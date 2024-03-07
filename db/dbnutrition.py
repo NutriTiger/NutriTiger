@@ -1,8 +1,8 @@
 import pymongo
 
 #----------------------------------------------------------------------
-#
-# Oyu Enkhbol and Jewel Merriman
+# Contributors:
+# Oyu Enkhbold and Jewel Merriman
 #
 #----------------------------------------------------------------------
 
