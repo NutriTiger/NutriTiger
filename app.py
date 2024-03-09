@@ -2,7 +2,7 @@
 from sys import path
 path.append('src')
 
-from flask import Flask
+from flask import Flask, render_template
 from CASClient import CASClient
 
 app = Flask(__name__)
@@ -11,11 +11,11 @@ _cas = CASClient()
 
 @app.route('/')
 def hello_world():
-    print("HERE!")
-    netid = _cas.authenticate()
-    print(netid)
-    netid = netid.rstrip()
-    return 'Hello, World!'
+    #print("HERE!")
+    #netid = _cas.authenticate()
+    #print(netid)
+    #netid = netid.rstrip()
+    return render_template('dhallmenus.html')
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
