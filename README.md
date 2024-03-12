@@ -68,5 +68,6 @@ If you are not a collaborater of the NutriTiger project, you may acquire a usern
 When you are ready to run any of the database files, make sure you have exported your mongodb username and password as environment variables with these commands in your terminal:
 - ``export MONGODB_USERNAME=<username>``
 - ``export MONGODB_PASSWORD=<password>``
+
 Replace ``<username>`` and ``<password>`` with your mongodb username and password accordingly.
 
