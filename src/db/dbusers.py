@@ -102,10 +102,8 @@ def finduser():
 def deleteuser():
     return
 
-# to test connection
+# USED FOR TESTING FOR NOW 
 def main(): 
-    newuser("Jewel", "jm0278", datetime(2004, 3, 9), 2000)
-    updategoal("jm0278", 2500)
     return
     
 
