@@ -34,4 +34,12 @@ body {
 
 .nt-food-button-active {
     background-color: #FFB672 !important;
-  }
+}
+
+.offcanvas {
+    --bs-offcanvas-width: min(95vw, 250px) !important;
+}
+
+.btn {
+    --bs-btn-border-width:0 !important;
+}
