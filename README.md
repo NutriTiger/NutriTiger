@@ -56,3 +56,6 @@ When you are ready to merge with prototype, or whatever master branch
 
 Miscellaneous Commands
 ``python –m pip freeze > requirements.txt``
+### Database Guidelines
+The db files (under src) require your mongodb username and password to connect to the database. 
+First, you must have database access on MongoDB Atlas for the NutriTiger project.
