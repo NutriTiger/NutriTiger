@@ -25,10 +25,6 @@ def main():
     html_content = request.content
 
     soup = BeautifulSoup(html_content, "html.parser")
-    # Print all the contents
-    print(soup.contents)
-    # Print all the div elements, will need to refine to search for nutritional facts
-    #print(soup.find_all("div"))
 
     nutrition_json = {}
     nutrition_json["recipeid"] = 530602
@@ -40,25 +36,19 @@ def main():
         title = element.findChild()
         if title is not None:
             if title.text.strip() == "Protein":
-                print(title.text)
                 nutrition_json["protein"] = element.text[8:]
             if title.text.strip() == "Tot. Carb.":
-                print(title.text)
                 nutrition_json["carbs"] = element.text[11:]
             if title.text.strip() == "Total Fat":
-                print(title.text)
                 nutrition_json["fats"] = element.text[10:]
             if title.text.strip() == "Cholesterol":
-                print(title.text)
                 nutrition_json["cholesterol"] = element.text[12:]
             if title.text.strip() == "Sodium":
-                print(title.text)
                 nutrition_json["sodium"] = element.text[7:]
         if element.text.strip().startswith("Sugars"):
             nutrition_json["sugar"] = element.text[9:]
         if element.text.strip().startswith("Dietary Fiber"):
             nutrition_json["fiber"] = element.text[16:]
-        print(element.text)
 
     nutrition_table_list = soup.find_all("li")
     for element in nutrition_table_list:
