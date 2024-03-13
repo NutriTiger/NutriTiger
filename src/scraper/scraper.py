@@ -156,8 +156,8 @@ def get_daily_menu(location_num, location_description):
 
                 # Update the old entree and append the items to the JSON
                 oldEntreeDescription = entreeDescription
-                food_items.append(entree.find("name").contents[0])
-                recipe_nums.append(entree.find("recnum").contents[0])
+                food_items.append(entree.find("name").text)
+                recipe_nums.append(entree.find("recnum").text)
         
         return complete_menu_data_list
 
