@@ -126,8 +126,8 @@ def get_nutrition_from_recipe(recipeid):
                 nutrition_json["iron"] = element.replace(" ", "")[IRON_OFFSET:]
 
         # Saves the ingredients and allergens list as a Python list to the JSON object
-        nutrition_json["ingredients"] = soup.find("span", {"class": INGREDIENTS_CLASS}).text.split(", ")
-        nutrition_json["allergen"] = soup.find("span", {"class": ALLERGENS_CLASS}).text.split(", ")
+        nutrition_json["ingredients"] = soup.find("span", {"class": INGREDIENTS_CLASS}).text
+        nutrition_json["allergen"] = soup.find("span", {"class": ALLERGENS_CLASS}).text
 
         return nutrition_json
     
