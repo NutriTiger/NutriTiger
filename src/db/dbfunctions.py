@@ -26,5 +26,5 @@ def connectmongo():
         print("An Invalid URI host error was received. Make sure your connection string is valid. See README for more details.")
         sys.exit(1)
 
-    # return database named "NT-db"
-    return client[NT-db]
+    # return client --> ensure that it is closed with proper with statements
+    return client
