@@ -7,6 +7,7 @@
 
 import requests
 import json
+import re
 import sys
 from bs4 import BeautifulSoup
 
@@ -79,8 +80,28 @@ def get_nutrition_from_recipe(recipeid):
         nutrition_json["recipeid"] = recipeid
         # Insert the name of the item, which is the first h2 tag
         nutrition_json["mealname"] = soup.find("h2").text
+
+        # If there is no data to parse, return an object with no information
+        if soup.find(string=re.compile('Nutritional Information is not available for this recipe.')):
+            nutrition_json["calories"] = ""
+            nutrition_json["fats"] = ""
+            nutrition_json["carbs"] = ""
+            nutrition_json["fiber"] = ""
+            nutrition_json["suger"] = ""
+            nutrition_json["cholesterol"] = ""
+            nutrition_json["protein"] = ""
+            nutrition_json["sodium"] = ""
+            nutrition_json["vitd"] = ""
+            nutrition_json["potassium"] = ""
+            nutrition_json["calcium"] = ""
+            nutrition_json["iron"] = ""
+            nutrition_json["ingredients"] = ""
+            nutrition_json["allergens"] = ""
+            return nutrition_json
+
         # Insert the calories, which is the second sequential element with id facts2
-        nutrition_json["calories"] = soup.find_all(id="facts2")[CALORIES_INDEX].text[CALORIES_OFFSET:]
+        calories_element = soup.find_all(id="facts2")[CALORIES_INDEX]
+        nutrition_json["calories"] = parse_nutrition_value("calories", calories_element)
 
         # Obtains entries from the table that represents a nutrition label
         nutrition_table_details = soup.find_all(id="facts4")
@@ -94,21 +115,21 @@ def get_nutrition_from_recipe(recipeid):
             if title is not None:
                 title = title.text.strip()
                 if title == "Protein":
-                    nutrition_json["protein"] = element.text[PROTEIN_OFFSET:]
+                    nutrition_json["protein"] = parse_nutrition_value("protein", element)
                 if title == "Tot. Carb.":
-                    nutrition_json["carbs"] = element.text[CARBS_OFFSET:]
+                    nutrition_json["carbs"] = parse_nutrition_value("carbs", element)
                 if title == "Total Fat":
-                    nutrition_json["fats"] = element.text[FATS_OFFSET:]
+                    nutrition_json["fats"] = parse_nutrition_value("fats", element)
                 if title == "Cholesterol":
-                    nutrition_json["cholesterol"] = element.text[CHOLESTEROL_OFFSET:]
+                    nutrition_json["cholesterol"] = parse_nutrition_value("cholesterol", element)
                 if title == "Sodium":
-                    nutrition_json["sodium"] = element.text[SODIUM_OFFSET:]
+                    nutrition_json["sodium"] = parse_nutrition_value("sodium", element)
 
             # Extract the quantity for items with no seperate title element
             if element.text.strip().startswith("Sugars"):
-                nutrition_json["sugar"] = element.text[SUGAR_OFFSET:]
+                nutrition_json["sugar"] = parse_nutrition_value("sugar", element)
             if element.text.strip().startswith("Dietary Fiber"):
-                nutrition_json["fiber"] = element.text[FIBER_OFFSET:]
+                nutrition_json["fiber"] = parse_nutrition_value("fiber", element)
 
         # Obtains entries from the list in the nutrition label
         nutrition_table_list = soup.find_all("li")
@@ -127,13 +148,56 @@ def get_nutrition_from_recipe(recipeid):
 
         # Saves the ingredients and allergens list as a Python list to the JSON object
         nutrition_json["ingredients"] = soup.find("span", {"class": INGREDIENTS_CLASS}).text
-        nutrition_json["allergen"] = soup.find("span", {"class": ALLERGENS_CLASS}).text
+        nutrition_json["allergens"] = soup.find("span", {"class": ALLERGENS_CLASS}).text
 
         return nutrition_json
     
     except Exception as ex:
         print(sys.argv[0] + ":", ex, file=sys.stderr)
 
+# ---------------------------------------------------------------------
+
+
+def parse_nutrition_value(key, element):
+    """
+    Given a key that corresponds to a nutrition item on a nutrition label
+    and corresponding html element from the meal nutrition website,
+    parse_nutrition_value returns the parsed string containing the value.
+    An empty string is returned if there is no entry for an item.
+    """
+    
+    value = ""
+
+    match key:
+        case "calories":
+            value = element.text[CALORIES_OFFSET:]
+        case "protein":
+            value = element.text[PROTEIN_OFFSET:]
+        case "carbs":
+            value = element.text[CARBS_OFFSET:]
+        case "fats":
+            value = element.text[FATS_OFFSET:]
+        case "cholesterol":
+            value = element.text[CHOLESTEROL_OFFSET:]
+        case "sodium":
+            value = element.text[SODIUM_OFFSET:]
+        case "calcium":
+            value = element.text[CALCIUM_OFFSET:]
+        case "vitd":
+            value = element.text[VITAMIND_OFFSET:]
+        case "potassium":
+            value = element.text[POTASSIUM_OFFSET:]
+        case "iron":
+            value = element.text[IRON_OFFSET:]
+        case "sugar":
+            value = element.text[SUGAR_OFFSET:]
+        case "fiber":
+            value = element.text[FIBER_OFFSET:]
+            
+    if value.startswith("-"):
+        return ""
+    else:
+        return value
 
 if __name__ == "__main__":
     main()
