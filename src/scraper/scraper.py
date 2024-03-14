@@ -27,6 +27,7 @@ import sys
 import datetime
 import json
 from bs4 import BeautifulSoup
+import webscraper
 
 # ---------------------------------------------------------------------
 
@@ -52,9 +53,12 @@ def main():
     format and print it to stdout.
     """
 
-    todays_menu_items = get_daily_menus()
+    todays_menu_items, todays_nutrition_list = get_daily_menus()
 
     for object in todays_menu_items:
+        print(json.dumps(object, indent=4, default=str))
+    
+    for object in todays_nutrition_list:
         print(json.dumps(object, indent=4, default=str))
 
 # ---------------------------------------------------------------------
@@ -70,16 +74,22 @@ def get_daily_menus():
 
     # Complete list of JSON objects to store the menus for one day
     complete_menu_data_list = []
+    complete_nutrition_data_list = []
 
     # Obtain the menu items from each location
     for location_num, location_description in zip(LOCATION_NUMS, LOCATION_DESCRIPTION):
-        location_menu = get_daily_menu(location_num, location_description)
+        location_menu, nutrition_list = get_daily_menu(location_num, location_description)
 
+        #print(nutrition_list)
         # Unpacks the list of entree_type entries and adds to the complete list
         for location_menu_entree_type in location_menu:
             complete_menu_data_list.append(location_menu_entree_type)
+
+        # Unpacks the list of nutrition infromation entries and adds to the complete list
+        for location_nutrition_data_item in nutrition_list:
+            complete_nutrition_data_list.append(location_nutrition_data_item)
     
-    return complete_menu_data_list
+    return complete_menu_data_list, complete_nutrition_data_list
 
 # ---------------------------------------------------------------------
 
@@ -110,6 +120,7 @@ def get_daily_menu(location_num, location_description):
 
         # Final list will all JSON objects to return
         complete_menu_data_list = []
+        complete_nutrition_data_list = []
 
         # Create JSON objects based on entree type for each meal
         for meal in mealsList:
@@ -157,9 +168,17 @@ def get_daily_menu(location_num, location_description):
                 # Update the old entree and append the items to the JSON
                 oldEntreeDescription = entreeDescription
                 food_items.append(entree.find("name").text)
-                recipe_nums.append(entree.find("recnum").text)
+                recipeid = entree.find("recnum").text
+                recipe_nums.append(recipeid)
+
+                # Add the nutrition information for the recipe number to the list
+                complete_nutrition_data_list.append(webscraper.get_nutrition_from_recipe(recipeid))
         
-        return complete_menu_data_list
+            data["fooditems"] = food_items
+            data["recipenums"] = recipe_nums
+            complete_menu_data_list.append(data)
+
+        return complete_menu_data_list, complete_nutrition_data_list
 
     except Exception as ex:
         print(sys.argv[0] + ":", ex, file=sys.stderr)
