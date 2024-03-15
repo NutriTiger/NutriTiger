@@ -9,11 +9,15 @@
 <head>
     <meta charset="utf-8">
     <title>My Homepage</title>
+    {% include 'bootstrap.html' %}
 </head>
 
 <body>
-        <h1>Today's Breakdown</h1> 
-        <h2>Good {{ampm}}, {{netid}}.</h2>
+    {% include 'navbar.html' %}    
+    {% set current_page = 'home' %}
+
+    <h1>Today's Breakdown</h1> 
+    <h2>Good {{ampm}}, {{netid}}.</h2>
         
     <table width="100%">
         <tr>
