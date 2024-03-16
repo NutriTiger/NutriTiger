@@ -47,8 +47,9 @@ def newuser(name, netid, bday, cal):
                         "carb_his" : [0],
                         "fat_his" : [0],
                         "prot_his" : [0],
-                        "daily" : [],
-                        "serving" : [],
+                        "daily_rec" : [],
+                        "daily_serv" : [],
+                        "daily_nut" : []
                         }
 
         # insert document into the collection
@@ -102,9 +103,10 @@ def userlogin(netid):
         who = {"netid": netid}
         update = {
             "$set": {
-                "last_login" : today
-                "daily" : [],
-                "serving" : [],
+                "last_login" : today,
+                "daily_rec" : [],
+                "daily_serv" : [],
+                "daily_nut" : [],
                 "cal_his" : cal_his,
                 "carb_his" : carb_his,
                 "fat_his" : fat_his,
@@ -146,7 +148,7 @@ def updategoal(netid, cal):
         return
 
 # INSIDE UPDATEDCONSUMED: organize macro/calorie count:
-# Note: right now, dict keys for nutrtion facts is labeled as "calories", "carbs", "fats", "protein" and vals are doubles
+# Note: right now, dict keys for nutrtion facts is labeled as "calories", "carbs", "fats", "proteins" and vals are doubles
 def __calculatenutrition__(recipeids, servings):
     entry_cal = 0
     entry_carb = 0
@@ -161,7 +163,7 @@ def __calculatenutrition__(recipeids, servings):
         entry_cal = entry_cal + nut["calories"]*serving
         entry_carb = entry_carb + nut["carbs"]*serving
         entry_fat = entry_fat + nut["fats"]*serving
-        entry_prot = entry_prot + nut["protein"]*serving
+        entry_prot = entry_prot + nut["proteins"]*serving
     return
 
 # Update user's consumed good: add to daily plate
@@ -175,10 +177,15 @@ def addconsumed(netid, entry):
     entry_cal, entry_carb, entry_fat, entry_prot = __calculatenutrition__(entry["recipeids"], entry["servings"])
 
     # update
-    daily = this_user["daily"]
-    serving = this_user["serving"]
-    daily.append(entry["recipeids"])
-    serving.append(entry["servings"])
+    daily_rec = this_user["daily_rec"]
+    daily_serv = this_user["daily_serv"]
+    daily_nut = this_user["daily_nut"]
+    daily_rec.append(entry["recipeids"])
+    daily_serv.append(entry["servings"])
+    daily_nut.append({"calories" : entry_cal,
+                    "carbs" : entry_carb,
+                    "fats" : entry_fat,
+                    "proteins": entry_prot})
 
     cal_his = this_user["cal_his"]
     carb_his = this_user["carb_his"]
@@ -196,8 +203,9 @@ def addconsumed(netid, entry):
         who = {"netid": netid}
         update = {
             "$set": {
-                "daily" : daily,
-                "serving" : serving,
+                "daily_rec" : daily_rec,
+                "daily_serv" : daily_nut,
+                "daily_nut" : daily_nut,
                 "cal_his" : cal_his,
                 "carb_his" : carb_his,
                 "fat_his" : fat_his,
@@ -217,30 +225,42 @@ def addconsumed(netid, entry):
             return
     return
 
-# Update user's consumed good: delete foods from an entry from daily plate
+# Update user's consumed good: edit foods from an entry from daily plate 
+# This implementation can handle edits of foods, like adding a food or changing serving size, as well as deleting
 def deleteconsumed(netid, entry):
     this_user = finduser(netid)
     if this_user is None:
         return
 
-    # calculated the original cals and macronutrients
+    # calculated added cals and macronutrients
     entry_cal, entry_carb, entry_fat, entry_prot = __calculatenutrition__(entry["recipeids"], entry["servings"])
 
     # update
-    daily = this_user["daily"]
-    serving = this_user["serving"]
-    daily[entry["entry_num"]] = entry["recipeids"]
-    serving[entry["entry_num"]] = entry["servings"]
+    daily_rec = this_user["daily_rec"]
+    daily_serv = this_user["daily_serv"]
+    daily_rec[entry["entry_num"]] = entry["recipeids"]
+    daily_serv.append[entry["entry_num"]] = entry["servings"]
+
+    daily_nut = this_user["daily_nut"]
+    old_nut = daily_nut[entry["entry_num"]] 
+    cal_diff = old_nut["calories"] - entry_cal
+    carb_diff = old_nut["carbs"] - entry_carb
+    fat_diff = old_nut["fats"] - entry_fat
+    prot_diff = old_nut["proteins"] - entry_prot
+    daily_nut[entry["entry_num"]] = {"calories" : entry_cal,
+                                    "carbs" : entry_carb,
+                                    "fats" : entry_fat,
+                                    "proteins": entry_prot}
 
     cal_his = this_user["cal_his"]
     carb_his = this_user["carb_his"]
     fat_his = this_user["fat_his"]
     prot_his = this_user["prot_his"]
 
-    cal_his[0] = cal_his[0] + entry_cal
-    carb_his[0] = carb_his[0] + entry_carb
-    fat_his[0] = fat_his[0] + entry_fat
-    prot_his[0] = prot_his[0] + entry_prot
+    cal_his[0] = cal_his[0] - cal_diff
+    carb_his[0] = carb_his[0] - carb_diff
+    fat_his[0] = fat_his[0] - fat_diff
+    prot_his[0] = prot_his[0] - prot_diff
 
     with connectmongo() as client:
         db = client.db
@@ -248,8 +268,9 @@ def deleteconsumed(netid, entry):
         who = {"netid": netid}
         update = {
             "$set": {
-                "daily" : daily,
-                "serving" : serving,
+                "daily_rec" : daily_rec,
+                "daily_serv" : daily_nut,
+                "daily_nut" : daily_nut,
                 "cal_his" : cal_his,
                 "carb_his" : carb_his,
                 "fat_his" : fat_his,
@@ -289,12 +310,27 @@ def finduser(netid):
         return this_user
 
 # delete user's data entries
-def deleteuser():
-    return
+def deleteuser(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        who = {"netid": netid}
+        try:
+            result = users_collection.delete_one(who)
+            print(f"# of deleted documents: {result.deleted_count}")
+            return
+        except pymongo.errors.OperationFailure:
+            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+            sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+            sys.exit(1)
+        return
 
 # USED FOR TESTING FOR NOW 
 def main(): 
-    # newuser("Jewel", "jm0278", datetime(2004, 3, 9), 2000)
+    deleteuser("jm0278")
+    newuser("Jewel", "jm0278", datetime(2004, 3, 9), 2000)
     userlogin("jm0278")
     return
 
