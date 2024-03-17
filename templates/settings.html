@@ -9,16 +9,18 @@
 <head>
     <meta charset="utf-8">
     <title>Settings</title>
+    {% include 'bootstrap.html' %}
 </head>
 
 <body>
+    {% include 'navbar.html' %}
     <h1>My Information</h1> 
     <div>
-        <form action="/cgi-bin/placeholder.py" method="get">
+        <form action="/placeholder" method="post">
             Set Calorie Goal:
-            <input type="text" name="line" value="Enter the number here"><br>
-            <input type="submit" value = "Save">
-            </form>
+            <input type="text" name="line" placeholder="Enter the number here"><br>
+            <button type="submit">Save</button>
+        </form>
     </div>
 
     <p>
