@@ -227,6 +227,7 @@ def addconsumed(netid, entry):
 
 # Update user's consumed good: edit foods from an entry from daily plate 
 # This implementation can handle edits of foods, like adding a food or changing serving size, as well as deleting
+# Note: Entry is a dict of the following form {"entry_num" : INT, "recipeids" : [ARRAY OF RECIPE IDS], "servings" : [ARRAY OF SERVINGS] }
 def deleteconsumed(netid, entry):
     this_user = finduser(netid)
     if this_user is None:

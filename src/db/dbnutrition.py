@@ -11,6 +11,7 @@ import pytz
 
 # Create new food item -- should already include the net id field of user
 def addpersonalfood(new_food):
+    # create doc w netid
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
@@ -26,6 +27,8 @@ def addpersonalfood(new_food):
         except pymongo.errors.ServerSelectionTimeoutError:
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
+
+# singular function to delete and add within one function
 
 # Inserts nutrition information of the upcoming two weeks of food
 def addmenunutrition(new_foods):
@@ -47,17 +50,19 @@ def addmenunutrition(new_foods):
         
 
 # Deletes all nutrition information of food items prior to this week
+# one function to delete and add nutrition info
 def deletenutritioninfo():
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
         eastern_time = pytz.timezone('US/Eastern')
-        eastern_time = pytz.timezone('US/Eastern')
         today = datetime.today(eastern_time)
-        day_of_week = today.weekday()
-        dt = today - datetime.timedelta(days = day_of_week)
+        # day_of_week = today.weekday()
+        # # first day of the week - Monday
+        # dt = today - datetime.timedelta(days = day_of_week)
 
-        documents_to_delete = {"date": {"$lt": dt}}
+        # !!!!filter out personal nutrition doc
+        documents_to_delete = {"date": {"$lt": today}}
         try:
             result = nutrition_col.delete_many(documents_to_delete)
             print(f"# of deleted documents: {result.deleted_count}")
@@ -104,3 +109,23 @@ def find_many_nutrition(recipeids):
         except pymongo.errors.ServerSelectionTimeoutError:
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
+
+# Retrieve nutritional information of a user
+def find_personal_nutrition(netid):
+    with connectmongo() as client:
+        db = client.db
+        nutrition_col = db.nutrition
+
+        documents_to_find = {"access": netid}
+        try:
+            result = nutrition_col.find(documents_to_find)
+            print(f"found documents: {result}")
+            return result
+        except pymongo.errors.OperationFailure:
+            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+            sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+            sys.exit(1)
+
+# find one personal nutrition info
