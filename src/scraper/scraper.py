@@ -89,6 +89,8 @@ def get_daily_menus_from_range(start_date, end_date):
         menu_nutrition_list = []
 
         while (current_date != (end_date + datetime.timedelta(days = 1))):
+            print("Getting daily menus for", current_date)
+
             current_menu_items_list, current_menu_nutrition_list = get_daily_menus(current_date)
             menu_items_list.append(current_menu_items_list)
             menu_nutrition_list.append(current_menu_nutrition_list)
@@ -146,6 +148,8 @@ def get_daily_menu(location_num, location_description, date=""):
     if date != "":
         DATE_PARAMETER = "&myaction=read&dtdate=" + return_formatted_date(date)
     COMBINED_URL = BASE_MENUS_URL + LOCATION_PARAMETER + DATE_PARAMETER
+
+    print("Obtaining daily menu for", location_description)
 
     # Attempt to make the request to create JSON objects from the menu
     try:
