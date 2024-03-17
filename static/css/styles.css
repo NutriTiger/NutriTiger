@@ -1,0 +1,45 @@
+.nt-color-navbar {
+    background-color: #F3DDC6 ; 
+}
+
+.nt-color-bg {
+    background-color: #EBC9A6;
+}
+
+.nt-color-buttons {
+    background-color: #FF9040; 
+}
+
+.nt-color-accent {
+    background-color: #FFB672; 
+}
+
+body { 
+    padding-top: 60px; 
+}
+
+.nt-color-menu {
+    background-color: #FFF4E9;
+}
+
+.nt-food-text {
+    transition: color 0.3s; /* Smooth transition for color change */
+    cursor: default; /* Default cursor */
+}
+
+.nt-food-text:hover {
+    background-color: #FFB672 ; /* Custom color on hover */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.nt-food-button-active {
+    background-color: #FFB672 !important;
+}
+
+.offcanvas {
+    --bs-offcanvas-width: min(95vw, 250px) !important;
+}
+
+.btn {
+    --bs-btn-border-width:0 !important;
+}
