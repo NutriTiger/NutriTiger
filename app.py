@@ -1,8 +1,14 @@
+# ----------------------------------------------------------------------
+# 
+# app.py
+#
+# ----------------------------------------------------------------------
+
 # Based on https://github.com/shannon-heh/TigerSnatch/blob/main/app.py#L75
 from sys import path
 path.append('src')
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import time
 from CASClient import CASClient
 
@@ -23,24 +29,27 @@ def get_ampm():
         return 'afternoon'
     return 'evening'
 
-def get_netid():
-
-    # access database and get the netid that matches the CAS login
-    return netid
-
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 def index():
-    # Add cookies? helper method for if this is first contact or returning
+    # Check if it is a user's first visit
+    visited_before = request.cookies.get('visited_before')
+    if 'visited_before' is None:
+        # indicate first contact
+        visited_before = '(None)'
+        # Redirect to set initial goals page
+        return redirect('/welcome')
     return render_template('index.html')
 
 #--------------------------------------------------------------------
 
 @app.route('/homepage', methods=['GET'])
 def homepage():
-    return render_template('homepage.html', ampm=get_ampm(), netid=get_netid())
+    netid = _cas.authenticate()
+    netid = netid.rstrip()
+    return render_template('homepage.html', ampm=get_ampm(), netid=netid)
 
 #--------------------------------------------------------------------
 
@@ -51,29 +60,34 @@ def dhall_menus():
 
 #--------------------------------------------------------------------
 
-@app.route('/firstcontact', methods=['POST'])
+@app.route('/welcome', methods=['POST'])
 def first_contact():
     if request.method == 'POST':
 
         # Get value entered into the calorie goal box
         user_goal = request.form['line']
 
-        # Process data here (add to db)
+        # Validate value
+        # Store value into database
+
     return render_template('firstcontact.html')
 
 #--------------------------------------------------------------------
 
 @app.route('/settings', methods=['POST'])
 def settings():
+    if request.method == 'POST':
+        # Update database with new input value
+        new_user_goal = request.form['line']
 
-    # Update database with new input value
-    new_user_goal = request.form['line']
+        # Validate value
+        # Store value into database
 
     return render_template('settings.html')
 
 #--------------------------------------------------------------------
 
-@app.route('editingplate', methods=['POST'])
+@app.route('/editingplate', methods=['POST'])
 def editing_plate():
     return render_template('editingplate.html')
 
