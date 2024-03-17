@@ -36,7 +36,7 @@ def updatemenu(menu_list):
             sys.exit(1)
 
 # Retrive food items for menu by date, mealtime, and dhall (optional)
-def querymenudisplay(date, mealtime, date, mealtime, dhall = None = None):
+def querymenudisplay(date, mealtime, dhall = None):
     with connectmongo() as client:
         db = client.db
         menu_col = db.menus
