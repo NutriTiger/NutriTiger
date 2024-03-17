@@ -20,7 +20,7 @@ from bs4 import BeautifulSoup
 BASE_LABEL_URL = "https://menus.princeton.edu/dining/_Foodpro/online-menu/label.asp?RecNumAndPort="
 CALORIES_INDEX = 1
 CALORIES_OFFSET = 9
-PROTEIN_OFFSET = 8
+PROTEINS_OFFSET = 8
 CARBS_OFFSET = 11
 FATS_OFFSET = 10
 CHOLESTEROL_OFFSET = 12
@@ -32,7 +32,7 @@ POTASSIUM_OFFSET = 11
 CALCIUM_OFFSET = 9
 IRON_OFFSET = 6
 INGREDIENTS_CLASS = "labelingredientsvalue"
-ALLERGENS_CLASS = "labelallergensvalue"
+ALLERGEN_CLASS = "labelallergensvalue"
 
 # ---------------------------------------------------------------------
 
@@ -89,14 +89,14 @@ def get_nutrition_from_recipe(recipeid):
             nutrition_json["fiber"] = ""
             nutrition_json["suger"] = ""
             nutrition_json["cholesterol"] = ""
-            nutrition_json["protein"] = ""
+            nutrition_json["proteins"] = ""
             nutrition_json["sodium"] = ""
             nutrition_json["vitd"] = ""
             nutrition_json["potassium"] = ""
             nutrition_json["calcium"] = ""
             nutrition_json["iron"] = ""
             nutrition_json["ingredients"] = ""
-            nutrition_json["allergens"] = ""
+            nutrition_json["allergen"] = ""
             return nutrition_json
 
         # Insert the calories, which is the second sequential element with id facts2
@@ -115,7 +115,7 @@ def get_nutrition_from_recipe(recipeid):
             if title is not None:
                 title = title.text.strip()
                 if title == "Protein":
-                    nutrition_json["protein"] = parse_nutrition_value("protein", element)
+                    nutrition_json["proteins"] = parse_nutrition_value("proteins", element)
                 if title == "Tot. Carb.":
                     nutrition_json["carbs"] = parse_nutrition_value("carbs", element)
                 if title == "Total Fat":
@@ -148,7 +148,7 @@ def get_nutrition_from_recipe(recipeid):
 
         # Saves the ingredients and allergens list as a Python list to the JSON object
         nutrition_json["ingredients"] = soup.find("span", {"class": INGREDIENTS_CLASS}).text
-        nutrition_json["allergens"] = soup.find("span", {"class": ALLERGENS_CLASS}).text
+        nutrition_json["allergen"] = soup.find("span", {"class": ALLERGEN_CLASS}).text
 
         return nutrition_json
     
@@ -171,8 +171,8 @@ def parse_nutrition_value(key, element):
     match key:
         case "calories":
             value = element.text[CALORIES_OFFSET:]
-        case "protein":
-            value = element.text[PROTEIN_OFFSET:]
+        case "proteins":
+            value = element.text[PROTEINS_OFFSET:]
         case "carbs":
             value = element.text[CARBS_OFFSET:]
         case "fats":
