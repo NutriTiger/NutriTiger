@@ -10,7 +10,30 @@
   <body>
     <!-- Content will go here.. -->
     {% include 'navbar.html' %}
+    <div class = "text-center">
+      <h1 class="display-3 pb-2">Today's Menus</h1>
+      <h3 class = "pb-1">{{ todays_date }}</h3>
+      <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
+    </div>
+    <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
+      {% for location, foods in location_food_dict.items() %}
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title text-center">{{ location }}</h5>
+            {% for food in foods %}
+            <a tabindex="0" class="btn nt-food-text" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Nutritional Content" data-bs-content="{{ nutritional_content }}">{{ food }}</a>
+            <br>
+            <!-- <p class="card-text nt-food-text" data-bs-toggle="popover" data-bs-content="Some content inside the popover">{{ food }}</p> -->
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+    <script src = "../static/js/script.js"></script>
+    
 </body>
 </html>

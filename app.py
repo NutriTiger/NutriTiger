@@ -62,7 +62,20 @@ def about():
 @app.route('/dhallmenus', methods=['GET'])
 def dhall_menus():
     # Fetch menu data from database
-    return render_template('dhallmenus.html')
+    # test data
+    LOCATION_DESCRIPTION = ["Rockefeller & Mathey Colleges",
+                        "Forbes College", "Graduate College",
+                        "Center for Jewish Life",
+                        "Yeh & New West Colleges",
+                        "Whitman & Butler Colleges"]
+    all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
+    nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
+
+    location_food_dict = {location: all_foods for location in LOCATION_DESCRIPTION}
+
+    todays_date = 'Monday, March 11th'
+
+    return render_template('dhallmenus.html', todays_date=todays_date, location_food_dict=location_food_dict, nutritional_content=nutritional_content)
 
 #--------------------------------------------------------------------
 
