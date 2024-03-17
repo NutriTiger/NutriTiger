@@ -32,7 +32,6 @@ def get_ampm():
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
-@app.route('/index', methods=['GET'])
 def index():
     # Check if it is a user's first visit
     visited_before = request.cookies.get('visited_before')
@@ -41,15 +40,22 @@ def index():
         visited_before = '(None)'
         # Redirect to set initial goals page
         return redirect('/welcome')
-    return render_template('index.html')
+    return redirect('/homepage')
 
 #--------------------------------------------------------------------
 
 @app.route('/homepage', methods=['GET'])
 def homepage():
-    netid = _cas.authenticate()
-    netid = netid.rstrip()
+    #netid = _cas.authenticate()
+    #netid = netid.rstrip()
+    netid = 'ab1234' # Placeholder netID
     return render_template('homepage.html', ampm=get_ampm(), netid=netid)
+
+#--------------------------------------------------------------------
+
+@app.route('/about', methods=['GET'])
+def about():
+    return render_template('about.html')
 
 #--------------------------------------------------------------------
 
@@ -60,21 +66,29 @@ def dhall_menus():
 
 #--------------------------------------------------------------------
 
-@app.route('/welcome', methods=['POST'])
+@app.route('/welcome', methods=['GET', 'POST'])
 def first_contact():
     if request.method == 'POST':
 
         # Get value entered into the calorie goal box
         user_goal = request.form['line']
 
-        # Validate value
+        # Validate value: with bootstrap and js, limit values that user can enter
+        # (ex. no negative values, no characters, no special characters)
         # Store value into database
 
     return render_template('firstcontact.html')
 
 #--------------------------------------------------------------------
 
-@app.route('/settings', methods=['POST'])
+@app.route('/history', methods=['GET'])
+def history():
+
+    return render_template('history.html')
+
+#--------------------------------------------------------------------
+
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
     if request.method == 'POST':
         # Update database with new input value
@@ -90,6 +104,12 @@ def settings():
 @app.route('/editingplate', methods=['POST'])
 def editing_plate():
     return render_template('editingplate.html')
+
+#--------------------------------------------------------------------
+
+@app.route('/logfood', methods=['POST'])
+def log_food():
+    return render_template('logfood.html')
 
 #--------------------------------------------------------------------
 
