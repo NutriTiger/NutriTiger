@@ -16,7 +16,6 @@ def update_nutrition(new_foods):
         db = client.db
         nutrition_col = db.nutrition
         eastern_time = pytz.timezone('US/Eastern')
-        eastern_time = pytz.timezone('US/Eastern')
         today = datetime.today(eastern_time)
         day_of_week = today.weekday()
         dt = today - datetime.timedelta(days = day_of_week)
@@ -107,8 +106,22 @@ def find_many_nutrition(recipeids):
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
 
-# Testing
-def main():
-    
-    sys.exit(0)
-    
+# Retrieve nutritional information of a user
+def find_personal_nutrition(netid):
+    with connectmongo() as client:
+        db = client.db
+        nutrition_col = db.nutrition
+
+        documents_to_find = {"access": netid}
+        try:
+            result = nutrition_col.find(documents_to_find)
+            print(f"found documents: {result}")
+            return result
+        except pymongo.errors.OperationFailure:
+            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+            sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+            sys.exit(1)
+
+# find one personal nutrition info
