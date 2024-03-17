@@ -56,3 +56,18 @@ When you are ready to merge with prototype, or whatever master branch
 
 Miscellaneous Commands
 ``python –m pip freeze > requirements.txt``
+### Database Guidelines
+The db files (under src) require a mongodb username and password with read and write access to connect to the database. 
+
+If you are a collaborater of the NutriTiger project, you may create a username and password by accessing the NutriTiger project on MongoDB Atlas: 
+- On the menu bar on the left hand side, click on "DataBase Access."
+- Then, click on "Add New DataBase User" and create your username and password for "Password Authentication." Set your "Built-in Role" to be "Atlas admin." Finally, click "Add User." 
+
+If you are not a collaborater of the NutriTiger project, you may acquire a username and password by contacting ________.
+
+When you are ready to run any of the database files, make sure you have exported your mongodb username and password as environment variables with these commands in your terminal:
+- ``export MONGODB_USERNAME=<username>``
+- ``export MONGODB_PASSWORD=<password>``
+
+Replace ``<username>`` and ``<password>`` with your mongodb username and password accordingly.
+
