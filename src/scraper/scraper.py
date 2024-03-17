@@ -55,18 +55,18 @@ def main():
 
     todays_menu_items, todays_nutrition_list = get_daily_menus()
 
-    for object in todays_menu_items:
-        print(json.dumps(object, indent=4, default=str))
+    #for object in todays_menu_items:
+    #    print(json.dumps(object, indent=4, default=str))
     
     for object in todays_nutrition_list:
         print(json.dumps(object, indent=4, default=str))
 
-    start_date = datetime.datetime(2024, 3, 11).date()
-    end_date = datetime.datetime(2024, 3, 13).date()
+    #start_date = datetime.datetime(2024, 3, 11).date()
+    #end_date = datetime.datetime(2024, 3, 13).date()
 
-    menu_items_list_range, menu_items_nutrition_list_range = get_daily_menus_from_range(start_date, end_date)
-    print(menu_items_list_range)
-    print(menu_items_nutrition_list_range)
+    #menu_items_list_range, menu_items_nutrition_list_range = get_daily_menus_from_range(start_date, end_date)
+    #print(menu_items_list_range)
+    #print(menu_items_nutrition_list_range)
 
 # ---------------------------------------------------------------------
 
@@ -114,10 +114,11 @@ def get_daily_menus(date=""):
     # Complete list of JSON objects to store the menus for one day
     complete_menu_data_list = []
     complete_nutrition_data_list = []
+    distinct_recipeid_list = []
 
     # Obtain the menu items from each location
     for location_num, location_description in zip(LOCATION_NUMS, LOCATION_DESCRIPTION):
-        location_menu, nutrition_list = get_daily_menu(location_num, location_description, date)
+        location_menu, nutrition_list = get_daily_menu(location_num, location_description, distinct_recipeid_list, date)
 
         # Unpacks the list of entree_type entries and adds to the complete list
         for location_menu_entree_type in location_menu:
@@ -132,7 +133,7 @@ def get_daily_menus(date=""):
 # ---------------------------------------------------------------------
 
 
-def get_daily_menu(location_num, location_description, date=""):
+def get_daily_menu(location_num, location_description, distinct_recipeid_list, date=""):
     """
     For a specific location, we make a request for the XML with the
     menu details and create JSON objects based on the unique entree
@@ -219,7 +220,12 @@ def get_daily_menu(location_num, location_description, date=""):
                 recipe_nums.append(recipeid)
 
                 # Add the nutrition information for the recipe number to the list
-                complete_nutrition_data_list.append(webscraper.get_nutrition_from_recipe(recipeid))
+                if recipeid not in distinct_recipeid_list:
+                    distinct_recipeid_list.append(recipeid)
+                    complete_nutrition_data_list.append(webscraper.get_nutrition_from_recipe(recipeid))
+
+                # Get Distinct recipeids and then loop through later
+                # Add link to object for nutrient information
         
             data["fooditems"] = food_items
             data["recipenums"] = recipe_nums
