@@ -61,7 +61,74 @@ def querymenudisplay(date, mealtime, dhall = None):
 # Testing
 def main():
     newmenu = {
-
-    }
+        {"date": "2024-03-02",
+        "dhall": "Rockefeller & Mathey Colleges",
+        "mealtime": "Lunch",
+        "type": "Soup of the Day",
+        "fooditems": [
+            "Roma House Beef Vegetable Soup",
+            "Vegan White Bean & Escarole Soup"
+        ],
+        "recipenums": [
+            "459978",
+            "020207"
+        ]
+        },
+        {
+        "date": "2024-03-02",
+        "dhall": "Rockefeller & Mathey Colleges",
+        "mealtime": "Lunch",
+        "type": "Breakfast Bars",
+        "fooditems": [
+            "Bagels",
+            "French Toast Sticks",
+            "Oatmeal Bar",
+            "Omelet Bar with Pork Options",
+            "Pancake & Waffle Toppings"
+        ],
+        "recipenums": [
+            "217001",
+            "280007",
+            "270052",
+            "061001",
+            "280002"
+        ]
+        },
+        {
+        "date": "2024-03-02",
+        "dhall": "Rockefeller & Mathey Colleges",
+        "mealtime": "Lunch",
+        "type": "Main Entree",
+        "fooditems": [
+            "Seared Salmon with Lemon Herb Butter"
+        ],
+        "recipenums": [
+            "510308"
+        ]
+        },
+        {
+        "date": "2024-03-02",
+        "dhall": "NCW",
+        "mealtime": "Lunch",
+        "type": "Main Entree",
+        "fooditems": [
+            "Seared Salmon with Lemon Herb Butter"
+        ],
+        "recipenums": [
+            "510308"
+        ]
+        }
+        }
+    updatemenu(newmenu)
+    result1 = querymenudisplay("2024-03-02", "Lunch", "Rockefeller & Mathey Colleges")
+    print(result1)
+    result2 = querymenudisplay("2024-03-02", "Lunch", "NCW")
+    print(result2)
+    result3 = querymenudisplay("2024-03-02", "Lunch")
+    print(result3)
+    
     sys.exit(0)
     
+
+if __name__ == '__main__':
+    main()

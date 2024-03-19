@@ -262,7 +262,7 @@ def editFood(netid, entry_num, food_num, new_serv):
     
     # calculate difference
     food_serv = this_user["daily_serv"][entry_num][food_num]
-    if (food_serv == new_serv)
+    if (food_serv == new_serv):
         print("serving size is the same")
         return this_user
     food_rec = this_user["daily_rec"][entry_num][food_num]

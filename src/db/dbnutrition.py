@@ -150,3 +150,14 @@ def find_one_personal_nutrition(netid, recipeid):
         except pymongo.errors.ServerSelectionTimeoutError:
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)            
+
+#-----------------------------------------------------------------------
+
+# USED FOR TESTING FOR NOW 
+def main(): 
+    return
+
+#-----------------------------------------------------------------------
+
+if __name__ == '__main__':
+    main()
