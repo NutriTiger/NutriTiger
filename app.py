@@ -8,10 +8,13 @@
 from sys import path
 path.append('src')
 path.append('src/db')
+
 from flask import Flask, render_template, request, redirect, make_response
 import time
 #from CASClient import CASClient
 from src.db import dbusers
+from src.db import dbmenus
+
 
 #--------------------------------------------------------------------
 
@@ -58,7 +61,9 @@ def homepage():
     # Placeholder values
     netid = 'jm0278' 
     curr_caltotal = 1500
-    cal_goal = 3100
+    cursor = dbusers.finduser(netid)
+    cal_goal = int(cursor['caloricgoal'])
+    print(cal_goal)
 
     if request.method == 'POST':
         return redirect('/editingplate')
@@ -84,6 +89,8 @@ def about():
 def dhall_menus():
     # Fetch menu data from database
     # test data
+    data = dbmenus.querymenudisplay("2024-03-02", "Lunch")
+    print(data)
     LOCATION_DESCRIPTION = ["Rockefeller & Mathey Colleges",
                         "Forbes College", "Graduate College",
                         "Center for Jewish Life",
