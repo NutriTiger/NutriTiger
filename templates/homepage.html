@@ -16,15 +16,17 @@
     {% include 'navbar.html' %}    
     {% set current_page = 'home' %}
 
-    <h1 class="text-center">Today's Breakdown</h1> 
-    <h2 class="text-center">Good {{ampm}}, {{netid}}.</h2>
-        
-    <table width="100%">
-        <tr>
-            <td width = 50% style="border: 1px solid black; vertical-align: top;">
-                <h2 class="text-center">My Macros</h2>
+    <h1 class="text-center m-3">Today's Breakdown</h1> 
+    <h3 class="text-center m-3">Good {{ampm}}, {{netid}}.</h3>
 
-                <h3 class="text-center">Daily calorie goal: {{cal_goal}}cal</h3>
+    <!--Layout for the two main cards-->
+    <div class="row">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+                <!--My Macros (left card)-->
+              <h5 class="text-center m-3">My Macros</h5>
+              <h3 class="text-center">Daily calorie goal: {{cal_goal}}cal</h3>
 
                 <div class="prog-container" style="display: flex; justify-content: center;">
                     <div class="progress" style="height: 50px; width: 300px;">
@@ -32,31 +34,44 @@
                     </div>
                   </div>
                 
-                <div style="width: 400px; height: 400px;">
+                <div style="width: 400px; height: 400px; justify-content: center;">
                     {% include 'piechart.html' %}
                 </div>
-            <td width="50%" style="border: 1px solid black; vertical-align: top;">
-                <h2 class="text-center">My Plate</h2>
-                <div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+                <!--My Plate (right card)-->
+                <h5 class="text-center">My Plate</h5>
+                <!--Create a card for each entry-->
+                <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
-                    <div style="background-color: lightgray; padding: 10px; margin: 20px;">
-                        <h3>{{entry}}</h3>
-                        <ul>
-                            {% for food in foods %}
-                            <li>{{food}}</li>
-                            {% endfor %}
-                        </ul>
+                    <div class="row-cols-1">
+                        <div class="card" style="background-color: lightgray; padding: 10px; margin: 20px;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{entry}}</h5>
+                                <ul>
+                                    {% for food in foods %}
+                                    <li>{{food}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     {% endfor %}
-                </div>
-            
-                <form action="/homepage" method="post">
-                    <button type="submit" name="edit_plate">Edit My Plate</button>
-                </form>
-            </td>
 
-        </tr>
-    </table>
+                    <!-- Edit my plate button -->
+                    <form action="/homepage" method="post">
+                        <button type="submit" name="edit_plate">Edit My Plate</button>
+                    </form>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>           
+            
         
 </body>
 </html>
