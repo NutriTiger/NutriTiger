@@ -23,12 +23,16 @@
         <tr>
             <td width = 50% style="border: 1px solid black; vertical-align: top;">
                 <h2 class="text-center">My Macros</h2>
-                <div style="background-color: lightblue; padding: 10px; margin: 20px">
-                    <h3>{{curr_caltotal}}cal / {{cal_goal}}cal</h3>
-                </div>
-                <p>Pie chart will go here.</p>
+
+                <h3 class="text-center">Daily calorie goal: {{cal_goal}}cal</h3>
+
+                <div class="prog-container" style="display: flex; justify-content: center;">
+                    <div class="progress" style="height: 50px; width: 300px;">
+                      <div class="progress-bar bg-success dynamic-progress-bar" role="progressbar" style="width: {{ (curr_caltotal / cal_goal) * 100 }}%;" aria-valuenow="{{curr_caltotal}}" aria-valuemin="0" aria-valuemax="{{cal_goal}}">{{curr_caltotal}}cal</div>
+                    </div>
+                  </div>
+                
                 <div style="width: 400px; height: 400px;">
-                    <!-- Adjust dimensions to fit your design -->
                     {% include 'piechart.html' %}
                 </div>
             <td width="50%" style="border: 1px solid black; vertical-align: top;">

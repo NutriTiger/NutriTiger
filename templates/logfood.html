@@ -16,25 +16,57 @@
     {% include 'navbar.html' %}
     {% set current_page = 'logfood' %}
 
-    <h1>Log Food</h1> 
-    <p>
+    <h1 class="text-center">Log Food</h1> 
+    <p class="text-center">
         Select your dining hall from the drop down below or search for the recipe name in the 
         search bar. Once you select your dish(es), estimate the number of servings you consumed 
         in the “My Plate” window below. 
     </p>
-              
-    <table width="100%">
-        <tr>
-            <td width = 60% style="border: 1px solid black; vertical-align: top;">
-                
-            </td>
-            <td width="40%" style="border: 1px solid black; vertical-align: top;">
-                <h2>My Plate</h2>
+    
+    <!-- Select buttons: Dining Hall, Mealtime -->
+    <div class="row">
+        <div class="col-sm-2">
+            <select class="form-select form-select-sm" aria-label="select_dhall" style="background-color: rgb(250, 160, 58);">
+                <option selected>Select Dining Hall</option>
+                <option value="1">Rockefeller & Mathey Colleges</option>
+                <option value="2">Forbes College</option>
+                <option value="3">Graduate College</option>
+                <option value="3">Center for Jewish Life</option>
+                <option value="3">Yeh & New West Colleges</option>
+                <option value="3">Whitman & Butler Colleges</option>
+            </select>
+        </div>
 
-            </td>
+        <div class="col-sm-2">
+            <select class="form-select form-select-sm" aria-label="select_mealtime" style="background-color: rgb(250, 160, 58);">
+                <option selected>Select Mealtime</option>
+                <option value="1">Breakfast</option>
+                <option value="2">Lunch</option>
+                <option value="3">Dinner</option>
+                <option value="3">Brunch</option>
+            </select>
+        </div>
+    </div>
 
-        </tr>
-    </table>
+    <!--Two cards: one for the food list, and one for My Plate-->
+    <div class="row">
+        <div class="col-sm-7">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Insert Dining Hall Name</h5>
+              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">My Plate</h5>
+              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <h3>Done adding food to your plate?</h3>
 

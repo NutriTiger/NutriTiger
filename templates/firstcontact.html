@@ -12,20 +12,20 @@
     {% include 'bootstrap.html' %}
 </head>
 
-<body>
+<body class="text-center">
     {% include 'navbar.html' %}
-    <h1>Nutrition Goals</h1> 
+    <h1 class="m-3">Nutrition Goals</h1> 
     <div>
-        <h2>Welcome to NutriTiger! Please fill out your daily calorie goal.</h2>
+        <h2 class="m-3">Welcome to NutriTiger! Please fill out your daily calorie goal.</h2>
 
-        <form action="/welcome" method="post">
+        <form action="/welcome" method="post" class="m-3">
             Set Calorie Goal:
             <input type="number" name="line" placeholder="Enter the number here" min="0"><br>
             <button type="submit">Save</button>
         </form>
     </div>
 
-    <p>
+    <p class="m-3">
         Don't know your calorie goal? click <strong>here</strong> to see your 
         _______ recommended caloric intake based on your goals. 
     </p>
