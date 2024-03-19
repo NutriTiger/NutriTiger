@@ -333,7 +333,7 @@ def deleteuser(netid):
 
 # USED FOR TESTING FOR NOW 
 def main(): 
-    updategoal("jm0278", 2500)
+    updategoal("jm0278", 100)
 
 #-----------------------------------------------------------------------
 
