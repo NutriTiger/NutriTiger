@@ -37,8 +37,10 @@
     </table>
 
     <h3>Done adding food to your plate?</h3>
-    <button onclick="window.location.href = 'homepage.html';">
-       Upload Plate and Return</button>
+
+    <form action="/logfood" method="post">
+        <button type="submit" name="upload_plate">Upload Plate and Return</button>
+    </form>
 
 </body>
 </html>

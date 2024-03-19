@@ -8,9 +8,10 @@
 from sys import path
 path.append('src')
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, make_response
 import time
 from CASClient import CASClient
+#import dbusers
 
 #--------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ _cas = CASClient()
 def get_ampm():
     current_hr = int(time.strftime('%I'))
     am_pm = time.strftime('%p')
+
     if am_pm == "AM":
         return 'morning'
     elif am_pm == "PM" and current_hr < 6:
@@ -35,21 +37,40 @@ def get_ampm():
 def index():
     # Check if it is a user's first visit
     visited_before = request.cookies.get('visited_before')
-    if 'visited_before' is None:
-        # indicate first contact
-        visited_before = '(None)'
-        # Redirect to set initial goals page
-        return redirect('/welcome')
+
+    if visited_before is None:
+        # Indicate first contact
+        visited_before = None
+        # Set cookie to mark user as visited now
+        response = make_response(redirect('/welcome'))
+        response.set_cookie('visited_before', 'True')
+        return response
+    
     return redirect('/homepage')
 
 #--------------------------------------------------------------------
 
-@app.route('/homepage', methods=['GET'])
+@app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
     #netid = _cas.authenticate()
     #netid = netid.rstrip()
-    netid = 'ab1234' # Placeholder netID
-    return render_template('homepage.html', ampm=get_ampm(), netid=netid)
+
+    # Placeholder values
+    netid = 'ab1234' 
+    curr_caltotal = 1500
+    cal_goal = 3100
+
+    if request.method == 'POST':
+        return redirect('/editingplate')
+    
+    ENTRIES = ["Entry 1", "Entry 2", "Entry 3"]
+    all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
+
+    entries_food_dict = {entry: all_foods for entry in ENTRIES}
+
+    return render_template('homepage.html', ampm=get_ampm(), netid=netid,
+                           curr_caltotal=curr_caltotal, cal_goal=cal_goal,
+                           entries_food_dict=entries_food_dict)
 
 #--------------------------------------------------------------------
 
@@ -75,20 +96,22 @@ def dhall_menus():
 
     todays_date = 'Monday, March 11th'
 
-    return render_template('dhallmenus.html', todays_date=todays_date, location_food_dict=location_food_dict, nutritional_content=nutritional_content)
+    return render_template('dhallmenus.html', todays_date=todays_date, 
+                           location_food_dict=location_food_dict, 
+                           nutritional_content=nutritional_content)
 
 #--------------------------------------------------------------------
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def first_contact():
     if request.method == 'POST':
-
+        # Placeholder netID
+        netid = 'ab1234'
         # Get value entered into the calorie goal box
         user_goal = request.form['line']
-
-        # Validate value: with bootstrap and js, limit values that user can enter
-        # (ex. no negative values, no characters, no special characters)
         # Store value into database
+        #updategoal(netid, user_goal)
+        return redirect('/homepage')
 
     return render_template('firstcontact.html')
 
@@ -97,31 +120,44 @@ def first_contact():
 @app.route('/history', methods=['GET'])
 def history():
 
-    return render_template('history.html')
+    # Placeholder values
+    avg_cals = 2000
+    avg_pro = 50
+    avg_carbs = 100
+    avg_fat = 40
+
+    return render_template('history.html', avg_cals=avg_cals, 
+                           avg_pro=avg_pro, avg_carbs=avg_carbs, 
+                           avg_fat=avg_fat)
 
 #--------------------------------------------------------------------
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     if request.method == 'POST':
-        # Update database with new input value
+        netid = 'ab1234'
         new_user_goal = request.form['line']
-
-        # Validate value
-        # Store value into database
+        #updategoal(netid, new_user_goal)
+        return redirect('/homepage')
 
     return render_template('settings.html')
 
 #--------------------------------------------------------------------
 
-@app.route('/editingplate', methods=['POST'])
+@app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
-    return render_template('editingplate.html')
+    netid = 'ab1234'
+
+    if request.method == "POST":
+        return redirect('/homepage')
+    return render_template('editingplate.html', ampm=get_ampm(), netid=netid)
 
 #--------------------------------------------------------------------
 
-@app.route('/logfood', methods=['POST'])
+@app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
+    if request.method == 'POST':
+        return redirect('/homepage')
     return render_template('logfood.html')
 
 #--------------------------------------------------------------------

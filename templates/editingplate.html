@@ -14,20 +14,20 @@
 
 <body>
     {% include 'navbar.html' %}
-    <h1>Today's Breakdown</h1> 
-    <h2>Good {{ampm}}, {{netid}}.</h2>
+    <h1 class="text-center">Today's Breakdown</h1> 
+    <h2 class="text-center">Good {{ampm}}, {{netid}}.</h2>
         
     <table width="100%">
         <tr>
             <td width = 50% style="border: 1px solid black; vertical-align: top;">
-                <h2>My Macros</h2>
+                <h2 class="text-center">My Macros</h2>
                 <div style="background-color: lightblue; padding: 10px; margin: 20px">
                     <h3>1500/3100 cal</h3>
                 </div>
                 <p>Pie chart will go here.</p>
             </td>
             <td width="50%" style="border: 1px solid black; vertical-align: top;">
-                <h2>My Daily Plate (Editing)</h2>
+                <h2 class="text-center">My Daily Plate (Editing)</h2>
                 <div style="background-color: lightgray; padding: 10px; margin: 20px;">
                     <h3>Entry 1</h3>
                     <ul>
@@ -54,9 +54,11 @@
                         <li>Food 3 </li>
                     </ul>
                 </div>
-
-                <button onclick="window.location.href = 'homepage.html';">
-                    Save Plate</button>
+                
+                <form action="/editingplate" method="post">
+                    <button type="submit" name="save_plate">Save Plate</button>
+                </form>
+                
             </td>
 
         </tr>

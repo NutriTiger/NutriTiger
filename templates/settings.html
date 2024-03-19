@@ -18,14 +18,17 @@
 
     <h1>My Information</h1> 
     <div>
-        <form action="/placeholder" method="post">
+        <form action="/settings" method="post">
             Set Calorie Goal:
-            <input type="text" name="line" placeholder="Enter the number here"><br>
+            <input type="number" name="line" placeholder="Enter the number here" min="0"><br>
             <button type="submit">Save</button>
         </form>
     </div>
 
-    {% include caloriecalculator.html %}
+    <p>
+        Don't know your calorie goal? click <strong>here</strong> to see your 
+        _______ recommended caloric intake based on your goals. 
+    </p>
         
 </body>
 </html>

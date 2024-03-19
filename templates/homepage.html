@@ -16,49 +16,39 @@
     {% include 'navbar.html' %}    
     {% set current_page = 'home' %}
 
-    <h1>Today's Breakdown</h1> 
-    <h2>Good {{ampm}}, {{netid}}.</h2>
+    <h1 class="text-center">Today's Breakdown</h1> 
+    <h2 class="text-center">Good {{ampm}}, {{netid}}.</h2>
         
     <table width="100%">
         <tr>
             <td width = 50% style="border: 1px solid black; vertical-align: top;">
-                <h2>My Macros</h2>
+                <h2 class="text-center">My Macros</h2>
                 <div style="background-color: lightblue; padding: 10px; margin: 20px">
-                    <h3>1500/3100 cal</h3>
+                    <h3>{{curr_caltotal}}cal / {{cal_goal}}cal</h3>
                 </div>
                 <p>Pie chart will go here.</p>
-            </td>
+                <div style="width: 400px; height: 400px;">
+                    <!-- Adjust dimensions to fit your design -->
+                    {% include 'piechart.html' %}
+                </div>
             <td width="50%" style="border: 1px solid black; vertical-align: top;">
-                <h2>My Plate</h2>
-                <div style="background-color: lightgray; padding: 10px; margin: 20px;">
-                    <h3>Entry 1</h3>
-                    <ul>
-                        <li>Food 1 </li>
-                        <li>Food 2 </li>
-                        <li>Food 3 </li>
-                    </ul>
+                <h2 class="text-center">My Plate</h2>
+                <div>
+                    {% for entry, foods in entries_food_dict.items() %}
+                    <div style="background-color: lightgray; padding: 10px; margin: 20px;">
+                        <h3>{{entry}}</h3>
+                        <ul>
+                            {% for food in foods %}
+                            <li>{{food}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
                 </div>
-
-                <div style="background-color: lightgray; padding: 10px; margin: 20px;">
-                    <h3>Entry 2</h3>
-                    <ul>
-                        <li>Food 1 </li>
-                        <li>Food 2 </li>
-                        <li>Food 3 </li>
-                    </ul>
-                </div>
-
-                <div style="background-color: lightgray; padding: 10px; margin: 20px;">
-                    <h3>Entry 3</h3>
-                    <ul>
-                        <li>Food 1 </li>
-                        <li>Food 2 </li>
-                        <li>Food 3 </li>
-                    </ul>
-                </div>
-
-                <button onclick="window.location.href = 'editingplate.html';">
-                    Edit My Plate</button>
+            
+                <form action="/homepage" method="post">
+                    <button type="submit" name="edit_plate">Edit My Plate</button>
+                </form>
             </td>
 
         </tr>

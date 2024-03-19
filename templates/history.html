@@ -16,24 +16,24 @@
     {% include 'navbar.html' %}
     {% set current_page = 'history' %}
 
-    <h1>My History</h1> 
+    <h1 class="text-center">My History</h1> 
     
-    <div style="display: flex; width: 100%;">
+    <div style="display: flex; width: 100%;" class="text-center">
         <div style="flex: 1 1 25%; height: 100px; background-color: #a8a7a7; margin-right: 10px;">
         <h3>Avg. Calories Per Day</h3>
-        <p>{{avg_cals}}</p>
+        <p>{{avg_cals}}cal</p>
         </div>
         <div style="flex: 1 1 20%; height: 100px; background-color: #a8a7a7; margin-right: 10px;">
         <h3>Avg. Protein</h3>
-        <p>{{avg_pro}}</p>
+        <p>{{avg_pro}}g</p>
         </div>
         <div style="flex: 1 1 20%; height: 100px; background-color: #a8a7a7; margin-right: 10px;">
         <h3>Avg. Carbs</h3>
-        <p>{{avg_carbs}}</p>
+        <p>{{avg_carbs}}g</p>
         </div>
         <div style="flex: 1 1 20%; height: 100px; background-color: #a8a7a7;">
         <h3>Avg. Fat</h3>
-        <p>{{avg_fat}}</p>
+        <p>{{avg_fat}}g</p>
         </div>
     </div>
     
