@@ -26,7 +26,6 @@ import requests
 import sys
 import datetime
 import json
-import cProfile
 from bs4 import BeautifulSoup
 import webscraper
 
