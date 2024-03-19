@@ -16,26 +16,45 @@
     {% include 'navbar.html' %}
     {% set current_page = 'history' %}
 
-    <h1>My History</h1> 
+    <h1 class="text-center">My History</h1> 
+    <h4 class="text-center">Past 7 Days</h4> 
     
-    <div style="display: flex; width: 100%;">
-        <div style="flex: 1 1 25%; height: 100px; background-color: #a8a7a7; margin-right: 10px;">
-        <h3>Avg. Calories Per Day</h3>
-        <p>{{avg_cals}}</p>
+    <!--Four cards for each average-->
+    <div class="row">
+        <div class="col-sm-3">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title">Avg. Calories/Day</h5>
+              <p>{{ avg_cals }}cal</p>
+            </div>
+          </div>
         </div>
-        <div style="flex: 1 1 20%; height: 100px; background-color: #a8a7a7; margin-right: 10px;">
-        <h3>Avg. Protein</h3>
-        <p>{{avg_pro}}</p>
+        <div class="col-sm-3">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title">Avg. Protein</h5>
+              <p>{{ avg_pro }}g</p>
+            </div>
+          </div>
         </div>
-        <div style="flex: 1 1 20%; height: 100px; background-color: #a8a7a7; margin-right: 10px;">
-        <h3>Avg. Carbs</h3>
-        <p>{{avg_carbs}}</p>
+        <div class="col-sm-3">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title">Avg. Carbs</h5>
+              <p>{{ avg_carbs }}g</p>
+            </div>
+          </div>
         </div>
-        <div style="flex: 1 1 20%; height: 100px; background-color: #a8a7a7;">
-        <h3>Avg. Fat</h3>
-        <p>{{avg_fat}}</p>
+        <div class="col-sm-3">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title">Avg. Fat</h5>
+              <p>{{ avg_fat }}g</p>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+      
     
     <p>Graph goes here.</p>
 </body>

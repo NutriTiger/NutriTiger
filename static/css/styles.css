@@ -43,3 +43,7 @@ body {
 .btn {
     --bs-btn-border-width:0 !important;
 }
+
+.dynamic-progress-bar {
+    width: 0%; /* Initial width */
+  }
