@@ -11,7 +11,7 @@ path.append('src')
 from flask import Flask, render_template, request, redirect, make_response
 import time
 from CASClient import CASClient
-#import dbusers
+from src.db import dbfunctions, dbusers
 
 #--------------------------------------------------------------------
 
@@ -106,11 +106,11 @@ def dhall_menus():
 def first_contact():
     if request.method == 'POST':
         # Placeholder netID
-        netid = 'ab1234'
+        netid = 'jm0278'
         # Get value entered into the calorie goal box
         user_goal = request.form['line']
         # Store value into database
-        #updategoal(netid, user_goal)
+        dbusers.updategoal(netid, user_goal)
         return redirect('/homepage')
 
     return render_template('firstcontact.html')
@@ -135,9 +135,9 @@ def history():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     if request.method == 'POST':
-        netid = 'ab1234'
+        netid = 'jm0278'
         new_user_goal = request.form['line']
-        #updategoal(netid, new_user_goal)
+        dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
 
     return render_template('settings.html')
@@ -146,7 +146,7 @@ def settings():
 
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
-    netid = 'ab1234'
+    netid = 'jm0278'
 
     if request.method == "POST":
         return redirect('/homepage')
