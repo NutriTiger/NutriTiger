@@ -144,7 +144,7 @@ def main():
         }
     ]
     emptymenu = []
-    updatemenu(newmenu)
+    update_menu(newmenu)
     # result1 = querymenudisplay("2024-03-02", "Lunch", "Rockefeller & Mathey Colleges")
     # print("querymenudisplay: 3/2, lunch, roma")
     # for row in result1:
