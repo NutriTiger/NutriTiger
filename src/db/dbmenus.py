@@ -11,7 +11,7 @@ from pytz import timezone
 
 # Delete food entries and nutrition info prior to today and updates dining hall 
 # menus for the next two weeks 
-def updatemenu(menu_list):
+def update_menu(menu_list):
     with connectmongo() as client:
         db = client.db
         menu_col = db.menus
@@ -56,7 +56,7 @@ def updatemenu(menu_list):
             sys.exit(1)
 
 # Retrive food items for menu by date, mealtime, and dhall (optional)
-def querymenudisplay(date, mealtime, dhall = None):
+def query_menu_display(date, mealtime, dhall = None):
     with connectmongo() as client:
         db = client.db
         menu_col = db.menus
