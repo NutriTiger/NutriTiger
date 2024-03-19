@@ -73,10 +73,10 @@ def __updatehistory__(this_user, entry_nut, factor):
     fat_his = this_user["fat_his"]
     prot_his = this_user["prot_his"]
 
-    cal_his[0] = cal_his[0] + entry_cal * factor
-    carb_his[0] = carb_his[0] + entry_carb * factor
-    fat_his[0] = fat_his[0] + entry_fat * factor
-    prot_his[0] = prot_his[0] + entry_prot * factor
+    cal_his[0] = cal_his[0] + entry_nut["calories"] * factor
+    carb_his[0] = carb_his[0] + entry_nut["carbs"] * factor
+    fat_his[0] = fat_his[0] + entry_nut["cats"] * factor
+    prot_his[0] = prot_his[0] + entry_nut["proteins"] * factor
 
 #-----------------------------------------------------------------------
 
@@ -333,7 +333,7 @@ def deleteuser(netid):
 
 # USED FOR TESTING FOR NOW 
 def main(): 
-    updategoal("jm0278", 100)
+    updategoal("jm0278", 2500)
 
 #-----------------------------------------------------------------------
 
