@@ -80,6 +80,8 @@ def get_nutrition_from_recipe(recipeid):
         nutrition_json["recipeid"] = recipeid
         # Insert the name of the item, which is the first h2 tag
         nutrition_json["mealname"] = soup.find("h2").text
+        # Insert the link to the nutritional information
+        nutrition_json["link"] = COMBINED_URL
 
         # If there is no data to parse, return an object with no information
         if soup.find(string=re.compile('Nutritional Information is not available for this recipe.')):
