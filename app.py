@@ -7,16 +7,16 @@
 # Based on https://github.com/shannon-heh/TigerSnatch/blob/main/app.py#L75
 from sys import path
 path.append('src')
-
+path.append('src/db')
 from flask import Flask, render_template, request, redirect, make_response
 import time
-from CASClient import CASClient
-from src.db import dbfunctions, dbusers
+#from CASClient import CASClient
+from src.db import dbusers
 
 #--------------------------------------------------------------------
 
 app = Flask(__name__)
-_cas = CASClient()
+#_cas = CASClient()
 
 #--------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ def homepage():
     #netid = netid.rstrip()
 
     # Placeholder values
-    netid = 'ab1234' 
+    netid = 'jm0278' 
     curr_caltotal = 1500
     cal_goal = 3100
 
