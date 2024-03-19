@@ -2,6 +2,7 @@ import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime
+from dotenv import load_dotenv
 import os
 import sys
 #----------------------------------------------------------------------
@@ -14,6 +15,8 @@ import sys
 
 # Connect to NutriTiger MongoDB database and return database object
 def connectmongo():
+    # Load environment variables from .env file
+    load_dotenv()
     password = os.getenv("MONGODB_PASSWORD")
     username = os.getenv("MONGODB_USERNAME")
 
