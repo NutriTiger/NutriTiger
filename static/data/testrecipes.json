@@ -1,0 +1,2128 @@
+[
+    [
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Breakfast",
+            "type": "Grill",
+            "fooditems": [
+                "Country Hash Browns",
+                "Eggs Made to Order",
+                "French Texas Toast",
+                "Omelet Bar with Pork Options",
+                "Pancake & Waffle Toppings",
+                "Scrambled Eggs"
+            ],
+            "recipenums": [
+                "161017",
+                "061004",
+                "280006",
+                "061001",
+                "280002",
+                "061002"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Bars",
+            "fooditems": [
+                "Assorted Donuts",
+                "Bagels",
+                "Freekeh & Fruit Bowl"
+            ],
+            "recipenums": [
+                "218001",
+                "217001",
+                "510261"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Soup of the Day",
+            "fooditems": [
+                "Cuban Style Black Bean Soup",
+                "New England Clam Chowder"
+            ],
+            "recipenums": [
+                "460224",
+                "510538"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Salads",
+            "fooditems": [
+                "Mediterranean Spinach Salad"
+            ],
+            "recipenums": [
+                "510017"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Chicken Broccoli & Lemon Sauce"
+            ],
+            "recipenums": [
+                "510400"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Eggplant Parmesan"
+            ],
+            "recipenums": [
+                "140005"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "On the Side",
+            "fooditems": [
+                "Saut\u00e9ed Green Beans",
+                "Wheat Berries & Butternut Squash"
+            ],
+            "recipenums": [
+                "460068",
+                "510070"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Fresh Mozzerella Bar"
+            ],
+            "recipenums": [
+                "510178"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Soup of the Day",
+            "fooditems": [
+                "New England Clam Chowder"
+            ],
+            "recipenums": [
+                "510538"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Salads",
+            "fooditems": [
+                "Mediterranean Spinach Salad"
+            ],
+            "recipenums": [
+                "510017"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Pasta Station",
+            "fooditems": [
+                "Spicy Sesame Noodles"
+            ],
+            "recipenums": [
+                "510372"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Mapo Tofu with Ground Beef"
+            ],
+            "recipenums": [
+                "510369"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Mapo Tofu with Mushrooms"
+            ],
+            "recipenums": [
+                "510370"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "On the Side",
+            "fooditems": [
+                "Green Beans in Garlic Sauce",
+                "Steamed Jasmine Rice"
+            ],
+            "recipenums": [
+                "510371",
+                "163031"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Chicken Nuggets Bar"
+            ],
+            "recipenums": [
+                "510203"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Breakfast",
+            "type": "Early Entree",
+            "fooditems": [
+                "Avocado Toast",
+                "Buttermilk Pancakes",
+                "Eggs Any Style & Omelets Made to Order",
+                "Pork Sausage Links",
+                "Scrambled Eggs",
+                "Tater Tots",
+                "Vegan Tofu Scramble"
+            ],
+            "recipenums": [
+                "530980",
+                "530677",
+                "530264",
+                "530397",
+                "530401",
+                "531001",
+                "531024"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Bars",
+            "fooditems": [
+                "Make Your Own Fajita",
+                "Seasonal Roasted Vegetables",
+                "Vegan Chia Seed Pudding",
+                "Yogurt & Fruit Mix-ins"
+            ],
+            "recipenums": [
+                "531022",
+                "530069",
+                "530986",
+                "530165"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Cream of Shiitake Fennel Soup"
+            ],
+            "recipenums": [
+                "530537"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Salads",
+            "fooditems": [
+                "Salad Bar Choice of Vegan Salads"
+            ],
+            "recipenums": [
+                "530200"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Grill",
+            "fooditems": [
+                "All Beef Hot Dog",
+                "Beef & Mushroom Burger",
+                "Cheesesteak Sandwich",
+                "Chicken Cheesesteak",
+                "Grilled Boneless Chicken",
+                "Grilled Cheese Sandwich",
+                "Vegan Bean Burger"
+            ],
+            "recipenums": [
+                "530086",
+                "530878",
+                "530629",
+                "530071",
+                "530650",
+                "530651",
+                "530881"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Pasta Station",
+            "fooditems": [
+                "Pasta Selection of the Day"
+            ],
+            "recipenums": [
+                "530383"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Argentinian Beef Sandwich"
+            ],
+            "recipenums": [
+                "530046"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Portobello Chimichurri"
+            ],
+            "recipenums": [
+                "534966"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Sides",
+            "fooditems": [
+                "Twister Fries",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "530114",
+                "171093"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Egg Salad",
+                "Forbes Deli",
+                "Yogurt & Fruit Mix-ins"
+            ],
+            "recipenums": [
+                "530423",
+                "530468",
+                "530165"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Salads",
+            "fooditems": [
+                "Salad Bar Choice of Vegan Salads"
+            ],
+            "recipenums": [
+                "530200"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Pasta Station",
+            "fooditems": [
+                "Pasta Selection of The Day"
+            ],
+            "recipenums": [
+                "530562"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Carne Asada Flank Steak",
+                "Cilantro Lime Chicken"
+            ],
+            "recipenums": [
+                "530026",
+                "534905"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Seitan Asada"
+            ],
+            "recipenums": [
+                "534910"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Sides",
+            "fooditems": [
+                "Baked Sweet Potato",
+                "Zucchini & Corn Saute"
+            ],
+            "recipenums": [
+                "530501",
+                "540400"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Graduate College",
+            "mealtime": "Continenal Breakfast",
+            "type": "Monday thru Thursday",
+            "fooditems": [
+                "A variety of food & beverages to start your day"
+            ],
+            "recipenums": [
+                "999500"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Graduate College",
+            "mealtime": "Dinner",
+            "type": "Soups",
+            "fooditems": [
+                "Garden Vegetable Soup",
+                "Navy Bean & Ham Soup"
+            ],
+            "recipenums": [
+                "020056",
+                "020045"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Graduate College",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Chicken Parmesan"
+            ],
+            "recipenums": [
+                "111079"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Graduate College",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Mushroom Risotto"
+            ],
+            "recipenums": [
+                "121452"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Graduate College",
+            "mealtime": "Dinner",
+            "type": "On the Side",
+            "fooditems": [
+                "Garlic Bread with Parmesan",
+                "Ratatouille",
+                "Saut\u00e9ed Green Kale"
+            ],
+            "recipenums": [
+                "166011",
+                "459945",
+                "171153"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "Main Entree",
+            "fooditems": [
+                "Oatmeal",
+                "Scrambled Eggs",
+                "Waffles"
+            ],
+            "recipenums": [
+                "311903",
+                "361002",
+                "311904"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "On the Side",
+            "fooditems": [
+                "Home Fried Potatoes"
+            ],
+            "recipenums": [
+                "316032"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Sliced Bagels"
+            ],
+            "recipenums": [
+                "311900"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "Desserts",
+            "fooditems": [
+                "Assorted Danish",
+                "Assorted Muffins"
+            ],
+            "recipenums": [
+                "328007",
+                "328008"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Butternut Squash Soup"
+            ],
+            "recipenums": [
+                "302003"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Salads",
+            "fooditems": [
+                "Caesar Salad",
+                "Fresh Fruit Salad",
+                "Lemon Lentil Salad",
+                "Salad Bar",
+                "Tabouli Salad"
+            ],
+            "recipenums": [
+                "400166",
+                "304008",
+                "316097",
+                "304013",
+                "304032"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Fishwich Sandwich"
+            ],
+            "recipenums": [
+                "312017"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Mushroom & Tofu Stew"
+            ],
+            "recipenums": [
+                "140058"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "On the Side",
+            "fooditems": [
+                "Coconut Basmati Rice",
+                "Shoestring French Fries",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "121202",
+                "316022",
+                "371093"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Yogurt Bar"
+            ],
+            "recipenums": [
+                "328009"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Soups",
+            "fooditems": [
+                "Tomato Soup"
+            ],
+            "recipenums": [
+                "302009"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Salads",
+            "fooditems": [
+                "Caesar Salad",
+                "Fresh Fruit Salad",
+                "Lemon Lentil Salad",
+                "Salad Bar",
+                "Tabouli Salad"
+            ],
+            "recipenums": [
+                "400166",
+                "304008",
+                "316097",
+                "304013",
+                "304032"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Cajun Tilapia"
+            ],
+            "recipenums": [
+                "312014"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Cheese Pizza",
+                "White Cheese Pizza"
+            ],
+            "recipenums": [
+                "313001",
+                "313003"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "On the Side",
+            "fooditems": [
+                "Lemon Scented Rice",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "314148",
+                "371093"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Yogurt Bar"
+            ],
+            "recipenums": [
+                "328009"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Desserts",
+            "fooditems": [
+                "Chocolate Chip Cookies"
+            ],
+            "recipenums": [
+                "318009"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Early Entree",
+            "fooditems": [
+                "European Style Breakfast Station with Pork Options"
+            ],
+            "recipenums": [
+                "560112"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Grill",
+            "fooditems": [
+                "Eggs Made to Order",
+                "French Toast or Pancakes",
+                "Omelet Bar with Pork Options"
+            ],
+            "recipenums": [
+                "560102",
+                "560113",
+                "560100"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Bars",
+            "fooditems": [
+                "Bagels",
+                "Oatmeal"
+            ],
+            "recipenums": [
+                "217001",
+                "280036"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Main Entree",
+            "fooditems": [
+                "Breakfast Sausage Patties",
+                "O'Brien Potatoes",
+                "Scrambled Eggs"
+            ],
+            "recipenums": [
+                "560114",
+                "560115",
+                "061002"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Build your own yogurt parfait"
+            ],
+            "recipenums": [
+                "560111"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Butternut Squash Soup",
+                "Coconut Curry Lentil Soup"
+            ],
+            "recipenums": [
+                "020015",
+                "560303"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Grill",
+            "fooditems": [
+                "All Beef Hot Dog",
+                "Beef & Mushroom Burger",
+                "Chicken Cheesesteak",
+                "Grilled Cheese",
+                "Grilled Chicken Bar",
+                "Steak Sandwich"
+            ],
+            "recipenums": [
+                "560152",
+                "560154",
+                "560153",
+                "560155",
+                "560156",
+                "560151"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Chicken Vindaloo"
+            ],
+            "recipenums": [
+                "560445"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Pasta with Pesto",
+                "Potato & Green Pea Curry (Aloo Matar)"
+            ],
+            "recipenums": [
+                "530923",
+                "560446"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "On the Side",
+            "fooditems": [
+                "Onion Rings",
+                "Steakhouse Fries",
+                "Vegetable of the Day",
+                "Whole Grain Brown Basmati Rice"
+            ],
+            "recipenums": [
+                "560150",
+                "161064",
+                "171093",
+                "241298"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Cornmeal Crusted Fish"
+            ],
+            "recipenums": [
+                "560662"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Eggplant Mesaka'a",
+                "Hoppin John"
+            ],
+            "recipenums": [
+                "560664",
+                "560665"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Dinner",
+            "type": "On the Side",
+            "fooditems": [
+                "Onion Rings",
+                "Pasta & Spicy Arrabiata Sauce",
+                "Steakhouse Fries",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "560150",
+                "560663",
+                "161064",
+                "171093"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Cereal",
+            "fooditems": [
+                "Hot Breakfast Cereal of the Day",
+                "Oatmeal"
+            ],
+            "recipenums": [
+                "580638",
+                "280036"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Breakfast",
+            "type": "Grill",
+            "fooditems": [
+                "Bacon or Sausage",
+                "Breakfast Potatoes",
+                "Omelets",
+                "Pancakes or French Toast or Waffles",
+                "Scrambled Tofu"
+            ],
+            "recipenums": [
+                "581044",
+                "580787",
+                "581342",
+                "581404",
+                "581114"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Cream of Mushroom Soup",
+                "Mulligatawny Soup"
+            ],
+            "recipenums": [
+                "580942",
+                "581040"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Chicken & Broccoli"
+            ],
+            "recipenums": [
+                "580628"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Vegan/Vegetarian",
+            "fooditems": [
+                "Moroccan Artichoke, Orange & Radish Salad",
+                "Tofu with Stir Fried Vegetables"
+            ],
+            "recipenums": [
+                "580798",
+                "602738"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Sides",
+            "fooditems": [
+                "Vegetable Fried Rice",
+                "Vegetable of The Day"
+            ],
+            "recipenums": [
+                "580819",
+                "581288"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Pizza",
+            "fooditems": [
+                "Short Order Grill"
+            ],
+            "recipenums": [
+                "581433"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Pasta",
+            "fooditems": [
+                "Pasta with Sundried Tomato Cream Sauce"
+            ],
+            "recipenums": [
+                "581149"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Composed Salads",
+            "fooditems": [
+                "Fresh Composed Salads & Hummus"
+            ],
+            "recipenums": [
+                "580624"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Action Station",
+            "fooditems": [
+                "Action Bar of the Week"
+            ],
+            "recipenums": [
+                "581403"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Soups",
+            "fooditems": [
+                "Cream of Mushroom Soup"
+            ],
+            "recipenums": [
+                "580942"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "BBQ Pork"
+            ],
+            "recipenums": [
+                "540356"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Guatemala",
+            "fooditems": [
+                "BBQ Pork"
+            ],
+            "recipenums": [
+                "540356"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Vegan/Vegetarian",
+            "fooditems": [
+                "BBQ Eggplant & Lentils"
+            ],
+            "recipenums": [
+                "580730"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Mexico",
+            "fooditems": [
+                "Pasta of the Day"
+            ],
+            "recipenums": [
+                "580774"
+            ]
+        },
+        {
+            "date": "2024-03-21",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Pizza",
+            "fooditems": [
+                "Short Order Grill"
+            ],
+            "recipenums": [
+                "581433"
+            ]
+        }
+    ],
+    [
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Breakfast",
+            "type": "Grill",
+            "fooditems": [
+                "Eggs Made to Order",
+                "French Texas Toast",
+                "Hash Browns",
+                "Omelet Bar with Pork Options",
+                "Pancake & Waffle Toppings",
+                "Scrambled Eggs"
+            ],
+            "recipenums": [
+                "061004",
+                "280006",
+                "161002",
+                "061001",
+                "280002",
+                "061002"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Bars",
+            "fooditems": [
+                "Assorted Donuts",
+                "Bagels",
+                "Hot Cranberry Orange Sunrise Porridge"
+            ],
+            "recipenums": [
+                "218001",
+                "217001",
+                "530740"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Breakfast",
+            "type": "Pasta Station 2",
+            "fooditems": [
+                "Bacon, Egg & Cheese on English Muffin"
+            ],
+            "recipenums": [
+                "280051"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Soup of the Day",
+            "fooditems": [
+                "Asian Vegetable Soup",
+                "New England Clam Chowder"
+            ],
+            "recipenums": [
+                "540245",
+                "510538"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Salads",
+            "fooditems": [
+                "Tossed House Salad"
+            ],
+            "recipenums": [
+                "510019"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Fried Fish Jamaican Style"
+            ],
+            "recipenums": [
+                "460136"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Spicy Chickpeas"
+            ],
+            "recipenums": [
+                "580894"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Lunch",
+            "type": "On the Side",
+            "fooditems": [
+                "Fried Plantain",
+                "Spanish Rice"
+            ],
+            "recipenums": [
+                "460031",
+                "460038"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Soup of the Day",
+            "fooditems": [
+                "New England Clam Chowder"
+            ],
+            "recipenums": [
+                "510538"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Salads",
+            "fooditems": [
+                "Tossed House Salad"
+            ],
+            "recipenums": [
+                "510019"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Pasta Station",
+            "fooditems": [
+                "Espagueti Verdes"
+            ],
+            "recipenums": [
+                "510373"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Pork Carnitas"
+            ],
+            "recipenums": [
+                "510374"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Lentils Picadillo"
+            ],
+            "recipenums": [
+                "581476"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Rockefeller & Mathey Colleges",
+            "mealtime": "Dinner",
+            "type": "On the Side",
+            "fooditems": [
+                "Cilantro & Lime Rice",
+                "Mexican Street Corn"
+            ],
+            "recipenums": [
+                "560142",
+                "510375"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Breakfast",
+            "type": "Early Entree",
+            "fooditems": [
+                "Breakfast Potatoes",
+                "Eggs Any Style & Omelets Made to Order",
+                "French Texas Toast",
+                "Scrambled Eggs",
+                "Turkey Sausage Links",
+                "Vegan Tofu Scramble"
+            ],
+            "recipenums": [
+                "530602",
+                "530264",
+                "530305",
+                "530401",
+                "530578",
+                "531024"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Bars",
+            "fooditems": [
+                "Frozen Fruit & Yogurt Smoothie",
+                "Make Your Own Fajita",
+                "Seasonal Roasted Vegetables",
+                "Yogurt & Fruit Mix-ins"
+            ],
+            "recipenums": [
+                "530319",
+                "531022",
+                "530069",
+                "530165"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Vegan White Bean Soup"
+            ],
+            "recipenums": [
+                "530557"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Salads",
+            "fooditems": [
+                "Salad Bar Choice of Vegan Salads"
+            ],
+            "recipenums": [
+                "530200"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Pasta Station",
+            "fooditems": [
+                "Pasta Selection of The Day"
+            ],
+            "recipenums": [
+                "530562"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Beer Battered Fried Fish"
+            ],
+            "recipenums": [
+                "530328"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Mushroom & Onion  Flatbread"
+            ],
+            "recipenums": [
+                "534963"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Sides",
+            "fooditems": [
+                "Cris Cut Fries",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "530113",
+                "171093"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Lunch",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Forbes Deli",
+                "Tuna Salad",
+                "Yogurt & Fruit Mix-ins"
+            ],
+            "recipenums": [
+                "530468",
+                "530452",
+                "530165"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Salads",
+            "fooditems": [
+                "Salad Bar Choice of Vegan Salads"
+            ],
+            "recipenums": [
+                "530200"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Pasta Station",
+            "fooditems": [
+                "Pasta Selection of The Day"
+            ],
+            "recipenums": [
+                "530562"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Teriyaki Chicken",
+                "Tilapia Togarashi"
+            ],
+            "recipenums": [
+                "534911",
+                "534920"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Teriyaki Tofu & Vegetables"
+            ],
+            "recipenums": [
+                "530499"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Forbes College",
+            "mealtime": "Dinner",
+            "type": "Sides",
+            "fooditems": [
+                "Green Bean Gomaae",
+                "Soba & Vegetable  Stirfry",
+                "Steamed Jasmine Rice"
+            ],
+            "recipenums": [
+                "534919",
+                "534921",
+                "530575"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "Main Entree",
+            "fooditems": [
+                "Oatmeal",
+                "Scrambled Eggs",
+                "Waffles"
+            ],
+            "recipenums": [
+                "311903",
+                "361002",
+                "311904"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "On the Side",
+            "fooditems": [
+                "Home Fried Potatoes"
+            ],
+            "recipenums": [
+                "316032"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Sliced Bagels"
+            ],
+            "recipenums": [
+                "311900"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Breakfast",
+            "type": "Desserts",
+            "fooditems": [
+                "Assorted Danish",
+                "Assorted Muffins"
+            ],
+            "recipenums": [
+                "328007",
+                "328008"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Old World Vegetable Soup"
+            ],
+            "recipenums": [
+                "020041"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Salads",
+            "fooditems": [
+                "Cole Slaw",
+                "Fresh Fruit Salad",
+                "House Salad",
+                "Salad Bar",
+                "Tomato & Avocado Salad"
+            ],
+            "recipenums": [
+                "304012",
+                "304008",
+                "333360",
+                "304013",
+                "047333"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Egyptian Kushari with Beef"
+            ],
+            "recipenums": [
+                "307061"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Cilantro Lime Tofu",
+                "Egyptian Kushari"
+            ],
+            "recipenums": [
+                "330037",
+                "307062"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Lunch",
+            "type": "On the Side",
+            "fooditems": [
+                "Basmati Rice",
+                "Egg Rolls",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "163002",
+                "314131",
+                "371093"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Soups",
+            "fooditems": [
+                "Moroccan Lentil Soup"
+            ],
+            "recipenums": [
+                "020061"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Salads",
+            "fooditems": [
+                "Fattoush Salad",
+                "Fresh Fruit Salad",
+                "House Salad",
+                "Tomato & Cucumber Salad"
+            ],
+            "recipenums": [
+                "333384",
+                "304008",
+                "333360",
+                "047008"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Kofta Beef",
+                "Yellow Chicken"
+            ],
+            "recipenums": [
+                "333378",
+                "333379"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Dolmeh Stuffed Peppers"
+            ],
+            "recipenums": [
+                "333380"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "On the Side",
+            "fooditems": [
+                "Challah Rolls",
+                "Charred Eggplant with Pomegranate & Lemon Zest",
+                "Chickpea Hummus",
+                "Garlic Mashed Potatoes",
+                "Gefilte Fish",
+                "Herb Oil",
+                "Khoresh Badmjan",
+                "Persian Jewel Rice",
+                "Vegetable of the Day",
+                "White Rice"
+            ],
+            "recipenums": [
+                "211012",
+                "333382",
+                "341018",
+                "316064",
+                "121047",
+                "314147",
+                "333383",
+                "333381",
+                "371093",
+                "316031"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Center for Jewish Life",
+            "mealtime": "Dinner",
+            "type": "Desserts",
+            "fooditems": [
+                "Chocolate Chip Cookies"
+            ],
+            "recipenums": [
+                "318009"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Early Entree",
+            "fooditems": [
+                "European Style Breakfast Station with Pork Options"
+            ],
+            "recipenums": [
+                "560112"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Grill",
+            "fooditems": [
+                "Eggs Made to Order",
+                "French Toast or Pancakes",
+                "Omelet Bar with Pork Options"
+            ],
+            "recipenums": [
+                "560102",
+                "560113",
+                "560100"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Bars",
+            "fooditems": [
+                "Bagels",
+                "Oatmeal"
+            ],
+            "recipenums": [
+                "217001",
+                "280036"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Main Entree",
+            "fooditems": [
+                "Breakfast Sausage Patties",
+                "O'Brien Potatoes",
+                "Scrambled Eggs"
+            ],
+            "recipenums": [
+                "560114",
+                "560115",
+                "061002"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Breakfast",
+            "type": "Specialty Bars",
+            "fooditems": [
+                "Build your own yogurt parfait"
+            ],
+            "recipenums": [
+                "560111"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Chicken Tortilla Soup",
+                "Garden Vegetable Soup"
+            ],
+            "recipenums": [
+                "560321",
+                "020056"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Grill",
+            "fooditems": [
+                "All Beef Hot Dog",
+                "Beef & Mushroom Burger",
+                "Chicken Cheesesteak",
+                "Grilled Cheese",
+                "Grilled Chicken Bar",
+                "Steak Sandwich"
+            ],
+            "recipenums": [
+                "560152",
+                "560154",
+                "560153",
+                "560155",
+                "560156",
+                "560151"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Shrimp in Chipotle Sauce"
+            ],
+            "recipenums": [
+                "560447"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Pasta with Sweet Corn, Tomato & Basil",
+                "Three Bean Taco Filling"
+            ],
+            "recipenums": [
+                "560448",
+                "141170"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Lunch",
+            "type": "On the Side",
+            "fooditems": [
+                "Onion Rings",
+                "Steakhouse Fries",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "560150",
+                "161064",
+                "171093"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Lemongrass Roast Chicken"
+            ],
+            "recipenums": [
+                "560472"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Dinner",
+            "type": "Vegetarian & Vegan Entree",
+            "fooditems": [
+                "Lemongrass Roast Tofu",
+                "Tomato Basil Penne"
+            ],
+            "recipenums": [
+                "560623",
+                "165009"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Yeh & New West Colleges",
+            "mealtime": "Dinner",
+            "type": "On the Side",
+            "fooditems": [
+                "Brown Rice",
+                "Fried Plantains",
+                "Onion Rings",
+                "Steakhouse Fries",
+                "Vegetable of the Day"
+            ],
+            "recipenums": [
+                "581022",
+                "520204",
+                "560150",
+                "161064",
+                "171093"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Breakfast",
+            "type": "Breakfast Cereal",
+            "fooditems": [
+                "Hot Breakfast Cereal of the Day",
+                "Oatmeal"
+            ],
+            "recipenums": [
+                "580638",
+                "280036"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Breakfast",
+            "type": "Grill",
+            "fooditems": [
+                "Bacon or Sausage",
+                "Breakfast Potatoes",
+                "French Toast",
+                "Omelets",
+                "Scrambled Tofu"
+            ],
+            "recipenums": [
+                "581044",
+                "580787",
+                "580635",
+                "581342",
+                "581114"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Soups",
+            "fooditems": [
+                "Manhattan Clam Chowder",
+                "Sweet Corn Chowder"
+            ],
+            "recipenums": [
+                "580945",
+                "580778"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Main Entree",
+            "fooditems": [
+                "Creamy Lemon Herb Chicken"
+            ],
+            "recipenums": [
+                "581701"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Vegan/Vegetarian",
+            "fooditems": [
+                "Escarole & White Bean Stew"
+            ],
+            "recipenums": [
+                "581702"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Sides",
+            "fooditems": [
+                "Mushroom & Spinach Orzo Risotto",
+                "Vegetable of The Day"
+            ],
+            "recipenums": [
+                "581703",
+                "581288"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Pizza",
+            "fooditems": [
+                "Short Order Grill"
+            ],
+            "recipenums": [
+                "581433"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Composed Salads",
+            "fooditems": [
+                "Fresh Composed Salads & Hummus"
+            ],
+            "recipenums": [
+                "580624"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Lunch",
+            "type": "Action Station",
+            "fooditems": [
+                "Action Bar of the Week"
+            ],
+            "recipenums": [
+                "581403"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Soups",
+            "fooditems": [
+                "Sweet Corn Chowder"
+            ],
+            "recipenums": [
+                "580778"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Main Entree",
+            "fooditems": [
+                "Cedar Smoked Salmon"
+            ],
+            "recipenums": [
+                "520069"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Guatemala",
+            "fooditems": [
+                "Cedar Smoked Salmon",
+                "Kale, Wild Mushroom & White Bean Stew"
+            ],
+            "recipenums": [
+                "520069",
+                "580860"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Vegan/Vegetarian",
+            "fooditems": [
+                "Kale, Wild Mushroom & White Bean Stew"
+            ],
+            "recipenums": [
+                "580860"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Mexico",
+            "fooditems": [
+                "Pasta of the Day"
+            ],
+            "recipenums": [
+                "580774"
+            ]
+        },
+        {
+            "date": "2024-03-22",
+            "dhall": "Whitman & Butler Colleges",
+            "mealtime": "Dinner",
+            "type": "Pizza",
+            "fooditems": [
+                "Short Order Grill"
+            ],
+            "recipenums": [
+                "581433"
+            ]
+        }
+    ]
+]

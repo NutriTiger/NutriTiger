@@ -15,6 +15,20 @@
       <h3 class = "pb-1">{{ todays_date }}</h3>
       <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
     </div>
+    <div class="text-center">
+    {% if not_weekend: %}
+    <div class="btn-group align-items-center" role="group" aria-label="Basic radio toggle button group">
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" {% if time_of_day == "Breakfast" %} checked {% endif %}>
+      <label class="btn btn-outline-primary" for="btnradio1">Breakfast</label>
+    
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" {% if time_of_day == 'Lunch' %} checked {% endif %}>
+      <label class="btn btn-outline-primary" for="btnradio2">Lunch</label>
+    
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" {% if time_of_day == 'Dinner' %} checked {% endif %}>
+      <label class="btn btn-outline-primary" for="btnradio3">Dinner</label>
+    </div></div>
+    {% else %}
+    {% endif %}
     <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
       {% for location, foods in location_food_dict.items() %}
       <div class="col">
