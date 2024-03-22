@@ -66,17 +66,12 @@ Miscellaneous Commands
 ``python –m pip freeze > requirements.txt``
 
 ### Database Guidelines
-The db files (under src) require a mongodb username and password with read and write access to connect to the database. 
+The db files (under src) require a mongodb username and password with read and write access to connect to the database. This information was previously shared to you.
 
-If you are a collaborator of the NutriTiger project, you may create a username and password by accessing the NutriTiger project on MongoDB Atlas: 
-- On the menu bar on the left hand side, click on "DataBase Access."
-- Then, click on "Add New DataBase User" and create your username and password for "Password Authentication." Set your "Built-in Role" to be "Atlas admin." Finally, click "Add User." 
+When you are ready to run any of the database files, make sure you have created a file named ``.env`` in the main NutriTiger directory. In that file, write the lines:
+``MONGODB_USERNAME=<username>``
+``MONGODB_PASSWORD=<password>``
+Replace ``<username>`` and ``<password>`` with the NutriTiger mongodb username and password accordingly.
 
-If you are not a collaborator of the NutriTiger project, you may acquire a username and password by contacting ________.
-
-When you are ready to run any of the database files, make sure you have exported your mongodb username and password as environment variables with these commands in your terminal:
-- ``export MONGODB_USERNAME=<username>``
-- ``export MONGODB_PASSWORD=<password>``
-
-Replace ``<username>`` and ``<password>`` with your mongodb username and password accordingly.
+Additionally, make sure your current IP address has network access. Go to the MongoDB Atlas Nutritiger project and click on "Network Access" on the left side menu. If you have the message that your current IP address is not added, click to add your current IP address to the access list. You must be connected to password protected WiFi to have network access.
 

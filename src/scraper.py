@@ -223,9 +223,6 @@ def get_daily_menu(location_num, location_description, distinct_recipeid_list, d
                 if recipeid not in distinct_recipeid_list:
                     distinct_recipeid_list.append(recipeid)
                     complete_nutrition_data_list.append(webscraper.get_nutrition_from_recipe(recipeid))
-
-                # Get Distinct recipeids and then loop through later
-                # Add link to object for nutrient information
         
             data["fooditems"] = food_items
             data["recipenums"] = recipe_nums

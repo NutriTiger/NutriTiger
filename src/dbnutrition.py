@@ -1,29 +1,27 @@
 import pymongo
 from dbfunctions import connectmongo
 import sys
-import datetime
-import pytz
+from datetime import datetime
+from pytz import timezone
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
 #
 #----------------------------------------------------------------------
 
-# Deletes all nutrition information of food items prior to today and
-# inserts nutrition information of the upcoming two weeks of food (as input)
+# Inserts nutrition information of the upcoming two weeks of food (as input)
+# call update_menu before to delete nutrition info
+# new_foods is list of bson objects
 def update_nutrition(new_foods):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
-        eastern_time = pytz.timezone('US/Eastern')
-        today = datetime.today(eastern_time)
-        day_of_week = today.weekday()
-        dt = today - datetime.timedelta(days = day_of_week)
-        documents_to_delete = {"date": {"$lt": dt}}
         
         try:
-            delete_result = nutrition_col.delete_many(documents_to_delete)
-            print(f"# of deleted documents: {delete_result.deleted_count}")
+            if len(new_foods) == 0:
+                print("new foods arr is empty")
+                return
+
             add_result = nutrition_col.insert_many(new_foods)
             document_ids = add_result.inserted_ids
             print(f"_id of inserted documents: {document_ids}")
@@ -37,7 +35,11 @@ def update_nutrition(new_foods):
         
 
 # Retrieve nutritional information of singular food item
+# Recipeid is int
 def find_one_nutrition(recipeid):
+    if not recipeid:
+        print("no recipe id inputted")
+        return
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
@@ -46,6 +48,10 @@ def find_one_nutrition(recipeid):
         try:
             result = nutrition_col.find_one(document_to_find)
             print(f"found document: {result}")
+
+            if not result:
+                print("No documents found")
+                return
             return result
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
@@ -55,42 +61,32 @@ def find_one_nutrition(recipeid):
             sys.exit(1)
 
 # Create new food item -- should already include the net id field of user
-def addpersonalfood(name, netid, nutrition):
+# Link is string, nutrition is dictionary
+def add_personal_food(name, netid, nutrition, link):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
-        current_items = {"netid": netid}
+        items_to_find = {"access": netid}
 
         try:
-            check = nutrition_col.find(current_items)
-            document_ids = check.inserted_ids
-            num_current = str(len(document_ids))
-            recipeid = num_current + 1
+            find_prev_personal = nutrition_col.find(items_to_find)
+            prev_personal = list(find_prev_personal)
+            num_current = len(prev_personal)
+            print(num_current)
+            recipeid = (num_current + 1)
             try:
-                new_food = {"mealname" : name, 
-                    "netid": netid,
+                document_to_add = {"mealname" : name, 
+                    "access": netid,
                     "recipeid" : recipeid,
-                    "calories" : nutrition[0], 
-                    "proteins" : nutrition[1], 
-                    "carbs" : nutrition[2],
-                    "fats" : nutrition[3],
-                    "chloesterol" : nutrition[4],
-                    "sodium" : nutrition[5],
-                    "calcium" : nutrition[6],
-                    "vitd" : nutrition[7],
-                    "potassium" : nutrition[8],
-                    "iron" : nutrition[9],
-                    "sugar" : nutrition[10],
-                    "fiber" : nutrition[11],
-                    "allergen": nutrition[12],
-                    "ingredients": nutrition[13]
+                    "link": link,
+                    **nutrition
                     }
-                result = nutrition_col.insert_one(new_food)
+                result = nutrition_col.insert_one(document_to_add)
                 document_id = result.inserted_id
                 print(f"_id of inserted document: {document_id}")
                 return
             except:
-                print("issue with insert")
+                print("Issue with insert for personal doc")
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
             sys.exit(1)
@@ -99,15 +95,27 @@ def addpersonalfood(name, netid, nutrition):
             sys.exit(1)
 
 # Retrieve nutritional information of multiple food items based on recipeids
-def find_many_nutrition(recipeids):
+# Return list of bson objects with nutrition information (entries are None if recipeid does not exist)
+def find_many_nutrition(recipeids, personal=False):
+    if not recipeids:
+        print("empty recipeid list")
+        return
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
-        documents_to_find = {"recipeid": recipeids}
         try:
-            result = nutrition_col.find(documents_to_find)
-            print(f"found documents: {result}")
-            return result
+            # all recipeids and isn't personal
+            result_list = []
+            for id in recipeids:
+                doc_to_find = {"recipeid": id, "access": { "$exists": personal }}
+                try:
+                    result = nutrition_col.find_one(doc_to_find)
+                except:
+                    print("Error with finding obj")
+                    return
+                print(f"found document: {result}")
+                result_list.append(result)
+            return result_list
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
             sys.exit(1)
@@ -125,7 +133,11 @@ def find_all_personal_nutrition(netid):
         try:
             result = nutrition_col.find(documents_to_find)
             print(f"found documents: {result}")
-            return result
+            list_result = list(result)
+            if len(list_result) == 0:
+                print("No personal nutrition documents found")
+                return
+            return list_result
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
             sys.exit(1)
@@ -143,6 +155,9 @@ def find_one_personal_nutrition(netid, recipeid):
         try:
             result = nutrition_col.find_one(documents_to_find)
             print(f"found documents: {result}")
+            if not result:
+                print("No personal nutrition document found")
+                return
             return result
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
@@ -150,3 +165,62 @@ def find_one_personal_nutrition(netid, recipeid):
         except pymongo.errors.ServerSelectionTimeoutError:
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)            
+
+#-----------------------------------------------------------------------
+
+# USED FOR TESTING FOR NOW 
+def main(): 
+    nutrition = [
+        {"recipeid": 12345,
+         "mealname": "Test Soup",
+         "link": "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html",
+         "calories": 100,
+         "proteins": 10,
+         "carbs": 9,
+         "fats": 8,
+         "cholesterol": 7,
+         "sodium": 6,
+         "calcium": 5,
+         "vitd": 4,
+         "potassium": 3,
+         "iron": 2,
+         "sugar": 1,
+         "fiber": 0,
+         "allergen": "soy",
+         "ingredients": "Flour, soy, water",
+        }
+    ]
+    personal = {"calories": 100,
+         "proteins": 10,
+         "carbs": 9,
+         "fats": 8,
+         "cholesterol": 7,
+         "sodium": 6,
+         "calcium": 5,
+         "vitd": 4,
+         "potassium": 3,
+         "iron": 2,
+         "sugar": 1,
+         "fiber": 0,
+         "allergen": "soy",
+         "ingredients": "Flour, soy, water",
+         "access": "oe7583"
+        }
+
+    # update_nutrition(nutrition)
+    # find_one_nutrition(12345)
+    # list = [12345, 54321]
+    # result = find_many_nutrition(list)
+    # print(result)
+    link = "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html"
+    add_personal_food("ANOTHER", "oe7583", personal, link)
+    # list = find_all_personal_nutrition("oe7583")
+    # for item in list:
+    #     print(item)
+    # find_one_personal_nutrition("oe7583", 1)
+
+
+#-----------------------------------------------------------------------
+
+if __name__ == '__main__':
+    main()
