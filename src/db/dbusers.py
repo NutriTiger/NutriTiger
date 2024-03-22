@@ -334,7 +334,7 @@ def deleteuser(netid):
 # USED FOR TESTING FOR NOW 
 def main(): 
     entry = {"recipeids": [12345, 1], "servings": [2, 1.5]}
-    print(editFood("jm0278", 0, 0, 3.5))
+    print(deleteEntry("jm0278", 0))
 
 #-----------------------------------------------------------------------
 
