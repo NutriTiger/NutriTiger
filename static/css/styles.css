@@ -57,3 +57,8 @@ body {
 .btn-close {
     align-self: flex-start; 
 }
+.btn-dhall {
+    --bs-btn-active-bg: #FF9040 !important;
+    --bs-btn-color: #000000 !important;
+    --bs-btn-bg: #FFB672 !important;
+}
