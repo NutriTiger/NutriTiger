@@ -89,8 +89,9 @@ def about():
 def dhall_menus():
     # Fetch menu data from database
     # test data
-    data = dbmenus.querymenudisplay("2024-03-02", "Lunch")
-    print(data)
+    #data = dbmenus.querymenudisplay("2024-03-02", "Lunch")
+    #print(data)
+    not_weekend = True
     LOCATION_DESCRIPTION = ["Rockefeller & Mathey Colleges",
                         "Forbes College", "Graduate College",
                         "Center for Jewish Life",
@@ -100,12 +101,13 @@ def dhall_menus():
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
     location_food_dict = {location: all_foods for location in LOCATION_DESCRIPTION}
-
+    time_of_day = 'Lunch'
     todays_date = 'Monday, March 11th'
 
     return render_template('dhallmenus.html', todays_date=todays_date, 
                            location_food_dict=location_food_dict, 
-                           nutritional_content=nutritional_content)
+                           nutritional_content=nutritional_content, not_weekend=not_weekend, time_of_day=time_of_day)
+
 
 #--------------------------------------------------------------------
 
