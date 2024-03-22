@@ -63,8 +63,8 @@ def main():
     #for object in todays_nutrition_list:
     #    print(json.dumps(object, indent=4, default=str))
 
-    start_date = datetime.datetime(2024, 3, 11).date()
-    end_date = datetime.datetime(2024, 3, 13).date()
+    start_date = datetime.datetime(2024, 3, 20)
+    end_date = datetime.datetime(2024, 3, 22)
 
     menu_items_list_range, menu_items_nutrition_list_range = get_daily_menus_from_range(start_date, end_date)
     print(menu_items_list_range)
