@@ -153,11 +153,34 @@ def settings():
 
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
-    netid = 'jm0278'
 
-    if request.method == "POST":
+    # Placeholder values
+    netid = 'jm0278' 
+    curr_caltotal = 1500
+    cursor = dbusers.finduser(netid)
+    cal_goal = int(cursor['caloricgoal'])
+    print(cal_goal)
+
+    if request.method == 'POST':
+        '''
+        if request.form['action'] == 'close':
+            # Close button action
+
+        elif 'save_plate' in request.form:
+            # Save button action
+    
+            return redirect('/homepage')
+            '''
         return redirect('/homepage')
-    return render_template('editingplate.html', ampm=get_ampm(), netid=netid)
+    
+    ENTRIES = ["Entry 1", "Entry 2", "Entry 3"]
+    all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
+
+    entries_food_dict = {entry: all_foods for entry in ENTRIES}
+
+    return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
+                           curr_caltotal=curr_caltotal, cal_goal=cal_goal,
+                           entries_food_dict=entries_food_dict)
 
 #--------------------------------------------------------------------
 
