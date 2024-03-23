@@ -31,7 +31,7 @@ def update_menu(menu_list):
             print(recipeid_to_delete)
             if len(recipeid_to_delete) == 0:
                 print("no recipeids to delete")
-                return
+                
             nutri_doc_to_delete = {"recipeid": {"$eq": recipeid_to_delete}}
             if len(recipeid_to_delete) == 1:
                 delete_recipeid_result = nutri_col.delete_one(nutri_doc_to_delete)

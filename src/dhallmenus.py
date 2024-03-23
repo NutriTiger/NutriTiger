@@ -4,12 +4,12 @@ import json
 sys.path.append('./scraper')
 
 
-from scraper.scraper import get_daily_menus_from_range, get_daily_menus
-from db.dbmenus import update_menu
+from scraper import get_daily_menus_from_range, get_daily_menus
+from dbmenus import update_menu
 import datetime
 
 def main():
-    start_date = datetime.datetime(2024, 3, 21)
+    start_date = datetime.datetime(2024, 3, 19)
     end_date = datetime.datetime(2024, 3, 22)
 
     menu_items_list_range, _ = get_daily_menus_from_range(start_date, end_date)

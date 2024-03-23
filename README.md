@@ -23,7 +23,7 @@
 ```sh
    git clone https://github.com/NutriTiger/NutriTiger.git
 ```
-2. Install all required packages
+2. Install all required packages and python (version 3.11.7)
 ```sh
 pip install -r requirements.txt
 ```

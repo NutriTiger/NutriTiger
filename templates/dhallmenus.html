@@ -11,25 +11,37 @@
     <!-- Content will go here.. -->
     {% include 'navbar.html' %}
     <div class = "text-center">
-      <h1 class="display-3 pb-2">Today's Menus</h1>
-      <h3 class = "pb-1">{{ todays_date }}</h3>
-      <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
-    </div>
-    <div class="text-center">
+      <h1 class="display-3 pb-2"><strong>Today's Menus</strong></h1>
+      <h3 class = "pb-1 align-middle" >
+      <a href = ""><svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: text-bottom;" height="32" width="20" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></a>
+      {{ todays_date }}
+      <a href = ""><svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: text-bottom;" height="32" width="20" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></a>
+    </h3>
+    <div class="btn-group align-items-center col-4 mx-auto pb-3" role="group" aria-label="Basic radio toggle button group">
+    
     {% if not_weekend: %}
-    <div class="btn-group align-items-center" role="group" aria-label="Basic radio toggle button group">
       <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" {% if time_of_day == "Breakfast" %} checked {% endif %}>
       <label class="btn btn-dhall btn-primary" for="btnradio1">Breakfast</label>
     
       <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" {% if time_of_day == 'Lunch' %} checked {% endif %}>
       <label class="btn btn-dhall btn-primary" for="btnradio2">Lunch</label>
     
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" {% if time_of_day == 'Dinner' %} checked {% endif %}>
-      <label class="btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
-    </div></div>
+    
     {% else %}
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" {% if time_of_day == "Brunch" %} checked {% endif %}>
+      <label class="btn btn-dhall btn-primary" for="btnradio1">Brunch</label>
+    
+
+    
     {% endif %}
-    <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
+        
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" {% if time_of_day == 'Dinner' %} checked {% endif %}>
+    <label class="btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
+    </div>
+
+    <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
+    </div>
+    <div class="p-4 row row-cols-1 row-cols-md-3 g-4">
       {% for location, foods in location_food_dict.items() %}
       <div class="col">
         <div class="card h-100">
