@@ -13,48 +13,58 @@
 </head>
 
 <body>
-    {% include 'navbar.html' %}
-    <h1 class="text-center">Today's Breakdown</h1> 
-    <h2 class="text-center">Good {{ampm}}, {{netid}}.</h2>
-        
-    <table width="100%">
-        <tr>
-            <td width = 50% style="border: 1px solid black; vertical-align: top;">
-                <h2 class="text-center">My Macros</h2>
-                <div style="background-color: lightblue; padding: 10px; margin: 20px">
-                    <h3>1500/3100 cal</h3>
-                </div>
-                <p>Pie chart will go here.</p>
-            </td>
-            <td width="50%" style="border: 1px solid black; vertical-align: top;">
-                <h2 class="text-center">My Daily Plate (Editing)</h2>
-                <div style="background-color: lightgray; padding: 10px; margin: 20px;">
-                    <h3>Entry 1</h3>
-                    <ul>
-                        <li>Food 1 </li>
-                        <li>Food 2 </li>
-                        <li>Food 3 </li>
-                    </ul>
-                </div>
+    {% include 'navbar.html' %}    
+    {% set current_page = 'home' %}
 
-                <div style="background-color: lightgray; padding: 10px; margin: 20px;">
-                    <h3>Entry 2</h3>
-                    <ul>
-                        <li>Food 1 </li>
-                        <li>Food 2 </li>
-                        <li>Food 3 </li>
-                    </ul>
-                </div>
+    <h1 class="text-center m-3">Today's Breakdown</h1> 
+    <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
-                <div style="background-color: lightgray; padding: 10px; margin: 20px;">
-                    <h3>Entry 3</h3>
-                    <ul>
-                        <li>Food 1 </li>
-                        <li>Food 2 </li>
-                        <li>Food 3 </li>
-                    </ul>
-                </div>
+    <!--Layout for the two main cards-->
+    <div class="row">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+                <!--My Macros (left card)-->
+              <h5 class="text-center m-3">My Macros</h5>
+              <h3 class="text-center">Daily calorie goal: {{cal_goal}}cal</h3>
+
+                <div class="prog-container" style="display: flex; justify-content: center;">
+                    <div class="progress" style="height: 50px; width: 300px;">
+                      <div class="progress-bar bg-success dynamic-progress-bar" role="progressbar" style="width: {{ (curr_caltotal / cal_goal) * 100 }}%;" aria-valuenow="{{curr_caltotal}}" aria-valuemin="0" aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal</div>
+                    </div>
+                  </div>
                 
+                <div style="width: 400px; height: 400px; justify-content: center;">
+                    {% include 'piechart.html' %}
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+                <!--My Plate (right card)-->
+                <h5 class="text-center">My Plate</h5>
+                <!--Create a card for each entry-->
+                <div class="col">
+                    {% for entry, foods in entries_food_dict.items() %}
+                    <div class="row-cols-1">
+                        <div class="card" style="background-color: lightgray; padding: 10px; margin: 20px;">
+                            <div class="card-body">
+                                <div class="header-container">
+                                    <h5 class="card-title">{{entry}}</h5>
+                                    <button type="button" class="btn-close" aria-label="Close"></button>
+                                </div>
+                                <ul>
+                                    {% for food in foods %}
+                                    <li>{{food}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
                 <form action="/editingplate" method="post">
                     <button type="submit" name="save_plate">Save Plate</button>
                 </form>

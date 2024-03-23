@@ -47,3 +47,13 @@ body {
 .dynamic-progress-bar {
     width: 0%; /* Initial width */
   }
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-close {
+    align-self: flex-start; 
+}

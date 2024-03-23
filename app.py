@@ -89,8 +89,9 @@ def about():
 def dhall_menus():
     # Fetch menu data from database
     # test data
-    data = dbmenus.querymenudisplay("2024-03-02", "Lunch")
-    print(data)
+    #data = dbmenus.querymenudisplay("2024-03-02", "Lunch")
+    #print(data)
+    not_weekend = True
     LOCATION_DESCRIPTION = ["Rockefeller & Mathey Colleges",
                         "Forbes College", "Graduate College",
                         "Center for Jewish Life",
@@ -100,12 +101,13 @@ def dhall_menus():
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
     location_food_dict = {location: all_foods for location in LOCATION_DESCRIPTION}
-
+    time_of_day = 'Lunch'
     todays_date = 'Monday, March 11th'
 
     return render_template('dhallmenus.html', todays_date=todays_date, 
                            location_food_dict=location_food_dict, 
-                           nutritional_content=nutritional_content)
+                           nutritional_content=nutritional_content, not_weekend=not_weekend, time_of_day=time_of_day)
+
 
 #--------------------------------------------------------------------
 
@@ -153,11 +155,34 @@ def settings():
 
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
-    netid = 'jm0278'
 
-    if request.method == "POST":
+    # Placeholder values
+    netid = 'jm0278' 
+    curr_caltotal = 1500
+    cursor = dbusers.finduser(netid)
+    cal_goal = int(cursor['caloricgoal'])
+    print(cal_goal)
+
+    if request.method == 'POST':
+        '''
+        if request.form['action'] == 'close':
+            # Close button action
+
+        elif 'save_plate' in request.form:
+            # Save button action
+    
+            return redirect('/homepage')
+            '''
         return redirect('/homepage')
-    return render_template('editingplate.html', ampm=get_ampm(), netid=netid)
+    
+    ENTRIES = ["Entry 1", "Entry 2", "Entry 3"]
+    all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
+
+    entries_food_dict = {entry: all_foods for entry in ENTRIES}
+
+    return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
+                           curr_caltotal=curr_caltotal, cal_goal=cal_goal,
+                           entries_food_dict=entries_food_dict)
 
 #--------------------------------------------------------------------
 

@@ -16,14 +16,15 @@
     {% include 'navbar.html' %}
     {% set current_page = 'settings' %}
 
-    <h1 class="m-3 text-center">My Information</h1> 
-    <div class="text-center">
-        <form action="/settings" method="post">
-            Set Calorie Goal:
-            <input type="number" name="line" placeholder="Enter the number here" min="0"><br>
-            <button type="submit">Save</button>
-        </form>
-    </div>
+    <div class="container-fluid">
+        <h1 class="m-3 text-center">My Information</h1> 
+        <div class="text-center">
+            <form action="/settings" method="post">
+                Set Calorie Goal:
+                <input type="number" name="line" placeholder="Enter the number here" min="0" required><br>
+                <button type="submit">Save</button>
+            </form>
+        </div>
 
     <p class="text-center m-3">
         Don't know your calorie goal? click <strong>here</strong> to see your 

@@ -57,10 +57,10 @@ def __calculatenutrition__(recipeids, servings):
         entry_carb = entry_carb + nut["carbs"]*serving
         entry_fat = entry_fat + nut["fats"]*serving
         entry_prot = entry_prot + nut["proteins"]*serving
-    return {{"calories" : entry_cal,
+    return {"calories" : entry_cal,
             "carbs" : entry_carb,
             "fats" : entry_fat,
-            "proteins": entry_prot}}
+            "proteins": entry_prot}
 
 #-----------------------------------------------------------------------
 '''
@@ -75,7 +75,7 @@ def __updatehistory__(this_user, entry_nut, factor):
 
     cal_his[0] = cal_his[0] + entry_nut["calories"] * factor
     carb_his[0] = carb_his[0] + entry_nut["carbs"] * factor
-    fat_his[0] = fat_his[0] + entry_nut["cats"] * factor
+    fat_his[0] = fat_his[0] + entry_nut["fats"] * factor
     prot_his[0] = prot_his[0] + entry_nut["proteins"] * factor
 
 #-----------------------------------------------------------------------
@@ -267,11 +267,11 @@ def editFood(netid, entry_num, food_num, new_serv):
         return this_user
     food_rec = this_user["daily_rec"][entry_num][food_num]
     old = __calculatenutrition__([food_rec], [food_serv])
-    new = __calculatenutrition__([food_rec], [new_serv])
-    diff_nut = {{"calories" : new["calories"] - old["calories"], 
-                "carbs" : new["carbs"] - old["carbs"],
-                "fats" : new["fats"] - old["fats"],
-                "proteins": new["proteins"] - old["proteins"]}}
+    serv_fact = new_serv/food_serv
+    diff_nut = {"calories" : old["calories"]*serv_fact - old["calories"], 
+                "carbs" : old["carbs"]*serv_fact - old["carbs"],
+                "fats" : old["fats"]*serv_fact - old["fats"],
+                "proteins" : old["proteins"]*serv_fact - old["proteins"]}
     
     # update user profile
     this_user["daily_serv"][entry_num][food_num] = new_serv
@@ -333,7 +333,8 @@ def deleteuser(netid):
 
 # USED FOR TESTING FOR NOW 
 def main(): 
-    updategoal("jm0278", 2500)
+    entry = {"recipeids": [12345, 1], "servings": [2, 1.5]}
+    print(deleteEntry("jm0278", 0))
 
 #-----------------------------------------------------------------------
 
