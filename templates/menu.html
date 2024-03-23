@@ -8,24 +8,25 @@
      </div>
      <div class="offcanvas-body nt-color-menu">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-           <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Homepage</a>
-           </li>
-           <li class="nav-item">
-              <a class="nav-link" href="#">Today's Menus</a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link" href="#">Log Food</a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link" href="#">My History</a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link" href="#">Profile Settings</a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-           </li>
+         <li class="nav-item">
+            <a class="nav-link {% if current_page == 'homepage' %}active{% endif %}" href="/homepage">Homepage</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_page == 'menus' %}active{% endif %}" href="{{ url_for('dhall_menus')}}">Today's Menus</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_page == 'editingplate' %}active{% endif %}" href="{{ url_for('editing_plate')}}">Log Food</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_page == 'history' %}active{% endif %}" href="{{ url_for('history')}}">My History</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_page == 'settings' %}active{% endif %}" href="{{ url_for('settings')}}">Profile Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_page == 'about' %}active{% endif %}" href="{{ url_for('about')}}">About</a>
+        </li>
+        
         </ul>
      </div>
   </div>

@@ -62,3 +62,14 @@ body {
     --bs-btn-color: #000000 !important;
     --bs-btn-bg: #FFB672 !important;
 }
+.nt-navbar-center {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    z-index: -1;
+}
+
+.fixed-top {
+    padding: 0.5rem !important;
+}

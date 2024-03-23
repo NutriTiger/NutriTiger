@@ -1,7 +1,7 @@
 <!--==============================================================-->
 <!-- about.html                                                   -->
 <!--==============================================================-->
-
+{% set current_page = 'about' %}
 <!DOCTYPE html>
 
 <html lang="en">
@@ -12,10 +12,10 @@
     {% include 'bootstrap.html' %}
 </head>
 
-<body class="text-center">
+<body>
     {% include 'navbar.html' %}
-    {% set current_page = 'about' %}
 
+    <div class="text-center">
     <h1>About NutriTiger</h1> 
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
@@ -41,5 +41,6 @@
         Purus ut faucibus pulvinar elementum. Cras semper auctor neque vitae tempus quam. 
         Amet porttitor eget dolor morbi.
     </p>
+</div>
 </body>
 </html>

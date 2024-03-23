@@ -87,7 +87,7 @@ def about():
 
 #--------------------------------------------------------------------
 
-@app.route('/dhallmenus', methods=['GET'])
+@app.route('/menus', methods=['GET'])
 def dhall_menus():
     # Fetch menu data from database
     # test data
@@ -107,15 +107,12 @@ def dhall_menus():
                         "Yeh & New West Colleges",
                         "Graduate College"]
 
-    all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
-    location_food_dict = {location: all_foods for location in locations}
     todays_date = utils.custom_strftime(current_date)
     print(todays_date)
 
     return render_template('dhallmenus.html', todays_date=todays_date, locations=locations, data=data,
-                           location_food_dict=location_food_dict, 
                            nutritional_content=nutritional_content, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 
