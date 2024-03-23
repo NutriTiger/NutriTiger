@@ -11,9 +11,11 @@ path.append('src/db')
 
 from flask import Flask, render_template, request, redirect, make_response
 import time
+import datetime
 #from CASClient import CASClient
 from src import dbusers
 from src import dbmenus
+from src import utils
 
 
 #--------------------------------------------------------------------
@@ -89,24 +91,32 @@ def about():
 def dhall_menus():
     # Fetch menu data from database
     # test data
-    #data = dbmenus.querymenudisplay("2024-03-02", "Lunch")
-    #print(data)
-    not_weekend = True
-    LOCATION_DESCRIPTION = ["Rockefeller & Mathey Colleges",
-                        "Forbes College", "Graduate College",
-                        "Center for Jewish Life",
+    current_date = datetime.datetime.today()
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    mealtime = utils.time_of_day(current_date.date(), current_date.time())
+    is_weekend_var = utils.is_weekend(current_date.date())
+
+
+    data = dbmenus.query_menu_display(current_date_zeros, mealtime)
+    print(data)
+
+
+    locations = ["Center for Jewish Life",
+                        "Forbes College", "Rockefeller & Mathey Colleges",
+                        "Whitman & Butler Colleges",
                         "Yeh & New West Colleges",
-                        "Whitman & Butler Colleges"]
+                        "Graduate College"]
+
     all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
-    location_food_dict = {location: all_foods for location in LOCATION_DESCRIPTION}
-    time_of_day = 'Lunch'
-    todays_date = 'Monday, March 11th'
+    location_food_dict = {location: all_foods for location in locations}
+    todays_date = utils.custom_strftime(current_date)
+    print(todays_date)
 
-    return render_template('dhallmenus.html', todays_date=todays_date, 
+    return render_template('dhallmenus.html', todays_date=todays_date, locations=locations, data=data,
                            location_food_dict=location_food_dict, 
-                           nutritional_content=nutritional_content, not_weekend=not_weekend, time_of_day=time_of_day)
+                           nutritional_content=nutritional_content, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 
 #--------------------------------------------------------------------
