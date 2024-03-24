@@ -4,6 +4,8 @@
 #
 #----------------------------------------------------------------------
 import datetime
+from datetime import datetime, timedelta
+import pytz
 
 def time_of_day(date, time):
     lunch_start = datetime.time(11, 0)       
@@ -32,15 +34,40 @@ def is_weekend(date):
 def gtocal(carbs, fats, proteins):
     return carbs*4, fats*9, proteins*4
 
-# returns average of array, ignoring zeroes
-def get_average(array):
-    len = 0
+# returns the arrays: cal, carb, prot, fat, date
+# where cal carb prot fat are all arrays with non-zero values
+# and date is the corresponding date array for those entries
+def get_corresponding_arrays(cal, carb, prot, fat):
+    # generate date array
+    eastern = pytz.timezone('US/Eastern')
+    today = datetime.now(eastern).date()
+    date_array = [today - timedelta(days=i) for i in range(len(cal))]
+
+    # filter date and array for non-zero entries
+    filtered_date_array = []
+    filtered_cal_array = []
+
+    for date_val, cal_val in zip(date_array, cal):
+        if cal_val != 0:
+            filtered_date_array.append(date_val)
+            filtered_cal_array.append(cal_val)
+    filtered_carb_array = [x for x in carb if x != 0]
+    filtered_prot_array = [x for x in prot if x != 0]
+    filtered_fat_array = [x for x in fat if x != 0]
+    return filtered_cal_array, filtered_carb_array, filtered_prot_array, filtered_fat_array, filtered_date_array
+
+# returns average of array over the past ndays
+# if length of array is less that ndays, just returns average of the array
+def get_average(array, ndays):
+    length = 0
     sum = 0
+    if (len(array) > ndays):
+        array = array[:ndays]
     for el in array:
-        if el != 0 and el is not None:
+        if el != 0:
             sum = sum + el
-            len = len + 1
-    return sum/len
+            length = length + 1
+    return sum/length
 
 def main():
     # Unit testing checks of functions

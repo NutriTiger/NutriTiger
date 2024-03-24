@@ -62,9 +62,13 @@ def homepage():
 
     # Placeholder values
     netid = 'jm0278' 
-    curr_caltotal = 1500
-    cursor = dbusers.finduser(netid)
-    cal_goal = int(cursor['caloricgoal'])
+
+    # will need to call whenever an existing user logs in
+    profile = dbusers.userlogin(netid)
+
+    curr_caltotal = profile['cal_his'][0]
+
+    cal_goal = int(profile['caloricgoal'])
     print(cal_goal)
 
     if request.method == 'POST':
@@ -135,12 +139,18 @@ def first_contact():
 
 @app.route('/history', methods=['GET'])
 def history():
-
-    # Placeholder values
-    avg_cals = 2000
-    avg_pro = 50
-    avg_carbs = 100
-    avg_fat = 40
+    # find current user
+    profile = dbusers.finduser('jm0278')
+    cal_his, carb_his, prot_his, fat_his, dates = utils.get_corresponding_arrays(profile['cal_his'], 
+                                                                                profile['carb_his'],
+                                                                                profile['prot_his'],
+                                                                                profile['fat_his']
+                                                                                )
+    # calculate averages
+    avg_cals = utils.get_average(cal_his, 7)
+    avg_carbs = utils.get_average(carb_his, 7)
+    avg_pro = utils.get_average(prot_his, 7)
+    avg_fat = utils.get_average(fat_his, 7)
 
     return render_template('history.html', avg_cals=avg_cals, 
                            avg_pro=avg_pro, avg_carbs=avg_carbs, 
