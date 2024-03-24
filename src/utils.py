@@ -28,8 +28,19 @@ def is_weekend(date):
     day_of_week = date.weekday()
     return (day_of_week >= 5)
 
+# returns calories of carbs, fats, proteins
 def gtocal(carbs, fats, proteins):
     return carbs*4, fats*9, proteins*4
+
+# returns average of array, ignoring zeroes
+def get_average(array):
+    len = 0
+    sum = 0
+    for el in array:
+        if el != 0 and el is not None:
+            sum = sum + el
+            len = len + 1
+    return sum/len
 
 def main():
     # Unit testing checks of functions
