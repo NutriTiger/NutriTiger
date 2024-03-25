@@ -49,7 +49,7 @@ def get_corresponding_arrays(cal, carb, prot, fat):
 
     for date_val, cal_val in zip(date_array, cal):
         if cal_val != 0:
-            filtered_date_array.append(date_val)
+            filtered_date_array.append(date_val.strftime('%Y-%m-%d'))
             filtered_cal_array.append(cal_val)
     filtered_carb_array = [x for x in carb if x != 0]
     filtered_prot_array = [x for x in prot if x != 0]

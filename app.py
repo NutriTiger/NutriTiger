@@ -161,10 +161,16 @@ def history():
     avg_carbs = utils.get_average(carb_his, his_range)
     avg_pro = utils.get_average(prot_his, his_range)
     avg_fat = utils.get_average(fat_his, his_range)
+    dates.reverse()
+    cal_his.reverse()
 
-    return render_template('history.html', avg_cals=avg_cals, 
-                           avg_pro=avg_pro, avg_carbs=avg_carbs, 
-                           avg_fat=avg_fat)
+    return render_template('history.html', 
+                            avg_cals=round(avg_cals, 2), 
+                            avg_pro=round(avg_pro, 2), 
+                            avg_carbs=round(avg_carbs, 2), 
+                            avg_fat=round(avg_fat,2),
+                            dates = dates,
+                            vals = cal_his)
 
 #--------------------------------------------------------------------
 
@@ -185,9 +191,9 @@ def editing_plate():
 
     # Placeholder values
     netid = 'jm0278' 
-    curr_caltotal = 1500
     cursor = dbusers.finduser(netid)
     cal_goal = int(cursor['caloricgoal'])
+    curr_caltotal = cursor['cal_his'][0]
     entries_info = cursor['daily_rec']
 
     # Testing filling the entries
