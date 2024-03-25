@@ -69,15 +69,24 @@ def homepage():
     curr_caltotal = profile['cal_his'][0]
 
     cal_goal = int(profile['caloricgoal'])
-    print(cal_goal)
 
+    # Copy pasted from editing plate method below
+    cursor = dbusers.finduser(netid)
+    entries_info = cursor['daily_rec']
+
+    # Testing filling the entries
+    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
+    foods_lists = [entry[:] for entry in entries_info]
+
+    entries_food_dict = {}
+    for i in range(len(ENTRIES)):
+        entry = ENTRIES[i]
+        foods = foods_lists[i]
+        entries_food_dict[entry] = foods
+
+    # When Edit Plate button is pressed
     if request.method == 'POST':
         return redirect('/editingplate')
-    
-    ENTRIES = ["Entry 1", "Entry 2", "Entry 3"]
-    all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
-
-    entries_food_dict = {entry: all_foods for entry in ENTRIES}
 
     return render_template('homepage.html', ampm=get_ampm(), netid=netid,
                            curr_caltotal=curr_caltotal, cal_goal=cal_goal,
@@ -202,9 +211,6 @@ def editing_plate():
                 if entry == card_id:
                     ENTRIES.remove(entry)
                     break
-                    
-            # Redefine food dict with updated group of entries
-            #entries_food_dict = {entry: all_foods for entry in ENTRIES}
 
             return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
                     curr_caltotal=curr_caltotal, cal_goal=cal_goal,
