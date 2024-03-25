@@ -49,11 +49,14 @@
                 <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
                     <div class="row-cols-1">
-                        <div class="card" style="background-color: lightgray; padding: 10px; margin: 20px;">
+                        <div class="card" id="{{entry}}" style="background-color: lightgray; padding: 10px; margin: 20px;">
                             <div class="card-body">
                                 <div class="header-container">
                                     <h5 class="card-title">{{entry}}</h5>
-                                    <button type="button" class="btn-close" aria-label="Close"></button>
+                                    <form action="/editingplate" method="post">
+                                        <input type="hidden" name="card_id" value="{{ entry }}">
+                                        <button type="submit" data-cardid="{{entry}}" class="btn-close" aria-label="Close"></button>
+                                    </form>
                                 </div>
                                 <ul>
                                     {% for food in foods %}

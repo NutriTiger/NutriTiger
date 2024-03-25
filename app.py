@@ -146,11 +146,12 @@ def history():
                                                                                 profile['prot_his'],
                                                                                 profile['fat_his']
                                                                                 )
-    # calculate averages
-    avg_cals = utils.get_average(cal_his, 7)
-    avg_carbs = utils.get_average(carb_his, 7)
-    avg_pro = utils.get_average(prot_his, 7)
-    avg_fat = utils.get_average(fat_his, 7)
+    # calculate averages with user's specified range (7 days)
+    his_range = 7
+    avg_cals = utils.get_average(cal_his, his_range)
+    avg_carbs = utils.get_average(carb_his, his_range)
+    avg_pro = utils.get_average(prot_his, his_range)
+    avg_fat = utils.get_average(fat_his, his_range)
 
     return render_template('history.html', avg_cals=avg_cals, 
                            avg_pro=avg_pro, avg_carbs=avg_carbs, 
@@ -180,23 +181,37 @@ def editing_plate():
     cal_goal = int(cursor['caloricgoal'])
     print(cal_goal)
 
-    if request.method == 'POST':
-        '''
-        if request.form['action'] == 'close':
-            # Close button action
-
-        elif 'save_plate' in request.form:
-            # Save button action
-    
-            return redirect('/homepage')
-            '''
-        return redirect('/homepage')
-    
     ENTRIES = ["Entry 1", "Entry 2", "Entry 3"]
     all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
 
     entries_food_dict = {entry: all_foods for entry in ENTRIES}
 
+    if request.method == 'POST':
+
+        # This is SUSPICIOUS!! NEED TO FIX
+        if 'card_id' in request.form:
+            # Retreive entry ID (which should be the direct entry name)
+            card_id = request.form.get('card_id')
+
+            # Close button
+            for entry in ENTRIES:
+                if entry == card_id:
+                    ENTRIES.remove(entry)
+                    break
+                    
+            # Redefine food dict with updated group of entries
+            entries_food_dict = {entry: all_foods for entry in ENTRIES}
+
+            return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
+                    curr_caltotal=curr_caltotal, cal_goal=cal_goal,
+                    entries_food_dict=entries_food_dict)
+    
+
+        elif 'save_plate' in request.form:
+            # Save button action (update database)
+    
+            return redirect('/homepage')
+    
     return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
                            curr_caltotal=curr_caltotal, cal_goal=cal_goal,
                            entries_food_dict=entries_food_dict)
