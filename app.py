@@ -179,16 +179,20 @@ def editing_plate():
     curr_caltotal = 1500
     cursor = dbusers.finduser(netid)
     cal_goal = int(cursor['caloricgoal'])
-    print(cal_goal)
+    entries_info = cursor['daily_rec']
 
-    ENTRIES = ["Entry 1", "Entry 2", "Entry 3"]
-    all_foods = ["Teriyaki Chicken", "General Tso's Tofu"]
+    # Testing filling the entries
+    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
+    foods_lists = [entry[:] for entry in entries_info]
 
-    entries_food_dict = {entry: all_foods for entry in ENTRIES}
+    entries_food_dict = {}
+    for i in range(len(ENTRIES)):
+        entry = ENTRIES[i]
+        foods = foods_lists[i]
+        entries_food_dict[entry] = foods
 
     if request.method == 'POST':
 
-        # This is SUSPICIOUS!! NEED TO FIX
         if 'card_id' in request.form:
             # Retreive entry ID (which should be the direct entry name)
             card_id = request.form.get('card_id')
@@ -200,7 +204,7 @@ def editing_plate():
                     break
                     
             # Redefine food dict with updated group of entries
-            entries_food_dict = {entry: all_foods for entry in ENTRIES}
+            #entries_food_dict = {entry: all_foods for entry in ENTRIES}
 
             return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
                     curr_caltotal=curr_caltotal, cal_goal=cal_goal,
