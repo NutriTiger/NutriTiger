@@ -55,20 +55,20 @@ def main():
     in a preferred format and print it to stdout.
     """
 
-    #todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
+    todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
 
-    #for object in todays_menu_items:
-    #    print(json.dumps(object, indent=4, default=str))
+    for object in todays_menu_items:
+        print(json.dumps(object, indent=4, default=str))
     
-    #for object in todays_nutrition_list:
-    #    print(json.dumps(object, indent=4, default=str))
+    for object in todays_nutrition_list:
+        print(json.dumps(object, indent=4, default=str))
 
-    start_date = datetime.datetime(2024, 3, 24).date()
-    end_date = datetime.datetime(2024, 3, 26).date()
+    #start_date = datetime.datetime(2024, 3, 24).date()
+    #end_date = datetime.datetime(2024, 3, 26).date()
 
-    menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
+    #menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
     #print(menu_items_list_range)
-    print(menu_items_nutrition_list_range)
+    #print(menu_items_nutrition_list_range)
 
 # ---------------------------------------------------------------------
 
@@ -133,7 +133,7 @@ async def get_daily_menus(date=""):
     # Complete list of JSON objects to store the menus for one day
     complete_menu_data_list = []
     complete_nutrition_data_list = []
-    temp = []
+    #temp = []
     distinct_recipeid_list = []
 
     # Obtain the menu items from each location
@@ -151,8 +151,8 @@ async def get_daily_menus(date=""):
                 complete_menu_data_list.append(obj1)
                 complete_nutrition_data_list.append(obj2)
 
-        for test in temp:
-            complete_nutrition_data_list.append(test)
+        #for test in temp:
+        #    complete_nutrition_data_list.append(test)
 
     return complete_menu_data_list, complete_nutrition_data_list
 
@@ -197,12 +197,16 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                 mealType = meal.get_attribute_list("name")[0]
                 entreeList = meal.find_all("entree")
                 
-                # Stores the JSON object for that entree type
+                # Stores the JSON objects for that entree type
                 data = {}
+                # Stores the JSON object for meals in each mealtype
+                items_obj = {}
+                # Stores the JSON object for mealtypes for a mealtime
+                mealitems_obj = {}
                 # Stores the items in that entree type
-                food_items = []
+                #food_items = []
                 # Stores the recipe number for each entree type
-                recipe_nums = []
+                #recipe_nums = []
                 # Stores the previous entree description to combine
                 # identical entree types for a meal
                 oldEntreeDescription = ""
@@ -218,14 +222,16 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                     if i > 0:
                         if entreeDescription != oldEntreeDescription:
                             # Save the data before clearing
-                            data["fooditems"] = food_items
-                            data["recipenums"] = recipe_nums
-                            complete_menu_data_list.append(data)
+                            #data["fooditems"] = food_items
+                            #data["recipenums"] = recipe_nums
+                            mealitems_obj[oldEntreeDescription] = items_obj
+                            #complete_menu_data_list.append(data)
                             
                             # Clear the data
-                            data = {}
-                            food_items = []
-                            recipe_nums = []
+                            items_obj = {}
+                            #data = {}
+                            #food_items = []
+                            #recipe_nums = []
                     
                     # If we are on a new data object, add the needed fields
                     if len(data) == 0:
@@ -235,13 +241,15 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                             data["date"] = datetime.datetime.today()
                         data["dhall"] = location_description
                         data["mealtime"] = mealType
-                        data["type"] = entreeDescription
+                        #data["type"] = entreeDescription
 
                     # Update the old entree and append the items to the JSON
                     oldEntreeDescription = entreeDescription
-                    food_items.append(entree.find("name").text)
+                    foodname = entree.find("name").text
+                    #food_items.append(entree.find("name").text)
                     recipeid = entree.find("recnum").text
-                    recipe_nums.append(recipeid)
+                    items_obj[foodname] = recipeid
+                    #recipe_nums.append(recipeid)
 
                     # Add the nutrition information for the recipe number to the list
                     if recipeid not in distinct_recipeid_list:
@@ -249,8 +257,11 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                         job = asyncio.ensure_future(webscraperfast.get_nutrition_from_recipe(recipeid, session))
                         nutrition_results.append(job)
             
-                data["fooditems"] = food_items
-                data["recipenums"] = recipe_nums
+                mealitems_obj[oldEntreeDescription] = items_obj
+                #data["fooditems"] = food_items
+                #data["recipenums"] = recipe_nums
+                #complete_menu_data_list.append(data)
+                data["data"] = mealitems_obj
                 complete_menu_data_list.append(data)
 
             await asyncio.gather(*nutrition_results, return_exceptions=True)
