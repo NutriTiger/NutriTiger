@@ -5,12 +5,12 @@
 # Author: Eric
 # ----------------------------------------------------------------------
 
-import requests
+#import requests
 import json
 import re
 import sys
-import asyncio
-import aiohttp
+#import asyncio
+#import aiohttp
 from bs4 import BeautifulSoup
 
 # ---------------------------------------------------------------------
@@ -73,7 +73,7 @@ async def get_nutrition_from_recipe(recipeid, session):
         # Make the request and save the content
         async with session.get(COMBINED_URL) as request:
             #request = requests.get(COMBINED_URL)
-            html_content = await request.text()
+            html_content = await request.text() 
             #html_content = request.content
 
             # Parse the content and create the nutrition object to return
