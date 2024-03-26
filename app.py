@@ -12,7 +12,7 @@ path.append('src/db')
 from flask import Flask, render_template, request, redirect, make_response
 import time
 #from CASClient import CASClient
-from src.db import dbusers
+import dbusers
 from src.db import dbmenus
 
 

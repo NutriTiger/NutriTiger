@@ -1,0 +1,114 @@
+<!--==============================================================-->
+<!-- logfoodsearch.html                                           -->
+<!-- Displays today's meals (dhall drop down + tabs for mealtime) -->
+
+<!--==============================================================-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<!-- to remove once we add to logfood.html -->
+
+<section>
+    <div class="container mt-5">
+        <h1>Dining Hall Menus</h1>
+        <select id="diningHallSelect" class="form-control my-3">
+            
+            <option value="hallA">Center for Jewish Life</option>
+            <option value="hallB">Forbes College</option>
+            <option value="hallC">Graduate College</option>
+            <option value="hallD">New College West & Yeh College</option>
+            <option value="hallE">Rockefeller & Mathey College</option>
+            <option value="hallF">Whitman College</option>
+        </select>
+
+        <!-- Tab Navs -->
+        <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="breakfast-tab" data-toggle="tab" href="#breakfast" role="tab" aria-controls="breakfast" aria-selected="true">Breakfast</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="lunch-tab" data-toggle="tab" href="#lunch" role="tab" aria-controls="lunch" aria-selected="false">Lunch</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="dinner-tab" data-toggle="tab" href="#dinner" role="tab" aria-controls="dinner" aria-selected="false">Dinner</a>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="mealTimeContent">
+            <div class="tab-pane fade show active" id="breakfast" role="tabpanel" aria-labelledby="breakfast-tab">
+                <!-- Breakfast content goes here -->
+                
+            </div>
+            <div class="tab-pane fade" id="lunch" role="tabpanel" aria-labelledby="lunch-tab">
+                <!-- Lunch content goes here -->
+            </div>
+            <div class="tab-pane fade" id="dinner" role="tabpanel" aria-labelledby="dinner-tab">
+                <!-- Dinner content goes here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listener for the dropdown selection change
+            document.getElementById('diningHallSelect').addEventListener('change', function() {
+                var selectedHall = this.value; // Get the value of the selected option
+                
+                // Message
+                console.log("Selected dining hall:", selectedHall); 
+                
+                // Make an AJAX request
+                fetchMenuData(selectedHall);
+            });
+        });
+        // function handleError() {
+        //     alert("Error: Failed to fetch data from server");
+        // }
+        // function handleResponse() {
+        //     if (this.status !== 200) {
+        //         alert('Error: Failed to fetch data from server');
+        //         return;
+        //     }
+        //     let resultsDiv = document.getElementById('');
+        // }
+        function fetchMenuData(hallId) {
+            // Example AJAX request to fetch data based on the selected dining hall
+            // This URL is just an example; you'll need to replace it with your actual data source
+            // let encodedhallId = encodeURIComponent(hallId);
+            // let url = '/logfood?dhall=' + encodedhallId;
+            // let request = new XMLHttpRequest();
+            // request.onload = handleResponse;
+            // request.onerror = handleError;
+            // request.open('GET', url);
+            // request.send();
+
+            // not sure what to the url should be
+
+            var url = '/logfood'
+
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Assuming data structure is { breakfast: [], lunch: [], dinner: [] }
+                updateMealContent('breakfast', data.breakfast);
+                updateMealContent('lunch', data.lunch);
+                updateMealContent('dinner', data.dinner);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function updateMealContent(meal, items) {
+            const container = document.getElementById(meal);
+            container.innerHTML = ''; // Clear existing content
+        }
+    </script>
+</section>
+</html>
