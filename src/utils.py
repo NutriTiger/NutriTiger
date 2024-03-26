@@ -4,7 +4,6 @@
 #
 #----------------------------------------------------------------------
 import datetime
-from datetime import datetime, timedelta
 import pytz
 
 def time_of_day(date, time):
