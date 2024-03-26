@@ -203,10 +203,6 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                 items_obj = {}
                 # Stores the JSON object for mealtypes for a mealtime
                 mealitems_obj = {}
-                # Stores the items in that entree type
-                #food_items = []
-                # Stores the recipe number for each entree type
-                #recipe_nums = []
                 # Stores the previous entree description to combine
                 # identical entree types for a meal
                 oldEntreeDescription = ""
@@ -222,16 +218,10 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                     if i > 0:
                         if entreeDescription != oldEntreeDescription:
                             # Save the data before clearing
-                            #data["fooditems"] = food_items
-                            #data["recipenums"] = recipe_nums
                             mealitems_obj[oldEntreeDescription] = items_obj
-                            #complete_menu_data_list.append(data)
                             
                             # Clear the data
                             items_obj = {}
-                            #data = {}
-                            #food_items = []
-                            #recipe_nums = []
                     
                     # If we are on a new data object, add the needed fields
                     if len(data) == 0:
@@ -241,15 +231,12 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                             data["date"] = datetime.datetime.today()
                         data["dhall"] = location_description
                         data["mealtime"] = mealType
-                        #data["type"] = entreeDescription
 
                     # Update the old entree and append the items to the JSON
                     oldEntreeDescription = entreeDescription
                     foodname = entree.find("name").text
-                    #food_items.append(entree.find("name").text)
                     recipeid = entree.find("recnum").text
                     items_obj[foodname] = recipeid
-                    #recipe_nums.append(recipeid)
 
                     # Add the nutrition information for the recipe number to the list
                     if recipeid not in distinct_recipeid_list:
@@ -258,9 +245,6 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
                         nutrition_results.append(job)
             
                 mealitems_obj[oldEntreeDescription] = items_obj
-                #data["fooditems"] = food_items
-                #data["recipenums"] = recipe_nums
-                #complete_menu_data_list.append(data)
                 data["data"] = mealitems_obj
                 complete_menu_data_list.append(data)
 
