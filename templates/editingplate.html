@@ -14,9 +14,9 @@
 </head>
 
 <body>
-    {% include 'navbar.html' %}    
+    {% include 'navbar.html' %}   
 
-    <h1 class="text-center m-3">Today's Breakdown</h1> 
+    <h1 class="text-center m-3">Editing My Plate</h1> 
     <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
     <!--Layout for the two main cards-->
@@ -25,18 +25,21 @@
           <div class="card">
             <div class="card-body">
                 <!--My Macros (left card)-->
-              <h5 class="text-center m-3">My Macros</h5>
-              <h3 class="text-center">Daily calorie goal: {{cal_goal}}cal</h3>
+              <h4 class="text-center py-3">My Macros</h4>
+              <h5 class="text-center">Daily calorie goal: {{cal_goal}}cal</h5>
 
-                <div class="prog-container" style="display: flex; justify-content: center;">
+                <div class="prog-container my-2" style="display: flex; justify-content: center;">
                     <div class="progress" style="height: 50px; width: 300px;">
                       <div class="progress-bar bg-success dynamic-progress-bar" role="progressbar" style="width: {{ (curr_caltotal / cal_goal) * 100 }}%;" aria-valuenow="{{curr_caltotal}}" aria-valuemin="0" aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal</div>
                     </div>
                   </div>
                 
-                <div style="width: 400px; height: 400px; justify-content: center;">
-                    {% include 'piechart.html' %}
+                  <div class="prog-container my-5" style="display: flex; justify-content: center;">
+                    <div style="width: 400px; height: 400px; display: flex; justify-content: center;">
+                      {% include 'piechart.html' %}
+                  </div>
                 </div>
+
             </div>
           </div>
         </div>
@@ -44,12 +47,12 @@
           <div class="card">
             <div class="card-body">
                 <!--My Plate (right card)-->
-                <h5 class="text-center">My Plate</h5>
+                <h4 class="text-center py-3">My Plate</h4>
                 <!--Create a card for each entry-->
                 <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
                     <div class="row-cols-1">
-                        <div class="card" id="{{entry}}" style="background-color: lightgray; padding: 10px; margin: 20px;">
+                        <div class="card" id="{{entry}}" style="background-color: lightgray; padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
                                     <h5 class="card-title">{{entry}}</h5>
@@ -67,10 +70,12 @@
                         </div>
                     </div>
                     {% endfor %}
-
-                <form action="/editingplate" method="post">
-                    <button type="submit" name="save_plate">Save Plate</button>
-                </form>
+                
+                <div class="py-3">
+                    <form action="/editingplate" method="post">
+                        <button type="submit" name="save_plate">Save Plate</button>
+                    </form>
+                </div>
                 
             </td>
 
