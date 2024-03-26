@@ -20,10 +20,12 @@
     <canvas id="myLineChart"></canvas>
 
     <script>
-        var cals = {{ vals | tojson | safe}};
+        var cals = {{ cals | tojson | safe}};
+        var prots = {{ prots | tojson | safe}};
+        var carbs = {{ cals | tojson | safe}};
+        var fats = {{ prots | tojson | safe}};
         var dates = {{ dates | tojson | safe}};
-        console.log('Array of cals:', cals);
-        console.log('Array of dates:', dates);
+
         // Sample data for the line chart
         var data = {
             labels: dates,
@@ -33,7 +35,31 @@
                 borderColor: 'rgba(173, 216, 230)', // Line color
                 backgroundColor: 'rgba(173, 216, 230, 0.5)',
                 borderWidth: 2, // Line width
-                fill: true // Don't fill area under the line
+                fill: true // Fill area under the line
+            },
+            {
+                label: 'Proteins', // Label for the dataset
+                data: prots,
+                borderColor: 'rgba(255, 99, 132)', // Line color (red)
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderWidth: 2, // Line width
+                fill: true // Fill area under the line
+            },
+            {
+                label: 'Carbs', // Label for the dataset
+                data: carbs,
+                borderColor: 'rgba(75, 192, 192)', // Line color (green)
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderWidth: 2, // Line width
+                fill: true // Fill area under the line
+            },
+            {
+                label: 'Fats', // Label for the dataset
+                data: fats,
+                borderColor: 'rgba(255, 205, 86)', // Line color (yellow)
+                backgroundColor: 'rgba(255, 205, 86, 0.5)',
+                borderWidth: 2, // Line width
+                fill: true // Fill area under the line
             }]
         };
 
@@ -42,7 +68,7 @@
 
         // Create the line chart
         var myLineChart = new Chart(ctx, {
-            type: 'line',
+            type: 'line', // could change to chart
             data: data,
             options: {
                 scales: {
