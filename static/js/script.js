@@ -1,3 +1,37 @@
+'use strict';
+
+function handleResponse(data) {
+    $('#dhallMenusDiv').html(data);
+}
+
+function handleError() {
+    alert('Error: Failed to fetch data from server');
+}
+
+function getResults() {
+    let mealtime = $("input[name='mealtime_btnradio']:checked").val();
+    console.log(mealtime);
+    let encoded_mealtime = encodeURIComponent(mealtime);
+    let url = '/update-menus-mealtime?mealtime=' + encoded_mealtime;
+    let requestData = {
+        type: 'GET',
+        url: url,
+        success: handleResponse,
+        error: handleError
+    };
+    $.ajax(requestData);
+}
+
+function setup() {
+    getResults();
+    $("input[name='mealtime_btnradio']").change(function() {
+        getResults();
+    });
+}
+
+$('document').ready(setup);
+
+// popover js
 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl, {
@@ -6,7 +40,7 @@ var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
 });
 
 
-
+// button js classes
 document.addEventListener('DOMContentLoaded', function() {
     var buttons = document.querySelectorAll('.nt-food-text');
     
@@ -33,4 +67,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
 
