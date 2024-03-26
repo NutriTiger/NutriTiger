@@ -16,7 +16,7 @@
 <body>
     {% include 'navbar.html' %}    
 
-    <h1 class="text-center m-3">Today's Breakdown</h1> 
+    <h1 class="text-center m-3">Editing My Plate</h1> 
     <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
     <!--Layout for the two main cards-->
@@ -34,9 +34,12 @@
                     </div>
                   </div>
                 
-                <div style="width: 400px; height: 400px; justify-content: center;">
-                    {% include 'piechart.html' %}
+                  <div class="prog-container" style="display: flex; justify-content: center;">
+                    <div style="width: 400px; height: 400px; display: flex; justify-content: center;">
+                      {% include 'piechart.html' %}
+                  </div>
                 </div>
+                
             </div>
           </div>
         </div>

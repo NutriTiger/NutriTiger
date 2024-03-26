@@ -32,11 +32,14 @@
                     <div class="progress" style="height: 50px; width: 300px;">
                       <div class="progress-bar bg-success dynamic-progress-bar" role="progressbar" style="width: {{ (curr_caltotal / cal_goal) * 100 }}%;" aria-valuenow="{{curr_caltotal}}" aria-valuemin="0" aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal</div>
                     </div>
-                  </div>
-                
-                <div style="width: 400px; height: 400px; justify-content: center;">
-                    {% include 'piechart.html' %}
                 </div>
+                
+                <div class="prog-container" style="display: flex; justify-content: center;">
+                    <div style="width: 400px; height: 400px; display: flex; justify-content: center;">
+                      {% include 'piechart.html' %}
+                  </div>
+                </div>
+                
             </div>
           </div>
         </div>
