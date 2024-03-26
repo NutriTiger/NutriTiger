@@ -39,11 +39,11 @@ import webscraperfast
 BASE_MENUS_URL = "https://menus.princeton.edu/dining/_Foodpro/online-menu/menu2.asp?"
 # Predefined location numbers and descriptions from campus dining
 LOCATION_NUMS = ["01", "03", "04", "05", "06", "08"]
-LOCATION_DESCRIPTION = ["Rockefeller & Mathey Colleges",
-                        "Forbes College", "Graduate College",
-                        "Center for Jewish Life",
+LOCATION_DESCRIPTION = ["Center for Jewish Life",
+                        "Forbes College", "Rockefeller & Mathey Colleges",
+                        "Whitman & Butler Colleges",
                         "Yeh & New West Colleges",
-                        "Whitman & Butler Colleges"]
+                        "Graduate College"]
 
 # ---------------------------------------------------------------------
 
