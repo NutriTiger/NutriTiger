@@ -4,7 +4,7 @@
 #
 #----------------------------------------------------------------------
 import datetime
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
 import pytz
 
 def time_of_day(date, time):
@@ -40,8 +40,8 @@ def gtocal(carbs, fats, proteins):
 def get_corresponding_arrays(cal, carb, prot, fat):
     # generate date array
     eastern = pytz.timezone('US/Eastern')
-    today = datetime.now(eastern).date()
-    date_array = [today - timedelta(days=i) for i in range(len(cal))]
+    today = datetime.datetime.now(eastern).date()
+    date_array = [today - datetime.timedelta(days=i) for i in range(len(cal))]
 
     # filter date and array for non-zero entries
     filtered_date_array = []
