@@ -25,16 +25,16 @@
           <div class="card">
             <div class="card-body">
                 <!--My Macros (left card)-->
-              <h5 class="text-center m-3">My Macros</h5>
-              <h3 class="text-center">Daily calorie goal: {{cal_goal}}cal</h3>
+              <h4 class="text-center py-3">My Macros</h4>
+              <h5 class="text-center">Daily calorie goal: {{cal_goal}}cal</h5>
 
-                <div class="prog-container" style="display: flex; justify-content: center;">
+                <div class="prog-container my-2" style="display: flex; justify-content: center;">
                     <div class="progress" style="height: 50px; width: 300px;">
                       <div class="progress-bar bg-success dynamic-progress-bar" role="progressbar" style="width: {{ (curr_caltotal / cal_goal) * 100 }}%;" aria-valuenow="{{curr_caltotal}}" aria-valuemin="0" aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal</div>
                     </div>
                 </div>
                 
-                <div class="prog-container" style="display: flex; justify-content: center;">
+                <div class="prog-container my-5" style="display: flex; justify-content: center;">
                     <div style="width: 400px; height: 400px; display: flex; justify-content: center;">
                       {% include 'piechart.html' %}
                   </div>
@@ -47,12 +47,12 @@
           <div class="card">
             <div class="card-body">
                 <!--My Plate (right card)-->
-                <h5 class="text-center">My Plate</h5>
+                <h4 class="text-center py-3">My Plate</h4>
                 <!--Create a card for each entry-->
                 <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
                     <div class="row-cols-1">
-                        <div class="card" style="background-color: lightgray; padding: 10px; margin: 20px;">
+                        <div class="card" style="background-color: lightgray; padding: 10px;">
                             <div class="card-body">
                                 <h5 class="card-title">{{entry}}</h5>
                                 <ul>
@@ -66,9 +66,12 @@
                     {% endfor %}
 
                     <!-- Edit my plate button -->
-                    <form action="/homepage" method="post">
+                    <div class="py-3">
+                      <form action="/homepage" method="post">
                         <button type="submit" name="edit_plate">Edit My Plate</button>
-                    </form>
+                      </form>
+                    </div>
+                    
                 </div>
             </div>
           </div>
