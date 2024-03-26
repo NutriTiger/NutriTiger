@@ -170,7 +170,11 @@ def history():
                             avg_carbs=round(avg_carbs, 2), 
                             avg_fat=round(avg_fat,2),
                             dates = dates,
-                            vals = cal_his)
+                            cals = cal_his,
+                            prots = prot_his,
+                            carbs = carb_his,
+                            fats = fat_his
+                            )
 
 #--------------------------------------------------------------------
 
