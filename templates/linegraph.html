@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Chart Example</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            width: 95%;
+            height: auto;
+            max-height: 55vh;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HTML canvas element where the chart will be rendered -->
+    <canvas id="myLineChart"></canvas>
+
+    <script>
+        var cals = {{ vals | tojson | safe}};
+        var dates = {{ dates | tojson | safe}};
+        console.log('Array of cals:', cals);
+        console.log('Array of dates:', dates);
+        // Sample data for the line chart
+        var data = {
+            labels: dates,
+            datasets: [{
+                label: 'Calories', // Label for the dataset
+                data: cals,
+                borderColor: 'rgba(173, 216, 230)', // Line color
+                backgroundColor: 'rgba(173, 216, 230, 0.5)',
+                borderWidth: 2, // Line width
+                fill: true // Don't fill area under the line
+            }]
+        };
+
+        // Get the canvas element
+        var ctx = document.getElementById('myLineChart').getContext('2d');
+
+        // Create the line chart
+        var myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true // Start y-axis from 0
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
