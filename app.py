@@ -128,6 +128,32 @@ def dhall_menus():
     return render_template('dhallmenus.html', todays_date=todays_date, locations=locations, data=data,
                            nutritional_content=nutritional_content, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
+@app.route('/update-menus-mealtime', methods=['GET'])
+def update_menus_mealtime():
+    mealtime = request.args.get('mealtime')
+
+    current_date = datetime.datetime.today()
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    is_weekend_var = utils.is_weekend(current_date.date())
+
+
+    data = dbmenus.query_menu_display(current_date_zeros, mealtime)
+    print(data)
+
+
+    locations = ["Center for Jewish Life",
+                        "Forbes College", "Rockefeller & Mathey Colleges",
+                        "Whitman & Butler Colleges",
+                        "Yeh & New West Colleges",
+                        "Graduate College"]
+
+    nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
+
+    todays_date = utils.custom_strftime(current_date)
+    print(todays_date)
+
+    return render_template('dhallmenus_update.html', todays_date=todays_date, locations=locations, data=data,
+                        nutritional_content=nutritional_content, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 #--------------------------------------------------------------------
 
