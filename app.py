@@ -12,6 +12,7 @@ path.append('src/db')
 from flask import Flask, render_template, request, redirect, make_response
 import time
 import datetime
+from pytz import timezone
 #from CASClient import CASClient
 from src import dbusers
 from src import dbmenus
@@ -282,7 +283,16 @@ def editing_plate():
 def log_food():
     if request.method == 'POST':
         return redirect('/homepage')
-    return render_template('logfood.html')
+    elif request.method == 'GET':
+        date_obj = datetime.datetime.now(timezone('US/Eastern')).date()
+        today = date_obj.strftime("%Y-%m-%d")
+
+        default_dhall = 'Center for Jewish Life'
+        breakfast = dbmenus.query_menu_display(today, 'breakfast', dhall = default_dhall)
+        lunch = dbmenus.query_menu_display(today, 'lunch', dhall = default_dhall)
+        dinner = dbmenus.query_menu_display(today, 'dinner', dhall = default_dhall)
+
+    return render_template('logfood.html', breakfast = breakfast, lunch = lunch, dinner = dinner)
 
 #--------------------------------------------------------------------
 
