@@ -3,11 +3,18 @@ from dbfunctions import connectmongo
 import sys
 from datetime import datetime
 from pytz import timezone
+from dotenv import load_dotenv
+import os
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
 #
 #----------------------------------------------------------------------
+
+load_dotenv()
+user = os.getenv("MONGODB_USERNAME")
+password = os.getenv("MONGODB_PASSWORD")
+
 
 # Delete food entries and nutrition info prior to today and updates dining hall 
 # menus for the next two weeks 
@@ -57,7 +64,9 @@ def update_menu(menu_list):
 
 # Retrive food items for menu by date, mealtime, and dhall (optional)
 def query_menu_display(date, mealtime, dhall = None):
+    print('we made it into the method')
     with connectmongo() as client:
+        print('we connected to the client')
         db = client.db
         menu_col = db.menus
 
@@ -66,19 +75,22 @@ def query_menu_display(date, mealtime, dhall = None):
         else:
             documents_to_find = {"date": {"$eq": date}, "mealtime": {"$eq": mealtime}, "dhall":{"$eq": dhall}}
 
-        try:
+        try: 
             result = menu_col.find(documents_to_find)
             print(f"found documents: {result}")
             list_result = list(result)
+            print('made it here?')
             if len(list_result) == 0:
                 print("No menu documents found")
                 return
             return list_result
     
-        except pymongo.errors.OperationFailure:
+        except pymongo.errors.OperationFailure as e:
+            print(e)
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
             sys.exit(1)
-        except pymongo.errors.ServerSelectionTimeoutError:
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            print(e)
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
             
