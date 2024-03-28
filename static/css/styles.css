@@ -73,3 +73,9 @@ body {
 .fixed-top {
     padding: 0.5rem !important;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
