@@ -12,16 +12,20 @@ path.append('src/db')
 from flask import Flask, render_template, request, redirect, make_response
 import time
 import datetime
+import os
+import dotenv
 #from CASClient import CASClient
 from src import dbusers
 from src import dbmenus
 from src import utils
+from src import auth
 
 
 #--------------------------------------------------------------------
 
 app = Flask(__name__)
-#_cas = CASClient()
+dotenv.load_dotenv()
+app.secret_key = os.environ['APP_SECRET_KEY']
 
 #--------------------------------------------------------------------
 
@@ -40,6 +44,7 @@ def get_ampm():
 
 @app.route('/', methods=['GET'])
 def index():
+    netid = auth.authenticate()
     # Check if it is a user's first visit
     visited_before = request.cookies.get('visited_before')
 
@@ -57,11 +62,12 @@ def index():
 
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
+    netid = auth.authenticate()
     #netid = _cas.authenticate()
     #netid = netid.rstrip()
 
     # Placeholder values
-    netid = 'jm0278' 
+    #netid = 'jm0278' 
 
     # will need to call whenever an existing user logs in
     profile = dbusers.userlogin(netid)
@@ -96,12 +102,14 @@ def homepage():
 
 @app.route('/about', methods=['GET'])
 def about():
+    netid = auth.authenticate()
     return render_template('about.html')
 
 #--------------------------------------------------------------------
 
 @app.route('/menus', methods=['GET'])
 def dhall_menus():
+    netid = auth.authenticate()
     # Fetch menu data from database
     # test data
     current_date = datetime.datetime.today()
@@ -130,6 +138,7 @@ def dhall_menus():
 
 @app.route('/update-menus-mealtime', methods=['GET'])
 def update_menus_mealtime():
+    netid = auth.authenticate()
     mealtime = request.args.get('mealtime')
 
     current_date = datetime.datetime.today()
@@ -159,13 +168,17 @@ def update_menus_mealtime():
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def first_contact():
+    netid = auth.authenticate()
     if request.method == 'POST':
         # Placeholder netID
-        netid = 'jm0278'
+        #netid = 'jm0278'
         # Get value entered into the calorie goal box
         user_goal = request.form['line']
         # Store value into database
-        dbusers.updategoal(netid, user_goal)
+        if dbusers.finduser(netid) is None:
+            dbusers.newuser(netid, user_goal)
+        else:
+            dbusers.updategoal(netid, user_goal)
         return redirect('/homepage')
 
     return render_template('firstcontact.html')
@@ -174,8 +187,9 @@ def first_contact():
 
 @app.route('/history', methods=['GET'])
 def history():
+    netid = auth.authenticate()
     # find current user
-    profile = dbusers.finduser('jm0278')
+    profile = dbusers.finduser(netid)
     cal_his, carb_his, prot_his, fat_his, dates = utils.get_corresponding_arrays(profile['cal_his'], 
                                                                                 profile['carb_his'],
                                                                                 profile['prot_his'],
@@ -206,8 +220,9 @@ def history():
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
+    netid = auth.authenticate()
     if request.method == 'POST':
-        netid = 'jm0278'
+        #netid = 'jm0278'
         new_user_goal = request.form['line']
         dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
@@ -218,9 +233,10 @@ def settings():
 
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
+    netid = auth.authenticate()
 
     # Placeholder values
-    netid = 'jm0278' 
+    #netid = 'jm0278' 
     cursor = dbusers.finduser(netid)
     cal_goal = int(cursor['caloricgoal'])
     curr_caltotal = cursor['cal_his'][0]
@@ -280,9 +296,16 @@ def editing_plate():
 
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
+    netid = auth.authenticate()
     if request.method == 'POST':
         return redirect('/homepage')
     return render_template('logfood.html')
+
+#--------------------------------------------------------------------
+
+@app.route('/logout', methods=['GET'])
+def logoutcas():
+    return auth.logoutcas()
 
 #--------------------------------------------------------------------
 
