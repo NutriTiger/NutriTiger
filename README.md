@@ -27,7 +27,9 @@
 ```sh
 pip install -r requirements.txt
 ```
-3. Configure .env file with tokens/secrets for the database
+3. Configure .env file with tokens/secrets for the database. For CAS authentication, please specify the following environment variable
+
+APP_SECRET_KEY=<somesecretkey>
 
 4. ``python app.py``
 ## Contributing
