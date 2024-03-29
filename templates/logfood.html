@@ -26,7 +26,7 @@
     </p>
     
     <!-- Select buttons: Dining Hall, Mealtime -->
-    <div class="row">
+    <div class="row p-2">
         <div class="col-sm-3">
             <select class="form-select form-select-sm" aria-label="select_dhall" style="background-color: rgb(250, 160, 58);">
                 <option selected>Select Dining Hall</option>
@@ -51,7 +51,7 @@
     </div>
 
     <!--Two cards: one for the food list, and one for My Plate-->
-    <div class="row">
+    <div class="row p-2">
         <div class="col-sm-6 m-3">
           <div class="card">
             <div class="card-body">
@@ -69,12 +69,13 @@
           </div>
         </div>
       </div>
-
-    <h3>Done adding food to your plate?</h3>
-
-    <form action="/logfood" method="post">
+    
+    <div class="container p-5">
+      <h4>Done adding food to your plate?</h4>
+      <form action="/logfood" method="post" class="p-3">
         <button type="submit" name="upload_plate">Upload Plate and Return</button>
-    </form>
+      </form>
+    </div>
 
 </body>
 </html>
