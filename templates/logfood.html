@@ -132,6 +132,9 @@
 
         fetch(url)
         .then(response => {
+          if (response.status === 404) {
+            throw new Error('Not Found: The requested resource was not found');
+          }
           if (response.headers.get("content-type").includes("application/json")) {
             return response.json();
           } else {
