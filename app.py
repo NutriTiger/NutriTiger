@@ -308,7 +308,6 @@ def log_food():
 def log_food_data():
     dhall = request.args.get('dhall', type = str)
     mealtime = request.args.get('mealtime', type = str)
-
     print(f"dhall: {dhall}, mealtime: {mealtime}")
 
     current_date = datetime.datetime.today()
@@ -318,6 +317,7 @@ def log_food_data():
     # query menu documents
     menus = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
 
+    print(menus)
     if not menus:
         return jsonify({"error": "No data found"}), 404
     result = menus[0]
