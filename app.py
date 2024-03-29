@@ -9,7 +9,7 @@ from sys import path
 path.append('src')
 path.append('src/db')
 
-from flask import Flask, render_template, request, redirect, make_response
+from flask import Flask, render_template, request, redirect, make_response, jsonify
 import time
 import datetime
 from pytz import timezone
@@ -111,6 +111,7 @@ def dhall_menus():
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
     is_weekend_var = utils.is_weekend(current_date.date())
     print('we made it here')
+
     data = dbmenus.query_menu_display(current_date_zeros, mealtime)
     print('past the data line')
     print(data)
@@ -137,7 +138,6 @@ def update_menus_mealtime():
     current_date = datetime.datetime.today()
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
-
 
     data = dbmenus.query_menu_display(current_date_zeros, mealtime)
     print(data)
@@ -284,31 +284,54 @@ def editing_plate():
 def log_food():
     if request.method == 'POST':
         return redirect('/homepage')
-    
-    date_obj = datetime.datetime.now(timezone('US/Eastern')).date()
-    today = date_obj.strftime("%Y-%m-%d")
 
-    dhall = request.args.get('dhall')
-    mealtime = request.args.get('mealtime')
-
-    if dhall is None and mealtime is None:
-        print("no dhall and no mealtime sent")
-        return render_template('logfood.html')
     
-    menu = dbmenus.query_menu_display(today, mealtime, dhall)
-    if (len(menu) == 0):
-        return render_template('logfood.html', message = "no food items found") 
+
+    eastern = timezone('America/New_York')
+    now_est = datetime.datetime.now(eastern)
+    menu = dbmenus.query_menu_display(now_est, 'breakfast', 'Rockefeller & Mathey Colleges')
+    if not menu:
+        return render_template('logfood.html') 
     # Given the new data structure, mealtime/dhall pairs only have one corresponding document
     result = menu[0]
     food_list = []
-    for category in result['data'].values():
-    # Extend the food_items list with the keys from each dictionary
-        food_list.extend(category.keys())
 
+    # Extend the food_items list with the keys from each dictionary
+    for category in result['data'].values():
+        food_list.extend(category.keys())
 
     return render_template('logfood.html', food_items = food_list)
 
 #--------------------------------------------------------------------
 
+@app.route('/logfood/data', methods=['GET'])
+def log_food_data():
+    dhall = request.args.get('dhall', type = str)
+    mealtime = request.args.get('mealtime', type = str)
+
+    print(f"dhall: {dhall}, mealtime: {mealtime}")
+
+    current_date = datetime.datetime.today()
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+
+
+    # query menu documents
+    menus = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
+
+    if not menus:
+        return jsonify({"error": "No data found"}), 404
+    result = menus[0]
+   
+    food_list = []
+
+    # Extend the food_items list with the keys from each dictionary
+    for category in result['data'].values():
+        food_list.extend(category.keys())
+
+
+    return jsonify(food_list)
+
+#--------------------------------------------------------------------
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=55556, debug=True, threaded=True)
+    app.run(host='localhost', port=55556, debug=True, threaded=True)

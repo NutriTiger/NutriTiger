@@ -1,20 +1,14 @@
 import pymongo
 from dbfunctions import connectmongo
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
-from dotenv import load_dotenv
-import os
+
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
 #
 #----------------------------------------------------------------------
-
-load_dotenv()
-user = os.getenv("MONGODB_USERNAME")
-password = os.getenv("MONGODB_PASSWORD")
-
 
 # Delete food entries and nutrition info prior to today and updates dining hall 
 # menus for the next two weeks 
@@ -70,19 +64,36 @@ def query_menu_display(date, mealtime, dhall = None):
         db = client.db
         menu_col = db.menus
 
-        if dhall is None:
-            documents_to_find = {"date": {"$eq": date}, "mealtime": {"$eq": mealtime}}
+        # Strip the time portion to get the start of today in Eastern Time
+        start_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        print("start:")
+        print(start_day)
+
+        # Define the end of today as just before midnight in Eastern Time
+        end_day = start_day + timedelta(days=1) - timedelta(microseconds=1)
+        print("end:")
+        print(end_day)
+
+        if dhall:
+            documents_to_find = {"date": {
+            "$gte": start_day,
+            "$lt": end_day}, "mealtime": mealtime, "dhall": dhall}
         else:
-            documents_to_find = {"date": {"$eq": date}, "mealtime": {"$eq": mealtime}, "dhall":{"$eq": dhall}}
+            documents_to_find = {"date": {
+            "$gte": start_day,
+            "$lt": end_day}, "mealtime": mealtime}
+        print(documents_to_find)
 
         try: 
             result = menu_col.find(documents_to_find)
-            print(f"found documents: {result}")
+            print(f"cursor: {result}")
+
             list_result = list(result)
-            print('made it here?')
-            if len(list_result) == 0:
+            if not list_result:
                 print("No menu documents found")
-                return
+                return []
+            else:
+                print('Documents found:', list_result)
             return list_result
     
         except pymongo.errors.OperationFailure as e:
@@ -93,7 +104,6 @@ def query_menu_display(date, mealtime, dhall = None):
             print(e)
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
-            
 # Testing
 def main():
     newmenu = [
