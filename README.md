@@ -67,13 +67,39 @@ When you are wanting to merge with main.
 Miscellaneous Commands
 ``python –m pip freeze > requirements.txt``
 
+To tag a branch
+- ``git checkout prototype``
+- ``git tag archive/prototype prototype``
+- ``git push --tags``
+
 ### Database Guidelines
 The db files (under src) require a mongodb username and password with read and write access to connect to the database. This information was previously shared to you.
 
-When you are ready to run any of the database files, make sure you have created a file named ``.env`` in the main NutriTiger directory. In that file, write the lines:
+
+
+When you are ready to run any of the database files, create a``.env`` in the main NutriTiger directory by using the command,
+``touch .env`` in the terminal. In that file, write the lines:
 ``MONGODB_USERNAME=<username>``
 ``MONGODB_PASSWORD=<password>``
 Replace ``<username>`` and ``<password>`` with the NutriTiger mongodb username and password accordingly.
 
 Additionally, make sure your current IP address has network access. Go to the MongoDB Atlas Nutritiger project and click on "Network Access" on the left side menu. If you have the message that your current IP address is not added, click to add your current IP address to the access list. You must be connected to password protected WiFi to have network access.
 
+### To create a virtual environment, note "myvenv" is a name that can be replaced with whatever you prefer
+python3.11 -m venv myvenv
+
+### To open the virtual environment
+source myvenv/bin/activate
+
+In order for the program to run, you must be using Python 3.11. Check your version within the virtual environment with:
+python --version, OR
+python3 --version
+
+If there are issues with version, refer back to the Python download document. 
+
+
+If you face this error: ``SSL CERTIFICATE_VERIFY_FAILED certificate verify failed unable to get local issuer certificate``,
+then Python is unable to verify the SSL certificate of a website you are trying to access. MacOS users may run this
+in the terminal (or find the Certificates.command and click it):
+
+/Applications/Python\ 3.11/Install\ Certificates.command

@@ -9,7 +9,6 @@
 <html lang="en">
 <!-- to remove once we add to logfood.html -->
 
-<section>
     <div class="container mt-5">
         <h1>Dining Hall Menus</h1>
         <select id="diningHallSelect" class="form-control my-3">
@@ -39,13 +38,28 @@
         <div class="tab-content" id="mealTimeContent">
             <div class="tab-pane fade show active" id="breakfast" role="tabpanel" aria-labelledby="breakfast-tab">
                 <!-- Breakfast content goes here -->
+                {% for item in breakfast %}
+                <div>
+                    <p>{{item}}</p>
+                </div>
+                {% endfor %}
                 
             </div>
             <div class="tab-pane fade" id="lunch" role="tabpanel" aria-labelledby="lunch-tab">
                 <!-- Lunch content goes here -->
+                {% for item in lunch %}
+                <div>
+                    <p>{{item}}</p>
+                </div>
+                {% endfor %}
             </div>
             <div class="tab-pane fade" id="dinner" role="tabpanel" aria-labelledby="dinner-tab">
                 <!-- Dinner content goes here -->
+                {% for item in dinner %}
+                <div>
+                    <p>{{item}}</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -57,42 +71,26 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Event listener for the dropdown selection change
+            // Dining hall selection change
             document.getElementById('diningHallSelect').addEventListener('change', function() {
-                var selectedHall = this.value; // Get the value of the selected option
-                
-                // Message
-                console.log("Selected dining hall:", selectedHall); 
-                
-                // Make an AJAX request
+                var selectedHall = this.value;
+                // Default fetch for breakfast or could fetch all meals and store
                 fetchMenuData(selectedHall);
             });
+
+            // Add event listeners for mealtime tabs
+            var mealTabs = document.querySelectorAll('.nav-link');
+            mealTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    var selectedHall = document.getElementById('diningHallSelect').value;
+                    var selectedMealtime = this.id.replace('-tab', ''); // gets 'breakfast', 'lunch', or 'dinner' from the id
+                    fetchMenuData(selectedHall, selectedMealtime);
+                });
+            });
         });
-        // function handleError() {
-        //     alert("Error: Failed to fetch data from server");
-        // }
-        // function handleResponse() {
-        //     if (this.status !== 200) {
-        //         alert('Error: Failed to fetch data from server');
-        //         return;
-        //     }
-        //     let resultsDiv = document.getElementById('');
-        // }
+      
         function fetchMenuData(hallId) {
-            // Example AJAX request to fetch data based on the selected dining hall
-            // This URL is just an example; you'll need to replace it with your actual data source
-            // let encodedhallId = encodeURIComponent(hallId);
-            // let url = '/logfood?dhall=' + encodedhallId;
-            // let request = new XMLHttpRequest();
-            // request.onload = handleResponse;
-            // request.onerror = handleError;
-            // request.open('GET', url);
-            // request.send();
-
-            // not sure what to the url should be
-
-            var url = '/logfood'
-
+            var url = `/logfood?dhall=${hallId}&mealtime=${mealtime}`;
 
             fetch(url)
             .then(response => response.json())
@@ -108,7 +106,7 @@
         function updateMealContent(meal, items) {
             const container = document.getElementById(meal);
             container.innerHTML = ''; // Clear existing content
+            container.innerHTML = '<div><p>{{items[1]}}</p></div>';
         }
     </script>
-</section>
 </html>
