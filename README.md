@@ -65,6 +65,11 @@ When you are wanting to merge with main.
 Miscellaneous Commands
 ``python –m pip freeze > requirements.txt``
 
+To tag a branch
+- ``git checkout prototype``
+- ``git tag archive/prototype prototype``
+- ``git push --tags``
+
 ### Database Guidelines
 The db files (under src) require a mongodb username and password with read and write access to connect to the database. This information was previously shared to you.
 
