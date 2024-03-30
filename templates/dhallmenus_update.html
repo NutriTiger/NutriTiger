@@ -1,3 +1,5 @@
+
+
 <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
     {% for item in data %}
     <div class="col">
@@ -8,7 +10,24 @@
              {% for category, foods in item.data.items() %}
              <h6>{{ category }}</h6>
              {% for food, code in foods.items() %}
-             <a tabindex="0" class="btn nt-food-text" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Nutritional Content" data-bs-content="{{ nutritional_content }}">{{ food }}</a>
+             <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-27" href="#">{{ food }}</a>
+             <!-- data-bs-trigger="hover focus" -->
+             <div style="display: none;" id="popover-27">
+               <div class="center">
+                  {{ nutritional_content }}
+                  <h2>Centered Title</h2>
+                  </div>
+                  <div class="center">
+                  <ul>
+                     <li>Item 1</li>
+                     <li>Item 2</li>
+                     <li>Item 3</li>
+                     <li>Item 4</li>
+                  </ul>
+                  </div>
+            </div>
+             
+            
              <br>
              {% endfor %}
              {% endfor %}

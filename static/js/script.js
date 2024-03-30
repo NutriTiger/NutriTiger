@@ -2,6 +2,8 @@
 
 function handleResponse(data) {
     $('#dhallMenusDiv').html(data);
+    // After adding dynamic content to the DOM, call the setup function
+    setup();
 }
 
 function handleError() {
@@ -23,49 +25,33 @@ function getResults() {
 }
 
 function setup() {
+    // Initialize popovers for dynamically generated content
+    /*const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+    const popover = new bootstrap.Popover('.popover-dismiss', {
+        trigger: 'focus'
+      })*/
+      var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    const popoverId = popoverTriggerEl.attributes['data-content-id'];
+    if (popoverId) {
+        const contentEl = $(`#${popoverId.value}`).html();
+        return new bootstrap.Popover(popoverTriggerEl, {
+            content: contentEl,
+            html: true,
+        });
+    } else { // do something else cause data-content-id isn't there.
+    }
+});
+
+      
+}
+
+
+
+$(document).ready(function() {
     getResults();
     $("input[name='mealtime_btnradio']").change(function() {
         getResults();
     });
-}
-
-$('document').ready(setup);
-
-// popover js
-var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl, {
-        html: true // Set html option to true to allow HTML content
-    });
 });
-
-
-// button js classes
-document.addEventListener('DOMContentLoaded', function() {
-    var buttons = document.querySelectorAll('.nt-food-text');
-    
-    buttons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            // Remove 'selected' class from all buttons
-            buttons.forEach(function(btn) {
-                btn.classList.remove('nt-food-button-active');
-            });
-
-            // Add 'selected' class to the clicked button
-            this.classList.add('nt-food-button-active');
-        });
-    });
-
-    // Add click event listener to the document body
-    document.body.addEventListener('click', function(event) {
-        // Check if the clicked element is not a button
-        if (!event.target.classList.contains('nt-food-text')) {
-            // Remove 'selected' class from all buttons
-            buttons.forEach(function(btn) {
-                btn.classList.remove('nt-food-button-active');
-            });
-        }
-    });
-});
-
-
