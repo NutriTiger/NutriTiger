@@ -3,11 +3,13 @@ from dbfunctions import connectmongo
 import sys
 from datetime import datetime
 from pytz import timezone
+
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
 #
 #----------------------------------------------------------------------
+
 
 # Inserts nutrition information of the upcoming two weeks of food (as input)
 # call update_menu before to delete nutrition info

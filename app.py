@@ -9,20 +9,24 @@ from sys import path
 path.append('src')
 path.append('src/db')
 
-from flask import Flask, render_template, request, redirect, make_response
+from flask import Flask, render_template, request, redirect, make_response, jsonify
 import time
 import datetime
+import os
+import dotenv
 from pytz import timezone
 #from CASClient import CASClient
 from src import dbusers
 from src import dbmenus
 from src import utils
+from src import auth
 
 
 #--------------------------------------------------------------------
 
 app = Flask(__name__)
-#_cas = CASClient()
+dotenv.load_dotenv()
+app.secret_key = os.environ['APP_SECRET_KEY']
 
 #--------------------------------------------------------------------
 
@@ -41,6 +45,7 @@ def get_ampm():
 
 @app.route('/', methods=['GET'])
 def index():
+    netid = auth.authenticate()
     # Check if it is a user's first visit
     visited_before = request.cookies.get('visited_before')
 
@@ -58,11 +63,12 @@ def index():
 
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
+    netid = auth.authenticate()
     #netid = _cas.authenticate()
     #netid = netid.rstrip()
 
     # Placeholder values
-    netid = 'jm0278' 
+    #netid = 'jm0278' 
 
     # will need to call whenever an existing user logs in
     profile = dbusers.userlogin(netid)
@@ -97,21 +103,24 @@ def homepage():
 
 @app.route('/about', methods=['GET'])
 def about():
+    netid = auth.authenticate()
     return render_template('about.html')
 
 #--------------------------------------------------------------------
 
 @app.route('/menus', methods=['GET'])
 def dhall_menus():
+    netid = auth.authenticate()
     # Fetch menu data from database
     # test data
     current_date = datetime.datetime.today()
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
     is_weekend_var = utils.is_weekend(current_date.date())
-
+    print('we made it here')
 
     data = dbmenus.query_menu_display(current_date_zeros, mealtime)
+    print('past the data line')
     print(data)
 
 
@@ -131,12 +140,12 @@ def dhall_menus():
 
 @app.route('/update-menus-mealtime', methods=['GET'])
 def update_menus_mealtime():
+    netid = auth.authenticate()
     mealtime = request.args.get('mealtime')
 
     current_date = datetime.datetime.today()
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
-
 
     data = dbmenus.query_menu_display(current_date_zeros, mealtime)
     print(data)
@@ -160,13 +169,17 @@ def update_menus_mealtime():
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def first_contact():
+    netid = auth.authenticate()
     if request.method == 'POST':
         # Placeholder netID
-        netid = 'jm0278'
+        #netid = 'jm0278'
         # Get value entered into the calorie goal box
         user_goal = request.form['line']
         # Store value into database
-        dbusers.updategoal(netid, user_goal)
+        if dbusers.finduser(netid) is None:
+            dbusers.newuser(netid, user_goal)
+        else:
+            dbusers.updategoal(netid, user_goal)
         return redirect('/homepage')
 
     return render_template('firstcontact.html')
@@ -175,8 +188,9 @@ def first_contact():
 
 @app.route('/history', methods=['GET'])
 def history():
+    netid = auth.authenticate()
     # find current user
-    profile = dbusers.finduser('jm0278')
+    profile = dbusers.finduser(netid)
     cal_his, carb_his, prot_his, fat_his, dates = utils.get_corresponding_arrays(profile['cal_his'], 
                                                                                 profile['carb_his'],
                                                                                 profile['prot_his'],
@@ -207,8 +221,9 @@ def history():
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
+    netid = auth.authenticate()
     if request.method == 'POST':
-        netid = 'jm0278'
+        #netid = 'jm0278'
         new_user_goal = request.form['line']
         dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
@@ -219,9 +234,10 @@ def settings():
 
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
+    netid = auth.authenticate()
 
     # Placeholder values
-    netid = 'jm0278' 
+    #netid = 'jm0278' 
     cursor = dbusers.finduser(netid)
     cal_goal = int(cursor['caloricgoal'])
     curr_caltotal = cursor['cal_his'][0]
@@ -281,18 +297,61 @@ def editing_plate():
 
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
+    netid = auth.authenticate()
     if request.method == 'POST':
         return redirect('/homepage')
-    elif request.method == 'GET':
-        date_obj = datetime.datetime.now(timezone('US/Eastern')).date()
-        today = date_obj.strftime("%Y-%m-%d")
 
-        default_dhall = 'Center for Jewish Life'
-        breakfast = dbmenus.query_menu_display(today, 'breakfast', dhall = default_dhall)
-        lunch = dbmenus.query_menu_display(today, 'lunch', dhall = default_dhall)
-        dinner = dbmenus.query_menu_display(today, 'dinner', dhall = default_dhall)
+    
 
-    return render_template('logfood.html', breakfast = breakfast, lunch = lunch, dinner = dinner)
+    eastern = timezone('America/New_York')
+    now_est = datetime.datetime.now(eastern)
+    menu = dbmenus.query_menu_display(now_est, 'breakfast', 'Rockefeller & Mathey Colleges')
+    if not menu:
+        return render_template('logfood.html') 
+    # Given the new data structure, mealtime/dhall pairs only have one corresponding document
+    result = menu[0]
+    food_list = []
+
+    # Extend the food_items list with the keys from each dictionary
+    for category in result['data'].values():
+        food_list.extend(category.keys())
+
+    return render_template('logfood.html', food_items = food_list)
+
+#--------------------------------------------------------------------
+
+@app.route('/logfood/data', methods=['GET'])
+def log_food_data():
+    dhall = request.args.get('dhall', type = str)
+    mealtime = request.args.get('mealtime', type = str)
+    print(f"dhall: {dhall}, mealtime: {mealtime}")
+
+    current_date = datetime.datetime.today()
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+
+
+    # query menu documents
+    menus = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
+
+    print(menus)
+    if not menus:
+        return jsonify({"error": "No data found"}), 404
+    result = menus[0]
+   
+    food_list = []
+
+    # Extend the food_items list with the keys from each dictionary
+    for category in result['data'].values():
+        food_list.extend(category.keys())
+
+
+    return jsonify(food_list)
+
+#--------------------------------------------------------------------
+
+@app.route('/logout', methods=['GET'])
+def logoutcas():
+    return auth.logoutcas()
 
 #--------------------------------------------------------------------
 
