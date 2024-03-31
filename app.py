@@ -18,6 +18,7 @@ from pytz import timezone
 #from CASClient import CASClient
 from src import dbusers
 from src import dbmenus
+from src import dbnutrition
 from src import utils
 from src import auth
 
@@ -114,14 +115,20 @@ def dhall_menus():
     # Fetch menu data from database
     # test data
     current_date = datetime.datetime.today()
-    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    #current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
     is_weekend_var = utils.is_weekend(current_date.date())
-    print('we made it here')
+    #print('we made it here')
 
-    data = dbmenus.query_menu_display(current_date_zeros, mealtime)
-    print('past the data line')
-    print(data)
+    #data = dbmenus.query_menu_display(current_date_zeros, mealtime)
+
+    #recipeids = utils.gather_recipes(data)
+    #nutrition_info = dbnutrition.find_one_nutrition('560154')
+    #nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+    #print('past the data line')
+    #print(recipeids)
+    #print("------------------------------------")
+    #print(nutrition_info)
 
 
     locations = ["Center for Jewish Life",
@@ -135,8 +142,7 @@ def dhall_menus():
     todays_date = utils.custom_strftime(current_date)
     print(todays_date)
 
-    return render_template('dhallmenus.html', todays_date=todays_date, locations=locations, data=data,
-                           nutritional_content=nutritional_content, is_weekend_var=is_weekend_var, mealtime=mealtime)
+    return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 @app.route('/update-menus-mealtime', methods=['GET'])
 def update_menus_mealtime():
@@ -148,7 +154,16 @@ def update_menus_mealtime():
     is_weekend_var = utils.is_weekend(current_date.date())
 
     data = dbmenus.query_menu_display(current_date_zeros, mealtime)
-    print(data)
+    #print(data)
+
+    
+    recipeids = utils.gather_recipes(data)
+    #nutrition_info = dbnutrition.find_one_nutrition('560154')
+    nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+    #print('past the data line')
+    #print(recipeids)
+    print("------------------------------------")
+    #print(nutrition_info)
 
 
     locations = ["Center for Jewish Life",
@@ -163,7 +178,7 @@ def update_menus_mealtime():
     print(todays_date)
 
     return render_template('dhallmenus_update.html', todays_date=todays_date, locations=locations, data=data,
-                        nutritional_content=nutritional_content, is_weekend_var=is_weekend_var, mealtime=mealtime)
+                        nutritional_content=nutritional_content, nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 #--------------------------------------------------------------------
 
