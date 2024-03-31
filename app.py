@@ -72,14 +72,16 @@ def homepage():
     #netid = 'jm0278' 
 
     # will need to call whenever an existing user logs in
-    profile = dbusers.userlogin(netid)
+    cursor = dbusers.finduser(netid)
+    curr_prots = round(float(cursor['prot_his'][0]), 1)
+    curr_carbs = round(float(cursor['carb_his'][0]), 1)
+    curr_fats = round(float(cursor['fat_his'][0]), 1)
+    print(curr_prots, curr_carbs, curr_fats)
 
-    curr_caltotal = profile['cal_his'][0]
-
-    cal_goal = int(profile['caloricgoal'])
+    curr_caltotal = round(float(cursor['cal_his'][0]), 1)
+    cal_goal = int(cursor['caloricgoal'])
 
     # Copy pasted from editing plate method below
-    cursor = dbusers.finduser(netid)
     entries_info = cursor['daily_rec']
 
     # Testing filling the entries
@@ -96,9 +98,15 @@ def homepage():
     if request.method == 'POST':
         return redirect('/editingplate')
 
-    return render_template('homepage.html', ampm=get_ampm(), netid=netid,
-                           curr_caltotal=curr_caltotal, cal_goal=cal_goal,
-                           entries_food_dict=entries_food_dict)
+    return render_template('homepage.html', 
+                            ampm=get_ampm(), 
+                            netid=netid,
+                            prots=curr_prots,
+                            carbs=curr_carbs,
+                            fats=curr_fats,
+                            curr_caltotal=curr_caltotal, 
+                            cal_goal=cal_goal,
+                            entries_food_dict=entries_food_dict)
 
 #--------------------------------------------------------------------
 
