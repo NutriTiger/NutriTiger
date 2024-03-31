@@ -10,11 +10,11 @@
              {% for category, foods in item.data.items() %}
              <h6>{{ category }}</h6>
              {% for food, code in foods.items() %}
-             <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-27" href="#">{{ food }}</a>
+             <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-27">{{ food }}</a>
              <!-- data-bs-trigger="hover focus" -->
              <div style="display: none;" id="popover-27">
                <div class="center">
-                  {{ nutritional_content }}
+                  {{ nutrition_info[loop.index]['calories'] }}
                   <h2>Centered Title</h2>
                   </div>
                   <div class="center">

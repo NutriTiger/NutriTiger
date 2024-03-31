@@ -69,6 +69,13 @@ def get_average(array, ndays):
             length = length + 1
     return sum/length
 
+def gather_recipes(data):
+    recipe_ids = set()
+    for entry in data:
+        for meal_data in entry['data'].values():
+            recipe_ids.update(meal_data.values())
+    return list(recipe_ids)
+
 def main():
     # Unit testing checks of functions
     date = datetime.datetime(2024, 3, 25)
