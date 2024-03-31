@@ -76,7 +76,6 @@ def homepage():
     curr_prots = round(float(cursor['prot_his'][0]), 1)
     curr_carbs = round(float(cursor['carb_his'][0]), 1)
     curr_fats = round(float(cursor['fat_his'][0]), 1)
-    print(curr_prots, curr_carbs, curr_fats)
 
     curr_caltotal = round(float(cursor['cal_his'][0]), 1)
     cal_goal = int(cursor['caloricgoal'])
@@ -262,6 +261,9 @@ def editing_plate():
     # Placeholder values
     #netid = 'jm0278' 
     cursor = dbusers.finduser(netid)
+    curr_prots = round(float(cursor['prot_his'][0]), 1)
+    curr_carbs = round(float(cursor['carb_his'][0]), 1)
+    curr_fats = round(float(cursor['fat_his'][0]), 1)
     cal_goal = int(cursor['caloricgoal'])
     curr_caltotal = cursor['cal_his'][0]
     entries_info = cursor['daily_rec']
@@ -314,7 +316,8 @@ def editing_plate():
     
     return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
                            curr_caltotal=curr_caltotal, cal_goal=cal_goal,
-                           entries_food_dict=entries_food_dict)
+                           entries_food_dict=entries_food_dict,
+                           prots=curr_prots, carbs=curr_carbs, fats=curr_fats,)
 
 #--------------------------------------------------------------------
 

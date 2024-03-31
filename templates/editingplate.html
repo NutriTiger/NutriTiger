@@ -28,11 +28,17 @@
               <h4 class="text-center py-3">My Macros</h4>
               <h5 class="text-center">Daily calorie goal: {{cal_goal}}cal</h5>
 
-                <div class="prog-container my-2" style="display: flex; justify-content: center;">
-                    <div class="progress" style="height: 50px; width: 300px;">
-                      <div class="progress-bar bg-success dynamic-progress-bar" role="progressbar" style="width: {{ (curr_caltotal / cal_goal) * 100 }}%;" aria-valuenow="{{curr_caltotal}}" aria-valuemin="0" aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal</div>
-                    </div>
+              <div class="prog-container my-2" style="display: flex; justify-content: center;">
+                <div class="progress" style="height: 50px; width: 300px;">
+                  <div class="progress-bar dynamic-progress-bar" 
+                      role="progressbar" 
+                      style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223);" 
+                      aria-valuenow="{{curr_caltotal}}" 
+                      aria-valuemin="0" 
+                      aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal
                   </div>
+                </div>
+            </div>  
                 
                   <div class="prog-container my-5" style="display: flex; justify-content: center;">
                     <div style="width: 400px; height: 400px; display: flex; justify-content: center;">
@@ -52,7 +58,7 @@
                 <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
                     <div class="row-cols-1 p-2">
-                        <div class="card" id="{{entry}}" style="background-color: lightblue; padding: 10px;">
+                        <div class="card" id="{{entry}}" style="background-color: rgb(246, 173, 173); padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
                                     <h5 class="card-title">{{entry}}</h5>
