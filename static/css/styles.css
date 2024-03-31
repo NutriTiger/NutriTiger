@@ -90,3 +90,32 @@ body {
     flex-direction: column;
     align-items: center;
   }
+
+.histChart-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px; /* Add some padding on the sides */
+}
+.hist-canvas {
+    max-width: 48%;
+    max-height: 55vh;
+    height: auto;
+}
+
+.avg-cals {
+    border-Color: rgba(173, 216, 230); 
+    background-Color: rgba(173, 216, 230, 0.5);
+}
+.avg-prots {
+    border-Color: rgba(255, 182, 193, 1); 
+    background-Color: rgba(255, 182, 193, 0.3);
+}
+.avg-carbs {
+    border-Color: rgb(67, 182, 107); 
+    background-Color: rgb(67, 182, 107, 0.3);
+}
+.avg-fats {
+    border-Color: rgba(255, 205, 86); 
+    background-Color: rgba(255, 205, 86, 0.5);
+}

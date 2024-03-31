@@ -6,28 +6,26 @@
     <title>Line Chart Example</title>
     <!-- Include Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        canvas {
-            width: 95%;
-            height: auto;
-            max-height: 55vh;
-        }
-    </style>
+    <link rel="stylesheet" href="../static/css/styles.css">
 </head>
 
 <body>
-    <!-- HTML canvas element where the chart will be rendered -->
-    <canvas id="myLineChart"></canvas>
+    <div class="histChart-container">
+        <!-- First Chart -->
+        <canvas id="calHistoryChart" class="hist-canvas"></canvas>
+        <!-- Second Chart -->
+        <canvas id="macroHistoryChart" class="hist-canvas"></canvas>
+    </div>
 
     <script>
         var cals = {{ cals | tojson | safe}};
         var prots = {{ prots | tojson | safe}};
-        var carbs = {{ cals | tojson | safe}};
-        var fats = {{ prots | tojson | safe}};
+        var carbs = {{ carbs | tojson | safe}};
+        var fats = {{ fats | tojson | safe}};
         var dates = {{ dates | tojson | safe}};
 
         // Sample data for the line chart
-        var data = {
+        var data1 = {
             labels: dates,
             datasets: [{
                 label: 'Calories', // Label for the dataset
@@ -36,20 +34,23 @@
                 backgroundColor: 'rgba(173, 216, 230, 0.5)',
                 borderWidth: 2, // Line width
                 fill: true // Fill area under the line
-            },
-            {
+            }]
+        };
+        var data2 = {
+            labels: dates,
+            datasets: [{
                 label: 'Proteins', // Label for the dataset
                 data: prots,
-                borderColor: 'rgba(255, 99, 132)', // Line color (red)
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 182, 193, 1)', // Light pink line color
+                backgroundColor: 'rgba(255, 182, 193, 0.3)',
                 borderWidth: 2, // Line width
                 fill: true // Fill area under the line
             },
             {
                 label: 'Carbs', // Label for the dataset
                 data: carbs,
-                borderColor: 'rgba(75, 192, 192)', // Line color (green)
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(67, 182, 107)', // Line color (green)
+                backgroundColor: 'rgba(67, 182, 107, 0.3)',
                 borderWidth: 2, // Line width
                 fill: true // Fill area under the line
             },
@@ -57,26 +58,35 @@
                 label: 'Fats', // Label for the dataset
                 data: fats,
                 borderColor: 'rgba(255, 205, 86)', // Line color (yellow)
-                backgroundColor: 'rgba(255, 205, 86, 0.5)',
+                backgroundColor: 'rgba(255, 205, 86, 0.7)',
                 borderWidth: 2, // Line width
                 fill: true // Fill area under the line
             }]
         };
 
-        // Get the canvas element
-        var ctx = document.getElementById('myLineChart').getContext('2d');
-
-        // Create the line chart
-        var myLineChart = new Chart(ctx, {
-            type: 'bar', // could change to chart
-            data: data,
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true // Start y-axis from 0
-                    }
+        // Options object if you want to use the same options for both charts
+        var options = {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
+        };
+
+        // Initialize the first chart
+        var ctx1 = document.getElementById('calHistoryChart').getContext('2d');
+        var myLineChart1 = new Chart(ctx1, {
+            type: 'line',
+            data: data1,
+            options: options
+        });
+
+        // Initialize the second chart
+        var ctx2 = document.getElementById('macroHistoryChart').getContext('2d');
+        var myLineChart2 = new Chart(ctx2, {
+            type: 'line',
+            data: data2,
+            options: options
         });
     </script>
 

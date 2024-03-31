@@ -11,6 +11,7 @@
     <meta charset="utf-8">
     <title>My History</title>
     {% include 'bootstrap.html' %}
+    <link rel="stylesheet" href="../static/css/styles.css">
 </head>
 
 <body>
@@ -22,7 +23,7 @@
     <!--Four cards (for each average)-->
     <div class="row p-5">
         <div class="col-sm-3">
-          <div class="card">
+          <div class="card avg-cals">
             <div class="card-body text-center">
               <h5 class="card-title">Avg. Calories/Day</h5>
               <p>{{ avg_cals }}cal</p>
@@ -30,7 +31,7 @@
           </div>
         </div>
         <div class="col-sm-3">
-          <div class="card">
+          <div class="card avg-prots">
             <div class="card-body text-center">
               <h5 class="card-title">Avg. Protein</h5>
               <p>{{ avg_pro }}g</p>
@@ -38,7 +39,7 @@
           </div>
         </div>
         <div class="col-sm-3">
-          <div class="card">
+          <div class="card avg-carbs">
             <div class="card-body text-center">
               <h5 class="card-title">Avg. Carbs</h5>
               <p>{{ avg_carbs }}g</p>
@@ -46,7 +47,7 @@
           </div>
         </div>
         <div class="col-sm-3">
-          <div class="card">
+          <div class="card avg-fats">
             <div class="card-body text-center">
               <h5 class="card-title">Avg. Fat</h5>
               <p>{{ avg_fat }}g</p>
