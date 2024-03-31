@@ -30,7 +30,13 @@
 
                 <div class="prog-container my-2" style="display: flex; justify-content: center;">
                     <div class="progress" style="height: 50px; width: 300px;">
-                      <div class="progress-bar bg-success dynamic-progress-bar" role="progressbar" style="width: {{ (curr_caltotal / cal_goal) * 100 }}%;" aria-valuenow="{{curr_caltotal}}" aria-valuemin="0" aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal</div>
+                      <div class="progress-bar dynamic-progress-bar" 
+                          role="progressbar" 
+                          style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223);" 
+                          aria-valuenow="{{curr_caltotal}}" 
+                          aria-valuemin="0" 
+                          aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal
+                      </div>
                     </div>
                 </div>
                 

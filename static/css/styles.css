@@ -91,21 +91,21 @@ body {
     align-items: center;
   }
 
+/* STYLES FOR HISTORY PAGE*/
 .histChart-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 0 20px; /* Add some padding on the sides */
+    padding: 0 20px;
 }
 .hist-canvas {
     max-width: 48%;
     max-height: 55vh;
     height: auto;
 }
-
 .avg-cals {
-    border-Color: rgba(173, 216, 230); 
-    background-Color: rgba(173, 216, 230, 0.5);
+    border-Color: rgb(66, 142, 223); 
+    background-Color: rgba(66, 142, 223, 0.5);
 }
 .avg-prots {
     border-Color: rgba(255, 182, 193, 1); 
@@ -119,3 +119,13 @@ body {
     border-Color: rgba(255, 205, 86); 
     background-Color: rgba(255, 205, 86, 0.5);
 }
+@media (max-width: 768px) {
+    .histChart-container {
+        flex-direction: column;
+        align-items: center; /* Center the charts if desired */
+    }
+    .hist-canvas {
+        max-width: 100%; /* Charts take full width on smaller screens */
+    }
+}
+/*************************/
