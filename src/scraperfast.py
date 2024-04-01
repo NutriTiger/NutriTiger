@@ -38,7 +38,7 @@ import webscraperfast
 # Base URL to retrive the XML for the menus
 BASE_MENUS_URL = "https://menus.princeton.edu/dining/_Foodpro/online-menu/menu2.asp?"
 # Predefined location numbers and descriptions from campus dining
-LOCATION_NUMS = ["01", "03", "04", "05", "06", "08"]
+LOCATION_NUMS = ["05", "03", "01", "08", "06", "04"]
 LOCATION_DESCRIPTION = ["Center for Jewish Life",
                         "Forbes College", "Rockefeller & Mathey Colleges",
                         "Whitman & Butler Colleges",
@@ -55,7 +55,11 @@ def main():
     in a preferred format and print it to stdout.
     """
 
-    todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
+    #todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
+    #tester = asyncio.run(test())
+    #tester = tester[0]
+    #for object in tester[0]:
+    #    print(object)
 
     #for object in todays_menu_items:
     #    print(json.dumps(object, indent=4, default=str))
@@ -63,12 +67,12 @@ def main():
     #for object in todays_nutrition_list:
     #    print(json.dumps(object, indent=4, default=str))
 
-    start_date = datetime.datetime(2024, 3, 26).date()
-    end_date = datetime.datetime(2024, 3, 27).date()
+    start_date = datetime.datetime(2024, 4, 1).date()
+    end_date = datetime.datetime(2024, 4, 2).date()
 
     menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
     #print(menu_items_list_range)
-    #print(menu_items_nutrition_list_range)
+    print(menu_items_nutrition_list_range)
 
 # ---------------------------------------------------------------------
 
@@ -141,7 +145,7 @@ async def get_daily_menus(date=""):
     distinct_recipeid_list = []
 
     # Obtain the menu items from each location
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(raise_for_status=True) as session:
         menu_results = []
         for location_num, location_description in zip(LOCATION_NUMS, LOCATION_DESCRIPTION):
             job = asyncio.ensure_future(get_daily_menu(location_num, location_description, distinct_recipeid_list, session, date))
@@ -167,7 +171,7 @@ async def get_daily_menus(date=""):
 # ---------------------------------------------------------------------
 
 
-async def get_daily_menu(location_num, location_description, distinct_recipeid_list, session, date=""):
+async def get_daily_menu(location_num, location_description, distinct_recipeid_list, session: aiohttp.ClientSession, date=""):
     """
     For a specific location, we make a request for the XML with the
     menu details and create JSON objects based on the unique entree
@@ -189,9 +193,9 @@ async def get_daily_menu(location_num, location_description, distinct_recipeid_l
     # Attempt to make the request to create JSON objects from the menu
     try:
         # Make the request and save the content
-        async with session.get(COMBINED_URL) as request:
-            xml_content = await request.text()
-            soup = BeautifulSoup(xml_content, "xml")
+        async with session.get(COMBINED_URL,  raise_for_status=True) as request:
+            xml_content = await request.text(encoding="ISO-8859-1")
+            soup = BeautifulSoup(xml_content, features="xml")
             mealsList = soup.find_all("meal")
 
             # Final list will all JSON objects to return

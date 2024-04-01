@@ -21,6 +21,8 @@ from bs4 import BeautifulSoup
 # Base URL to retrive the html for the menu item
 BASE_LABEL_URL = "https://menus.princeton.edu/dining/_Foodpro/online-menu/label.asp?RecNumAndPort="
 CALORIES_INDEX = 1
+SERVING_SIZE_INDEX = 0
+SERVING_SIZE_OFFSET = 13
 CALORIES_OFFSET = 9
 PROTEINS_OFFSET = 8
 CARBS_OFFSET = 11
@@ -71,9 +73,9 @@ async def get_nutrition_from_recipe(recipeid, session):
         COMBINED_URL = BASE_LABEL_URL + str(recipeid)
 
         # Make the request and save the content
-        async with session.get(COMBINED_URL) as request:
+        async with session.get(COMBINED_URL, raise_for_status=True) as request:
             #request = requests.get(COMBINED_URL)
-            html_content = await request.text() 
+            html_content = await request.text(encoding="ISO-8859-1") 
             #html_content = request.content
 
             # Parse the content and create the nutrition object to return
@@ -94,6 +96,7 @@ async def get_nutrition_from_recipe(recipeid, session):
                 nutrition_json["carbs"] = ""
                 nutrition_json["fiber"] = ""
                 nutrition_json["suger"] = ""
+                nutrition_json["servingsize"] = ""
                 nutrition_json["cholesterol"] = ""
                 nutrition_json["proteins"] = ""
                 nutrition_json["sodium"] = ""
@@ -108,6 +111,11 @@ async def get_nutrition_from_recipe(recipeid, session):
             # Insert the calories, which is the second sequential element with id facts2
             calories_element = soup.find_all(id="facts2")[CALORIES_INDEX]
             nutrition_json["calories"] = parse_nutrition_value("calories", calories_element)
+
+            # Insert the serving size, which has a unique class
+            serving_size_element = soup.find_all(id="facts2")[SERVING_SIZE_INDEX]
+            nutrition_json["servingsize"] = serving_size_element.text[SERVING_SIZE_OFFSET:]
+            serving_size_element.text[SERVING_SIZE_OFFSET:]
 
             # Obtains entries from the table that represents a nutrition label
             nutrition_table_details = soup.find_all(id="facts4")
