@@ -31,8 +31,8 @@ function setup() {
     const popover = new bootstrap.Popover('.popover-dismiss', {
         trigger: 'focus'
       })*/
-      var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     const popoverId = popoverTriggerEl.attributes['data-content-id'];
     if (popoverId) {
         const contentEl = $(`#${popoverId.value}`).html();

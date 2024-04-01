@@ -1,39 +1,45 @@
-
-
 <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
-    {% for item in data %}
-    <div class="col">
+   
+   {% for item in data %}
+   <div class="col">
        <div class="card h-100">
-          <div class="card-body">
-             <h5 class="card-title text-center">{{ item.dhall }}</h5>
-             
-             {% for category, foods in item.data.items() %}
-             <h6>{{ category }}</h6>
-             {% for food, code in foods.items() %}
-             <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-27">{{ food }}</a>
-             <!-- data-bs-trigger="hover focus" -->
-             <div style="display: none;" id="popover-27">
-               <div class="center">
-                  {{ nutrition_info[loop.index]['calories'] }}
-                  <h2>Centered Title</h2>
-                  </div>
-                  <div class="center">
-                  <ul>
-                     <li>Item 1</li>
-                     <li>Item 2</li>
-                     <li>Item 3</li>
-                     <li>Item 4</li>
-                  </ul>
-                  </div>
-            </div>
-             
-            
-             <br>
-             {% endfor %}
-             {% endfor %}
+           <div class="card-body">
+               <h5 class="card-title text-center">{{ item.dhall }}</h5>
+               
+               {% set outer_outer_loop = loop %}
+               {% for category, foods in item.data.items() %}
+               <h6>{{ category }}</h6>
+               {% set outer_loop = loop %}
+               {% for food, code in foods.items() %}
+               
+               <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">{{ food }}</a>
+               <!-- data-bs-trigger="hover focus" -->
+               <!-- style="display: none;" -->
+               <div style="display: none;" id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">
+                   <div class="center">
+                       {{ outer_outer_loop.index }}
+                       {{ outer_loop.index }}
+                       {{ loop.index }}
+                        <!-- ((outer_loop.index-1) * item.data|length) + idk... foods|length -->
+                       {{ (data|length * (outer_outer_loop.index-1)) +  loop.index + (outer_loop.index-1)}}
+                       
+                       <h2>Centered Title</h2>
+                   </div>
+                   <div class="center">
+                       <ul>
+                           <li>Item 1</li>
+                           <li>Item 2</li>
+                           <li>Item 3</li>
+                           <li>Item 4</li>
+                       </ul>
+                   </div>
+               </div>
+               <br>
+               {% endfor %}
+               {% endfor %}
 
-          </div>
+           </div>
        </div>
-    </div>
-    {% endfor %}
- </div>
+   </div>
+   {% endfor %}
+</div>
