@@ -1,57 +1,59 @@
 <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
-   {% set ns = namespace(c = 0) %}
-   {% for item in data %}
-   <div class="col">
-       <div class="card h-100">
-           <div class="card-body">
-               <h5 class="card-title text-center">{{ item.dhall }}</h5>
-               
-               {% set outer_outer_loop = loop %}
-               {% for category, foods in item.data.items() %}
-               <h6>{{ category }}</h6>
-               {% set outer_loop = loop %}
-               {% for food, code in foods.items() %}
-               
-               <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">{{ food }}</a>
-               <!-- data-bs-trigger="hover focus" -->
-               <!-- style="display: none;" -->
-               <div style="display: none;" id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">
-                  {{ ns.c }}
-               {% if ns.c < nutrition_info|length and nutrition_info[ns.c] is not none %}
-                  
-                  <div class="center">
-                       <!--{{ outer_outer_loop.index }}
-                       {{ outer_loop.index }}
-                       {{ loop.index }} 
-                       {{ ns.c }}-->
+    {% set ns = namespace(c = 0) %}
+    {% for item in data %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title text-center">{{ item.dhall }}</h5>
+                {% set outer_outer_loop = loop %}
+                {% for category, foods in item.data.items() %}
+                <h6>{{ category }}</h6>
+                {% set outer_loop = loop %}
+                {% for food, code in foods.items() %}
+                <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="hover focus" data-content-id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">{{ food }}</a>
+                <!-- data-bs-trigger="hover focus" -->
+                <!-- style="display: none;" -->
+                <div style="display: none;" id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">
+                    <!-- {{ ns.c }} -->
+                    {% if ns.c < nutrition_info|length and nutrition_info[ns.c] is not none %}
+                    <div class="center">
+                        <!--{{ outer_outer_loop.index }}
+                            {{ outer_loop.index }}
+                            {{ loop.index }} 
+                            {{ ns.c }}-->
                         <!-- ((outer_loop.index-1) * item.data|length) + idk... foods|length -->
-                       <!-- {{ (data|length * (outer_outer_loop.index-1)) +  loop.index + (outer_loop.index-1)}} -->
-                       <!-- {{ nutrition_info[ns.c] }} -->
-                       
-                       
-                       <h2>Nutritional Content for {{ nutrition_info[ns.c]['mealname'] }}</h2>
-                   </div>
-                   <div class="center">
-                       <ul>
-                           <li>Calories: {{ nutrition_info[ns.c]['calories'] }}</li>
-                           <li>Protein:  {{ nutrition_info[ns.c]['proteins'] }}</li>
-                           <li>Carbohydrates: {{ nutrition_info[ns.c]['carbs'] }}</li>
-                           <li>Fats: {{ nutrition_info[ns.c]['fats'] }}</li>
-                           <li>Ingredients: {{ nutrition_info[ns.c]['ingredients'] }}</li>
-                           <li>Allergens: {{ nutrition_info[ns.c]['allergen'] }}</li>
-                           <li><a href="{{ nutrition_info[ns.c]['link'] }}">Link to see more: {{ nutrition_info[ns.c]['link'] }}</a></li>
-                       </ul>
-                   </div>
-               {% endif %}
-                   
-               </div>
-               <br>
-                  {% set ns.c = ns.c + 1 %}
-               {% endfor %}
-               {% endfor %}
+                        <!-- {{ (data|length * (outer_outer_loop.index-1)) +  loop.index + (outer_loop.index-1)}} -->
+                        <!-- {{ nutrition_info[ns.c] }} -->
+                        <h4>Nutritional Content for {{ nutrition_info[ns.c]['mealname'] }}</h4>
+                    </div>
+                    <div class="center">
+                        <ul>
+                            <li><strong>Serving Size:</strong> </li>
+                            <li><strong>Calories:</strong> {{ nutrition_info[ns.c]['calories'] }}</li>
+                            <li><strong>Protein:</strong>  {{ nutrition_info[ns.c]['proteins'] }}</li>
+                            <li><strong>Carbohydrates:</strong> {{ nutrition_info[ns.c]['carbs'] }}</li>
+                            <li><strong>Fats:</strong> {{ nutrition_info[ns.c]['fats'] }}</li>
+                            <li><strong>Ingredients:</strong> {{ nutrition_info[ns.c]['ingredients'] }}</li>
+                            <li><strong>Allergens:</strong> {{ nutrition_info[ns.c]['allergen'] }}</li>
+                            <!--<li><strong>Link to see more:</strong> <a href="{{ nutrition_info[ns.c]['link'] }}">{{ nutrition_info[ns.c]['link'] }}</a></li>
+                                -->
+                        </ul>
+                        <h3>
+                            <a href="{{ nutrition_info[ns.c]['link'] }}" class="btn btn-more-info">
+                            More Information 
+                            </a>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg>
 
-           </div>
-       </div>
-   </div>
-   {% endfor %}
+                        </h3>
+                    </div>
+                    {% endif %}
+                </div>
+                <br>
+                {% set ns.c = ns.c + 1 %}
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>

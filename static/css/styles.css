@@ -47,12 +47,21 @@ body {
     background-color: #FFB672 !important;
 }
 
+.popover{
+    max-width: 30%; /* Max Width of the popover (depending on the container!) */
+}
+
 .offcanvas {
     --bs-offcanvas-width: min(95vw, 250px) !important;
 }
 
 .btn {
     --bs-btn-border-width:0 !important;
+}
+.btn-more-info {
+    --bs-btn-border-width:1 !important;
+    --bs-btn-color: #000000 !important;
+    background-color: #FFB672 !important;
 }
 
 .dynamic-progress-bar {
@@ -63,6 +72,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.icon {
+    width: 2em;
+    height: 2em;
+    vertical-align: -0.125em;
 }
 
 .btn-close {
@@ -80,6 +95,8 @@ body {
     left: 0;
     z-index: -1;
 }
+
+
 
 .fixed-top {
     padding: 0.5rem !important;
