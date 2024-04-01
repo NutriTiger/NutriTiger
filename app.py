@@ -188,7 +188,7 @@ def update_menus_mealtime():
     #print('past the data line')
     #print(recipeids)
     print("------------------------------------")
-    #print(nutrition_info)
+    print(nutrition_info)
 
 
     locations = ["Center for Jewish Life",

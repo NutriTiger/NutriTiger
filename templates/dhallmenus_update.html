@@ -1,5 +1,5 @@
 <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
-   
+   {% set ns = namespace(c = 0) %}
    {% for item in data %}
    <div class="col">
        <div class="card h-100">
@@ -16,25 +16,37 @@
                <!-- data-bs-trigger="hover focus" -->
                <!-- style="display: none;" -->
                <div style="display: none;" id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">
-                   <div class="center">
-                       {{ outer_outer_loop.index }}
+                  {{ ns.c }}
+               {% if ns.c < nutrition_info|length and nutrition_info[ns.c] is not none %}
+                  
+                  <div class="center">
+                       <!--{{ outer_outer_loop.index }}
                        {{ outer_loop.index }}
-                       {{ loop.index }}
+                       {{ loop.index }} 
+                       {{ ns.c }}-->
                         <!-- ((outer_loop.index-1) * item.data|length) + idk... foods|length -->
-                       {{ (data|length * (outer_outer_loop.index-1)) +  loop.index + (outer_loop.index-1)}}
+                       <!-- {{ (data|length * (outer_outer_loop.index-1)) +  loop.index + (outer_loop.index-1)}} -->
+                       <!-- {{ nutrition_info[ns.c] }} -->
                        
-                       <h2>Centered Title</h2>
+                       
+                       <h2>Nutritional Content for {{ nutrition_info[ns.c]['mealname'] }}</h2>
                    </div>
                    <div class="center">
                        <ul>
-                           <li>Item 1</li>
-                           <li>Item 2</li>
-                           <li>Item 3</li>
-                           <li>Item 4</li>
+                           <li>Calories: {{ nutrition_info[ns.c]['calories'] }}</li>
+                           <li>Protein:  {{ nutrition_info[ns.c]['proteins'] }}</li>
+                           <li>Carbohydrates: {{ nutrition_info[ns.c]['carbs'] }}</li>
+                           <li>Fats: {{ nutrition_info[ns.c]['fats'] }}</li>
+                           <li>Ingredients: {{ nutrition_info[ns.c]['ingredients'] }}</li>
+                           <li>Allergens: {{ nutrition_info[ns.c]['allergen'] }}</li>
+                           <li><a href="{{ nutrition_info[ns.c]['link'] }}">Link to see more: {{ nutrition_info[ns.c]['link'] }}</a></li>
                        </ul>
                    </div>
+               {% endif %}
+                   
                </div>
                <br>
+                  {% set ns.c = ns.c + 1 %}
                {% endfor %}
                {% endfor %}
 
