@@ -39,11 +39,11 @@ import webscraperfast
 BASE_MENUS_URL = "https://menus.princeton.edu/dining/_Foodpro/online-menu/menu2.asp?"
 # Predefined location numbers and descriptions from campus dining
 LOCATION_NUMS = ["01", "03", "04", "05", "06", "08"]
-LOCATION_DESCRIPTION = ["Rockefeller & Mathey Colleges",
-                        "Forbes College", "Graduate College",
-                        "Center for Jewish Life",
+LOCATION_DESCRIPTION = ["Center for Jewish Life",
+                        "Forbes College", "Rockefeller & Mathey Colleges",
+                        "Whitman & Butler Colleges",
                         "Yeh & New West Colleges",
-                        "Whitman & Butler Colleges"]
+                        "Graduate College"]
 
 # ---------------------------------------------------------------------
 
@@ -57,16 +57,16 @@ def main():
 
     todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
 
-    for object in todays_menu_items:
-        print(json.dumps(object, indent=4, default=str))
+    #for object in todays_menu_items:
+    #    print(json.dumps(object, indent=4, default=str))
     
-    for object in todays_nutrition_list:
-        print(json.dumps(object, indent=4, default=str))
+    #for object in todays_nutrition_list:
+    #    print(json.dumps(object, indent=4, default=str))
 
-    #start_date = datetime.datetime(2024, 3, 24).date()
-    #end_date = datetime.datetime(2024, 3, 26).date()
+    start_date = datetime.datetime(2024, 3, 26).date()
+    end_date = datetime.datetime(2024, 3, 27).date()
 
-    #menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
+    menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
     #print(menu_items_list_range)
     #print(menu_items_nutrition_list_range)
 
@@ -111,7 +111,11 @@ async def get_daily_menus_from_range(start_date, end_date):
         await asyncio.gather(*results, return_exceptions=True)
         
         for result in results:
-            menu_items, nutrition_items = result.result()
+            if result.result() is None:
+                menu_items = []
+                nutrition_items = []
+            else:
+                menu_items, nutrition_items = result.result()
             for obj1, obj2 in zip(menu_items, nutrition_items):
                 menu_items_list.append(obj1)
                 menu_nutrition_list.append(obj2)
@@ -146,7 +150,11 @@ async def get_daily_menus(date=""):
 
         # Can cause error if no data
         for result in menu_results:
-            menu_list, nutrition_list = result.result()
+            if result.result() is None:
+                menu_list = []
+                nutrition_list = []
+            else:
+                menu_list, nutrition_list = result.result()
             for obj1, obj2 in zip(menu_list, nutrition_list):
                 complete_menu_data_list.append(obj1)
                 complete_nutrition_data_list.append(obj2)

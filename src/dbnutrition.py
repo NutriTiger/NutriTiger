@@ -3,6 +3,7 @@ from dbfunctions import connectmongo
 import sys
 from datetime import datetime
 from pytz import timezone
+
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
@@ -22,6 +23,10 @@ def update_nutrition(new_foods):
                 print("new foods arr is empty")
                 return
 
+            for item in new_foods:
+                if not isinstance(item, dict):
+                    print(f"Non-dict item found: {item} of type {type(item)}")
+                    
             add_result = nutrition_col.insert_many(new_foods)
             document_ids = add_result.inserted_ids
             print(f"_id of inserted documents: {document_ids}")
@@ -188,6 +193,24 @@ def main():
          "fiber": 0,
          "allergen": "soy",
          "ingredients": "Flour, soy, water",
+        },
+        {"recipeid": 24821,
+         "mealname": "Tomato Soup",
+         "link": "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html",
+         "calories": 100,
+         "proteins": 10,
+         "carbs": 9,
+         "fats": 8,
+         "cholesterol": 7,
+         "sodium": 6,
+         "calcium": 5,
+         "vitd": 4,
+         "potassium": 3,
+         "iron": 2,
+         "sugar": 1,
+         "fiber": 0,
+         "allergen": "soy",
+         "ingredients": "Flour, soy, water",
         }
     ]
     personal = {"calories": 100,
@@ -207,11 +230,12 @@ def main():
          "access": "oe7583"
         }
 
-    # update_nutrition(nutrition)
-    # find_one_nutrition(12345)
-    # list = [12345, 54321]
-    # result = find_many_nutrition(list)
-    # print(result)
+    update_nutrition(nutrition)
+    data = find_one_nutrition('560154')
+    print(data['calories'])
+    list = [12345, 54321]
+    result = find_many_nutrition(list)
+    print(result[0]['calories'])
     link = "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html"
     add_personal_food("ANOTHER", "oe7583", personal, link)
     # list = find_all_personal_nutrition("oe7583")

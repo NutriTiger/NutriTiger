@@ -9,6 +9,7 @@ import bson
 import ssl
 import os
 import sys
+
 #----------------------------------------------------------------------
 # Contributors:
 # Jewel Merriman and Oyu Enkhbold
@@ -334,7 +335,9 @@ def deleteuser(netid):
 # USED FOR TESTING FOR NOW 
 def main(): 
     entry = {"recipeids": [12345, 1], "servings": [2, 1.5]}
-    print(deleteEntry("jm0278", 0))
+    # addEntry("jm0278", entry)
+    addEntry("jm0278", entry)
+    # print(deleteEntry("jm0278", 0))
 
 #-----------------------------------------------------------------------
 

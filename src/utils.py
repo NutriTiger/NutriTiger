@@ -4,6 +4,7 @@
 #
 #----------------------------------------------------------------------
 import datetime
+# from datetime import datetime, timedelta
 import pytz
 
 def time_of_day(date, time):
@@ -39,8 +40,8 @@ def gtocal(carbs, fats, proteins):
 def get_corresponding_arrays(cal, carb, prot, fat):
     # generate date array
     eastern = pytz.timezone('US/Eastern')
-    today = datetime.now(eastern).date()
-    date_array = [today - timedelta(days=i) for i in range(len(cal))]
+    today = datetime.datetime.now(eastern).date()
+    date_array = [today - datetime.timedelta(days=i) for i in range(len(cal))]
 
     # filter date and array for non-zero entries
     filtered_date_array = []
@@ -48,7 +49,7 @@ def get_corresponding_arrays(cal, carb, prot, fat):
 
     for date_val, cal_val in zip(date_array, cal):
         if cal_val != 0:
-            filtered_date_array.append(date_val.strftime('%Y-%m-%d'))
+            filtered_date_array.append(date_val.strftime('%m-%d'))
             filtered_cal_array.append(cal_val)
     filtered_carb_array = [x for x in carb if x != 0]
     filtered_prot_array = [x for x in prot if x != 0]
@@ -67,6 +68,13 @@ def get_average(array, ndays):
             sum = sum + el
             length = length + 1
     return sum/length
+
+def gather_recipes(data):
+    recipe_ids = set()
+    for entry in data:
+        for meal_data in entry['data'].values():
+            recipe_ids.update(meal_data.values())
+    return list(recipe_ids)
 
 def main():
     # Unit testing checks of functions

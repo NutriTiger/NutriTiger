@@ -10,32 +10,64 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- HTML canvas element where the chart will be rendered -->
-    <canvas id="myPieChart" width="400" height="400"></canvas>
+    <div style="width: 400px; height: 400px; position: relative;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <!-- HTML canvas element where the chart will be rendered -->
+            <canvas id="myPieChart" width="400" height="400"></canvas>
+        </div>
+    </div>    
 
     <script>
+        var fatsInGrams = {{ fats }};
+        var proteinsInGrams = {{ prots }};
+        var carbsInGrams = {{ carbs }};
+        var fatsCalories = fatsInGrams * 9;
+        var proteinsCalories = proteinsInGrams * 4;
+        var carbsCalories = carbsInGrams * 4;
+
         // Data for the pie chart
         var data = {
-            labels: ['Fat (g)', 'Protein (g)', 'Carbs (g)'],
+            labels: [
+                `Protein (${proteinsInGrams}g)`,
+                `Carbs (${carbsInGrams}g)`,
+                `Fat (${fatsInGrams}g)`
+            ],
             datasets: [{
-                data: [12, 19, 3], // Example data values
+                data: [proteinsCalories, carbsCalories, fatsCalories], // Proportions based on calories
                 backgroundColor: [
-                    'orange',
-                    'pink',
-                    'green'
+                    'rgba(255, 182, 193, 1)',
+                    'rgba(67, 182, 107)',
+                    'rgba(255, 205, 86)'
                 ]
             }]
         };
-
+    
         // Get the canvas element
         var ctx = document.getElementById('myPieChart').getContext('2d');
-
+    
         // Create the pie chart
         var myPieChart = new Chart(ctx, {
             type: 'pie',
-            data: data
+            data: data,
+            options: {
+                responsive: false, // Disable responsiveness if you've set specific width and height
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom' // Position the legend at the bottom
+                    },
+                    tooltip: {
+                        callbacks: {
+                            // Include grams in tooltip
+                            label: function(context) {
+                                var label = ' ' + context.parsed + ' cal';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
         });
     </script>
-
 </body>
 </html>
