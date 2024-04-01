@@ -73,13 +73,23 @@
                                     {% endfor %}
                                 </ul>
                             </div>
-                        </div>
                     </div>
-                    {% endfor %}
-                
+                </div>
+
+                {% endfor %}
+
+                <!--"Click to add an entry"-->
+                <div class="p-3">
+                    <form action="/editingplate" method="post">
+                        <center>
+                            <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to add an Entry</button>
+                        </center>
+                    </form>
+                </div>
+
                 <div class="py-3">
                     <form action="/editingplate" method="post">
-                        <button type="submit" name="save_plate">Save Plate</button>
+                        <button type="submit" name="save_plate" class="btn btn-secondary btn-lg btn-block">Save Plate</button>
                     </form>
                 </div>
                 
