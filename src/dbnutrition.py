@@ -27,9 +27,9 @@ def update_nutrition(new_foods):
                 if not isinstance(item, dict):
                     print(f"Non-dict item found: {item} of type {type(item)}")
                     
-            # add_result = nutrition_col.insert_many(new_foods)
-            # document_ids = add_result.inserted_ids
-            # print(f"_id of inserted documents: {document_ids}")
+            add_result = nutrition_col.insert_many(new_foods)
+            document_ids = add_result.inserted_ids
+            print(f"_id of inserted documents: {document_ids}")
             return
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
