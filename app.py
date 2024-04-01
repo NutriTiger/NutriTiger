@@ -68,9 +68,6 @@ def homepage():
     #netid = _cas.authenticate()
     #netid = netid.rstrip()
 
-    # Placeholder values
-    #netid = 'jm0278' 
-
     # will need to call whenever an existing user logs in
     cursor = dbusers.finduser(netid)
     curr_prots = round(float(cursor['prot_his'][0]), 1)
@@ -80,13 +77,34 @@ def homepage():
     curr_caltotal = round(float(cursor['cal_his'][0]), 1)
     cal_goal = int(cursor['caloricgoal'])
 
-    # Copy pasted from editing plate method below
+    # A list of lists: holds recipeids for each entry
     entries_info = cursor['daily_rec']
 
-    # Testing filling the entries
+    # Entry title strings array ("Entry #")
     ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
-    foods_lists = [entry[:] for entry in entries_info]
 
+    # List of lists of foods, should match up with ENTRIES array
+    foods_lists = []
+    for entry in entries_info:
+
+        entry_recipeids = entry[:]
+    
+        # Get nutrition info for entries
+        entry_nutrition = dbnutrition.find_many_nutrition(entry_recipeids)
+
+        # Check for None values in entry_nutrition (maybe ask Oyu to catch these in dbnutrition?)
+        if entry_nutrition is None:
+            foods_lists.append([])
+        
+        # If "mealname" for this recipeid, then add it to the list for current entry
+        else:
+            mealnames = []
+            for meal in entry_nutrition:
+                if isinstance(meal, dict) and "mealname" in meal:
+                    mealnames.append(meal["mealname"])
+            foods_lists.append(mealnames)
+
+    # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
     for i in range(len(ENTRIES)):
         entry = ENTRIES[i]
