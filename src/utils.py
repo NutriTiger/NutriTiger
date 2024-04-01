@@ -6,7 +6,6 @@
 import datetime
 # from datetime import datetime, timedelta
 import pytz
-from collections import OrderedDict
 
 
 def time_of_day(date, time):
@@ -72,12 +71,12 @@ def get_average(array, ndays):
     return sum/length
 
 def gather_recipes(data):
-    recipe_ids = OrderedDict()
+    recipe_ids = []
     for entry in data:
         for meal_data in entry['data'].values():
             for recipe_id in meal_data.values():
-                recipe_ids[recipe_id] = None
-    return list(recipe_ids.keys())
+                recipe_ids.append(recipe_id)
+    return recipe_ids
 
 def main():
     # Unit testing checks of functions
