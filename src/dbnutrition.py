@@ -10,7 +10,6 @@ from pytz import timezone
 #
 #----------------------------------------------------------------------
 
-
 # Inserts nutrition information of the upcoming two weeks of food (as input)
 # call update_menu before to delete nutrition info
 # new_foods is list of bson objects

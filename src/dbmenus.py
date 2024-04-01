@@ -1,7 +1,7 @@
 import pymongo
 from dbfunctions import connectmongo
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from pytz import timezone
 
 #----------------------------------------------------------------------
@@ -19,16 +19,19 @@ def update_menu(menu_list):
         nutri_col = db.nutrition
 
         date_obj = datetime.now(timezone('US/Eastern')).date()
-        today = date_obj.strftime("%Y-%m-%d")
+        today = datetime.combine(date_obj, time.min)
 
         documents_to_delete = {"date": {"$lt": today}}
         try:
             query_documents = menu_col.find(documents_to_delete)
             recipeid_to_delete = []
-            for item in query_documents:
-                for id in item["recipenums"]:
-                    recipeid_to_delete.append(id)
-    
+            print("or here")
+            # Fetch all documents (consider pagination for large datasets)
+            for document in query_documents:
+                # Assuming each 'data' field is a dictionary with sub-dictionaries as values
+                for category in document['data'].values():
+                    for item in category.values():
+                        recipeid_to_delete.append(item)
             print(recipeid_to_delete)
             if len(recipeid_to_delete) == 0:
                 print("no recipeids to delete")
@@ -39,6 +42,7 @@ def update_menu(menu_list):
             else:
                 delete_recipeid_result = nutri_col.delete_many(nutri_doc_to_delete)
 
+            print(delete_recipeid_result)
             delete_result = menu_col.delete_many(documents_to_delete)
             print(f"# of deleted documents: {delete_result.deleted_count}")
             if not menu_list:
@@ -106,79 +110,32 @@ def query_menu_display(date, mealtime, dhall = None):
             sys.exit(1)
 # Testing
 def main():
+    date1 = datetime.fromisoformat('2020-01-06T00:00:00.000Z'[:-1] + '+00:00')
+    date2 = datetime.fromisoformat('2020-01-06T00:00:00.000Z'[:-1] + '+00:00')
+    date3 = datetime.fromisoformat('2020-01-06T00:00:00.000Z'[:-1] + '+00:00')
+
     newmenu = [
-        {"date": "2024-03-02",
+        {"date": date1,
         "dhall": "Rockefeller & Mathey Colleges",
         "mealtime": "Lunch",
-        "type": "Soup of the Day",
-        "fooditems": [
-            "Roma House Beef Vegetable Soup",
-            "Vegan White Bean & Escarole Soup"
-        ],
-        "recipenums": [
-            "459978",
-            "020207"
-        ]
-        },
-        {
-        "date": "2024-03-02",
-        "dhall": "Rockefeller & Mathey Colleges",
-        "mealtime": "Lunch",
-        "type": "Breakfast Bars",
-        "fooditems": [
-            "Bagels",
-            "French Toast Sticks",
-            "Oatmeal Bar",
-            "Omelet Bar with Pork Options",
-            "Pancake & Waffle Toppings"
-        ],
-        "recipenums": [
-            "217001",
-            "280007",
-            "270052",
-            "061001",
-            "280002"
-        ]
-        },
-        {
-        "date": "2024-03-02",
-        "dhall": "Rockefeller & Mathey Colleges",
-        "mealtime": "Lunch",
-        "type": "Main Entree",
-        "fooditems": [
-            "Seared Salmon with Lemon Herb Butter"
-        ],
-        "recipenums": [
-            "510308"
-        ]
-        },
-        {
-        "date": "2024-03-02",
-        "dhall": "NCW",
-        "mealtime": "Lunch",
-        "type": "Main Entree",
-        "fooditems": [
-            "Seared Salmon with Lemon Herb Butter"
-        ],
-        "recipenums": [
-            "510308"
-        ]
+        "data":{
+            "grill": {"food1":1234,"food2":234},
+            "area": {"food1":356,"food2":897}
         }
+        },
+        {
+       "date": date2,
+        "dhall": "Whitman & Butler Colleges",
+        "mealtime": "breakfast",
+        "data":{
+            "fruit": {"food1":234,"food2":789},
+            "area": {"food1":123,"food2":234}
+        }
+        }
+        
     ]
     emptymenu = []
-    update_menu(newmenu)
-    # result1 = querymenudisplay("2024-03-02", "Lunch", "Rockefeller & Mathey Colleges")
-    # print("querymenudisplay: 3/2, lunch, roma")
-    # for row in result1:
-    #     print(row)
-    # result2 = querymenudisplay("2024-03-02", "Lunch", "NCW")
-    # print("querymenudisplay: 3/2, lunch, NCW")
-    # for row in result2:
-    #     print(row)
-    # result3 = querymenudisplay("2024-03-02", "Lunch")
-    # print("querymenudisplay: 3/2, lunch")
-    # for row in result3:
-    #     print(row)
+    update_menu(emptymenu)
     
     sys.exit(0)
     
