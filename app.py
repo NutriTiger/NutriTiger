@@ -183,10 +183,12 @@ def update_menus_mealtime():
 
     
     recipeids = utils.gather_recipes(data)
-    #nutrition_info = dbnutrition.find_one_nutrition('560154')
+    #nutrition_info = dbnutrition.find_one_nutrition('304008')
+    #nutrition_info = dbnutrition.find_one_nutrition('020076')
+    #nutrition_info = dbnutrition.find_one_nutrition('540488')
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
     #print('past the data line')
-    #print(recipeids)
+    print(recipeids)
     print("------------------------------------")
     print(nutrition_info)
 
