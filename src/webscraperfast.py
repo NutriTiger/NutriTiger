@@ -71,9 +71,9 @@ async def get_nutrition_from_recipe(recipeid, session):
         COMBINED_URL = BASE_LABEL_URL + str(recipeid)
 
         # Make the request and save the content
-        async with session.get(COMBINED_URL) as request:
+        async with session.get(COMBINED_URL, raise_for_status=True) as request:
             #request = requests.get(COMBINED_URL)
-            html_content = await request.text() 
+            html_content = await request.text(encoding="ISO-8859-1") 
             #html_content = request.content
 
             # Parse the content and create the nutrition object to return
