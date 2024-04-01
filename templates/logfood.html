@@ -82,7 +82,7 @@
     <div class="container p-5">
       <h4>Done adding food to your plate?</h4>
       <form action="/logfood" method="post" class="p-3">
-        <button type="submit" name="upload_plate">Upload Plate and Return</button>
+        <button type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
       </form>
     </div>
 
@@ -99,6 +99,13 @@
         console.log(diningHallSelect);
         if (diningHallSelect) {
           console.log(diningHallSelect);
+
+          if (selectedHall && selectedHall == "Select Dining Hall") {
+            const p = document.createElement('p');
+            p.classList.add('card-text'); 
+            p.textContent = "Please select a dining hall from the dropdown menu."; 
+            document.body.appendChild(p);
+          }
 
           diningHallSelect.addEventListener('change', function() {
               var selectedHall = this.value; // Get the value of the selected option
