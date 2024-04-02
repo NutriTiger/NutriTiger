@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
+
    <head>
-      <title>NutriTiger</title>
+      <title>Logout of NutriTiger</title>
+      {% include 'bootstrap.html' %}
    </head>
-   <body>
-      <h2>You are logged out of Nutritiger</h2>
-      <a href="/homepage">Log back in</a>
+
+   <body class="text-center">
+
+      <div>
+         <h2 class="m-3">You are logged out of Nutritiger.</h2>
+
+       </div>
+
+      <div class="py-3">
+         <form action="/homepage" method="post">
+           <button type="submit" name="logback" class="btn btn-primary btn-lg btn-block">Log Back In</button>
+         </form>
+       </div>
    </body>
 </html>
