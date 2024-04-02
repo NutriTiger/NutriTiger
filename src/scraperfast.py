@@ -93,13 +93,14 @@ async def get_daily_menus_from_range(start_date, end_date):
         current_date = start_date
         menu_items_list = []
         menu_nutrition_list = []
+        distinct_recipeid_list = []
 
         results = []
 
         while (current_date != (end_date + datetime.timedelta(days = 1))):
             print("Getting daily menus for", current_date)
 
-            job = asyncio.ensure_future(get_daily_menus(current_date))
+            job = asyncio.ensure_future(get_daily_menus(distinct_recipeid_list, current_date))
             results.append(job)
             
             current_date = current_date + datetime.timedelta(days = 1)
@@ -119,17 +120,20 @@ async def get_daily_menus_from_range(start_date, end_date):
                 menu_items = []
                 nutrition_items = []
             else:
-                menu_items, nutrition_items = result.result()
-            for obj1, obj2 in zip(menu_items, nutrition_items):
-                menu_items_list.append(obj1)
-                menu_nutrition_list.append(obj2)
+                big_list = result.result()
+                menu_list = big_list[0]
+                nutrition_list = big_list[1]
+                for obj1 in menu_list:
+                    menu_items_list.append(obj1)
+                for obj2 in nutrition_list:
+                    menu_nutrition_list.append(obj2)
 
         return menu_items_list, menu_nutrition_list
 
 # ---------------------------------------------------------------------
 
 
-async def get_daily_menus(date=""):
+async def get_daily_menus(distinct_recipeid_list, date=""):
     """
     Based on the predefined location numbers in LOCATION_NUMS and
     descriptions in LOCATION_DESCRIPTION get_daily_menus obtains the
@@ -142,7 +146,7 @@ async def get_daily_menus(date=""):
     complete_menu_data_list = []
     complete_nutrition_data_list = []
     #temp = []
-    distinct_recipeid_list = []
+    #distinct_recipeid_list = []
 
     # Obtain the menu items from each location
     async with aiohttp.ClientSession(raise_for_status=True) as session:
@@ -152,16 +156,21 @@ async def get_daily_menus(date=""):
             menu_results.append(job)
         await asyncio.gather(*menu_results, return_exceptions=True)
 
+        #print(menu_results[0].result()[1]) # First zero is dhall index, then next 0, 1 is between menu items and nutrition, loop through those objects
+
         # Can cause error if no data
-        for result in menu_results:
-            if result.result() is None:
+        for dhall in menu_results:
+            if dhall.result() is None:
                 menu_list = []
                 nutrition_list = []
             else:
-                menu_list, nutrition_list = result.result()
-            for obj1, obj2 in zip(menu_list, nutrition_list):
-                complete_menu_data_list.append(obj1)
-                complete_nutrition_data_list.append(obj2)
+                big_list = dhall.result()
+                menu_list = big_list[0]
+                nutrition_list = big_list[1]
+                for obj1 in menu_list:
+                    complete_menu_data_list.append(obj1)
+                for obj2 in nutrition_list:
+                    complete_nutrition_data_list.append(obj2)
 
         #for test in temp:
         #    complete_nutrition_data_list.append(test)
