@@ -427,6 +427,31 @@ def log_food_data():
 
 #--------------------------------------------------------------------
 
+@app.route('/personalfood', methods=['GET', 'POST'])
+def personal_food():
+    return render_template('personalfood.html') 
+
+@app.route('/addpersonalfood', methods=['POST'])
+def add_personal_food():
+    if request.method == 'POST':
+        recipename = request.args.get('name', type = str)
+        cal = request.args.get('calories', type = int)
+        protein = request.args.get('protein', type = int)
+        carbs = request.args.get('carbs', type = int)
+        fats = request.args.get('fats', type = int)
+        netid = auth.authenticate()
+        link = "https://simple.wikipedia.org/wiki/Nutrition#:~:text=the%20provision%20to%20cells%20and,able%20to%20do%20certain%20things."
+        nutrition_dict = {
+                        "calories": cal,
+                        "proteins": protein,
+                        "carbs": carbs,
+                        "fats": fats,
+                        }
+        add_personal_food(recipename, netid, nutrition_dict, link)
+
+    
+#--------------------------------------------------------------------
+
 @app.route('/logout', methods=['GET'])
 def logoutcas():
     return auth.logoutcas()
