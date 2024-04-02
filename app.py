@@ -375,24 +375,23 @@ def log_food():
     if request.method == 'POST':
         return redirect('/homepage')
 
-    # eastern = timezone('America/New_York')
-    # now_est = datetime.datetime.now(eastern)
     current_date = datetime.datetime.today()
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
+    is_weekend_var = utils.is_weekend(current_date.date())
 
-    menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
-    if not menu:
-        return render_template('logfood.html') 
-    # Given the new data structure, mealtime/dhall pairs only have one corresponding document
-    result = menu[0]
+    # menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
+    # if not menu:
+    #     return render_template('logfood.html') 
+    # # Given the new data structure, mealtime/dhall pairs only have one corresponding document
+    # result = menu[0]
     food_list = []
 
-    # Extend the food_items list with the keys from each dictionary
-    for category in result['data'].values():
-        food_list.extend(category.keys())
+    # # Extend the food_items list with the keys from each dictionary
+    # for category in result['data'].values():
+    #     food_list.extend(category.keys())
 
-    return render_template('logfood.html', food_items = food_list)
+    return render_template('logfood.html', food_items = food_list, is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
 
