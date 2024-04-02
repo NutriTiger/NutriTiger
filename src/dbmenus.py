@@ -18,29 +18,29 @@ def update_menu(menu_list):
         menu_col = db.menus
         nutri_col = db.nutrition
 
-        date_obj = datetime.now(timezone('US/Eastern')).date()
-        today = datetime.combine(date_obj, time.min)
-
-        documents_to_delete = {"date": {"$lt": today}}
+        # date_obj = datetime.now(timezone('US/Eastern')).date()
+        # today = datetime.combine(date_obj, time.min)
+        documents_to_delete = {}
+        # documents_to_delete = {"date": {"$lt": today}}
         try:
             query_documents = menu_col.find(documents_to_delete)
             recipeid_to_delete = []
-            print("or here")
-            # Fetch all documents (consider pagination for large datasets)
-            for document in query_documents:
-                # Assuming each 'data' field is a dictionary with sub-dictionaries as values
-                for category in document['data'].values():
-                    for item in category.values():
-                        recipeid_to_delete.append(item)
-            print(recipeid_to_delete)
-            if len(recipeid_to_delete) == 0:
-                print("no recipeids to delete")
-                
-            nutri_doc_to_delete = {"recipeid": {"$eq": recipeid_to_delete}}
-            if len(recipeid_to_delete) == 1:
-                delete_recipeid_result = nutri_col.delete_one(nutri_doc_to_delete)
-            else:
-                delete_recipeid_result = nutri_col.delete_many(nutri_doc_to_delete)
+
+            # # Fetch all documents (consider pagination for large datasets)
+            # for document in query_documents:
+            #     # Assuming each 'data' field is a dictionary with sub-dictionaries as values
+            #     for category in document['data'].values():
+            #         for item in category.values():
+            #             recipeid_to_delete.append(item)
+            # print(recipeid_to_delete)
+            # if len(recipeid_to_delete) == 0:
+                # print("no recipeids to delete")
+            nutri_doc_to_delete = {}
+            # nutri_doc_to_delete = {"recipeid": {"$eq": recipeid_to_delete}}
+            # if len(recipeid_to_delete) == 1:
+            #     delete_recipeid_result = nutri_col.delete_one(nutri_doc_to_delete)
+            # else:
+            delete_recipeid_result = nutri_col.delete_many(nutri_doc_to_delete)
 
             print(delete_recipeid_result)
             delete_result = menu_col.delete_many(documents_to_delete)
