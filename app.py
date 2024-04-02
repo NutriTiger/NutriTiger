@@ -375,11 +375,13 @@ def log_food():
     if request.method == 'POST':
         return redirect('/homepage')
 
-    
+    # eastern = timezone('America/New_York')
+    # now_est = datetime.datetime.now(eastern)
+    current_date = datetime.datetime.today()
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
-    eastern = timezone('America/New_York')
-    now_est = datetime.datetime.now(eastern)
-    menu = dbmenus.query_menu_display(now_est, 'breakfast', 'Rockefeller & Mathey Colleges')
+
+    menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
     if not menu:
         return render_template('logfood.html') 
     # Given the new data structure, mealtime/dhall pairs only have one corresponding document
@@ -398,6 +400,8 @@ def log_food():
 def log_food_data():
     dhall = request.args.get('dhall', type = str)
     mealtime = request.args.get('mealtime', type = str)
+    print("we are inside logfood/data")
+    print(mealtime)
     print(f"dhall: {dhall}, mealtime: {mealtime}")
 
     current_date = datetime.datetime.today()

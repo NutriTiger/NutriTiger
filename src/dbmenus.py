@@ -93,6 +93,8 @@ def query_menu_display(date, mealtime, dhall = None):
             print(f"cursor: {result}")
 
             list_result = list(result)
+            print("this is it")
+            print(list_result)
             if not list_result:
                 print("No menu documents found")
                 return []

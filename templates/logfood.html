@@ -100,22 +100,23 @@
         if (diningHallSelect) {
           console.log(diningHallSelect);
 
-          if (selectedHall && selectedHall == "Select Dining Hall") {
-            const p = document.createElement('p');
-            p.classList.add('card-text'); 
-            p.textContent = "Please select a dining hall from the dropdown menu."; 
-            document.body.appendChild(p);
-          }
-
           diningHallSelect.addEventListener('change', function() {
-              var selectedHall = this.value; // Get the value of the selected option
-              // Assume default or currently active mealtime
-              var mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
-              
-              console.log("Selected dining hall:", selectedHall, "Mealtime:", mealtime);
-              
-              // Make an AJAX request
-              fetchMenuData(selectedHall, mealtime);
+            var selectedHall = this.value; // Get the value of the selected option
+            // Assume default or currently active mealtime
+            var mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
+
+
+            if (selectedHall && selectedHall == "Select Dining Hall") {
+              const p = document.createElement('p');
+              p.classList.add('card-text'); 
+              p.textContent = "Please select a dining hall from the dropdown menu."; 
+              document.body.appendChild(p);
+            }
+            
+            console.log("Selected dining hall:", selectedHall, "Mealtime:", mealtime);
+            
+            // Make an AJAX request
+            fetchMenuData(selectedHall, mealtime);
           });
         }
 
