@@ -9,7 +9,7 @@ from sys import path
 path.append('src')
 path.append('src/db')
 
-from flask import Flask, render_template, request, redirect, make_response, jsonify
+from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for
 import time
 import datetime
 import os
@@ -427,16 +427,19 @@ def log_food_data():
 
 @app.route('/personalfood', methods=['GET', 'POST'])
 def personal_food():
-    return render_template('personalfood.html') 
+    form_data = session.pop('form_data', None) if 'form_data' in session else {
+        'name': "i.e. overnight oats", 'calories': 0, 'carbs': 0, 'proteins': 0, 'fats': 0, 'message': "Enter nutrition information for your own food items!"
+    }
+    return render_template('personalfood.html', **form_data) 
 
 @app.route('/addpersonalfood', methods=['POST'])
 def add_personal_food():
     if request.method == 'POST':
-        recipename = request.args.get('name', type = str)
-        cal = request.args.get('calories', type = int)
-        protein = request.args.get('protein', type = int)
-        carbs = request.args.get('carbs', type = int)
-        fats = request.args.get('fats', type = int)
+        recipename = request.form.get('name', type = str)
+        cal = request.form.get('calories', type = int)
+        protein = request.form.get('proteins', type = int)
+        carbs = request.form.get('carbs', type = int)
+        fats = request.form.get('fats', type = int)
         netid = auth.authenticate()
         link = "https://simple.wikipedia.org/wiki/Nutrition#:~:text=the%20provision%20to%20cells%20and,able%20to%20do%20certain%20things."
         nutrition_dict = {
@@ -445,8 +448,24 @@ def add_personal_food():
                         "carbs": carbs,
                         "fats": fats,
                         }
-        add_personal_food(recipename, netid, nutrition_dict, link)
-
+        result = dbnutrition.find_one_personal_nutrition(netid, recipename)
+        if not result:
+            dbnutrition.add_personal_food(recipename, netid, nutrition_dict, link)
+            return redirect('/homepage')
+        else:
+            msg = "A personal food item with this name already exists, please put a new name!"
+            # Store form data and message in session
+            session['form_data'] = {
+                'name': recipename,
+                'calories': cal,
+                'carbs': carbs,
+                'proteins': protein,
+                'fats': fats,
+                'message': msg
+            }
+            return redirect(url_for('personal_food'))
+        
+    return
     
 #--------------------------------------------------------------------
 
