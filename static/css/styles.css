@@ -145,4 +145,8 @@ body {
         max-width: 100%; /* Charts take full width on smaller screens */
     }
 }
+
+.narrow-input {
+    width: 100px; /* Adjust the width as needed */
+}
 /*************************/

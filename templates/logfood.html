@@ -168,15 +168,28 @@
             const p = document.createElement('p');
             p.textContent = "No data found.";
             container.appendChild(p);
-          } else{
-            // Create and append each food item as a <p> tag
+          } else {
+            // Create and append each food item as a <p> tag with a checkbox
             items.forEach(item => {
-            const p = document.createElement('p');
-            p.classList.add('card-text'); // Add the Bootstrap class for styling
-            p.textContent = item; // Set the text content to the food item
-            container.appendChild(p); // Append the paragraph to the container
-          });
-          }
+                const div = document.createElement('div'); // Create a div for each item
+                div.classList.add('form-check'); // Bootstrap class for checkbox styling
+                
+                const checkbox = document.createElement('input'); // Create the checkbox
+                checkbox.type = 'checkbox';
+                checkbox.classList.add('form-check-input'); // Bootstrap class for checkbox styling
+                checkbox.id = 'checkbox-' + item.replace(/\s+/g, '-').toLowerCase(); // Example id: checkbox-food-item-name
+                
+                const label = document.createElement('label'); // Create a label for the checkbox
+                label.classList.add('form-check-label'); // Bootstrap class for label styling
+                label.htmlFor = checkbox.id; // Associate label with checkbox
+                label.textContent = item; // Set label text to the food item name
+                
+                div.appendChild(checkbox); // Append the checkbox to the div
+                div.appendChild(label); // Append the label to the div
+                
+                container.appendChild(div); // Append the div to the container
+            });
+        }
           
       } else {
           console.error('Container not found for meal');

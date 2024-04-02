@@ -69,7 +69,13 @@
                                 </div>
                                 <ul>
                                     {% for food in foods %}
-                                    <li>{{food}}</li>
+                                    <li class="d-flex justify-content-between">
+                                        <span>{{food}}</span>
+                                        <!-- Serving lineedit -->
+                                        <div class="form-group mb-0" style="flex: 0 0 auto;">
+                                            <input type="serving" class="form-control narrow-input" placeholder="Edit Serv">
+                                        </div>
+                                    </li>
                                     {% endfor %}
                                 </ul>
                             </div>
