@@ -61,6 +61,15 @@
                         <div class="card" style="background-color: lightgray; padding: 10px;">
                             <div class="card-body">
                                 <h5 class="card-title">{{entry}}</h5>
+
+                                <!--Labels for nutrient stats across the top of an entry -->
+                                <div class="py-2">
+                                  <span class="badge badge-info" style="background-color: rgb(55, 127, 228);">100cal</span>
+                                  <span class="badge badge-info" style="background-color: rgb(255, 107, 130);">10g</span>
+                                  <span class="badge badge-info" style="background-color: rgb(49, 165, 74);">10g</span>
+                                  <span class="badge badge-info" style="background-color: rgb(218, 184, 17);">10g</span>
+                                </div>
+
                                 <ul>
                                     {% for food in foods %}
                                     <li>{{food}}</li>
@@ -84,6 +93,5 @@
         </div>
       </div>           
             
-        
 </body>
 </html>
