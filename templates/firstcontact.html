@@ -12,19 +12,25 @@
     {% include 'bootstrap.html' %}
 </head>
 
-<body class="text-center">
+<body>
     {% include 'navbar.html' %}
-    <h1 class="m-3">Nutrition Goals</h1> 
-    <div>
-        <h2 class="m-3">Welcome to NutriTiger! Please fill out your daily calorie goal.</h2>
 
-        <form action="/welcome" method="post" class="m-3">
-            Set Calorie Goal:
-            <input type="number" name="line" placeholder="Enter the number here" min="0" required><br>
-            <button type="submit">Save</button>
-        </form>
+    <div class="text-center container-fluid mx-auto p-5">
+        <h1 class="m-5">Nutrition Goals</h1> 
+        <h3 class="m-3 p-4">Welcome to NutriTiger! Please fill out your daily calorie goal.</h3>
+
+        {% include 'caloriecalculator.html' %}
+        
+        <div class="text-center p-4">
+            <form action="/welcome" method="post">
+                <strong>Calorie Goal:</strong>
+                <input type="number" name="line" placeholder="Enter the number here" min="0" required><br>
+                <div class="p-3">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
-    {% include 'caloriecalculator.html' %}
 
 </body>
 </html>

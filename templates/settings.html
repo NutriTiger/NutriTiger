@@ -16,17 +16,20 @@
 <body>
     {% include 'navbar.html' %}
 
-    <div class="container-fluid">
-        <h1 class="m-3 text-center">My Information</h1> 
-        <div class="text-center">
+    <div class="container-fluid mx-auto p-5">
+        <h1 class="m-5 text-center">My Information</h1> 
+
+        {% include 'caloriecalculator.html' %}
+
+        <div class="text-center p-4">
             <form action="/settings" method="post">
-                Set Calorie Goal:
+                <strong>Calorie Goal:</strong>
                 <input type="number" name="line" placeholder="Enter the number here" min="0" required><br>
-                <button type="submit">Save</button>
+                <div class="p-3">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
+                </div>
             </form>
         </div>
-
-    {% include 'caloriecalculator.html' %}
         
 </body>
 </html>
