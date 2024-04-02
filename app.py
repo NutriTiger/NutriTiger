@@ -422,7 +422,6 @@ def log_food_data():
     for category in result['data'].values():
         food_list.extend(category.keys())
 
-
     return jsonify(food_list)
 
 #--------------------------------------------------------------------
