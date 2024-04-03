@@ -376,10 +376,12 @@ def log_food():
         return redirect('/homepage')
 
     
-    current_date = datetime.datetime.today()
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
-    is_weekend_var = utils.is_weekend(current_date.date())
+    is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
+    print(current_date.now(timezone('US/Eastern')))
+    print(is_weekend_var)
 
     menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
     if not menu:
@@ -415,7 +417,8 @@ def log_food_data():
 
     print(menus)
     if not menus:
-        return jsonify({"error": "No data found"}), 404
+        # return jsonify({"error": "No data found"}), 404
+        return {}
     result = menus[0]
    
     food_dict = {}
