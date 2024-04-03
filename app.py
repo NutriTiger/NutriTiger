@@ -375,6 +375,7 @@ def log_food():
     if request.method == 'POST':
         return redirect('/homepage')
 
+    
     current_date = datetime.datetime.today()
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
