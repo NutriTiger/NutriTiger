@@ -81,7 +81,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title text-center">My Plate</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <div id="my-plate"></div>
           </div>
         </div>
       </div>
@@ -193,10 +193,7 @@
                 label.textContent = item; // Set label text to the item name
 
                 // Event listener for the checkbox
-                checkbox.addEventListener('click', function() {
-                    console.log("Checkbox with ID " + this.id + " was clicked.");
-                    // Perform other actions based on clicked checkbox ID if necessary
-                });
+                checkbox.addEventListener('change', handleCheckboxChange);
 
                 div.appendChild(checkbox); // Append the checkbox to the div
                 div.appendChild(label); // Append the label to the div
@@ -208,6 +205,47 @@
       } else {
           console.error('Container not found for meal');
       }
+    }
+    // Function to handle checkbox change event
+    function handleCheckboxChange() {
+        if (this.checked) {
+            console.log("Checkbox with ID " + this.id + " was checked.");
+            // Find the associated label element
+            const label = document.querySelector('label[for="' + this.id + '"]');
+            // Access the text content of the label
+            const labelText = label.textContent;
+            console.log("Food item: " + labelText);
+
+            const row = document.createElement('div');
+            const recId = this.id.substring(9);
+            console.log(recId)
+            row.id = "foodplate-" + recId;
+            row.classList.add('row');
+
+            const labelColumn = document.createElement('div');
+            labelColumn.classList.add('col');
+            labelColumn.textContent = labelText;
+
+            const servingsColumn = document.createElement('div');
+            servingsColumn.classList.add('col');
+            const servingsInput = document.createElement('input');
+            servingsInput.type = 'text';
+            servingsInput.placeholder = 'Servings';
+            servingsColumn.appendChild(servingsInput);
+            
+            row.appendChild(labelColumn);
+            row.appendChild(servingsColumn);
+            
+            document.getElementById('my-plate').appendChild(row);
+
+        } else {
+            console.log("Checkbox with ID " + this.id + " was unchecked.");
+            const retrieved_recId = this.id.substring(9);
+            const plateID = "foodplate-" + retrieved_recId;
+            console.log("recid for remove: " + plateID)
+            const row = document.getElementById(plateID)
+            row.remove()
+        }
     }
 </script>
 </html>
