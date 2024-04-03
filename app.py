@@ -380,18 +380,20 @@ def log_food():
 
     is_weekend_var = utils.is_weekend(current_date.date())
 
-    # menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
-    # if not menu:
-    #     return render_template('logfood.html') 
-    # # Given the new data structure, mealtime/dhall pairs only have one corresponding document
-    # result = menu[0]
-    food_list = []
+    menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
+    if not menu:
+        return render_template('logfood.html') 
+    # Given the new data structure, mealtime/dhall pairs only have one corresponding document
+    result = menu[0]
+    food_dict = {}
 
-    # # Extend the food_items list with the keys from each dictionary
-    # for category in result['data'].values():
-    #     food_list.extend(category.keys())
+    # Extend the food_items list with the keys from each dictionary
+    for category in result['data'].values():
+        food_dict.update(category)
+    print("FOOD ITEMS")
+    print(food_dict)
 
-    return render_template('logfood.html', food_items = food_list, is_weekend_var = is_weekend_var)
+    return render_template('logfood.html', food_items = food_dict, is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
 
@@ -415,13 +417,15 @@ def log_food_data():
         return jsonify({"error": "No data found"}), 404
     result = menus[0]
    
-    food_list = []
+    food_dict = {}
 
     # Extend the food_items list with the keys from each dictionary
     for category in result['data'].values():
-        food_list.extend(category.keys())
+        food_dict.update(category)
+    print("FOOD ITEMS")
+    print(food_dict)
 
-    return jsonify(food_list)
+    return jsonify(food_dict)
 
 #--------------------------------------------------------------------
 
