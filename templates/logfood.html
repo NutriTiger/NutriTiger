@@ -70,9 +70,8 @@
 
         <div class="card">
           <div class="card-body" id="menu-items">
-            <p class="text-center">Please select a dining hall from the dropdown menu.</p>
-            {% for food in food_items %}
-              <p class="card-text">{{food}}</p>
+            {% for food, recipeid in food_items %}
+              <p class="card-text" id="{{ recipeid }}">{{food}}</p>
             {% endfor %}
           </div>
         </div>
@@ -82,7 +81,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title text-center">My Plate</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <div id="my-plate"></div>
           </div>
         </div>
       </div>
@@ -172,37 +171,81 @@
           // Clear existing content
           container.innerHTML = '';
 
-          if (Array.isArray(items) && items.length === 0) {
+          if (Object.keys(items).length === 0) {
             // Handle no data case, e.g., display a message
             const p = document.createElement('p');
             p.textContent = "No data found.";
             container.appendChild(p);
           } else {
-            // Create and append each food item as a <p> tag with a checkbox
-            items.forEach(item => {
+            // Iterate over the dictionary entries
+            Object.entries(items).forEach(([item, id]) => {
                 const div = document.createElement('div'); // Create a div for each item
                 div.classList.add('form-check'); // Bootstrap class for checkbox styling
-                
+
                 const checkbox = document.createElement('input'); // Create the checkbox
                 checkbox.type = 'checkbox';
                 checkbox.classList.add('form-check-input'); // Bootstrap class for checkbox styling
-                checkbox.id = 'checkbox-' + item.replace(/\s+/g, '-').toLowerCase(); // Example id: checkbox-food-item-name
-                
+                checkbox.id = 'checkbox-' + id; // Use the ID from the dictionary
+
                 const label = document.createElement('label'); // Create a label for the checkbox
                 label.classList.add('form-check-label'); // Bootstrap class for label styling
                 label.htmlFor = checkbox.id; // Associate label with checkbox
-                label.textContent = item; // Set label text to the food item name
-                
+                label.textContent = item; // Set label text to the item name
+
+                // Event listener for the checkbox
+                checkbox.addEventListener('change', handleCheckboxChange);
+
                 div.appendChild(checkbox); // Append the checkbox to the div
                 div.appendChild(label); // Append the label to the div
-                
+
                 container.appendChild(div); // Append the div to the container
             });
-        }
+          }
           
       } else {
           console.error('Container not found for meal');
       }
+    }
+    // Function to handle checkbox change event
+    function handleCheckboxChange() {
+        if (this.checked) {
+            console.log("Checkbox with ID " + this.id + " was checked.");
+            // Find the associated label element
+            const label = document.querySelector('label[for="' + this.id + '"]');
+            // Access the text content of the label
+            const labelText = label.textContent;
+            console.log("Food item: " + labelText);
+
+            const row = document.createElement('div');
+            const recId = this.id.substring(9);
+            console.log(recId)
+            row.id = "foodplate-" + recId;
+            row.classList.add('row');
+
+            const labelColumn = document.createElement('div');
+            labelColumn.classList.add('col');
+            labelColumn.textContent = labelText;
+
+            const servingsColumn = document.createElement('div');
+            servingsColumn.classList.add('col');
+            const servingsInput = document.createElement('input');
+            servingsInput.type = 'text';
+            servingsInput.placeholder = 'Servings';
+            servingsColumn.appendChild(servingsInput);
+            
+            row.appendChild(labelColumn);
+            row.appendChild(servingsColumn);
+            
+            document.getElementById('my-plate').appendChild(row);
+
+        } else {
+            console.log("Checkbox with ID " + this.id + " was unchecked.");
+            const retrieved_recId = this.id.substring(9);
+            const plateID = "foodplate-" + retrieved_recId;
+            console.log("recid for remove: " + plateID)
+            const row = document.getElementById(plateID)
+            row.remove()
+        }
     }
 </script>
 </html>
