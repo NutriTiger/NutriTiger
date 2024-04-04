@@ -99,18 +99,44 @@ def homepage():
         # If "mealname" for this recipeid, then add it to the list for current entry
         else:
             mealnames = []
+            cal_entry_total = 0
+            pro_entry_total = 0
+            carb_entry_total = 0
+            fat_entry_total = 0
             for meal in entry_nutrition:
                 if isinstance(meal, dict) and "mealname" in meal:
                     mealnames.append(meal["mealname"])
+                
+                # Get macro totals for each entry to display across the top
+                if isinstance(meal, dict) and "calories" in meal:
+                    cal_entry_total += int(meal["calories"])
+                if isinstance(meal, dict) and "fats" in meal:
+                    fat_entry_total += int(meal["fats"])
+                if isinstance(meal, dict) and "carbs" in meal:
+                    carb_entry_total += int(meal["carbs"])
+                if isinstance(meal, dict) and "proteins" in meal:
+                    pro_entry_total += int(meal["proteins"])
+
             foods_lists.append(mealnames)
+            entry_nutrition.append({
+            "calories_total": cal_entry_total,
+            "fats_total": fat_entry_total,
+            "carbs_total": carb_entry_total,
+            "proteins_total": pro_entry_total
+        })
 
     # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
     for i in range(len(ENTRIES)):
         entry = ENTRIES[i]
         foods = foods_lists[i]
-        entries_food_dict[entry] = foods
-
+        nutrition_totals = entry_nutrition[i]
+        entries_food_dict[entry] = {"foods": foods, "nutrition_totals": nutrition_totals}
+    
+    print("Length of ENTRIES:", len(ENTRIES))
+    print("Length of foods_lists:", len(foods_lists))
+    print("Length of entry_nutrition:", len(entry_nutrition))
+    
     # When Edit Plate button is pressed
     if request.method == 'POST':
         return redirect('/editingplate')
