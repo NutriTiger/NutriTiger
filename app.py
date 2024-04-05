@@ -194,7 +194,7 @@ def dhall_menus():
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
     todays_date = utils.custom_strftime(current_date)
-    print(todays_date)
+    #print(todays_date)
 
     return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
@@ -217,9 +217,9 @@ def update_menus_mealtime():
     #nutrition_info = dbnutrition.find_one_nutrition('540488')
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
     #print('past the data line')
-    print(recipeids)
-    print("------------------------------------")
-    print(nutrition_info)
+    #print(recipeids)
+    #print("------------------------------------")
+    #print(nutrition_info)
 
 
     locations = ["Center for Jewish Life",
@@ -231,7 +231,7 @@ def update_menus_mealtime():
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
     todays_date = utils.custom_strftime(current_date)
-    print(todays_date)
+    #print(todays_date)
 
     return render_template('dhallmenus_update.html', todays_date=todays_date, locations=locations, data=data,
                         nutritional_content=nutritional_content, nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
