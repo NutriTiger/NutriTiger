@@ -10,10 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div style="width: 400px; height: 400px; position: relative;">
+    <div style="position: relative;">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             <!-- HTML canvas element where the chart will be rendered -->
-            <canvas id="myPieChart" width="400" height="400"></canvas>
+            <canvas id="myPieChart" width="350" height="350"></canvas>
         </div>
     </div>    
 
@@ -41,7 +41,7 @@
                 ]
             }]
         };
-    
+
         // Get the canvas element
         var ctx = document.getElementById('myPieChart').getContext('2d');
     
@@ -50,7 +50,8 @@
             type: 'pie',
             data: data,
             options: {
-                responsive: false, // Disable responsiveness if you've set specific width and height
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: true,
