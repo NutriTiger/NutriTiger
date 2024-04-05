@@ -29,6 +29,10 @@ body {
     padding-top: 60px; 
 }
 
+.card-body-dhall-menus {
+    border-radius: 3%;
+}
+
 .nt-color-menu {
     background-color: #FFF4E9;
 }
@@ -47,9 +51,10 @@ body {
     background-color: #FFB672 !important;
 }
 
-.popover{
-    max-width: 30%; /* Max Width of the popover (depending on the container!) */
-}
+/*.popover{
+    min-width: 20%;
+    max-width: 30%; /* Max Width of the popover (depending on the container!) 
+}*/
 
 .offcanvas {
     --bs-offcanvas-width: min(95vw, 250px) !important;

@@ -68,6 +68,8 @@ def get_average(array, ndays):
         if el != 0:
             sum = sum + el
             length = length + 1
+    if length == 0:
+        return 0
     return sum/length
 
 def gather_recipes(data):
