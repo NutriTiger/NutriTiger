@@ -56,7 +56,7 @@
                 <h4 class="text-center py-3">My Plate</h4>
                 <!--Create a card for each entry-->
                 <div class="col">
-                    {% for entry, data in entries_food_dict.items() %}
+                  {% for entry, data in entries_food_dict.items() %}
                     {% set foods = data.foods %}
                     {% set nutrition_totals = data.nutrition_totals %}
                     <div class="row-cols-1 p-2">
@@ -67,9 +67,9 @@
                                 <!--Labels for nutrient stats across the top of an entry -->
                                 <div class="py-2">
                                   <span class="badge badge-info" style="background-color: rgb(55, 127, 228);">{{ nutrition_totals.calories_total }}cals</span>
-                                  <span class="badge badge-info" style="background-color: rgb(255, 107, 130);">{{ nutrition_totals.fats_total }}g</span>
-                                  <span class="badge badge-info" style="background-color: rgb(49, 165, 74);">{{ nutrition_totals.carbs_total }}g</span>
-                                  <span class="badge badge-info" style="background-color: rgb(218, 184, 17);">{{ nutrition_totals.proteins_total }}g</span>
+                                  <span class="badge badge-info" style="background-color: rgb(255, 107, 130);">{{ nutrition_totals.proteins_total }}g Protein</span>
+                                  <span class="badge badge-info" style="background-color: rgb(49, 165, 74);">{{ nutrition_totals.carbs_total }}g Carbs</span>
+                                  <span class="badge badge-info" style="background-color: rgb(218, 184, 17);">{{ nutrition_totals.fats_total }}g Fat</span>
                                 </div>
 
                                 <ul>
