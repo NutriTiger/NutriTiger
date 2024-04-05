@@ -10,7 +10,7 @@
 }
 
 .nt-color-navbar {
-    background-color: #F3DDC6 ; 
+    background-color: #EBC9A6 ; 
 }
 
 .nt-color-bg {
@@ -27,10 +27,20 @@
 
 body { 
     padding-top: 60px; 
+    background-color: #F3DDC6 ; 
+}
+
+.row>* {
+    padding-right: calc(var(--bs-gutter-x)* .75);
+    padding-left: calc(var(--bs-gutter-x)* .75);
+}
+
+.p-5 {
+    padding-top: 1.5rem !important;
 }
 
 .card-body-dhall-menus {
-    border-radius: 3%;
+    border-radius: 2%;
 }
 
 .nt-color-menu {
@@ -40,6 +50,7 @@ body {
 .nt-food-text {
     transition: color 0.3s; /* Smooth transition for color change */
     cursor: default; /* Default cursor */
+    text-align: left;
 }
 
 .nt-food-text:hover {
@@ -92,6 +103,7 @@ body {
     --bs-btn-active-bg: #FF9040 !important;
     --bs-btn-color: #000000 !important;
     --bs-btn-bg: #FFB672 !important;
+    --bs-btn-padding-x: 2rem !important;
 }
 .nt-navbar-center {
     display: flex;
