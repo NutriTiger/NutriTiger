@@ -207,7 +207,7 @@ def update_menus_mealtime():
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
 
-    data = dbmenus.query_menu_display(current_date_zeros, mealtime)
+    data = dbmenus.query_menu_display(current_date_zeros)
     #print(data)
 
     
