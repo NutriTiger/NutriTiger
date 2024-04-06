@@ -152,7 +152,16 @@
                 fetchMenuData(selectedHall, mealtime);
             }
         });
-    });
+
+        // Event listener for close buttons on My Plate
+        $(document).on('click', '.btn-close', function() {
+            // Remove the card from the DOM
+            $(this).closest('.food-row-wrap').remove();
+
+            // Uncheck the food's checkbox
+
+        });
+      });
 
     function fetchMenuData(hallId, mealtime) {
         var url = '/logfood/data?dhall=' + encodeURIComponent(hallId) + '&mealtime=' + encodeURIComponent(mealtime);
@@ -235,31 +244,49 @@
             row.id = "foodplate-" + recId;
             row.classList.add('row');
 
+            // create a border around each food row
+            const rowWrapper = document.createElement('div');
+            rowWrapper.classList.add('food-row-wrap','card', 'border-primary', 'p-3', 'mb-3'); // Add border and padding classes to the wrapper
+
             const labelColumn = document.createElement('div');
             labelColumn.classList.add('col');
             labelColumn.textContent = labelText;
 
+            //  <div class="card border-primary" id="{{entry}}" style="padding: 10px;">
             const servingsColumn = document.createElement('div');
-            servingsColumn.classList.add('col');
+            servingsColumn.classList.add('col', 'd-flex', 'align-items-center', 'justify-content-end');
             const servingsInput = document.createElement('input');
-            servingsInput.type = 'text';
+            servingsInput.type = 'serving';
+            servingsInput.classList.add('form-control', 'small-input')
             servingsInput.placeholder = 'Servings';
-            servingsInput.classList.add('form-control', 'small-input');
+            const closeButton = document.createElement('button');
+            closeButton.classList.add('btn-close', 'btn-sm', 'aria-label="Close"');
             servingsColumn.appendChild(servingsInput);
+            servingsColumn.appendChild(closeButton);
             
             row.appendChild(labelColumn);
             row.appendChild(servingsColumn);
             
-            document.getElementById('my-plate').appendChild(row);
+            rowWrapper.appendChild(row); // Append the row to the wrapper
+            document.getElementById('my-plate').appendChild(rowWrapper); // Append the wrapper to the container
 
         } else {
             console.log("Checkbox with ID " + this.id + " was unchecked.");
             const retrieved_recId = this.id.substring(9);
             const plateID = "foodplate-" + retrieved_recId;
             console.log("recid for remove: " + plateID)
+
             const row = document.getElementById(plateID)
-            row.remove()
+            
+            if (row) {
+              // access wrapper to delete both border & the actual row
+              const wrapper = row.closest('.food-row-wrap');
+              if (wrapper) {
+                  wrapper.remove();
+              }
+            }
         }
     }
+
 </script>
 </html>

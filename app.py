@@ -168,10 +168,11 @@ def dhall_menus():
     netid = auth.authenticate()
     # Fetch menu data from database
     # test data
-    current_date = datetime.datetime.today()
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
     #current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    print(current_date.now(timezone('US/Eastern')))
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
-    is_weekend_var = utils.is_weekend(current_date.date())
+    is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
     #print('we made it here')
 
     #data = dbmenus.query_menu_display(current_date_zeros, mealtime)
@@ -216,10 +217,11 @@ def update_menus_mealtime():
     #nutrition_info = dbnutrition.find_one_nutrition('020076')
     #nutrition_info = dbnutrition.find_one_nutrition('540488')
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+
     #print('past the data line')
     #print(recipeids)
     #print("------------------------------------")
-    #print(nutrition_info)
+    print(nutrition_info)
 
 
     locations = ["Center for Jewish Life",
