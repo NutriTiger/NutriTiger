@@ -234,22 +234,33 @@
             row.id = "foodplate-" + recId;
             row.classList.add('row');
 
+            //const border = document.createElement('div');
+            //border.classList.add('card', 'border-primary');
+            //border.style.add('padding: 10px');
+            const rowWrapper = document.createElement('div'); // Create wrapper for the row
+            rowWrapper.classList.add('card', 'border-primary', 'p-3', 'mb-3'); // Add border and padding classes to the wrapper
+
             const labelColumn = document.createElement('div');
             labelColumn.classList.add('col');
             labelColumn.textContent = labelText;
 
+            //  <div class="card border-primary" id="{{entry}}" style="padding: 10px;">
             const servingsColumn = document.createElement('div');
-            servingsColumn.classList.add('col');
+            servingsColumn.classList.add('col', 'd-flex', 'align-items-center', 'justify-content-end');
             const servingsInput = document.createElement('input');
-            servingsInput.type = 'text';
+            servingsInput.type = 'serving';
+            servingsInput.classList.add('form-control', 'small-input')
             servingsInput.placeholder = 'Servings';
-            servingsInput.classList.add('form-control', 'small-input');
+            const closeButton = document.createElement('button');
+            closeButton.classList.add('btn-close', 'btn-sm', 'aria-label="Close"');
             servingsColumn.appendChild(servingsInput);
+            servingsColumn.appendChild(closeButton);
             
             row.appendChild(labelColumn);
             row.appendChild(servingsColumn);
             
-            document.getElementById('my-plate').appendChild(row);
+            rowWrapper.appendChild(row); // Append the row to the wrapper
+            document.getElementById('my-plate').appendChild(rowWrapper); // Append the wrapper to the container
 
         } else {
             console.log("Checkbox with ID " + this.id + " was unchecked.");
