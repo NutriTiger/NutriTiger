@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Line Chart Example</title>
+
     <!-- Include Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../static/css/styles.css">
@@ -11,9 +11,9 @@
 
 <body>
     <div class="histChart-container">
-        <!-- First Chart -->
+        <!-- Calorie Chart -->
         <canvas id="calHistoryChart" class="hist-canvas"></canvas>
-        <!-- Second Chart -->
+        <!-- Macros Chart -->
         <canvas id="macroHistoryChart" class="hist-canvas"></canvas>
     </div>
 
@@ -24,7 +24,7 @@
         var fats = {{ fats | tojson | safe}};
         var dates = {{ dates | tojson | safe}};
 
-        // Sample data for the line chart
+        //  Data for the line chart
         var data1 = {
             labels: dates,
             datasets: [{
@@ -70,7 +70,9 @@
                 y: {
                     beginAtZero: true
                 }
-            }
+            },
+            responsive: true,
+            maintainAspectRatio: false
         };
 
         // Initialize the first chart

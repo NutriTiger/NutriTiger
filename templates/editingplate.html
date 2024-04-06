@@ -61,19 +61,21 @@
                         <div class="card border-primary" id="{{entry}}" style="padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
-                                    <h5 class="card-title">{{entry}}</h5>
+                                    <h5 class="card-title py-1">{{entry}}</h5>
                                     <form action="/editingplate" method="post">
                                         <input type="hidden" name="card_id" value="{{ entry }}">
                                         <button type="submit" data-cardid="{{entry}}" class="btn-close" aria-label="Close"></button>
                                     </form>
                                 </div>
-                                <ul>
+                                <ul class="list-group">
                                     {% for food in foods %}
-                                    <li class="d-flex justify-content-between">
+                                    <li class="list-group-item d-flex justify-content-between">
                                         <span>{{food}}</span>
                                         <!-- Serving lineedit -->
-                                        <div class="form-group mb-0" style="flex: 0 0 auto;">
-                                            <input type="serving" class="form-control narrow-input" placeholder="Edit Serv">
+                                        <div class="d-flex align-items-center">
+                                            <input type="serving" class="form-control small-input" placeholder="Edit Serv">
+                                            <!--Add an X button for each food item in entry-->
+                                        <button type="button" class="btn-close btn-sm" aria-label="Close"></button>
                                         </div>
                                     </li>
                                     {% endfor %}

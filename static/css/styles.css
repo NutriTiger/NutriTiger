@@ -163,7 +163,28 @@ body {
     }
 }
 
-.narrow-input {
-    width: 100px; /* Adjust the width as needed */
-}
 /*************************/
+
+/* For My Plate footer (Log Food)*/
+.card-footer {
+    background-color: orange;
+    color: black;
+}
+
+/* For servings line edits (smaller width) */
+.small-input {
+    width: 100px;
+}
+
+/* Smaller close buttons for individual foods */
+.btn-close.btn-sm {
+    font-size: 0.75rem; 
+    padding: 0.25rem 0.5rem;
+    align-self: center;
+}
+
+/* Bordered rows for editing foods rows */
+.list-group-item {
+    border: 1px solid #dee2e6; /* Add border */
+    border-radius: 0; /* Remove border-radius */
+}

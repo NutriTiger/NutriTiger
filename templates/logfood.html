@@ -44,7 +44,7 @@
 
     <!--Two cards: one for the food list, and one for My Plate-->
     <div class="row p-2">
-      <div class="col-sm-6 m-3">
+      <div class="col-md-6 m-3">
 
         <!-- Tab Navs -->
         <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
@@ -78,6 +78,8 @@
         </div>
 
       </div>
+
+      <!--My Plate Card (right side)-->
       <div class="col-sm-5 m-3">
         <div class="card">
           <div class="card-body">
@@ -85,6 +87,14 @@
             <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
             <div id="my-plate"></div>
           </div>
+
+          <!--My Plate Footer: display plate totals-->
+          <div class="card-footer text-center">
+            <strong>Plate Totals:</strong>
+            <br>
+            {{cals}}cals {{pro}}g protein {{carbs}}g carbs {{fats}}g fat
+          </div>
+
         </div>
       </div>
     </div>
@@ -233,6 +243,7 @@
             const servingsInput = document.createElement('input');
             servingsInput.type = 'text';
             servingsInput.placeholder = 'Servings';
+            servingsInput.classList.add('form-control', 'small-input');
             servingsColumn.appendChild(servingsInput);
             
             row.appendChild(labelColumn);
