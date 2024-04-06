@@ -2,6 +2,10 @@
 
 function handleResponse(data) {
     $('#dhallMenusDiv').html(data);
+    var newHtml = $('#todaysDateDivUpdate').html();
+
+    // Set the HTML content of #todaysDateDiv
+    $('#todaysDateDiv').html(newHtml);
     // After adding dynamic content to the DOM, call the setup function
     setup();
 }
@@ -12,9 +16,13 @@ function handleError() {
 
 function getResults() {
     let mealtime = $("input[name='mealtime_btnradio']:checked").val();
+    const currentDate = $('#currentDateDiv').text();
+
     console.log(mealtime);
+    console.log(currentDate)
     let encoded_mealtime = encodeURIComponent(mealtime);
-    let url = '/update-menus-mealtime?mealtime=' + encoded_mealtime;
+    let encoded_date = encodeURIComponent(currentDate)
+    let url = '/update-menus-mealtime?mealtime=' + encoded_mealtime + "&currentdate=" + encoded_date;
     let requestData = {
         type: 'GET',
         url: url,
@@ -25,12 +33,6 @@ function getResults() {
 }
 
 function setup() {
-    // Initialize popovers for dynamically generated content
-    /*const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
-    const popover = new bootstrap.Popover('.popover-dismiss', {
-        trigger: 'focus'
-      })*/
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     const popoverId = popoverTriggerEl.attributes['data-content-id'];
@@ -40,7 +42,6 @@ function setup() {
             content: contentEl,
             html: true,
         });
-    } else { // do something else cause data-content-id isn't there.
     }
 });
 
@@ -51,6 +52,49 @@ function debouncedGetResults() {
     timer = setTimeout(getResults, 500);
 }
 
+function modifyDate(daysToAddOrSubtract) {
+    // Get the current date string from the #currentDateDiv element
+    const currentDateStr = $('#currentDateDiv').text();
+    
+    // Parse the date string to a Date object
+    const currentDate = new Date(currentDateStr);
+
+    // Modify the date by adding or subtracting days
+    currentDate.setDate(currentDate.getDate() + daysToAddOrSubtract);
+
+    // Format the modified date as a string in the desired format
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds()).padStart(3, '0');
+    const timezoneOffsetMinutes = -currentDate.getTimezoneOffset();
+    const timezoneOffsetHours = Math.floor(timezoneOffsetMinutes / 60);
+    const timezoneOffsetMinutesRemainder = Math.abs(timezoneOffsetMinutes % 60);
+    const timezoneOffsetHoursStr = String(Math.abs(timezoneOffsetHours)).padStart(2, '0');
+    const timezoneOffsetMinutesStr = String(timezoneOffsetMinutesRemainder).padStart(2, '0');
+    const timezoneOffsetString = `${timezoneOffsetHours < 0 ? '-' : '+'}${timezoneOffsetHoursStr}:${timezoneOffsetMinutesStr}`;
+    const modifiedDateStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}${timezoneOffsetString}`;
+
+    // Update the #currentDateDiv element with the modified date
+    $('#currentDateDiv').text(modifiedDateStr);
+
+    // Perform the AJAX request with the modified date
+    getResults();
+}
+
+function handleLeftArrowClick() {
+    // Subtract a day from the current date
+    modifyDate(-1);
+}
+
+// Function to handle right arrow click
+function handleRightArrowClick() {
+    // Add a day to the current date
+    modifyDate(1);
+}
 
 $(document).ready(function() {
     getResults();
@@ -71,12 +115,16 @@ $(document).ready(function() {
     leftArrow.addEventListener('click', function() {
         // Handle left arrow click
         console.log('Left arrow clicked');
+        handleLeftArrowClick();
     });
 
     rightArrow.addEventListener('click', function() {
         // Handle right arrow click
         console.log('Right arrow clicked');
+        handleRightArrowClick();
     });
+
+    
     
     // getResults();
 });

@@ -167,44 +167,31 @@ def about():
 def dhall_menus():
     netid = auth.authenticate()
     # Fetch menu data from database
-    # test data
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     #current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     print(current_date.now(timezone('US/Eastern')))
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
     is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
-    #print('we made it here')
-
-    #data = dbmenus.query_menu_display(current_date_zeros, mealtime)
-
-    #recipeids = utils.gather_recipes(data)
-    #nutrition_info = dbnutrition.find_one_nutrition('560154')
-    #nutrition_info = dbnutrition.find_many_nutrition(recipeids)
-    #print('past the data line')
-    #print(recipeids)
-    #print("------------------------------------")
-    #print(nutrition_info)
-
-
-    locations = ["Center for Jewish Life",
-                        "Forbes College", "Rockefeller & Mathey Colleges",
-                        "Whitman & Butler Colleges",
-                        "Yeh & New West Colleges",
-                        "Graduate College"]
-
-    nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
-
+    
+   
     todays_date = utils.custom_strftime(current_date)
     #print(todays_date)
 
-    return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime)
+    return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
 
 @app.route('/update-menus-mealtime', methods=['GET'])
 def update_menus_mealtime():
     netid = auth.authenticate()
     mealtime = request.args.get('mealtime')
+    current_date_string = request.args.get('currentdate')
+    print(current_date_string + " AHHAHAH")
+    
+    current_date = datetime.datetime.strptime(current_date_string, "%Y-%m-%d %H:%M:%S.%f%z")
+    
 
-    current_date = datetime.datetime.today()
+
+    #current_date = datetime.datetime.today()
+    print(current_date)
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
 
@@ -213,30 +200,16 @@ def update_menus_mealtime():
 
     
     recipeids = utils.gather_recipes(data)
-    #nutrition_info = dbnutrition.find_one_nutrition('304008')
-    #nutrition_info = dbnutrition.find_one_nutrition('020076')
-    #nutrition_info = dbnutrition.find_one_nutrition('540488')
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
-    #print('past the data line')
-    #print(recipeids)
-    #print("------------------------------------")
-    print(nutrition_info)
-
-
-    locations = ["Center for Jewish Life",
-                        "Forbes College", "Rockefeller & Mathey Colleges",
-                        "Whitman & Butler Colleges",
-                        "Yeh & New West Colleges",
-                        "Graduate College"]
-
-    nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
+   
+    #print(nutrition_info)
 
     todays_date = utils.custom_strftime(current_date)
     #print(todays_date)
 
-    return render_template('dhallmenus_update.html', todays_date=todays_date, locations=locations, data=data,
-                        nutritional_content=nutritional_content, nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
+    return render_template('dhallmenus_update.html', todays_date=todays_date, data=data,
+                        nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 #--------------------------------------------------------------------
 
