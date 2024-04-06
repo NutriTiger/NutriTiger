@@ -1,5 +1,5 @@
 <!--==============================================================-->
-<!-- about.html                                                   -->
+<!-- logfood.html                                                   -->
 <!--==============================================================-->
 
 <!DOCTYPE html>
@@ -190,7 +190,8 @@
             container.appendChild(p);
           } else {
             // Iterate over the dictionary entries
-            Object.entries(items).forEach(([item, id]) => {
+            Object.entries(items).forEach(([item, [name, id, cals, carbs, prots, fats, ss]]) => {
+                console.log(item, id, cals, carbs, prots, fats, ss);
                 const div = document.createElement('div'); // Create a div for each item
                 div.classList.add('form-check'); // Bootstrap class for checkbox styling
 
@@ -202,7 +203,7 @@
                 const label = document.createElement('label'); // Create a label for the checkbox
                 label.classList.add('form-check-label'); // Bootstrap class for label styling
                 label.htmlFor = checkbox.id; // Associate label with checkbox
-                label.textContent = item; // Set label text to the item name
+                label.textContent = name; // Set label text to the item name
 
                 // Event listener for the checkbox
                 checkbox.addEventListener('change', handleCheckboxChange);
