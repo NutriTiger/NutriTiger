@@ -1,5 +1,5 @@
 <!--==============================================================-->
-<!-- about.html                                                   -->
+<!-- logfood.html                                                   -->
 <!--==============================================================-->
 
 <!DOCTYPE html>
@@ -152,7 +152,16 @@
                 fetchMenuData(selectedHall, mealtime);
             }
         });
-    });
+
+        // Event listener for close buttons on My Plate
+        $(document).on('click', '.btn-close', function() {
+            // Remove the card from the DOM
+            $(this).closest('.food-row-wrap').remove();
+
+            // Uncheck the food's checkbox
+
+        });
+      });
 
     function fetchMenuData(hallId, mealtime) {
         var url = '/logfood/data?dhall=' + encodeURIComponent(hallId) + '&mealtime=' + encodeURIComponent(mealtime);
@@ -190,7 +199,8 @@
             container.appendChild(p);
           } else {
             // Iterate over the dictionary entries
-            Object.entries(items).forEach(([item, id]) => {
+            Object.entries(items).forEach(([item, [name, id, cals, carbs, prots, fats, ss]]) => {
+                console.log(item, id, cals, carbs, prots, fats, ss);
                 const div = document.createElement('div'); // Create a div for each item
                 div.classList.add('form-check'); // Bootstrap class for checkbox styling
 
@@ -202,7 +212,7 @@
                 const label = document.createElement('label'); // Create a label for the checkbox
                 label.classList.add('form-check-label'); // Bootstrap class for label styling
                 label.htmlFor = checkbox.id; // Associate label with checkbox
-                label.textContent = item; // Set label text to the item name
+                label.textContent = name; // Set label text to the item name
 
                 // Event listener for the checkbox
                 checkbox.addEventListener('change', handleCheckboxChange);
@@ -234,11 +244,9 @@
             row.id = "foodplate-" + recId;
             row.classList.add('row');
 
-            //const border = document.createElement('div');
-            //border.classList.add('card', 'border-primary');
-            //border.style.add('padding: 10px');
-            const rowWrapper = document.createElement('div'); // Create wrapper for the row
-            rowWrapper.classList.add('card', 'border-primary', 'p-3', 'mb-3'); // Add border and padding classes to the wrapper
+            // create a border around each food row
+            const rowWrapper = document.createElement('div');
+            rowWrapper.classList.add('food-row-wrap','card', 'border-primary', 'p-3', 'mb-3'); // Add border and padding classes to the wrapper
 
             const labelColumn = document.createElement('div');
             labelColumn.classList.add('col');
@@ -267,9 +275,18 @@
             const retrieved_recId = this.id.substring(9);
             const plateID = "foodplate-" + retrieved_recId;
             console.log("recid for remove: " + plateID)
+
             const row = document.getElementById(plateID)
-            row.remove()
+            
+            if (row) {
+              // access wrapper to delete both border & the actual row
+              const wrapper = row.closest('.food-row-wrap');
+              if (wrapper) {
+                  wrapper.remove();
+              }
+            }
         }
     }
+
 </script>
 </html>
