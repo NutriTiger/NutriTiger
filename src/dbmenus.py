@@ -61,7 +61,7 @@ def update_menu(menu_list):
             sys.exit(1)
 
 # Retrive food items for menu by date, mealtime, and dhall (optional)
-def query_menu_display(date, mealtime, dhall = None):
+def query_menu_display(date, mealtime= None, dhall = None):
     print('we made it into the method')
     with connectmongo() as client:
         print('we connected to the client')
@@ -78,14 +78,22 @@ def query_menu_display(date, mealtime, dhall = None):
         print("end:")
         print(end_day)
 
-        if dhall:
+        if dhall and mealtime:
             documents_to_find = {"date": {
             "$gte": start_day,
             "$lt": end_day}, "mealtime": mealtime, "dhall": dhall}
-        else:
+        elif dhall:
+            documents_to_find = {"date": {
+            "$gte": start_day,
+            "$lt": end_day}, "dhall": dhall}
+        elif mealtime:
             documents_to_find = {"date": {
             "$gte": start_day,
             "$lt": end_day}, "mealtime": mealtime}
+        else:
+            documents_to_find = {"date": {
+            "$gte": start_day,
+            "$lt": end_day}}
         print(documents_to_find)
 
         try: 
@@ -98,8 +106,8 @@ def query_menu_display(date, mealtime, dhall = None):
             if not list_result:
                 print("No menu documents found")
                 return []
-            else:
-                print('Documents found:', list_result)
+            #else:
+                #print('Documents found:', list_result)
             return list_result
     
         except pymongo.errors.OperationFailure as e:

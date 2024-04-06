@@ -52,6 +52,13 @@ function setup() {
 $(document).ready(function() {
     getResults();
     $("input[name='mealtime_btnradio']").change(function() {
-        getResults();
+        var selectedMealtime = $(this).val();
+    
+    // "Disappear" all meal elements
+        $(".meal").css("display", "none");
+        
+        // Show the selected meal elements
+        $("." + selectedMealtime).css("display", "block");
     });
+    // getResults();
 });

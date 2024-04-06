@@ -118,7 +118,7 @@ def find_many_nutrition(recipeids, personal=False):
                 except:
                     print("Error with finding obj")
                     return
-                print(f"found document: {result}")
+                #print(f"found document: {result}")
                 result_list.append(result)
             return result_list
         except pymongo.errors.OperationFailure:

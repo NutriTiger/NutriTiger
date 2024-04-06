@@ -1,9 +1,9 @@
 <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
     {% set ns = namespace(c = 0) %}
     {% for item in data %}
-    <div class="col">
-        <div class="card h-100 card-body-dhall-menus">
-            <div class="card-body">
+    <div class="col meal {{ item.mealtime }}">
+        <div class="card h-100 card-body-dhall-menus ">
+            <div class="card-body"  >
                 <h5 class="card-title text-center">{{ item.dhall }}</h5>
                 {% set outer_outer_loop = loop %}
                 {% for category, foods in item.data.items() %}
@@ -28,7 +28,7 @@
                     </div>
                     <div class="center">
                         <ul>
-                            <li><strong>Serving Size:</strong></li>
+                            <li><strong>Serving Size:</strong> {{ nutrition_info[ns.c]['servingsize'] }} </li>
                             <li><strong>Calories:</strong> {{ nutrition_info[ns.c]['calories'] }}</li>
                             <li><strong>Protein:</strong>  {{ nutrition_info[ns.c]['proteins'] }}</li>
                             <li><strong>Carbohydrates:</strong> {{ nutrition_info[ns.c]['carbs'] }}</li>
