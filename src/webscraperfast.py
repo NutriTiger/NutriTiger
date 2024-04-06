@@ -5,12 +5,9 @@
 # Author: Eric
 # ----------------------------------------------------------------------
 
-#import requests
 import json
 import re
 import sys
-#import asyncio
-#import aiohttp
 from bs4 import BeautifulSoup
 
 # ---------------------------------------------------------------------
@@ -111,6 +108,8 @@ async def get_nutrition_from_recipe(recipeid, session):
             # Insert the calories, which is the second sequential element with id facts2
             calories_element = soup.find_all(id="facts2")[CALORIES_INDEX]
             nutrition_json["calories"] = parse_nutrition_value("calories", calories_element)
+            if nutrition_json["calories"] != "":
+                nutrition_json["calories"] = int(nutrition_json["calories"])
 
             # Insert the serving size, which has a unique class
             serving_size_element = soup.find_all(id="facts2")[SERVING_SIZE_INDEX]
@@ -129,11 +128,18 @@ async def get_nutrition_from_recipe(recipeid, session):
                 if title is not None:
                     title = title.text.strip()
                     if title == "Protein":
-                        nutrition_json["proteins"] = parse_nutrition_value("proteins", element)
+                        nutrition_json["proteins"] = parse_nutrition_value("proteins", element)[:-1]
+                        if nutrition_json["proteins"] != "":
+                            nutrition_json["proteins"] = float(nutrition_json["proteins"])
                     if title == "Tot. Carb.":
-                        nutrition_json["carbs"] = parse_nutrition_value("carbs", element)
+                        # The -1 removes grams symbol
+                        nutrition_json["carbs"] = parse_nutrition_value("carbs", element)[:-1]
+                        if nutrition_json["carbs"] != "":
+                            nutrition_json["carbs"] = float(nutrition_json["carbs"])
                     if title == "Total Fat":
-                        nutrition_json["fats"] = parse_nutrition_value("fats", element)
+                        nutrition_json["fats"] = parse_nutrition_value("fats", element)[:-1]
+                        if nutrition_json["fats"] != "":
+                            nutrition_json["fats"] = float(nutrition_json["fats"])
                     if title == "Cholesterol":
                         nutrition_json["cholesterol"] = parse_nutrition_value("cholesterol", element)
                     if title == "Sodium":

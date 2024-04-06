@@ -55,11 +55,8 @@ def main():
     in a preferred format and print it to stdout.
     """
 
-    #todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
-    #tester = asyncio.run(test())
-    #tester = tester[0]
-    #for object in tester[0]:
-    #    print(object)
+    todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
+    print(todays_nutrition_list)
 
     #for object in todays_menu_items:
     #    print(json.dumps(object, indent=4, default=str))
@@ -67,12 +64,12 @@ def main():
     #for object in todays_nutrition_list:
     #    print(json.dumps(object, indent=4, default=str))
 
-    start_date = datetime.datetime(2024, 4, 1).date()
-    end_date = datetime.datetime(2024, 4, 2).date()
+    #start_date = datetime.datetime(2024, 4, 1).date()
+    #end_date = datetime.datetime(2024, 4, 2).date()
 
-    menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
+    #menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
     #print(menu_items_list_range)
-    print(menu_items_nutrition_list_range)
+    #print(menu_items_nutrition_list_range)
 
 # ---------------------------------------------------------------------
 
@@ -93,25 +90,16 @@ async def get_daily_menus_from_range(start_date, end_date):
         current_date = start_date
         menu_items_list = []
         menu_nutrition_list = []
-        distinct_recipeid_list = []
 
         results = []
 
         while (current_date != (end_date + datetime.timedelta(days = 1))):
             print("Getting daily menus for", current_date)
 
-            job = asyncio.ensure_future(get_daily_menus(distinct_recipeid_list, current_date))
+            job = asyncio.ensure_future(get_daily_menus(current_date))
             results.append(job)
             
             current_date = current_date + datetime.timedelta(days = 1)
-
-            """
-            current_menu_items_list, current_menu_nutrition_list = get_daily_menus(current_date)
-            menu_items_list.append(current_menu_items_list)
-            menu_nutrition_list.append(current_menu_nutrition_list)
-
-            current_date = current_date + datetime.timedelta(days = 1)
-            """
         
         await asyncio.gather(*results, return_exceptions=True)
         
@@ -133,7 +121,7 @@ async def get_daily_menus_from_range(start_date, end_date):
 # ---------------------------------------------------------------------
 
 
-async def get_daily_menus(distinct_recipeid_list, date=""):
+async def get_daily_menus(date="", distinct_recipeid_list=[]):
     """
     Based on the predefined location numbers in LOCATION_NUMS and
     descriptions in LOCATION_DESCRIPTION get_daily_menus obtains the
