@@ -13,5 +13,3 @@ disable=missing-module-docstring,
 
 [FORMAT]
 max-line-length=72
-max-module-lines=500
-min-similarity-lines=10
