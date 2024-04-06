@@ -79,13 +79,13 @@ def homepage():
 
     # A list of lists: holds recipeids for each entry
     entries_info = cursor['daily_rec']
+    user_info = cursor['daily_nut']
 
     # Entry title strings array ("Entry #")
     ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
 
     # List of lists of foods, should match up with ENTRIES array
     foods_lists = []
-    nutrition_totals = []
     for entry in entries_info:
 
         entry_recipeids = entry[:]
@@ -98,46 +98,23 @@ def homepage():
             foods_lists.append([])
         
         # If "mealname" for this recipeid, then add it to the list for current entry
-        # Also calculate the macro totals for each entry 
         else:
             mealnames = []
-            cal_entry_total = 0
-            pro_entry_total = 0
-            carb_entry_total = 0
-            fat_entry_total = 0
 
             # For each food in the entry
             for food in entry_nutrition:
                 if isinstance(food, dict) and "mealname" in food:
                     mealnames.append(food["mealname"])
-                
-                # Get macro totals for each entry to display across the top
-                if isinstance(food, dict) and "calories" in food:
-                    cal_entry_total += int(food["calories"])
-                if isinstance(food, dict) and "fats" in food:
-                    fat_entry_total += int(food["fats"])
-                if isinstance(food, dict) and "carbs" in food:
-                    carb_entry_total += int(food["carbs"])
-                if isinstance(food, dict) and "proteins" in food:
-                    pro_entry_total += int(food["proteins"])
 
             # Append the list of mealnames for this entry
             foods_lists.append(mealnames)
             
-            # Append the cumulative macro totals for this entry
-            nutrition_totals.append({
-                "calories_total": cal_entry_total,
-                "fats_total": fat_entry_total,
-                "carbs_total": carb_entry_total,
-                "proteins_total": pro_entry_total
-            })
-    print(nutrition_totals)
     # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
     for i in range(len(ENTRIES)):
         entry = ENTRIES[i]
         foods = foods_lists[i]
-        totals = nutrition_totals[i]
+        totals = user_info[i]
         entries_food_dict[entry] = {"foods": foods, "nutrition_totals": totals}
 
     # When Edit Plate button is pressed
@@ -392,15 +369,31 @@ def log_food():
         return render_template('logfood.html') 
     # Given the new data structure, mealtime/dhall pairs only have one corresponding document
     result = menu[0]
-    food_dict = {}
+    food_dict = []
 
     # Extend the food_items list with the keys from each dictionary
     for category in result['data'].values():
-        food_dict.update(category)
-    print("FOOD ITEMS")
-    print(food_dict)
-
-    return render_template('logfood.html', food_items = food_dict, is_weekend_var = is_weekend_var)
+        for key, val in category.items():
+            nut = dbnutrition.find_one_nutrition(val)
+            if (result is not None):
+                if (nut['calories']==''):
+                    cals = 'NA'
+                    carbs = 'NA'
+                    prots = 'NA'
+                    fats = 'NA'
+                # for now need to parse string to float
+                else:
+                    cals = float(nut['calories'][:-1])
+                    carbs = float(nut['carbs'][:-1])
+                    prots = float(nut['proteins'][:-1])
+                    fats = float(nut['fats'][:-1])
+                print('RESULT:')
+                print(cals, carbs, prots, fats)
+                food_list.append([key, val, cals, carbs, prots, fats, nut['servingsize']])
+                # FOR WHEN STORED AS NUMS: food_list.append([key, val, nut['calories'], nut['carbs'], nut['fats'], nut['proteins'], nut['servingsize']])
+    
+    return jsonify(food_list)
+    return render_template('logfood.html', food_items = food_list, is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
 
@@ -425,15 +418,32 @@ def log_food_data():
         return {}
     result = menus[0]
    
-    food_dict = {}
+    food_list = []
 
     # Extend the food_items list with the keys from each dictionary
     for category in result['data'].values():
-        food_dict.update(category)
+        for key, val in category.items():
+            nut = dbnutrition.find_one_nutrition(val)
+            if (result is not None):
+                if (nut['calories']==''):
+                    cals = 'NA'
+                    carbs = 'NA'
+                    prots = 'NA'
+                    fats = 'NA'
+                # for now need to parse string to float
+                else:
+                    cals = float(nut['calories'][:-1])
+                    carbs = float(nut['carbs'][:-1])
+                    prots = float(nut['proteins'][:-1])
+                    fats = float(nut['fats'][:-1])
+                print('RESULT:')
+                print(cals, carbs, prots, fats)
+                food_list.append([key, val, cals, carbs, prots, fats, nut['servingsize']])
+                # FOR WHEN STORED AS NUMS: food_list.append([key, val, nut['calories'], nut['carbs'], nut['fats'], nut['proteins'], nut['servingsize']])
     print("FOOD ITEMS")
-    print(food_dict)
+    print(food_list)
 
-    return jsonify(food_dict)
+    return jsonify(food_list)
 
 #--------------------------------------------------------------------
 
