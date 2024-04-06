@@ -46,7 +46,10 @@ function setup() {
 
       
 }
-
+function debouncedGetResults() {
+    clearTimeout(timer);
+    timer = setTimeout(getResults, 500);
+}
 
 
 $(document).ready(function() {
@@ -60,5 +63,20 @@ $(document).ready(function() {
         // Show the selected meal elements
         $("." + selectedMealtime).css("display", "block");
     });
+
+    const leftArrow = document.getElementById('leftArrow');
+    const rightArrow = document.getElementById('rightArrow');
+
+    // Add click event listeners
+    leftArrow.addEventListener('click', function() {
+        // Handle left arrow click
+        console.log('Left arrow clicked');
+    });
+
+    rightArrow.addEventListener('click', function() {
+        // Handle right arrow click
+        console.log('Right arrow clicked');
+    });
+    
     // getResults();
 });

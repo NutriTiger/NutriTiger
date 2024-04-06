@@ -104,29 +104,47 @@ def add_personal_food(name, netid, nutrition, link):
 def find_many_nutrition(recipeids, personal=False):
     if not recipeids:
         print("empty recipeid list")
-        return
+        return []
+
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
+
         try:
-            # all recipeids and isn't personal
-            result_list = []
-            for id in recipeids:
-                doc_to_find = {"recipeid": id, "access": { "$exists": personal }}
-                try:
-                    result = nutrition_col.find_one(doc_to_find)
-                except:
-                    print("Error with finding obj")
-                    return
-                #print(f"found document: {result}")
-                result_list.append(result)
+            # Construct the pipeline for aggregation
+            pipeline = [
+                {"$match": {"recipeid": {"$in": recipeids}}},
+                {"$addFields": {"__order": {"$indexOfArray": [recipeids, "$recipeid"]}}},
+                {"$sort": {"__order": 1}},
+                {"$project": {
+                    "_id": 0,
+                    "recipeid": 1,
+                    "mealname": 1,
+                    "link": 1,
+                    "calories": 1,
+                    "servingsize": 1,
+                    "proteins": 1,
+                    "carbs": 1,
+                    "fats": 1,
+                    "ingredients": 1,
+                    "allergen": 1
+                }}
+            ]
+            
+            result_list = list(nutrition_col.aggregate(pipeline))
+
+            # Create a dictionary with recipeids as keys for quick lookup
+            result_dict = {result["recipeid"]: result for result in result_list}
+
+            # Fill in missing documents with empty dictionaries
+            result_list = [result_dict.get(recipeid, {}) for recipeid in recipeids]
+
             return result_list
-        except pymongo.errors.OperationFailure:
-            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
-            sys.exit(1)
-        except pymongo.errors.ServerSelectionTimeoutError:
-            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
-            sys.exit(1)
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return []
+
 
 # Retrieve nutritional information of a user
 def find_all_personal_nutrition(netid):

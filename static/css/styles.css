@@ -35,6 +35,11 @@ body {
     padding-left: calc(var(--bs-gutter-x)* .75);
 }
 
+.row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
 .p-5 {
     padding-top: 1.5rem !important;
 }
@@ -58,8 +63,8 @@ body {
     cursor: pointer; /* Change cursor to pointer on hover */
 }
 
-.nt-food-button-active {
-    background-color: #FFB672 !important;
+.nt-food-text:focus {
+    background-color: #FFB672 ;/* Custom color on hover */
 }
 
 /*.popover{
@@ -71,7 +76,7 @@ body {
     --bs-offcanvas-width: min(95vw, 250px) !important;
 }
 
-.btn {
+.nt-btn {
     --bs-btn-border-width:0 !important;
 }
 .btn-more-info {

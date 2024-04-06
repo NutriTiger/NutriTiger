@@ -18,14 +18,14 @@
       <div class = "text-center">
          <h1 class="display-3 pb-2"><strong>Today's Menus</strong></h1>
          <h3 class = "pb-1 align-middle" >
-            <a href = "" style = "text-decoration: none">
+            <a href = "" id="leftArrow" style = "text-decoration: none">
                <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: text-bottom;" height="32" width="20" viewBox="0 0 320 512">
                   <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                   <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
                </svg>
             </a>
             {{ todays_date }}
-            <a href = "" style = "text-decoration: none">
+            <a href = "" id="rightArrow" style = "text-decoration: none">
                <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: text-bottom;" height="32" width="20" viewBox="0 0 320 512">
                   <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                   <path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/>
@@ -35,12 +35,12 @@
          <div class="btn-group align-items-center mx-auto pb-3" role="group" aria-label="Basic radio toggle button group">
             {% if not is_weekend_var: %}
             <input type="radio" value="Breakfast" class="btn-check" name="mealtime_btnradio" id="btnradio1" autocomplete="off" {% if mealtime == "Breakfast" %} checked {% endif %}>
-            <label class="btn btn-dhall btn-primary" for="btnradio1">Breakfast</label>
+            <label class="nt-btn btn btn-dhall btn-primary" for="btnradio1">Breakfast</label>
             {% endif %}
             <input type="radio" value="Lunch" class="btn-check" name="mealtime_btnradio" id="btnradio2" autocomplete="off" {% if mealtime == 'Lunch' %} checked {% endif %}>
-            <label class="btn btn-dhall btn-primary" for="btnradio2">Lunch</label>   
+            <label class="nt-btn btn btn-dhall btn-primary" for="btnradio2">Lunch</label>   
             <input type="radio" value="Dinner" class="btn-check" name="mealtime_btnradio" id="btnradio3" autocomplete="off" {% if mealtime == 'Dinner' %} checked {% endif %}>
-            <label class="btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
+            <label class="nt-btn btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
          </div>
          <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
       </div>

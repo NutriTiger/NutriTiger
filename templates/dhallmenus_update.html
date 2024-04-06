@@ -1,7 +1,7 @@
 <div class="p-5 row row-cols-1 row-cols-md-3 g-4">
     {% set ns = namespace(c = 0) %}
     {% for item in data %}
-    <div class="col meal {{ item.mealtime }}">
+    <div class="col meal {{ item.mealtime }}" {% if item.mealtime != mealtime %} style = "display: none;" {% endif %}>
         <div class="card h-100 card-body-dhall-menus ">
             <div class="card-body"  >
                 <h5 class="card-title text-center">{{ item.dhall }}</h5>
@@ -10,7 +10,7 @@
                 <h6>{{ category }}</h6>
                 {% set outer_loop = loop %}
                 {% for food, code in foods.items() %}
-                <a tabindex="0" class="btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">{{ food }}</a>
+                <a tabindex="0" class="nt-btn btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">{{ food }}</a>
                 <!-- data-bs-trigger="hover focus" -->
                 <!-- style="display: none;" -->
                 <div style="display: none;" id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">
