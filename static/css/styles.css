@@ -58,6 +58,11 @@ body {
     text-align: left;
 }
 
+.day_arrow {
+    text-decoration: none;
+    cursor: pointer;
+}
+
 .nt-food-text:hover {
     background-color: #FFB672 ; /* Custom color on hover */
     cursor: pointer; /* Change cursor to pointer on hover */
