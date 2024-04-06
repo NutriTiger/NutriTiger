@@ -62,21 +62,21 @@ def update_menu(menu_list):
 
 # Retrive food items for menu by date, mealtime, and dhall (optional)
 def query_menu_display(date, mealtime= None, dhall = None):
-    print('we made it into the method')
+    #print('we made it into the method')
     with connectmongo() as client:
-        print('we connected to the client')
+        #print('we connected to the client')
         db = client.db
         menu_col = db.menus
 
         # Strip the time portion to get the start of today in Eastern Time
         start_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
-        print("start:")
-        print(start_day)
+        #print("start:")
+        #print(start_day)
 
         # Define the end of today as just before midnight in Eastern Time
         end_day = start_day + timedelta(days=1) - timedelta(microseconds=1)
-        print("end:")
-        print(end_day)
+        #print("end:")
+        #print(end_day)
 
         if dhall and mealtime:
             documents_to_find = {"date": {
@@ -94,15 +94,15 @@ def query_menu_display(date, mealtime= None, dhall = None):
             documents_to_find = {"date": {
             "$gte": start_day,
             "$lt": end_day}}
-        print(documents_to_find)
+        #print(documents_to_find)
 
         try: 
             result = menu_col.find(documents_to_find)
-            print(f"cursor: {result}")
+            #print(f"cursor: {result}")
 
             list_result = list(result)
-            print("this is it")
-            print(list_result)
+            #print("this is it")
+            #print(list_result)
             if not list_result:
                 print("No menu documents found")
                 return []
