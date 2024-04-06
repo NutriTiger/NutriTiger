@@ -79,13 +79,13 @@ def homepage():
 
     # A list of lists: holds recipeids for each entry
     entries_info = cursor['daily_rec']
+    user_info = cursor['daily_nut']
 
     # Entry title strings array ("Entry #")
     ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
 
     # List of lists of foods, should match up with ENTRIES array
     foods_lists = []
-    nutrition_totals = []
     for entry in entries_info:
 
         entry_recipeids = entry[:]
@@ -98,46 +98,23 @@ def homepage():
             foods_lists.append([])
         
         # If "mealname" for this recipeid, then add it to the list for current entry
-        # Also calculate the macro totals for each entry 
         else:
             mealnames = []
-            cal_entry_total = 0
-            pro_entry_total = 0
-            carb_entry_total = 0
-            fat_entry_total = 0
 
             # For each food in the entry
             for food in entry_nutrition:
                 if isinstance(food, dict) and "mealname" in food:
                     mealnames.append(food["mealname"])
-                
-                # Get macro totals for each entry to display across the top
-                if isinstance(food, dict) and "calories" in food:
-                    cal_entry_total += int(food["calories"])
-                if isinstance(food, dict) and "fats" in food:
-                    fat_entry_total += int(food["fats"])
-                if isinstance(food, dict) and "carbs" in food:
-                    carb_entry_total += int(food["carbs"])
-                if isinstance(food, dict) and "proteins" in food:
-                    pro_entry_total += int(food["proteins"])
 
             # Append the list of mealnames for this entry
             foods_lists.append(mealnames)
             
-            # Append the cumulative macro totals for this entry
-            nutrition_totals.append({
-                "calories_total": cal_entry_total,
-                "fats_total": fat_entry_total,
-                "carbs_total": carb_entry_total,
-                "proteins_total": pro_entry_total
-            })
-    print(nutrition_totals)
     # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
     for i in range(len(ENTRIES)):
         entry = ENTRIES[i]
         foods = foods_lists[i]
-        totals = nutrition_totals[i]
+        totals = user_info[i]
         entries_food_dict[entry] = {"foods": foods, "nutrition_totals": totals}
 
     # When Edit Plate button is pressed
