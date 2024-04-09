@@ -5,14 +5,14 @@
     {% for food in foods %}
         <div id="container">
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="checkbox-{{ food.recipeid }}" onchange="handleCheckboxChange()">
+                <input type="checkbox" class="form-check-input" id="checkbox-{{ food.recipeid }}" onchange="handleCheckboxChange({{ food.recipeid }})">
                 <label for="checkbox-{{ food.recipeid }}" class="form-check-label">{{ food.mealname }}</label>
                 <div class="nutrition-facts">
                     <p>Serving Size: <span id="servingsize-{{ food.recipeid }}">{{ food.servingsize }}</span>
-                    Calories: <span class="cals-{{ food.recipeid }}">{{ food.calories }}</span>
-                    Proteins: <span class="prots-{{ food.recipeid }}">{{ food.proteins }}g</span>
-                    Carbs: <span class="carbs-{{ food.recipeid }}">{{ food.carbs }}g</span>
-                    Fats: <span class="fats-{{ food.recipeid }}">{{ food.fats }}g</span>
+                    Calories: <span id="cals-{{ food.recipeid }}">{{ food.calories }}</span>
+                    Proteins: <span id="prots-{{ food.recipeid }}">{{ food.proteins }}g</span>
+                    Carbs: <span id="carbs-{{ food.recipeid }}">{{ food.carbs }}g</span>
+                    Fats: <span id="fats-{{ food.recipeid }}">{{ food.fats }}g</span>
                 </div>
             </div>
         </div>
