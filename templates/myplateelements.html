@@ -4,12 +4,19 @@
     <div class="col">
         <!--Label Column-->
         <span>{{ mealname }}</span>
+
         <!--Serving Lineedit Column-->
         <div class="col d-flex align-items-center justify-content-end">
             <input type="serving" class="form-control small-input" placeholder="Servings">
 
             <!--Close button column-->
-            <button type="button" class=" btn-close btn-sm" aria-label="Close"></button>
+            <button type="button" id="close-{{ recid }}" class=" btn-close btn-sm" aria-label="Close"></button>
         </div>
+
+        <!--Hidden values-->
+        <input type="hidden" id="plate-cals-{{recid}}" value="{{ cals }}">
+        <input type="hidden" id="plate-carbs-{{recid}}" value="{{ carbs }}">
+        <input type="hidden" id="plate-prots-{{recid}}" value="{{ prots }}">
+        <input type="hidden" id="plate-fats-{{recid}}" value="{{ fats }}">
     </div>
 </div>
