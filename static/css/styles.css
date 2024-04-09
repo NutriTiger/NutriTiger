@@ -31,8 +31,8 @@ body {
 }
 
 .row>* {
-    padding-right: calc(var(--bs-gutter-x)* .75);
-    padding-left: calc(var(--bs-gutter-x)* .75);
+    padding-right: calc(var(--bs-gutter-x));
+    padding-left: calc(var(--bs-gutter-x));
 }
 
 .row {
@@ -78,7 +78,7 @@ body {
 }*/
 
 .offcanvas {
-    --bs-offcanvas-width: min(95vw, 250px) !important;
+    --bs-offcanvas-width: min(95vw, 225px) !important;
 }
 
 .nt-btn {
