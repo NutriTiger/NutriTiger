@@ -3,29 +3,28 @@
 # ----------------------------------------------------------------------
 # scraper.py
 # Author: Eric
+#
+# Notes:
+#
+# Using manual scraper over MobileApp API to obtain entree descriptions
+# Concurrency is done with asyncio and aiohttp to make multiple connections
+# at once.
+#
+# Sources Used:
+# https://www.geeksforgeeks.org/python-web-scraping-tutorial/
+# https://towardsdatascience.com/xml-scraping-done-right-6ac66eef9efc
+# https://realpython.com/python-concurrency/
+#
+# Location 05: CJL
+# Location 03: Forbes
+# Location 04: Grad
+# Location 01: Rocky + Maddy
+# Location 08: Whitman & Butler
+# Location 06: Yeh West
 # ----------------------------------------------------------------------
-
-"""
-Notes:
-
-Using manual scraper over MobileApp API to obtain entree descriptions
-
-Sources Used:
-https://www.geeksforgeeks.org/python-web-scraping-tutorial/
-https://towardsdatascience.com/xml-scraping-done-right-6ac66eef9efc
-https://realpython.com/python-concurrency/
-
-Location 05: CJL
-Location 03: Forbes
-Location 04: Grad
-Location 01: Rocky + Maddy
-Location 08: Whitman & Butler
-Location 06: Yeh West
-"""
 
 import sys
 import datetime
-import json
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
@@ -55,21 +54,23 @@ def main():
     in a preferred format and print it to stdout.
     """
 
+    # Obtains today menus
     todays_menu_items, todays_nutrition_list = asyncio.run(get_daily_menus())
+
+    print(todays_menu_items)
     print(todays_nutrition_list)
 
-    #for object in todays_menu_items:
-    #    print(json.dumps(object, indent=4, default=str))
-    
-    #for object in todays_nutrition_list:
-    #    print(json.dumps(object, indent=4, default=str))
+    # Gets the date for today, resetting the timestamp
+    todays_date = datetime.datetime.today()
+    todays_date = datetime.datetime(todays_date.year, todays_date.month, todays_date.day)
 
-    #start_date = datetime.datetime(2024, 4, 1).date()
-    #end_date = datetime.datetime(2024, 4, 2).date()
+    # Gets menus from yesterday up to tomorrow
+    start_date = todays_date - datetime.timedelta(days=1)
+    end_date = todays_date + datetime.timedelta(days=1)
 
-    #menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
-    #print(menu_items_list_range)
-    #print(menu_items_nutrition_list_range)
+    menu_items_list_range, menu_items_nutrition_list_range = asyncio.run(get_daily_menus_from_range(start_date, end_date))
+    print(menu_items_list_range)
+    print(menu_items_nutrition_list_range)
 
 # ---------------------------------------------------------------------
 
@@ -79,20 +80,28 @@ async def get_daily_menus_from_range(start_date, end_date):
     Given a start date and an end date, a list of lists of menu items
     and nutrition information corresponding to each day is returned. If
     both of the dates are the same or represent an invalid range an
-    exception is thrown.
+    exception is thrown. Use get_daily_menus for a specific day
+    instead.
     """
 
     date_difference = (end_date - start_date).days
 
+    # If the dates are an invalid range raise an exception.
     if date_difference <= 0:
-        raise Exception(sys.argv[0] + ":", "Invalid date range!")
+        ex = Exception(sys.argv[0] + ": " + "Invalid date range!")
+        print(ex, file=sys.stderr)
+        sys.exit(1)
     else:
+        today = datetime.datetime.astimezone(datetime.datetime.now())
+        print("Scraping Script Started:", today)
+        print("====================================================\n")
         current_date = start_date
         menu_items_list = []
         menu_nutrition_list = []
 
         results = []
 
+        # Obtain the menu for each date
         while (current_date != (end_date + datetime.timedelta(days = 1))):
             print("Getting daily menus for", current_date)
 
@@ -104,11 +113,11 @@ async def get_daily_menus_from_range(start_date, end_date):
         await asyncio.gather(*results, return_exceptions=True)
         
         for result in results:
-            if result.result() is None:
+            big_list = result.result()
+            if big_list is None:
                 menu_items = []
                 nutrition_items = []
             else:
-                big_list = result.result()
                 menu_list = big_list[0]
                 nutrition_list = big_list[1]
                 for obj1 in menu_list:
