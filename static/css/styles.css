@@ -206,3 +206,8 @@ body {
     height: 50px;
     align-self: center;
 }
+
+.selected-label {
+    height: 30px;
+    font-size: 16px;
+}
