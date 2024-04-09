@@ -198,3 +198,11 @@ body {
     border: 1px solid #dee2e6; /* Add border */
     border-radius: 0; /* Remove border-radius */
 }
+
+/* Calorie goal lineedit */ 
+/* <input type="number" class="form-control" name='line' placeholder="Enter the number here" min="0" required>*/
+.form-calgoal {
+    width: 250px;
+    height: 50px;
+    align-self: center;
+}

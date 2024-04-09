@@ -15,21 +15,36 @@
 
 <body>
     {% include 'navbar.html' %}
+    
+    <!--<div class="row p-5">
+    <div class="col-sm-6">-->
+    
+    <div class="row p-5">
+        <div class="'col-sm-9">
+            <div class="card">
+                <div class="card-body">
+                  
+                    <div class="container-fluid mx-auto p-5">
+                        <h1 class="m-5 text-center">My Information</h1> 
+                
+                        {% include 'caloriecalculator.html' %}
+                
+                        <div class="text-center p-4">
+                            <div class="row">
+                                <h4>Calorie Goal:</h4>
+                                <form action="/settings" method="post">
+                                    <input type="number" class="form-control form-calgoal container" name='line' placeholder="Enter the number here." min="0" required>
+                                    <div class="p-3">
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
-    <div class="container-fluid mx-auto p-5">
-        <h1 class="m-5 text-center">My Information</h1> 
-
-        {% include 'caloriecalculator.html' %}
-
-        <div class="text-center p-4">
-            <form action="/settings" method="post">
-                <strong>Calorie Goal:</strong>
-                <input type="number" name="line" placeholder="Enter the number here" min="0" required><br>
-                <div class="p-3">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
                 </div>
-            </form>
+              </div>
         </div>
+    </div>
         
 </body>
 </html>
