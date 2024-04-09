@@ -18,8 +18,8 @@ function getResults() {
     let mealtime = $("input[name='mealtime_btnradio']:checked").val();
     const currentDate = $('#currentDateDiv').text();
 
-    console.log(mealtime);
-    console.log(currentDate)
+    //console.log(mealtime);
+    //console.log(currentDate)
     let encoded_mealtime = encodeURIComponent(mealtime);
     let encoded_date = encodeURIComponent(currentDate)
     let url = '/update-menus-mealtime?mealtime=' + encoded_mealtime + "&currentdate=" + encoded_date;
@@ -39,6 +39,7 @@ function setup() {
     if (popoverId) {
         const contentEl = $(`#${popoverId.value}`).html();
         return new bootstrap.Popover(popoverTriggerEl, {
+            container: 'body',
             content: contentEl,
             html: true,
         });
@@ -114,13 +115,11 @@ $(document).ready(function() {
     // Add click event listeners
     leftArrow.addEventListener('click', function() {
         // Handle left arrow click
-        console.log('Left arrow clicked');
         handleLeftArrowClick();
     });
 
     rightArrow.addEventListener('click', function() {
         // Handle right arrow click
-        console.log('Right arrow clicked');
         handleRightArrowClick();
     });
 
