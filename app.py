@@ -158,6 +158,7 @@ def dhall_menus():
 
 @app.route('/update-menus-mealtime', methods=['GET'])
 def update_menus_mealtime():
+    print(f"\nGOT CALLED\n")
     netid = auth.authenticate()
     mealtime = request.args.get('mealtime')
     current_date_string = request.args.get('currentdate')
@@ -355,8 +356,6 @@ def log_food():
     netid = auth.authenticate()
     if request.method == 'POST':
         return redirect('/homepage')
-
-    
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
@@ -364,36 +363,7 @@ def log_food():
     print(current_date.now(timezone('US/Eastern')))
     print(is_weekend_var)
 
-    menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
-    if not menu:
-        return render_template('logfood.html') 
-    # Given the new data structure, mealtime/dhall pairs only have one corresponding document
-    result = menu[0]
-    food_dict = []
-
-    # Extend the food_items list with the keys from each dictionary
-    for category in result['data'].values():
-        for key, val in category.items():
-            nut = dbnutrition.find_one_nutrition(val)
-            if (result is not None):
-                if (nut['calories']==''):
-                    cals = 'NA'
-                    carbs = 'NA'
-                    prots = 'NA'
-                    fats = 'NA'
-                # for now need to parse string to float
-                else:
-                    cals = float(nut['calories'][:-1])
-                    carbs = float(nut['carbs'][:-1])
-                    prots = float(nut['proteins'][:-1])
-                    fats = float(nut['fats'][:-1])
-                print('RESULT:')
-                print(cals, carbs, prots, fats)
-                food_list.append([key, val, cals, carbs, prots, fats, nut['servingsize']])
-                # FOR WHEN STORED AS NUMS: food_list.append([key, val, nut['calories'], nut['carbs'], nut['fats'], nut['proteins'], nut['servingsize']])
-    
-    return jsonify(food_list)
-    return render_template('logfood.html', food_items = food_list, is_weekend_var = is_weekend_var)
+    return render_template('logfood.html', is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
 
@@ -402,48 +372,32 @@ def log_food_data():
     dhall = request.args.get('dhall', type = str)
     mealtime = request.args.get('mealtime', type = str)
     print("we are inside logfood/data")
-    print(mealtime)
     print(f"dhall: {dhall}, mealtime: {mealtime}")
 
+    # query menu documents
     current_date = datetime.datetime.today()
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    menu = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
 
-
-    # query menu documents
-    menus = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
-
-    print(menus)
-    if not menus:
+    print(menu)
+    if not menu:
         # return jsonify({"error": "No data found"}), 404
-        return {}
-    result = menus[0]
-   
-    food_list = []
+        data_found=False
+        nut={}
+    else:
+        data_found=True
+        result = menu[0]
+        recids = []
+        # Extend the food_items list with the keys from each dictionary
+        for category in result['data'].values():
+            for recid in category.values():
+                recids.append(recid)
+        nut = dbnutrition.find_many_nutrition(recids)
+        print("FOOD ITEMS")
+        print(nut)
 
-    # Extend the food_items list with the keys from each dictionary
-    for category in result['data'].values():
-        for key, val in category.items():
-            nut = dbnutrition.find_one_nutrition(val)
-            if (result is not None):
-                if (nut['calories']==''):
-                    cals = 'NA'
-                    carbs = 'NA'
-                    prots = 'NA'
-                    fats = 'NA'
-                # for now need to parse string to float
-                else:
-                    cals = float(nut['calories'][:-1])
-                    carbs = float(nut['carbs'][:-1])
-                    prots = float(nut['proteins'][:-1])
-                    fats = float(nut['fats'][:-1])
-                print('RESULT:')
-                print(cals, carbs, prots, fats)
-                food_list.append([key, val, cals, carbs, prots, fats, nut['servingsize']])
-                # FOR WHEN STORED AS NUMS: food_list.append([key, val, nut['calories'], nut['carbs'], nut['fats'], nut['proteins'], nut['servingsize']])
-    print("FOOD ITEMS")
-    print(food_list)
-
-    return jsonify(food_list)
+    html_code = render_template('logfood_items.html', data_found=data_found, foods=nut)
+    return make_response(html_code)
 
 #--------------------------------------------------------------------
 
