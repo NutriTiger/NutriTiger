@@ -366,6 +366,22 @@ def log_food():
     return render_template('logfood.html', is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
+@app.route('/logfood/myplate', methods=['GET'])
+def log_food_myplate():
+    mealname = request.args.get('mealname', type = str)
+    cals = request.args.get('cals', type = float)
+    prots_str = request.args.get('prots', type = str)
+    carbs_str = request.args.get('carbs', type = str)
+    fats_str = request.args.get('fats', type = str)
+
+    prots = float(prots_str[:-1])
+    carbs = float(carbs_str[:-1])
+    fats = float(fats_str[:-1])
+    print(mealname, cals, prots, carbs, fats)
+
+    html_code = render_template('myplateelements.html', mealname=mealname, cals=cals, prots=prots, fats=fats)
+    return make_response(html_code)
+
 
 @app.route('/logfood/data', methods=['GET'])
 def log_food_data():
