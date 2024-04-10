@@ -114,25 +114,58 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
+// storing checkbox state
+var checkboxState = {};
+
+// update checkbox status
+function updateCheckboxState(recid, status) {
+  checkboxState[recid] = status;
+}
+
+// set checkbox state based on stored state
+function setCheckboxState(recid) {
+    const checkbox = document.getElementById("checkbox-" + recid);
+    if (checkboxStates.hasOwnProperty(recid)) {
+        checkbox.checked = checkboxState[recid];
+    }
+}
+
+// Function to setup checkbox states for all checkboxes on the page
+function setupCheckboxStates() {
+    // Loop through checkboxes and set their states
+    const checkboxes = document.querySelectorAll('[id^="checkbox-"]');
+    checkboxes.forEach(function(checkbox) {
+        // get the recid substring from the id
+        const recid = checkbox.id.replace("checkbox-", "");
+        setCheckboxState(recid);
+    });
+}
+
+// When AJAX request to add meal to plate is successful, append data to my-plate
 function handleMyPlate(data) {
-  console.log(data)
+  console.log(data);
   $('#my-plate').append(data);
 }
-// Function to handle checkbox change event
+
+// Function to handle checkbox change event: gets label text, macro data, makes URL, and 
+// sends AJAX GET request to server
 function handleCheckboxChange(recid) {
-  const check_id = "checkbox-"+recid
-  const checkbox = document.getElementById(check_id)
-  const checked = checkbox.checked
+  const check_id = "checkbox-"+recid;
+  const checkbox = document.getElementById(check_id);
+  const checked = checkbox.checked;
   if (checked) {
+    // update checkbox state to CHECKED
+    updateCheckboxState(recid, checked);
+
     console.log(recid)
     // Find the associated label element
     const label = document.querySelector('label[for="' + check_id + '"]');
     const labelText = label.textContent;
-    const this_cals = document.getElementById("cals-" + recid).innerText
-    const this_prots = document.getElementById("prots-" + recid).innerText
-    const this_carbs = document.getElementById("carbs-" + recid).innerText
-    const this_fats = document.getElementById("fats-" + recid).innerText
-    console.log(labelText, this_cals, this_prots, this_carbs, this_fats)
+    const this_cals = document.getElementById("cals-" + recid).innerText;
+    const this_prots = document.getElementById("prots-" + recid).innerText;
+    const this_carbs = document.getElementById("carbs-" + recid).innerText;
+    const this_fats = document.getElementById("fats-" + recid).innerText;
+    console.log(labelText, this_cals, this_prots, this_carbs, this_fats);
     let url = `/logfood/myplate?mealname=${encodeURIComponent(labelText)}&cals=${encodeURIComponent(this_cals)}&prots=${encodeURIComponent(this_prots)}&carbs=${encodeURIComponent(this_carbs)}&fats=${encodeURIComponent(this_fats)}`;
         $.ajax({
             type: 'GET',
@@ -143,18 +176,24 @@ function handleCheckboxChange(recid) {
 
   }
   else {
-    console.log('unchecked')
+    // update checkbox state to UNCHECKED
+    updateCheckboxState(recid, unchecked);
+    console.log('unchecked');
   }
 }
 
+// for when AJAX Request encounters an error
 function handleError() {
-  console.log('error')
+  console.log('error');
 }
 
+// request fetch menu items (AJAX request)
 function handleResponse(data) {
-  console.log(data)
+  console.log(data);
   $('#menu-items').html(data);
 }
+
+// fetch menu items based on selected dhall and mealtime
 function getResults() {
     const diningHallSelect = $('#diningHallSelect');
     const menuItems = $('#menu-items');
@@ -178,11 +217,14 @@ function getResults() {
     }
 }
 
+// set up event listeners for dhall select and mealtime tab
 function setup() {
   // Event listener for the dropdown selection change
   const diningHallSelect = document.getElementById('diningHallSelect');
   $('#mealTimeTab a').on('shown.bs.tab', getResults);
   diningHallSelect.addEventListener('change', getResults);
+
+  setupCheckboxStates();
 }
 
 $('document').ready(setup);
