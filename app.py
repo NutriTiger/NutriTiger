@@ -369,6 +369,7 @@ def log_food():
 @app.route('/logfood/myplate', methods=['GET'])
 def log_food_myplate():
     mealname = request.args.get('mealname', type = str)
+    recid = request.args.get('recid', type = int)
     cals = request.args.get('cals', type = float)
     prots_str = request.args.get('prots', type = str)
     carbs_str = request.args.get('carbs', type = str)
@@ -379,7 +380,7 @@ def log_food_myplate():
     fats = float(fats_str[:-1])
     print(mealname, cals, prots, carbs, fats)
 
-    html_code = render_template('myplateelements.html', mealname=mealname, cals=cals, prots=prots, fats=fats)
+    html_code = render_template('myplateelements.html', recid=recid, mealname=mealname, cals=cals, prots=prots, fats=fats)
     return make_response(html_code)
 
 
