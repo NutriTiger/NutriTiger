@@ -113,6 +113,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+
+function handleMyPlate(data) {
+  console.log(data)
+  $('#my-plate').append(data);
+}
 // Function to handle checkbox change event
 function handleCheckboxChange(recid) {
   const check_id = "checkbox-"+recid
@@ -132,7 +137,7 @@ function handleCheckboxChange(recid) {
         $.ajax({
             type: 'GET',
             url: url,
-            success: handleResponse,
+            success: handleMyPlate,
             error: handleError
         });
 
@@ -140,71 +145,6 @@ function handleCheckboxChange(recid) {
   else {
     console.log('unchecked')
   }
-    if (recid) {
-      console.log(this.id)
-      const recId = this.id.substring(9);
-      console.log("Checkbox of food with recid " + recId + " was checked.");
-        // Find the associated label element
-        const label = document.querySelector('label[for="' + this.id + '"]');
-        // Access the text content of the label
-        const labelText = label.textContent;
-        console.log("Food item: " + labelText);
-
-        const row = document.createElement('div');
-        console.log(recId)
-        row.id = "foodplate-" + recId;
-        row.classList.add('row');
-
-        // create a border around each food row
-        const rowWrapper = document.createElement('div');
-        rowWrapper.classList.add('food-row-wrap','card', 'border-primary', 'p-3', 'mb-3'); // Add border and padding classes to the wrapper
-
-        const labelColumn = document.createElement('div');
-        labelColumn.classList.add('col');
-        labelColumn.textContent = labelText;
-
-        //  <div class="card border-primary" id="{{entry}}" style="padding: 10px;">
-        const servingsColumn = document.createElement('div');
-        servingsColumn.classList.add('col', 'd-flex', 'align-items-center', 'justify-content-end');
-        const servingsInput = document.createElement('input');
-        servingsInput.type = 'serving';
-        servingsInput.classList.add('form-control', 'small-input')
-        servingsInput.placeholder = 'Servings';
-        servingsInput.addEventListener('input', function(event) {
-            // This function is called every time the user changes the input
-            console.log('Servings changed to: ', event.target.value);
-            const calTotal = document.getElementById('calTotal')
-            // NEED TO FIGURE OUT HOW TO CALCULATE PLATE TOTALS
-            calTotal.innerText = event.target.value
-        });
-        const closeButton = document.createElement('button');
-        closeButton.classList.add('btn-close', 'btn-sm', 'aria-label="Close"');
-        servingsColumn.appendChild(servingsInput);
-        servingsColumn.appendChild(closeButton);
-        
-        row.appendChild(labelColumn);
-        row.appendChild(servingsColumn);
-        
-        rowWrapper.appendChild(row); // Append the row to the wrapper
-        document.getElementById('my-plate').appendChild(rowWrapper); // Append the wrapper to the container
-
-    } else {
-        console.log("no check", recid)
-        console.log("Checkbox with ID " + this.id + " was unchecked.");
-        const retrieved_recId = this.id.substring(9);
-        const plateID = "foodplate-" + retrieved_recId;
-        console.log("recid for remove: " + plateID)
-
-        const row = document.getElementById(plateID)
-        
-        if (row) {
-          // access wrapper to delete both border & the actual row
-          const wrapper = row.closest('.food-row-wrap');
-          if (wrapper) {
-              wrapper.remove();
-          }
-        }
-    }
 }
 
 function handleError() {
