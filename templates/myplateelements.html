@@ -8,8 +8,10 @@
 
         <!--Serving Lineedit Column-->
         <div class="col d-flex align-items-center justify-content-end">
-            <input type="number" min="0" required class="form-control small-input" data-cals="{{ cals }}" 
-            data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}" placeholder="Servings" oninput="handleServingChange()">
+            <input type="number" min="0" class="form-control small-input" data-cals="{{ cals }}" 
+            data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
+            placeholder="Servings" oninput="handleServingChange()" required
+            onkeypress="return isValid(event)">
 
             <!--Close button column-->
             <button type="button" id="close-{{ uniqueid }}" class=" btn-close btn-sm" aria-label="Close" 
@@ -17,3 +19,26 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    // Validate the serving inputs
+    function isValid(input) {
+        var charCode = event.which || event.keyCode;
+        var value = input.target.value;
+
+        // If the pressed key is a '-'
+        if (input.charCode === 45)
+            return false;
+
+        // If the key contains nonvalid chars 
+        if ((input.charCode < 48 || input.charCode > 57) && input.charCode !== 46)
+            return false;
+
+        // Allow only 2 decimal places
+        if (value.indexOf('.') !== -1 && value.length - value.indexOf('.') > 2)
+            return false;
+
+        return true;
+    }
+</script>
