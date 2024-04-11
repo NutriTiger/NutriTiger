@@ -211,3 +211,8 @@ body {
     height: 30px;
     font-size: 16px;
 }
+
+/* Setting min heights for logfood page cards */
+.logfood-card {
+    min-height: 400px; /* Set minimum height */
+  }
