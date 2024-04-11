@@ -180,7 +180,6 @@ def update_menus_mealtime():
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
-   
     #print(nutrition_info)
 
     todays_date = utils.custom_strftime(current_date)
@@ -383,7 +382,30 @@ def log_food_myplate():
     html_code = render_template('myplateelements.html', recid=recid, mealname=mealname, cals=cals, prots=prots, fats=fats)
     return make_response(html_code)
 
+@app.route('/logfood/data', methods=['GET'])
+def log_food_data():
+    netid = auth.authenticate()
 
+    current_date = datetime.datetime.today()
+    print(current_date)
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    is_weekend_var = utils.is_weekend(current_date.date())
+
+    data = dbmenus.query_menu_display(current_date_zeros)
+    print("DATA:")
+    print(data)
+
+    
+    recipeids = utils.gather_recipes(data)
+    nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+
+    print("NUTRITION INFO")
+    print(nutrition_info)
+
+    return render_template('logfood_update.html', data=data,
+                        nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
+
+'''
 @app.route('/logfood/data', methods=['GET'])
 def log_food_data():
     dhall = request.args.get('dhall', type = str)
@@ -415,7 +437,7 @@ def log_food_data():
 
     html_code = render_template('logfood_items.html', data_found=data_found, foods=nut)
     return make_response(html_code)
-
+'''
 #--------------------------------------------------------------------
 
 @app.route('/personalfood', methods=['GET', 'POST'])
