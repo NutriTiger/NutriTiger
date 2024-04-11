@@ -362,6 +362,17 @@ def log_food():
     print(current_date.now(timezone('US/Eastern')))
     print(is_weekend_var)
 
+    # Handle upload plate and return button
+    if request.method == 'POST':
+        # save a copy of this entry (all new foods & servings)
+        # entry = request.json
+		#print(entry)
+        # add this entry to database
+        # dbusers.addEntry(netid, entry)
+        # return user to homepage
+        return redirect('/homepage')
+
+
     return render_template('logfood.html', is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
