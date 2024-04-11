@@ -1,22 +1,19 @@
 <!--border for each food row-->
 
-<div class="food-row-wrap card border-primary p-3 mb-3">
+<div class="food-row-wrap card border-primary p-3 mb-3" id="myplate-{{ uniqueid }}">
     <div class="col">
         <!--Label Column-->
         <span>{{ mealname }}</span>
+        <p>{{ location}}, {{ mealtime }}</p>
 
         <!--Serving Lineedit Column-->
         <div class="col d-flex align-items-center justify-content-end">
-            <input type="serving" class="form-control small-input" placeholder="Servings">
+            <input type="serving" class="form-control small-input" data-cals="{{ cals }}" 
+            data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}" placeholder="Servings" oninput="handleServingChange()">
 
             <!--Close button column-->
-            <button type="button" id="close-{{ recid }}" class=" btn-close btn-sm" aria-label="Close"></button>
+            <button type="button" id="close-{{ uniqueid }}" class=" btn-close btn-sm" aria-label="Close" 
+            onclick="closeMyPlate(this)" data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
         </div>
-
-        <!--Hidden values-->
-        <input type="hidden" id="plate-cals-{{recid}}" value="{{ cals }}">
-        <input type="hidden" id="plate-carbs-{{recid}}" value="{{ carbs }}">
-        <input type="hidden" id="plate-prots-{{recid}}" value="{{ prots }}">
-        <input type="hidden" id="plate-fats-{{recid}}" value="{{ fats }}">
     </div>
 </div>
