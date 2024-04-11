@@ -158,23 +158,28 @@ def dhall_menus():
 
 @app.route('/update-menus-mealtime', methods=['GET'])
 def update_menus_mealtime():
-    print(f"\nGOT CALLED\n")
     netid = auth.authenticate()
-    mealtime = request.args.get('mealtime')
     current_date_string = request.args.get('currentdate')
-    print(current_date_string + " AHHAHAH")
     
     current_date = datetime.datetime.strptime(current_date_string, "%Y-%m-%d %H:%M:%S.%f%z")
+    mealtime = request.args.get('mealtime')
+    if mealtime:
+        mealtime = utils.time_of_day(current_date.date(), current_date.time())
+
+
+  
     
 
 
     #current_date = datetime.datetime.today()
-    print(current_date)
+    todays_date = utils.custom_strftime(current_date)
+
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
 
     data = dbmenus.query_menu_display(current_date_zeros)
-    #print(data)
+    if data == []:
+        return render_template("dhallmenus_none.html", todays_date=todays_date, is_weekend_var=is_weekend_var)
 
     
     recipeids = utils.gather_recipes(data)
@@ -182,7 +187,6 @@ def update_menus_mealtime():
 
     #print(nutrition_info)
 
-    todays_date = utils.custom_strftime(current_date)
     #print(todays_date)
 
     return render_template('dhallmenus_update.html', todays_date=todays_date, data=data,
