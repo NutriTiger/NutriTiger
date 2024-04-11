@@ -185,7 +185,6 @@ def update_menus_mealtime():
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
-   
     #print(nutrition_info)
 
     #print(todays_date)
@@ -367,27 +366,64 @@ def log_food():
     print(current_date.now(timezone('US/Eastern')))
     print(is_weekend_var)
 
+    # Handle upload plate and return button
+    if request.method == 'POST':
+        # save a copy of this entry (all new foods & servings)
+        # entry = request.json
+		#print(entry)
+        # add this entry to database
+        # dbusers.addEntry(netid, entry)
+        # return user to homepage
+        return redirect('/homepage')
+
+
     return render_template('logfood.html', is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
 def log_food_myplate():
+    checkid = request.args.get('checkid', type = str)
     mealname = request.args.get('mealname', type = str)
     recid = request.args.get('recid', type = int)
+    location = request.args.get('location', type = str)
+    mealtime = request.args.get('mealtime', type = str)
+    servingsize = request.args.get('servingsize', type = str)
     cals = request.args.get('cals', type = float)
-    prots_str = request.args.get('prots', type = str)
-    carbs_str = request.args.get('carbs', type = str)
-    fats_str = request.args.get('fats', type = str)
-
-    prots = float(prots_str[:-1])
-    carbs = float(carbs_str[:-1])
-    fats = float(fats_str[:-1])
+    prots = request.args.get('prots', type = float)
+    carbs = request.args.get('carbs', type = float)
+    fats = request.args.get('fats', type = float)
+    uniqueid = checkid[8:]
     print(mealname, cals, prots, carbs, fats)
 
-    html_code = render_template('myplateelements.html', recid=recid, mealname=mealname, cals=cals, prots=prots, fats=fats)
+    html_code = render_template('myplateelements.html', checkid=checkid, uniqueid=uniqueid, mealname=mealname, 
+                                recid=recid, location=location, mealtime=mealtime, servingsize=servingsize, 
+                                cals=cals, prots=prots, carbs=carbs, fats=fats)
     return make_response(html_code)
 
+@app.route('/logfood/data', methods=['GET'])
+def log_food_data():
+    netid = auth.authenticate()
 
+    current_date = datetime.datetime.today()
+    print(current_date)
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    is_weekend_var = utils.is_weekend(current_date.date())
+
+    data = dbmenus.query_menu_display(current_date_zeros)
+    print("DATA:")
+    print(data)
+
+    
+    recipeids = utils.gather_recipes(data)
+    nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+
+    print("NUTRITION INFO")
+    print(nutrition_info)
+
+    return render_template('logfood_update.html', data=data,
+                        nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
+
+'''
 @app.route('/logfood/data', methods=['GET'])
 def log_food_data():
     dhall = request.args.get('dhall', type = str)
@@ -419,7 +455,7 @@ def log_food_data():
 
     html_code = render_template('logfood_items.html', data_found=data_found, foods=nut)
     return make_response(html_code)
-
+'''
 #--------------------------------------------------------------------
 
 @app.route('/personalfood', methods=['GET', 'POST'])

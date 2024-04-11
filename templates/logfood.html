@@ -17,12 +17,17 @@
     {% include 'navbar.html' %}
     {% set current_page = 'logfood' %}
 
-    <h1 class="text-center m-5">Log Food</h1> 
-    <p class="custom-text-wrapper">
-        Select your dining hall from the drop down below or search for the recipe name in the 
-        search bar. Once you select your dish(es), estimate the number of servings you consumed 
-        in the “My Plate” window below. 
-    </p>
+    <!--Give header white background -->
+    <div class="p-3">
+      <h1 class="text-center my-2">Log Food</h1>
+      <p class="text-center">
+          Select your dining hall from the drop down below or search for the recipe name in the
+          search bar.
+          Once you select your dish(es), estimate the number of servings you consumed in the “My Plate” window below.
+
+
+      </p>
+    </div>
     
     <!-- Select buttons: Dining Hall, Mealtime -->
     <div class="row p-2">
@@ -43,6 +48,11 @@
     <!--Two cards: one for the food list, and one for My Plate-->
     <div class="row p-2">
       <div class="col-md-6 m-3">
+
+        <!--Putting entire food selection menu in one card-->
+        <div class="logfood-card card">
+          <div class="card-body">
+
         <!-- Tab Navs -->
         <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
           {% if not is_weekend_var: %}
@@ -66,16 +76,16 @@
 
 
         <div class="card">
-          <div class="card-body" id="menu-items">
-            <p class="text-center">Please select a dining hall from the dropdown menu.</p>
-          </div>
+          <div class="card-body" id="menu-items"></div>
         </div>
 
+      </div>
+        </div>
       </div>
 
       <!--My Plate Card (right side)-->
       <div class="col-sm-5 m-3">
-        <div class="card">
+        <div class="logfood-card card">
           <div class="card-body">
             <h5 class="card-title text-center">My Plate</h5>
             <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
@@ -86,13 +96,7 @@
           <div class="card-footer text-center">
             <strong>Plate Totals:</strong>
             <br>
-            <div id="calTotal"> 
-            </div>
-            <div id="protTotal"> 
-            </div>
-            <div id="carbTotal"> 
-            </div>
-            <div id="fatTotal"> 
+            <div id="plateTotals"> 
             </div>
           </div>
 
@@ -114,72 +118,62 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
-// storing checkbox state
-var checkboxState = {};
 
-// update checkbox status
-function updateCheckboxState(recid, status) {
-  checkboxState[recid] = status;
-}
-
-// set checkbox state based on stored state
-function setCheckboxState(recid) {
-    const checkbox = document.getElementById("checkbox-" + recid);
-    if (checkboxStates.hasOwnProperty(recid)) {
-        checkbox.checked = checkboxState[recid];
-    }
-}
-
-// Function to setup checkbox states for all checkboxes on the page
-function setupCheckboxStates() {
-    // Loop through checkboxes and set their states
-    const checkboxes = document.querySelectorAll('[id^="checkbox-"]');
-    checkboxes.forEach(function(checkbox) {
-        // get the recid substring from the id
-        const recid = checkbox.id.replace("checkbox-", "");
-        setCheckboxState(recid);
-    });
-}
-
-// When AJAX request to add meal to plate is successful, append data to my-plate
 function handleMyPlate(data) {
   console.log(data);
   $('#my-plate').append(data);
 }
 
+function closeMyPlate(element) {
+  let checkid = element.dataset.checkid;
+  let checkbox = document.getElementById(checkid);
+  if (checkbox) {
+    checkbox.checked = false;
+  }
+  let myplateid = element.dataset.myplateid;
+  let myplatebox = document.getElementById(myplateid);
+  if (myplatebox) {
+    myplatebox.remove()
+  }
+  handleServingChange()
+}
+
 // Function to handle checkbox change event: gets label text, macro data, makes URL, and 
 // sends AJAX GET request to server
-function handleCheckboxChange(recid) {
-  const check_id = "checkbox-"+recid;
-  const checkbox = document.getElementById(check_id);
-  const checked = checkbox.checked;
-  if (checked) {
-    // update checkbox state to CHECKED
-    updateCheckboxState(recid, checked);
+function handleCheckboxChange(element) {
+  if (element.checked) {
+    console.log("checked: ", element.dataset.mealname)
+  
+    let url = `/logfood/myplate?checkid=${encodeURIComponent(element.id)}` + 
+              `&mealname=${encodeURIComponent(element.dataset.mealname)}` + 
+              `&recid=${encodeURIComponent(element.dataset.recid)}` + 
+              `&location=${encodeURIComponent(element.dataset.location)}`+ 
+              `&mealtime=${encodeURIComponent(element.dataset.mealtime)}` + 
+              `&servingsize=${encodeURIComponent(element.dataset.servingsize)}` + 
+              `&cals=${encodeURIComponent(element.dataset.cals)}` + 
+              `&carbs=${encodeURIComponent(element.dataset.carbs)}` + 
+              `&prots=${encodeURIComponent(element.dataset.prots)}` + 
+              `&fats=${encodeURIComponent(element.dataset.fats)}`;
 
-    console.log(recid)
-    // Find the associated label element
-    const label = document.querySelector('label[for="' + check_id + '"]');
-    const labelText = label.textContent;
-    const this_cals = document.getElementById("cals-" + recid).innerText;
-    const this_prots = document.getElementById("prots-" + recid).innerText;
-    const this_carbs = document.getElementById("carbs-" + recid).innerText;
-    const this_fats = document.getElementById("fats-" + recid).innerText;
-    console.log(labelText, this_cals, this_prots, this_carbs, this_fats);
-    let url = `/logfood/myplate?mealname=${encodeURIComponent(labelText)}&cals=${encodeURIComponent(this_cals)}&prots=${encodeURIComponent(this_prots)}&carbs=${encodeURIComponent(this_carbs)}&fats=${encodeURIComponent(this_fats)}`;
-        $.ajax({
-            type: 'GET',
-            url: url,
-            success: handleMyPlate,
-            error: handleError
-        });
+    let requestData = ({
+        type: 'GET',
+        url: url,
+        success: handleMyPlate,
+        error: handleError
+    });
+    request = $.ajax(requestData);
 
   }
   else {
-    // update checkbox state to UNCHECKED
-    updateCheckboxState(recid, unchecked);
+    let checkid = element.id 
+    let uniqueid = checkid.slice(8);
+    let myplatebox = document.getElementById("myplate-"+uniqueid)
+    if (myplatebox) {
+      myplatebox.remove()
+    }
     console.log('unchecked');
   }
+  handleServingChange()
 }
 
 // for when AJAX Request encounters an error
@@ -193,28 +187,39 @@ function handleResponse(data) {
   $('#menu-items').html(data);
 }
 
+
 // fetch menu items based on selected dhall and mealtime
 function getResults() {
-    const diningHallSelect = $('#diningHallSelect');
-    const menuItems = $('#menu-items');
-    const selectedHall = diningHallSelect.val();
-
-    if (selectedHall === "Select Dining Hall") {
-        menuItems.html('<p class="text-center">Please select a dining hall from the dropdown menu.</p>');
-    } else {
-        const mealTimeTabs = $('#mealTimeTab');
-        var mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
-        console.log("Selected dining hall:", selectedHall, "Mealtime:", mealtime);
-        let url = `/logfood/data?dhall=${encodeURIComponent(selectedHall)}&mealtime=${encodeURIComponent(mealtime)}`;
-
-        let requestData = {
-            type: 'GET',
-            url: url,
-            success: handleResponse,
-            error: handleError
-        };
-        request = $.ajax(requestData);
-    }
+  $('.menu-items-content').hide();
+  let selectedHall = $('#diningHallSelect').val();
+  console.log(selectedHall)
+  if (selectedHall === "Select Dining Hall") {
+    $('#select').show();
+  }
+  else {
+    $('#select').hide();
+    let mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
+    dhallCode = selectedHall.substring(0, 2)
+    let divToShow = dhallCode + "-" + mealtime
+    console.log(divToShow)
+    $('#' + divToShow).show();
+  }
+}
+function handleServingChange() {
+  const inputs = document.querySelectorAll('.small-input');
+  let totalCals = 0
+  let totalCarbs = 0
+  let totalFats = 0
+  let totalProts = 0
+  inputs.forEach(input => {
+    let serving = input.value
+    totalCals += serving*input.dataset.cals
+    totalCarbs += serving*input.dataset.carbs
+    totalFats += serving*input.dataset.fats
+    totalProts += serving*input.dataset.prots
+    });
+  const plateTotals = document.getElementById("plateTotals")
+  plateTotals.innerHTML = `Calories: ${totalCals} Proteins: ${totalProts} Carbs: ${totalCarbs} Fats: ${totalFats} `;
 }
 
 // set up event listeners for dhall select and mealtime tab
@@ -224,7 +229,14 @@ function setup() {
   $('#mealTimeTab a').on('shown.bs.tab', getResults);
   diningHallSelect.addEventListener('change', getResults);
 
-  setupCheckboxStates();
+  let url = `/logfood/data`;
+  let requestData = {
+      type: 'GET',
+      url: url,
+      success: handleResponse,
+      error: handleError
+  };
+  request = $.ajax(requestData);
 }
 
 $('document').ready(setup);
