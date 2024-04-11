@@ -18,8 +18,8 @@ function getResults() {
     let mealtime = $("input[name='mealtime_btnradio']:checked").val();
     const currentDate = $('#currentDateDiv').text();
 
-    //console.log(mealtime);
-    //console.log(currentDate)
+    // console.log(mealtime);
+    // console.log(currentDate)
     let encoded_mealtime = encodeURIComponent(mealtime);
     let encoded_date = encodeURIComponent(currentDate)
     let url = '/update-menus-mealtime?mealtime=' + encoded_mealtime + "&currentdate=" + encoded_date;

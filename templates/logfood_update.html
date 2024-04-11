@@ -1,0 +1,21 @@
+<!--==============================================================-->
+<!-- logfood_update.html                                          -->
+<!--==============================================================-->
+{% set ns = namespace(c = 0) %}
+{% for item in data %}
+    {% set ooo_loop = loop %}
+    <div class = "menu-items-content" style="display: none;" id="{{ item.dhall[:2] }}-{{ item.mealtime }}">
+    {% for category, foods in item.data.items() %}
+        {% set oo_loop = loop %}
+        {% for food, code in foods.items() %}
+            <div class="form-check">
+                {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
+                <input type="checkbox" class="form-check-input" id="checkbox-{{ checkbox_id }}" where="{{ item.dhall }}" when="{{ item.mealtime }}" onchange="handleCheckboxChange('{{ checkbox_id }}')">
+                <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    </div>
+{% endfor %}
+<p id="select" class="text-center">Please select a dining hall from the dropdown menu.</p>
+
