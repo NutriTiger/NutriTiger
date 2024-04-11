@@ -367,19 +367,22 @@ def log_food():
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
 def log_food_myplate():
+    checkid = request.args.get('checkid', type = str)
     mealname = request.args.get('mealname', type = str)
     recid = request.args.get('recid', type = int)
+    location = request.args.get('location', type = str)
+    mealtime = request.args.get('mealtime', type = str)
+    servingsize = request.args.get('servingsize', type = str)
     cals = request.args.get('cals', type = float)
-    prots_str = request.args.get('prots', type = str)
-    carbs_str = request.args.get('carbs', type = str)
-    fats_str = request.args.get('fats', type = str)
-
-    prots = float(prots_str[:-1])
-    carbs = float(carbs_str[:-1])
-    fats = float(fats_str[:-1])
+    prots = request.args.get('prots', type = float)
+    carbs = request.args.get('carbs', type = float)
+    fats = request.args.get('fats', type = float)
+    uniqueid = checkid[8:]
     print(mealname, cals, prots, carbs, fats)
 
-    html_code = render_template('myplateelements.html', recid=recid, mealname=mealname, cals=cals, prots=prots, fats=fats)
+    html_code = render_template('myplateelements.html', checkid=checkid, uniqueid=uniqueid, mealname=mealname, 
+                                recid=recid, location=location, mealtime=mealtime, servingsize=servingsize, 
+                                cals=cals, prots=prots, carbs=carbs, fats=fats)
     return make_response(html_code)
 
 @app.route('/logfood/data', methods=['GET'])
