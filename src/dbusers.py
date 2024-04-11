@@ -336,9 +336,9 @@ def deleteuser(netid):
 def main(): 
     print(find_one_nutrition(24821))
     print(find_one_nutrition(12345))
-    #entry = {"recipeids": [24821, 12345], "servings": [2, 1.5]}
+    entry = {"recipeids": [24821, 12345], "servings": [2, 1.5]}
     # addEntry("jm0278", entry)
-    #addEntry("so3756", entry)
+    addEntry("so3756", entry)
     # print(deleteEntry("jm0278", 0))
 
 #-----------------------------------------------------------------------
