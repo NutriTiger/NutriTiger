@@ -17,12 +17,17 @@
     {% include 'navbar.html' %}
     {% set current_page = 'logfood' %}
 
-    <h1 class="text-center m-5">Log Food</h1> 
-    <p class="custom-text-wrapper">
-        Select your dining hall from the drop down below or search for the recipe name in the 
-        search bar. Once you select your dish(es), estimate the number of servings you consumed 
-        in the “My Plate” window below. 
-    </p>
+    <!--Give header white background -->
+    <div class="p-3">
+      <h1 class="text-center my-2">Log Food</h1>
+      <p class="text-center">
+          Select your dining hall from the drop down below or search for the recipe name in the
+          search bar.
+          Once you select your dish(es), estimate the number of servings you consumed in the “My Plate” window below.
+
+
+      </p>
+    </div>
     
     <!-- Select buttons: Dining Hall, Mealtime -->
     <div class="row p-2">
@@ -43,6 +48,11 @@
     <!--Two cards: one for the food list, and one for My Plate-->
     <div class="row p-2">
       <div class="col-md-6 m-3">
+
+        <!--Putting entire food selection menu in one card-->
+        <div class="logfood-card card">
+          <div class="card-body">
+
         <!-- Tab Navs -->
         <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
           {% if not is_weekend_var: %}
@@ -70,10 +80,12 @@
         </div>
 
       </div>
+        </div>
+      </div>
 
       <!--My Plate Card (right side)-->
       <div class="col-sm-5 m-3">
-        <div class="card">
+        <div class="logfood-card card">
           <div class="card-body">
             <h5 class="card-title text-center">My Plate</h5>
             <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>

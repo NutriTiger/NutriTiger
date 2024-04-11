@@ -4,12 +4,12 @@
     <div class="col">
         <!--Label Column-->
         <span>{{ mealname }}</span>
-        <p>{{ location}}, {{ mealtime }}</p>
+        <p class="text-muted pt-2">{{ location}}, {{ mealtime }}</p>
 
         <!--Serving Lineedit Column-->
         <div class="col d-flex align-items-center justify-content-end">
             <input type="serving" class="form-control small-input" data-cals="{{ cals }}" 
-            data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}" placeholder="Servings" oninput="handleServingChange()">
+            data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}" placeholder="Servings" oninput="handleServingChange()">
 
             <!--Close button column-->
             <button type="button" id="close-{{ uniqueid }}" class=" btn-close btn-sm" aria-label="Close" 

@@ -10,7 +10,7 @@
         {% for food, code in foods.items() %}
             <div class="form-check">
                 {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
-                <input type="checkbox" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
+                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
                     data-recid="{{ code }}" data-location="{{ item.dhall }}" data-mealtime="{{ item.mealtime }}"
                     data-mealname="{{ food }}"
                     data-servingsize="{{ nutrition_info[ns.c]['servingsize'] }}"
