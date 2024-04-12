@@ -33,7 +33,8 @@
                             <div class="row">
                                 <h4>Calorie Goal:</h4>
                                 <form action="/settings" method="post">
-                                    <input type="number" class="form-control form-calgoal container" name='line' placeholder="Enter the number here." min="0" required>
+                                    <input type="number" class="form-control form-calgoal container" name='line' placeholder="Enter the number here." min="0" required
+                                    onkeypress="return isValid(event)">
                                     <div class="p-3">
                                         <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
                                     </div>
@@ -48,3 +49,26 @@
         
 </body>
 </html>
+
+<script>
+
+    // Validate the serving inputs
+    function isValid(input) {
+        var charCode = input.which || input.keyCode;
+        var value = input.target.value;
+
+        // If the pressed key is a '-'
+        if (input.charCode === 45)
+            return false;
+
+        // If the key contains nonvalid chars 
+        if ((input.charCode < 48 || input.charCode > 57) && input.charCode !== 46)
+            return false;
+
+        // Allow only 2 decimal places
+        if (value.indexOf('.') !== -1 && value.length - value.indexOf('.') > 2)
+            return false;
+
+        return true;
+    }
+</script>
