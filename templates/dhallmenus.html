@@ -30,17 +30,6 @@
                     </svg>
                 </a>
             </h3>
-            <div class="btn-group align-items-center mx-auto pb-3" role="group" aria-label="Basic radio toggle button group">
-                {% if not is_weekend_var: %}
-                <input type="radio" value="Breakfast" class="btn-check" name="mealtime_btnradio" id="btnradio1" autocomplete="off" {% if mealtime == "Breakfast" %} checked {% endif %}>
-                <label class="nt-btn btn btn-dhall btn-primary" for="btnradio1">Breakfast</label>
-                {% endif %}
-                <input type="radio" value="Lunch" class="btn-check" name="mealtime_btnradio" id="btnradio2" autocomplete="off" {% if mealtime == 'Lunch' %} checked {% endif %}>
-                <label class="nt-btn btn btn-dhall btn-primary" for="btnradio2">Lunch</label>   
-                <input type="radio" value="Dinner" class="btn-check" name="mealtime_btnradio" id="btnradio3" autocomplete="off" {% if mealtime == 'Dinner' %} checked {% endif %}>
-                <label class="nt-btn btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
-            </div>
-            <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
         </div>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <div id = "dhallMenusDiv"></div>
