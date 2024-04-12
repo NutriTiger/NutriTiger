@@ -29,6 +29,11 @@ app = Flask(__name__)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
 
+# Takes the user to a general error page if an error occurs
+@app.errorhandler(Exception)  
+def not_found(e):    
+  return render_template("error.html") 
+
 #--------------------------------------------------------------------
 
 # Code used from PennyFlaskJinja/penny.py from Lecture 10
