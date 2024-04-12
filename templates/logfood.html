@@ -29,7 +29,7 @@
       </p>
     </div>
     
-    <!-- Select button for Dining Hall -->
+    <!-- Select dropdown for Dining Halls -->
     <div class="row p-2">
         <div class="col-sm-3 m-3">
             <select class="btn btn-secondary dropdown-toggle form-select" id = "diningHallSelect" aria-label="select_dhall">
@@ -45,15 +45,15 @@
         </div>
     </div>
 
-    <!--Two cards: one for the food list, and one for My Plate-->
+    <!--Two cards: one for the dining hall food display, and one for My Plate-->
     <div class="row p-2">
       <div class="col-md-6 m-3">
 
-        <!--Putting entire food selection menu in one card-->
+        <!--Putting entire food selection menu in one background card-->
         <div class="logfood-card card">
           <div class="card-body">
 
-        <!-- Tab Navs -->
+        <!-- Mealtime Tab Navs -->
         <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
           {% if not is_weekend_var: %}
             <li class="custom-nav-item">
@@ -92,7 +92,7 @@
             <div id="my-plate"></div>
           </div>
 
-          <!--My Plate Footer: display plate totals-->
+          <!--My Plate Footer: display plate macro totals-->
           <div class="card-footer text-center">
             <strong>Plate Totals:</strong>
             <br>
@@ -104,6 +104,7 @@
       </div>
     </div>
     
+    <!--Upload plate button-->
     <div class="container p-5">
       <h4>Done adding food to your plate?</h4>
       <form action="/logfood" method="post" class="p-3">
@@ -112,6 +113,7 @@
     </div>
 
 </body>
+
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
@@ -228,6 +230,37 @@ function setup() {
   const diningHallSelect = document.getElementById('diningHallSelect');
   $('#mealTimeTab a').on('shown.bs.tab', getResults);
   diningHallSelect.addEventListener('change', getResults);
+
+  // NOT DONE (NOT WORKING LOL)
+  // Event listener for submit button (to get entry and send to flask)
+  document.getElementById('my-plate').addEventListener('submit', function(event) {
+            
+            // Array to store each food in the entry
+            var plate = [];
+            
+            const inputs = document.querySelectorAll('.my-plate');
+            inputs.forEach(input => {
+              let recid = input.dataset.recid;
+              let serving = input.dataset.value;
+              plate.push({ food: recid, servingSize: serving});
+              });
+
+            // convert to JSON object
+            var jsonData = JSON.stringify(plate);
+
+            // Send JSON data to Flask (AJAX)
+            $.ajax({
+                type: 'POST', 
+                url: '/logfood', 
+                data: { plateData: jsonData },
+                success: function(response) {
+                    console.log('data sent');
+                },
+                error: function(xhr, status, error) {
+                    console.error('error data not sent');
+                }
+            });
+        });
 
   let url = `/logfood/data`;
   let requestData = {

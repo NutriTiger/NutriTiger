@@ -7,7 +7,7 @@
         <p class="text-muted pt-2">{{ location}}, {{ mealtime }}</p>
 
         <!--Serving Lineedit Column-->
-        <div class="col d-flex align-items-center justify-content-end">
+        <div id="new_entry" class="col d-flex align-items-center justify-content-end">
             <input type="number" min="0" class="form-control small-input" data-cals="{{ cals }}" 
             data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
             placeholder="Servings" oninput="handleServingChange()" required
@@ -24,7 +24,7 @@
 
     // Validate the serving inputs
     function isValid(input) {
-        var charCode = event.which || event.keyCode;
+        var charCode = input.which || input.keyCode;
         var value = input.target.value;
 
         // If the pressed key is a '-'

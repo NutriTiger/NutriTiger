@@ -368,11 +368,11 @@ def log_food():
 
     # Handle upload plate and return button
     if request.method == 'POST':
-        # save a copy of this entry (all new foods & servings)
-        # entry = request.json
-		#print(entry)
+        # retreive json object
+        entry = request.json
+        print(entry)
         # add this entry to database
-        # dbusers.addEntry(netid, entry)
+        dbusers.addEntry(netid, entry)
         # return user to homepage
         return redirect('/homepage')
 
