@@ -9,7 +9,7 @@ from sys import path
 path.append('src')
 path.append('src/db')
 
-from flask import Flask, render_template, request, redirect, make_response, jsonify
+from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for
 import time
 import datetime
 import os
@@ -28,6 +28,11 @@ from src import auth
 app = Flask(__name__)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
+
+# Takes the user to a general error page if an error occurs
+@app.errorhandler(Exception)  
+def not_found(e):    
+  return render_template("error.html") 
 
 #--------------------------------------------------------------------
 
@@ -85,6 +90,7 @@ def homepage():
 
     # List of lists of foods, should match up with ENTRIES array
     foods_lists = []
+    nutrition_totals = []
     for entry in entries_info:
 
         entry_recipeids = entry[:]
@@ -97,19 +103,47 @@ def homepage():
             foods_lists.append([])
         
         # If "mealname" for this recipeid, then add it to the list for current entry
+        # Also calculate the macro totals for each entry 
         else:
             mealnames = []
-            for meal in entry_nutrition:
-                if isinstance(meal, dict) and "mealname" in meal:
-                    mealnames.append(meal["mealname"])
-            foods_lists.append(mealnames)
+            cal_entry_total = 0
+            pro_entry_total = 0
+            carb_entry_total = 0
+            fat_entry_total = 0
 
+            # For each food in the entry
+            for food in entry_nutrition:
+                if isinstance(food, dict) and "mealname" in food:
+                    mealnames.append(food["mealname"])
+                
+                # Get macro totals for each entry to display across the top
+                if isinstance(food, dict) and "calories" in food:
+                    cal_entry_total += int(food["calories"])
+                if isinstance(food, dict) and "fats" in food:
+                    fat_entry_total += int(food["fats"])
+                if isinstance(food, dict) and "carbs" in food:
+                    carb_entry_total += int(food["carbs"])
+                if isinstance(food, dict) and "proteins" in food:
+                    pro_entry_total += int(food["proteins"])
+
+            # Append the list of mealnames for this entry
+            foods_lists.append(mealnames)
+            
+            # Append the cumulative macro totals for this entry
+            nutrition_totals.append({
+                "calories_total": cal_entry_total,
+                "fats_total": fat_entry_total,
+                "carbs_total": carb_entry_total,
+                "proteins_total": pro_entry_total
+            })
+    print(nutrition_totals)
     # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
     for i in range(len(ENTRIES)):
         entry = ENTRIES[i]
         foods = foods_lists[i]
-        entries_food_dict[entry] = foods
+        totals = nutrition_totals[i]
+        entries_food_dict[entry] = {"foods": foods, "nutrition_totals": totals}
 
     # When Edit Plate button is pressed
     if request.method == 'POST':
@@ -165,7 +199,7 @@ def dhall_menus():
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
     todays_date = utils.custom_strftime(current_date)
-    print(todays_date)
+    #print(todays_date)
 
     return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
@@ -188,9 +222,9 @@ def update_menus_mealtime():
     #nutrition_info = dbnutrition.find_one_nutrition('540488')
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
     #print('past the data line')
-    print(recipeids)
-    print("------------------------------------")
-    print(nutrition_info)
+    #print(recipeids)
+    #print("------------------------------------")
+    #print(nutrition_info)
 
 
     locations = ["Center for Jewish Life",
@@ -202,7 +236,7 @@ def update_menus_mealtime():
     nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
 
     todays_date = utils.custom_strftime(current_date)
-    print(todays_date)
+    #print(todays_date)
 
     return render_template('dhallmenus_update.html', todays_date=todays_date, locations=locations, data=data,
                         nutritional_content=nutritional_content, nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
@@ -375,24 +409,28 @@ def log_food():
     if request.method == 'POST':
         return redirect('/homepage')
 
-    # eastern = timezone('America/New_York')
-    # now_est = datetime.datetime.now(eastern)
-    current_date = datetime.datetime.today()
+    
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
+    is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
+    print(current_date.now(timezone('US/Eastern')))
+    print(is_weekend_var)
 
     menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
     if not menu:
         return render_template('logfood.html') 
     # Given the new data structure, mealtime/dhall pairs only have one corresponding document
     result = menu[0]
-    food_list = []
+    food_dict = {}
 
     # Extend the food_items list with the keys from each dictionary
     for category in result['data'].values():
-        food_list.extend(category.keys())
+        food_dict.update(category)
+    print("FOOD ITEMS")
+    print(food_dict)
 
-    return render_template('logfood.html', food_items = food_list)
+    return render_template('logfood.html', food_items = food_dict, is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
 
@@ -413,31 +451,37 @@ def log_food_data():
 
     print(menus)
     if not menus:
-        return jsonify({"error": "No data found"}), 404
+        # return jsonify({"error": "No data found"}), 404
+        return {}
     result = menus[0]
    
-    food_list = []
+    food_dict = {}
 
     # Extend the food_items list with the keys from each dictionary
     for category in result['data'].values():
-        food_list.extend(category.keys())
+        food_dict.update(category)
+    print("FOOD ITEMS")
+    print(food_dict)
 
-    return jsonify(food_list)
+    return jsonify(food_dict)
 
 #--------------------------------------------------------------------
 
 @app.route('/personalfood', methods=['GET', 'POST'])
 def personal_food():
-    return render_template('personalfood.html') 
+    form_data = session.pop('form_data', None) if 'form_data' in session else {
+        'name': "i.e. overnight oats", 'calories': 0, 'carbs': 0, 'proteins': 0, 'fats': 0, 'message': "Enter nutrition information for your own food items!"
+    }
+    return render_template('personalfood.html', **form_data) 
 
 @app.route('/addpersonalfood', methods=['POST'])
 def add_personal_food():
     if request.method == 'POST':
-        recipename = request.args.get('name', type = str)
-        cal = request.args.get('calories', type = int)
-        protein = request.args.get('protein', type = int)
-        carbs = request.args.get('carbs', type = int)
-        fats = request.args.get('fats', type = int)
+        recipename = request.form.get('name', type = str)
+        cal = request.form.get('calories', type = int)
+        protein = request.form.get('proteins', type = int)
+        carbs = request.form.get('carbs', type = int)
+        fats = request.form.get('fats', type = int)
         netid = auth.authenticate()
         link = "https://simple.wikipedia.org/wiki/Nutrition#:~:text=the%20provision%20to%20cells%20and,able%20to%20do%20certain%20things."
         nutrition_dict = {
@@ -446,8 +490,24 @@ def add_personal_food():
                         "carbs": carbs,
                         "fats": fats,
                         }
-        add_personal_food(recipename, netid, nutrition_dict, link)
-
+        result = dbnutrition.find_one_personal_nutrition(netid, recipename)
+        if not result:
+            dbnutrition.add_personal_food(recipename, netid, nutrition_dict, link)
+            return redirect('/homepage')
+        else:
+            msg = "A personal food item with this name already exists, please put a new name!"
+            # Store form data and message in session
+            session['form_data'] = {
+                'name': recipename,
+                'calories': cal,
+                'carbs': carbs,
+                'proteins': protein,
+                'fats': fats,
+                'message': msg
+            }
+            return redirect(url_for('personal_food'))
+        
+    return
     
 #--------------------------------------------------------------------
 
