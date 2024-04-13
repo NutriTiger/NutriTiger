@@ -306,6 +306,32 @@ def finduser(netid):
         if this_user is None:
             print(f"There does not exists a document with netid : {netid}")
         return this_user
+#-----------------------------------------------------------------------
+
+'''
+Returns the calorie goal of a user based on netid
+'''
+def findsettings(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        try:
+            pipeline = [
+                {"$match": {"netid": netid}},
+                {"$project": {"_id": 0, "caloricgoal": 1, "join_date": 1, "last_login": 1}}
+            ]
+            result = list(users_collection.aggregate(pipeline))
+            if not result:
+                print(f"There does not exist a document with netid: {netid}")
+                return None
+            return result[0]  # Return the first (and only) result
+        except pymongo.errors.OperationFailure:
+            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+            sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+            sys.exit(1)
+
 
 #-----------------------------------------------------------------------
 

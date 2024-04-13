@@ -43,7 +43,6 @@ def get_corresponding_arrays(cal, carb, prot, fat):
     eastern = pytz.timezone('US/Eastern')
     today = datetime.datetime.now(eastern).date()
     date_array = [today - datetime.timedelta(days=i) for i in range(len(cal))]
-
     # filter date and array for non-zero entries
     filtered_date_array = []
     filtered_cal_array = []
