@@ -28,7 +28,7 @@ from src import auth
 app = Flask(__name__)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
-
+'''
 # Takes the user to a general error page if an error occurs
 @app.errorhandler(Exception)
 def not_found(e):
@@ -38,7 +38,7 @@ def not_found(e):
 def display_error():
     netid = auth.authenticate()
     return render_template("error.html")
-
+'''
 #--------------------------------------------------------------------
 
 # Code used from PennyFlaskJinja/penny.py from Lecture 10
@@ -228,19 +228,27 @@ def history():
     netid = auth.authenticate()
     # find current user
     profile = dbusers.finduser(netid)
-    cal_his, carb_his, prot_his, fat_his, dates = utils.get_corresponding_arrays(profile['cal_his'], 
-                                                                                profile['carb_his'],
-                                                                                profile['prot_his'],
-                                                                                profile['fat_his']
-                                                                                )
-    # calculate averages with user's specified range (7 days)
-    his_range = 7
+    cals, carbs, prots, fats, dates = utils.get_corresponding_arrays(profile['cal_his'], 
+                                                                    profile['carb_his'],
+                                                                    profile['prot_his'],
+                                                                    profile['fat_his']
+                                                                    )
+    his_range = 7 # THIS IS THE ONLY NUMBER WE NEED TO CHANGE FOR STRETCH
+    cal_his = cals[:his_range]
+    carb_his = carbs[:his_range]
+    fat_his = fats[:his_range]
+    prot_his = prots[:his_range]
+    dates = dates[:7]
+
     avg_cals = utils.get_average(cal_his, his_range)
     avg_carbs = utils.get_average(carb_his, his_range)
     avg_pro = utils.get_average(prot_his, his_range)
     avg_fat = utils.get_average(fat_his, his_range)
     dates.reverse()
     cal_his.reverse()
+    carb_his.reverse()
+    prot_his.reverse()
+    fat_his.reverse()
 
     return render_template('history.html', 
                             avg_cals=round(avg_cals, 2), 
@@ -371,26 +379,26 @@ def editing_plate():
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
     netid = auth.authenticate()
-    current_date = datetime.datetime.now(timezone('US/Eastern'))
-    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
-
-    is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
-    print(current_date.now(timezone('US/Eastern')))
-    print(is_weekend_var)
-
     # Handle upload plate and return button
     if request.method == 'POST':
-        print("in post")
         # retreive json object
         data = request.get_json()
         entry_recids = data.get('entry_recids')
         entry_servings = data.get('entry_servings')
         dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings})
         return jsonify({"success": True, "redirect": url_for('homepage')})
+    else :
+        current_date = datetime.datetime.now(timezone('US/Eastern'))
+        current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+        is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
+    
+        data = dbmenus.query_menu_display(current_date_zeros)
+        print(data)
+        recipeids = utils.gather_recipes(data)
+        nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+        print("about to render template for logfood")
 
-
-    else:
-        return render_template('logfood.html', is_weekend_var = is_weekend_var)
+        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
@@ -423,48 +431,12 @@ def log_food_data():
     is_weekend_var = utils.is_weekend(current_date.date())
 
     data = dbmenus.query_menu_display(current_date_zeros)
-
-    
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
 
     return render_template('logfood_update.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
-
-'''
-@app.route('/logfood/data', methods=['GET'])
-def log_food_data():
-    dhall = request.args.get('dhall', type = str)
-    mealtime = request.args.get('mealtime', type = str)
-    print("we are inside logfood/data")
-    print(f"dhall: {dhall}, mealtime: {mealtime}")
-
-    # query menu documents
-    current_date = datetime.datetime.today()
-    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
-    menu = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
-
-    print(menu)
-    if not menu:
-        # return jsonify({"error": "No data found"}), 404
-        data_found=False
-        nut={}
-    else:
-        data_found=True
-        result = menu[0]
-        recids = []
-        # Extend the food_items list with the keys from each dictionary
-        for category in result['data'].values():
-            for recid in category.values():
-                recids.append(recid)
-        nut = dbnutrition.find_many_nutrition(recids)
-        print("FOOD ITEMS")
-        print(nut)
-
-    html_code = render_template('logfood_items.html', data_found=data_found, foods=nut)
-    return make_response(html_code)
-'''
 #--------------------------------------------------------------------
 
 @app.route('/personalfood', methods=['GET', 'POST'])
