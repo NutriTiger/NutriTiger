@@ -18,33 +18,51 @@
     
     <!--<div class="row p-5">
     <div class="col-sm-6">-->
-    
-    <div class="row p-5">
-        <div class="'col-sm-9">
+
+    <div class="row p-5 mx-auto">
             <div class="card">
                 <div class="card-body">
-                  
-                    <div class="container-fluid mx-auto p-5">
-                        <h1 class="m-5 text-center">My Information</h1> 
-                
-                        {% include 'caloriecalculator.html' %}
-                
-                        <div class="text-center p-4">
-                            <div class="row">
-                                <h4>Calorie Goal:</h4>
-                                <form action="/settings" method="post">
-                                    <input type="number" class="form-control form-calgoal container" name='line' placeholder="Enter the number here." min="0" required
-                                    onkeypress="return isValid(event)">
-                                    <div class="p-3">
-                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
 
-                </div>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane" type="button" role="tab" aria-controls="settings-tab-pane" aria-selected="true">Settings</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="personal-nutritition-tab" data-bs-toggle="tab" data-bs-target="#personal-nutritition-tab-pane" type="button" role="tab" aria-controls="personal-nutritition-tab-pane" aria-selected="false">Personal Nutrition</button>
+                    </li>
+                   
+                  </ul>
+                  <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
+
+                            <h1 class="py-3 text-center">{{ netid }}'s Information</h1> 
+                    
+                            {% include 'caloriecalculator.html' %}
+                    
+                            <div class="text-center p-4">
+                                <div class="row">
+                                    <h4>Calorie Goal:</h4>
+                                    <form action="/settings" method="post">
+                                        <input type="number" class="form-control form-calgoal container" name='line' placeholder="Enter the number here." min="0" required
+                                        onkeypress="return isValid(event)">
+                                        <div class="p-3">
+                                            <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+    
+                    </div>
+                    <div class="tab-pane fade" id="personal-nutritition-tab-pane" role="tabpanel" aria-labelledby="personal-nutritition-tab" tabindex="0">
+
+                        
+                    </div>
+                  </div>
+                
+                    
+                  
+                    
               </div>
-        </div>
     </div>
         
 </body>
