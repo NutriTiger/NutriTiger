@@ -1,13 +1,12 @@
 <!--border for each food row-->
 
-<div class="food-row-wrap card border-primary p-3 mb-3" id="myplate-{{ uniqueid }}">
-    <div class="col">
+<div class="card border-primary p-2 mb-3" id="myplate-{{ uniqueid }}">
+    <div class="col d-flex">
         <!--Label Column-->
-        <span>{{ mealname }}</span>
-        <p class="text-muted pt-2">{{ location}}, {{ mealtime }}</p>
+        <span>{{ mealname }}</span> <br>
 
         <!--Serving Lineedit Column-->
-        <div id="new_entry" class="col d-flex align-items-center justify-content-end">
+        <div id="new_entry" class="col d-flex justify-content-end">
             <input type="number" min="0" class="form-control small-input" data-cals="{{ cals }}" 
             data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
             placeholder="Servings" oninput="handleServingChange()" required
@@ -18,6 +17,7 @@
             onclick="closeMyPlate(this)" data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
         </div>
     </div>
+    <p class="text-muted pt-2">{{ location}}, {{ mealtime }}</p>
 </div>
 
 <script>

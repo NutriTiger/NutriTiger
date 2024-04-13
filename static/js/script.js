@@ -6,6 +6,7 @@ function handleResponse(data) {
 
     // Set the HTML content of #todaysDateDiv
     $('#todaysDateDiv').html(newHtml);
+    
     // After adding dynamic content to the DOM, call the setup function
     setup();
 }
@@ -17,12 +18,10 @@ function handleError() {
 function getResults() {
     let mealtime = $("input[name='mealtime_btnradio']:checked").val();
     const currentDate = $('#currentDateDiv').text();
-
-    // console.log(mealtime);
-    // console.log(currentDate)
     let encoded_mealtime = encodeURIComponent(mealtime);
     let encoded_date = encodeURIComponent(currentDate)
     let url = '/update-menus-mealtime?mealtime=' + encoded_mealtime + "&currentdate=" + encoded_date;
+
     let requestData = {
         type: 'GET',
         url: url,
@@ -45,8 +44,6 @@ function setup() {
         });
     }
 });
-
-      
 }
 function debouncedGetResults() {
     clearTimeout(timer);
@@ -91,7 +88,6 @@ function handleLeftArrowClick() {
     modifyDate(-1);
 }
 
-// Function to handle right arrow click
 function handleRightArrowClick() {
     // Add a day to the current date
     modifyDate(1);
@@ -99,12 +95,10 @@ function handleRightArrowClick() {
 
 $(document).ready(function() {
     getResults();
-    $("input[name='mealtime_btnradio']").change(function() {
+    $(document).on("change", "input[name='mealtime_btnradio']", function() {
         var selectedMealtime = $(this).val();
-    
-    // "Disappear" all meal elements
+        // hide meal elements - "caching"
         $(".meal").css("display", "none");
-        
         // Show the selected meal elements
         $("." + selectedMealtime).css("display", "block");
     });
@@ -112,18 +106,12 @@ $(document).ready(function() {
     const leftArrow = document.getElementById('leftArrow');
     const rightArrow = document.getElementById('rightArrow');
 
-    // Add click event listeners
+    // Left and right click event listeners
     leftArrow.addEventListener('click', function() {
-        // Handle left arrow click
         handleLeftArrowClick();
     });
 
     rightArrow.addEventListener('click', function() {
-        // Handle right arrow click
         handleRightArrowClick();
     });
-
-    
-    
-    // getResults();
 });

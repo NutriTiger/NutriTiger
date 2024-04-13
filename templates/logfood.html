@@ -79,7 +79,9 @@
 
         <div class="card">
           <div class="card-body" id="usda-search-results"></div>
-          <div class="card-body" id="menu-items"></div>
+          <div class="card-body" id="menu-items">
+            {% include 'logfood_update.html' %}
+          </div>
         </div>
 
       </div>
@@ -102,18 +104,19 @@
             <div id="plateTotals"> 
             </div>
           </div>
-
         </div>
+
+        <!--Upload plate button-->
+        <div class="container p-5">
+          <h5>Done adding food to your plate?</h5>
+          <form action="/logfood" method="post" class="p-3">
+            <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
+          </form>
+        </div>
+        
       </div>
     </div>
     
-    <!--Upload plate button-->
-    <div class="container p-5">
-      <h4>Done adding food to your plate?</h4>
-      <form action="/logfood" method="post" class="p-3">
-        <button type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
-      </form>
-    </div>
 
 </body>
 
@@ -188,7 +191,7 @@ function handleError() {
   console.log('error');
 }
 
-// request fetch menu items (AJAX request)
+/* request fetch menu items (AJAX request)
 function handleResponse(data) {
   console.log(data);
   $('#menu-items').html(data);
@@ -247,6 +250,8 @@ function debounce(func, delay) {
 // fetch menu items based on selected dhall and mealtime + correct display
 function getResults() {
   $('.menu-items-content').hide();
+  $('#select').hide();
+  $('#noDataMessage').hide();
   let selectedHall = $('#diningHallSelect').val();
   console.log(selectedHall)
 
@@ -264,8 +269,11 @@ function getResults() {
     let mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
     dhallCode = selectedHall.substring(0, 2)
     let divToShow = dhallCode + "-" + mealtime
-    console.log(divToShow)
-    $('#' + divToShow).show();
+    if ($('#' + divToShow).length > 0) {
+      $('#' + divToShow).show();
+    } else {
+      $('#noDataMessage').show();
+    }
   }
 }
 
@@ -296,43 +304,45 @@ function setup() {
 
   // NOT DONE (NOT WORKING LOL)
   // Event listener for submit button (to get entry and send to flask)
-  document.getElementById('my-plate').addEventListener('submit', function(event) {
-            
-            // Array to store each food in the entry
-            var plate = [];
-            
-            const inputs = document.querySelectorAll('.my-plate');
-            inputs.forEach(input => {
-              let recid = input.dataset.recid;
-              let serving = input.dataset.value;
-              plate.push({ food: recid, servingSize: serving});
-              });
+  document.getElementById('submitButton').addEventListener('click', function(event) {
+    event.preventDefault();
+    console.log("submit")
+    var recids = [];
+    var servings = [];
+    const inputs = document.querySelectorAll('.small-input');
+    inputs.forEach(input => {
+      let recid = input.dataset.recid;
+      let serving = parseFloat(input.value);
+      recids.push(recid)
+      servings.push(serving)
+      });
 
-            // convert to JSON object
-            var jsonData = JSON.stringify(plate);
+    // convert to JSON object
+    // var json_recids = JSON.stringify(recids);
+    // var json_servings = JSON.stringify(servings);
+    var dataToSend = {
+      entry_recids: recids,
+      entry_servings: servings
+    }
+   var jsonData = JSON.stringify(dataToSend);
 
-            // Send JSON data to Flask (AJAX)
-            $.ajax({
-                type: 'POST', 
-                url: '/logfood', 
-                data: { plateData: jsonData },
-                success: function(response) {
-                    console.log('data sent');
-                },
-                error: function(xhr, status, error) {
-                    console.error('error data not sent');
-                }
-            });
+    $.ajax({
+        type: 'POST',
+        url: '/logfood',
+        contentType: 'application/json', // This tells the server that you're sending JSON
+        data: jsonData, 
+        success: function(response) {
+            console.log('Data sent successfully:', response);
+            // Check if the server response includes the redirect URL
+            if(response.success && response.redirect) {
+                window.location.href = response.redirect;  // Perform the redirection
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error in data submission:', xhr.status, xhr.responseText);
+        }
         });
-
-  let url = `/logfood/data`;
-  let requestData = {
-      type: 'GET',
-      url: url,
-      success: handleResponse,
-      error: handleError
-  };
-  request = $.ajax(requestData);
+  });
 }
 
 $('document').ready(setup);
