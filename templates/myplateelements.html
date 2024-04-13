@@ -1,24 +1,30 @@
 <!--border for each food row-->
 
 <div class="card border-primary p-2 mb-3" id="myplate-{{ uniqueid }}">
-    <div class="col d-flex">
-        <!--Label Column-->
-        <span>{{ mealname }}</span> <br>
+    <div class="row">
+        <div class="col">
+            <!-- Food label and location/time subtitle -->
+            <span>{{ mealname }}</span>
+            <p class="text-muted mb-0">{{ location }}, {{ mealtime }}</p>
+        </div>
+        <div class="col-auto d-flex align-items-center">
+            <!-- Serving Lineedit Column and Close button -->
+            <div id="new_entry" class="d-flex align-items-center">
+                <!-- Serving Lineedit -->
+                <input type="number" min="0" class="form-control small-input mr-2" data-cals="{{ cals }}"
+                data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
+                placeholder="Servings" oninput="handleServingChange()" required
+                onkeypress="return isValid(event)">
 
-        <!--Serving Lineedit Column-->
-        <div id="new_entry" class="col d-flex justify-content-end">
-            <input type="number" min="0" class="form-control small-input" data-cals="{{ cals }}" 
-            data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
-            placeholder="Servings" oninput="handleServingChange()" required
-            onkeypress="return isValid(event)">
 
-            <!--Close button column-->
-            <button type="button" id="close-{{ uniqueid }}" class=" btn-close btn-sm" aria-label="Close" 
-            onclick="closeMyPlate(this)" data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
+                <!-- Close button -->
+                <button type="button" id="close-{{ uniqueid }}" class="btn btn-close btn-sm" aria-label="Close"
+                onclick="closeMyPlate(this)" data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
+            </div>
         </div>
     </div>
-    <p class="text-muted pt-2">{{ location}}, {{ mealtime }}</p>
 </div>
+
 
 <script>
 
