@@ -9,7 +9,7 @@ from sys import path
 path.append('src')
 path.append('src/db')
 
-from flask import Flask, render_template, request, redirect, make_response, jsonify
+from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for
 import time
 import datetime
 import os
@@ -28,6 +28,11 @@ from src import auth
 app = Flask(__name__)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
+
+# Takes the user to a general error page if an error occurs
+@app.errorhandler(Exception)  
+def not_found(e):    
+  return render_template("error.html")
 
 #--------------------------------------------------------------------
 
@@ -79,6 +84,7 @@ def homepage():
 
     # A list of lists: holds recipeids for each entry
     entries_info = cursor['daily_rec']
+    user_info = cursor['daily_nut']
 
     # Entry title strings array ("Entry #")
     ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
@@ -99,17 +105,22 @@ def homepage():
         # If "mealname" for this recipeid, then add it to the list for current entry
         else:
             mealnames = []
-            for meal in entry_nutrition:
-                if isinstance(meal, dict) and "mealname" in meal:
-                    mealnames.append(meal["mealname"])
-            foods_lists.append(mealnames)
 
+            # For each food in the entry
+            for food in entry_nutrition:
+                if isinstance(food, dict) and "mealname" in food:
+                    mealnames.append(food["mealname"])
+
+            # Append the list of mealnames for this entry
+            foods_lists.append(mealnames)
+            
     # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
     for i in range(len(ENTRIES)):
         entry = ENTRIES[i]
         foods = foods_lists[i]
-        entries_food_dict[entry] = foods
+        totals = user_info[i]
+        entries_food_dict[entry] = {"foods": foods, "nutrition_totals": totals}
 
     # When Edit Plate button is pressed
     if request.method == 'POST':
@@ -138,74 +149,53 @@ def about():
 def dhall_menus():
     netid = auth.authenticate()
     # Fetch menu data from database
-    # test data
-    current_date = datetime.datetime.today()
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
     #current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    print(current_date.now(timezone('US/Eastern')))
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
-    is_weekend_var = utils.is_weekend(current_date.date())
-    #print('we made it here')
-
-    #data = dbmenus.query_menu_display(current_date_zeros, mealtime)
-
-    #recipeids = utils.gather_recipes(data)
-    #nutrition_info = dbnutrition.find_one_nutrition('560154')
-    #nutrition_info = dbnutrition.find_many_nutrition(recipeids)
-    #print('past the data line')
-    #print(recipeids)
-    #print("------------------------------------")
-    #print(nutrition_info)
-
-
-    locations = ["Center for Jewish Life",
-                        "Forbes College", "Rockefeller & Mathey Colleges",
-                        "Whitman & Butler Colleges",
-                        "Yeh & New West Colleges",
-                        "Graduate College"]
-
-    nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
-
+    is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
+    
+   
     todays_date = utils.custom_strftime(current_date)
-    print(todays_date)
+    #print(todays_date)
 
-    return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime)
+    return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
 
 @app.route('/update-menus-mealtime', methods=['GET'])
 def update_menus_mealtime():
     netid = auth.authenticate()
+    current_date_string = request.args.get('currentdate')
+    
+    current_date = datetime.datetime.strptime(current_date_string, "%Y-%m-%d %H:%M:%S.%f%z")
     mealtime = request.args.get('mealtime')
+    if mealtime:
+        mealtime = utils.time_of_day(current_date.date(), current_date.time())
 
-    current_date = datetime.datetime.today()
+
+  
+    
+
+
+    #current_date = datetime.datetime.today()
+    todays_date = utils.custom_strftime(current_date)
+
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
 
-    data = dbmenus.query_menu_display(current_date_zeros, mealtime)
-    #print(data)
+    data = dbmenus.query_menu_display(current_date_zeros)
+    if data == []:
+        return render_template("dhallmenus_none.html", todays_date=todays_date, is_weekend_var=is_weekend_var)
 
     
     recipeids = utils.gather_recipes(data)
-    #nutrition_info = dbnutrition.find_one_nutrition('304008')
-    #nutrition_info = dbnutrition.find_one_nutrition('020076')
-    #nutrition_info = dbnutrition.find_one_nutrition('540488')
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
-    #print('past the data line')
-    print(recipeids)
-    print("------------------------------------")
-    print(nutrition_info)
 
+    #print(nutrition_info)
 
-    locations = ["Center for Jewish Life",
-                        "Forbes College", "Rockefeller & Mathey Colleges",
-                        "Whitman & Butler Colleges",
-                        "Yeh & New West Colleges",
-                        "Graduate College"]
+    #print(todays_date)
 
-    nutritional_content = "Serving Size: 8 oz\nCalories: 200\nProtein: 10 g\nFat: 10 g\nCarbs: 20 g\n\nIngredients: Chicken, Soy Sauce, Sugar, Sesame Seeds, Canola Oil, Salt, Pepper, Chili\n\nAllergens: Wheat, soy, tree nuts"
-
-    todays_date = utils.custom_strftime(current_date)
-    print(todays_date)
-
-    return render_template('dhallmenus_update.html', todays_date=todays_date, locations=locations, data=data,
-                        nutritional_content=nutritional_content, nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
+    return render_template('dhallmenus_update.html', todays_date=todays_date, data=data,
+                        nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 #--------------------------------------------------------------------
 
@@ -269,8 +259,12 @@ def settings():
         new_user_goal = request.form['line']
         dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
+    user_settings = dbusers.findsettings(netid)
+    current_cal_goal = user_settings['caloricgoal']
+    join_date = user_settings['join_date']
+    
 
-    return render_template('settings.html')
+    return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date)
 
 #--------------------------------------------------------------------
 
@@ -374,70 +368,120 @@ def log_food():
     netid = auth.authenticate()
     if request.method == 'POST':
         return redirect('/homepage')
-
-    # eastern = timezone('America/New_York')
-    # now_est = datetime.datetime.now(eastern)
-    current_date = datetime.datetime.today()
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
+    is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
+    print(current_date.now(timezone('US/Eastern')))
+    print(is_weekend_var)
 
-    menu = dbmenus.query_menu_display(current_date_zeros, 'breakfast', 'Rockefeller & Mathey Colleges')
-    if not menu:
-        return render_template('logfood.html') 
-    # Given the new data structure, mealtime/dhall pairs only have one corresponding document
-    result = menu[0]
-    food_list = []
+    # Handle upload plate and return button
+    if request.method == 'POST':
+        # retreive json object
+        entry = request.json
+        print(entry)
+        # add this entry to database
+        dbusers.addEntry(netid, entry)
+        # return user to homepage
+        return redirect('/homepage')
 
-    # Extend the food_items list with the keys from each dictionary
-    for category in result['data'].values():
-        food_list.extend(category.keys())
 
-    return render_template('logfood.html', food_items = food_list)
+    return render_template('logfood.html', is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
+@app.route('/logfood/myplate', methods=['GET'])
+def log_food_myplate():
+    checkid = request.args.get('checkid', type = str)
+    mealname = request.args.get('mealname', type = str)
+    recid = request.args.get('recid', type = int)
+    location = request.args.get('location', type = str)
+    mealtime = request.args.get('mealtime', type = str)
+    servingsize = request.args.get('servingsize', type = str)
+    cals = request.args.get('cals', type = float)
+    prots = request.args.get('prots', type = float)
+    carbs = request.args.get('carbs', type = float)
+    fats = request.args.get('fats', type = float)
+    uniqueid = checkid[8:]
+    print(mealname, cals, prots, carbs, fats)
 
+    html_code = render_template('myplateelements.html', checkid=checkid, uniqueid=uniqueid, mealname=mealname, 
+                                recid=recid, location=location, mealtime=mealtime, servingsize=servingsize, 
+                                cals=cals, prots=prots, carbs=carbs, fats=fats)
+    return make_response(html_code)
+
+@app.route('/logfood/data', methods=['GET'])
+def log_food_data():
+    netid = auth.authenticate()
+
+    current_date = datetime.datetime.today()
+    print(current_date)
+    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    is_weekend_var = utils.is_weekend(current_date.date())
+
+    data = dbmenus.query_menu_display(current_date_zeros)
+    print("DATA:")
+    print(data)
+
+    
+    recipeids = utils.gather_recipes(data)
+    nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+
+    print("NUTRITION INFO")
+    print(nutrition_info)
+
+    return render_template('logfood_update.html', data=data,
+                        nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
+
+'''
 @app.route('/logfood/data', methods=['GET'])
 def log_food_data():
     dhall = request.args.get('dhall', type = str)
     mealtime = request.args.get('mealtime', type = str)
     print("we are inside logfood/data")
-    print(mealtime)
     print(f"dhall: {dhall}, mealtime: {mealtime}")
 
+    # query menu documents
     current_date = datetime.datetime.today()
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+    menu = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
 
+    print(menu)
+    if not menu:
+        # return jsonify({"error": "No data found"}), 404
+        data_found=False
+        nut={}
+    else:
+        data_found=True
+        result = menu[0]
+        recids = []
+        # Extend the food_items list with the keys from each dictionary
+        for category in result['data'].values():
+            for recid in category.values():
+                recids.append(recid)
+        nut = dbnutrition.find_many_nutrition(recids)
+        print("FOOD ITEMS")
+        print(nut)
 
-    # query menu documents
-    menus = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
-
-    print(menus)
-    if not menus:
-        return jsonify({"error": "No data found"}), 404
-    result = menus[0]
-   
-    food_list = []
-
-    # Extend the food_items list with the keys from each dictionary
-    for category in result['data'].values():
-        food_list.extend(category.keys())
-
-    return jsonify(food_list)
-
+    html_code = render_template('logfood_items.html', data_found=data_found, foods=nut)
+    return make_response(html_code)
+'''
 #--------------------------------------------------------------------
 
 @app.route('/personalfood', methods=['GET', 'POST'])
 def personal_food():
-    return render_template('personalfood.html') 
+    form_data = session.pop('form_data', None) if 'form_data' in session else {
+        'name': "i.e. overnight oats", 'calories': 0, 'carbs': 0, 'proteins': 0, 'fats': 0, 'message': "Enter nutrition information for your own food items!"
+    }
+    return render_template('personalfood.html', **form_data) 
 
 @app.route('/addpersonalfood', methods=['POST'])
 def add_personal_food():
     if request.method == 'POST':
-        recipename = request.args.get('name', type = str)
-        cal = request.args.get('calories', type = int)
-        protein = request.args.get('protein', type = int)
-        carbs = request.args.get('carbs', type = int)
-        fats = request.args.get('fats', type = int)
+        recipename = request.form.get('name', type = str)
+        cal = request.form.get('calories', type = int)
+        protein = request.form.get('proteins', type = int)
+        carbs = request.form.get('carbs', type = int)
+        fats = request.form.get('fats', type = int)
         netid = auth.authenticate()
         link = "https://simple.wikipedia.org/wiki/Nutrition#:~:text=the%20provision%20to%20cells%20and,able%20to%20do%20certain%20things."
         nutrition_dict = {
@@ -446,8 +490,24 @@ def add_personal_food():
                         "carbs": carbs,
                         "fats": fats,
                         }
-        add_personal_food(recipename, netid, nutrition_dict, link)
-
+        result = dbnutrition.find_one_personal_nutrition(netid, recipename)
+        if not result:
+            dbnutrition.add_personal_food(recipename, netid, nutrition_dict, link)
+            return redirect('/homepage')
+        else:
+            msg = "A personal food item with this name already exists, please put a new name!"
+            # Store form data and message in session
+            session['form_data'] = {
+                'name': recipename,
+                'calories': cal,
+                'carbs': carbs,
+                'proteins': protein,
+                'fats': fats,
+                'message': msg
+            }
+            return redirect(url_for('personal_food'))
+        
+    return
     
 #--------------------------------------------------------------------
 
