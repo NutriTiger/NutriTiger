@@ -266,10 +266,12 @@ def settings():
         return redirect('/homepage')
     user_settings = dbusers.findsettings(netid)
     current_cal_goal = user_settings['caloricgoal']
-    join_date = user_settings['join_date']
+    join_date = utils.custom_strftime(user_settings['join_date'])
+    user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
+    print(user_nutrition)
     
 
-    return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date)
+    return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date, user_nutrition=user_nutrition)
 
 #--------------------------------------------------------------------
 
@@ -493,7 +495,7 @@ def add_personal_food():
         result = dbnutrition.find_one_personal_nutrition(netid, recipename)
         if not result:
             dbnutrition.add_personal_food(recipename, netid, nutrition_dict, link)
-            return redirect('/homepage')
+            return redirect((url_for('settings')))
         else:
             msg = "A personal food item with this name already exists, please put a new name!"
             # Store form data and message in session
