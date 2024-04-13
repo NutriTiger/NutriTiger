@@ -76,7 +76,9 @@
 
 
         <div class="card">
-          <div class="card-body" id="menu-items"></div>
+          <div class="card-body" id="menu-items">
+            {% include 'logfood_update.html' %}
+          </div>
         </div>
 
       </div>
@@ -184,28 +186,33 @@ function handleError() {
   console.log('error');
 }
 
-// request fetch menu items (AJAX request)
+/* request fetch menu items (AJAX request)
 function handleResponse(data) {
   console.log(data);
   $('#menu-items').html(data);
 }
+*/
 
 
 // fetch menu items based on selected dhall and mealtime
 function getResults() {
   $('.menu-items-content').hide();
+  $('#select').hide();
+  $('#noDataMessage').hide();
   let selectedHall = $('#diningHallSelect').val();
   console.log(selectedHall)
   if (selectedHall === "Select Dining Hall") {
     $('#select').show();
   }
   else {
-    $('#select').hide();
     let mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
     dhallCode = selectedHall.substring(0, 2)
     let divToShow = dhallCode + "-" + mealtime
-    console.log(divToShow)
-    $('#' + divToShow).show();
+    if ($('#' + divToShow).length > 0) {
+      $('#' + divToShow).show();
+    } else {
+      $('#noDataMessage').show();
+    }
   }
 }
 function handleServingChange() {
@@ -273,15 +280,6 @@ function setup() {
         }
         });
   });
- 
-  let url = `/logfood/data`;
-  let requestData = {
-      type: 'GET',
-      url: url,
-      success: handleResponse,
-      error: handleError
-  };
-  request = $.ajax(requestData);
 }
 
 $('document').ready(setup);
