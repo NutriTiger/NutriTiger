@@ -17,9 +17,20 @@
 <body>
     {% include 'navbar.html' %}
 
-    <h1 class="text-center">My History</h1> 
-    <h4 class="text-center">Past 7 Logged Days</h4> 
-    
+    <h1 class="text-center">My History</h1>     
+    <h5 class="text-center">Select a date range from the dropdown to see your logged history for that period. </h5>
+
+    <div class="row p-2 justify-content-center">
+      <div class="col-sm-3 m-3">
+          <select class="btn btn-secondary dropdown-toggle form-select" id = "historyRangeSelect">
+            <option value="7" selected>Past 1 week</option>
+            <option value="14">Past 2 weeks</option>
+            <option value="31">Past month</option>
+            <option value="93">Past 3 months</option>
+          </select>
+      </div>
+  </div>
+
     <!--Four cards (for each average)-->
     <div class="row p-5">
         <div class="col-sm-3">
@@ -62,3 +73,34 @@
     
 </body>
 </html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  function getHistory() {
+    let selectedRange = $('#historyRangeSelect').val();
+    console.log(selectedRange)
+
+    // send in selectedRange to Flask (# of days user selected)
+    $.ajax({
+      url: '/history-data',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ selectedRange: selectedRange }),
+      success: function(response) {
+        console.log('Data sent successfully:', response);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error sending data:', error);
+      }
+    });
+
+   }
+
+  function setup() {
+    const historyRangeSelect = document.getElementById('historyRangeSelect');
+    historyRangeSelect.addEventListener('change', getHistory);
+  }
+
+  $(document).ready(setup);
+</script>
