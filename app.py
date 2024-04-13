@@ -362,8 +362,6 @@ def editing_plate():
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
     netid = auth.authenticate()
-    if request.method == 'POST':
-        return redirect('/homepage')
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
 
@@ -373,16 +371,17 @@ def log_food():
 
     # Handle upload plate and return button
     if request.method == 'POST':
+        print("in post")
         # retreive json object
-        entry = request.json
-        print(entry)
-        # add this entry to database
-        dbusers.addEntry(netid, entry)
-        # return user to homepage
-        return redirect('/homepage')
+        data = request.get_json()
+        entry_recids = data.get('entry_recids')
+        entry_servings = data.get('entry_servings')
+        dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings})
+        return jsonify({"success": True, "redirect": url_for('homepage')})
 
 
-    return render_template('logfood.html', is_weekend_var = is_weekend_var)
+    else:
+        return render_template('logfood.html', is_weekend_var = is_weekend_var)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
@@ -415,15 +414,11 @@ def log_food_data():
     is_weekend_var = utils.is_weekend(current_date.date())
 
     data = dbmenus.query_menu_display(current_date_zeros)
-    print("DATA:")
-    print(data)
 
     
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
-    print("NUTRITION INFO")
-    print(nutrition_info)
 
     return render_template('logfood_update.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
