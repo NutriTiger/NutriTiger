@@ -30,9 +30,14 @@ dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
 
 # Takes the user to a general error page if an error occurs
-@app.errorhandler(Exception)  
-def not_found(e):    
-  return render_template("error.html")
+@app.errorhandler(Exception)
+def not_found(e):
+  return redirect("/error")
+
+@app.route('/error', methods=['GET'])
+def display_error():
+    netid = auth.authenticate()
+    return render_template("error.html")
 
 #--------------------------------------------------------------------
 
