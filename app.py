@@ -264,8 +264,12 @@ def settings():
         new_user_goal = request.form['line']
         dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
+    user_settings = dbusers.findsettings(netid)
+    current_cal_goal = user_settings['caloricgoal']
+    join_date = user_settings['join_date']
+    
 
-    return render_template('settings.html')
+    return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date)
 
 #--------------------------------------------------------------------
 
