@@ -21,6 +21,7 @@ from src import dbmenus
 from src import dbnutrition
 from src import utils
 from src import auth
+import requests
 
 
 #--------------------------------------------------------------------
@@ -165,11 +166,6 @@ def update_menus_mealtime():
     mealtime = request.args.get('mealtime')
     if mealtime:
         mealtime = utils.time_of_day(current_date.date(), current_date.time())
-
-
-  
-    
-
 
     #current_date = datetime.datetime.today()
     todays_date = utils.custom_strftime(current_date)
@@ -413,7 +409,6 @@ def log_food_data():
     print("DATA:")
     print(data)
 
-    
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
@@ -423,6 +418,23 @@ def log_food_data():
     return render_template('logfood_update.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
 
+@app.route('/logfood/usdadata', methods=['GET'])
+def logfood_usdadata():
+    netid = auth.authenticate()
+    query = request.args.get('query', default="", type=str)
+    api_key = 'XBwD6rxHxWX1wTdECT9q778IWkDtNcxwkxOJECw9'  # API key
+
+    # Construct the USDA API URL
+    url = f"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}&query={query}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+        data = response.json()  # Convert response to JSON
+        return jsonify(data)  # Send JSON response back to client
+    except requests.exceptions.RequestException as e:
+        # Handle any errors that occur during the HTTP request
+        return jsonify({"error": str(e)}), 500
 '''
 @app.route('/logfood/data', methods=['GET'])
 def log_food_data():
@@ -509,4 +521,4 @@ def logoutcas():
 #--------------------------------------------------------------------
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=55556, debug=True)
+    app.run(host='localhost', port=55557, debug=True)
