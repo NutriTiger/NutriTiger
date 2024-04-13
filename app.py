@@ -21,6 +21,7 @@ from src import dbmenus
 from src import dbnutrition
 from src import utils
 from src import auth
+import requests
 
 
 #--------------------------------------------------------------------
@@ -28,7 +29,7 @@ from src import auth
 app = Flask(__name__)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
-
+'''
 # Takes the user to a general error page if an error occurs
 @app.errorhandler(Exception)
 def not_found(e):
@@ -38,7 +39,7 @@ def not_found(e):
 def display_error():
     netid = auth.authenticate()
     return render_template("error.html")
-
+'''
 #--------------------------------------------------------------------
 
 # Code used from PennyFlaskJinja/penny.py from Lecture 10
@@ -176,11 +177,6 @@ def update_menus_mealtime():
     if mealtime:
         mealtime = utils.time_of_day(current_date.date(), current_date.time())
 
-
-  
-    
-
-
     #current_date = datetime.datetime.today()
     todays_date = utils.custom_strftime(current_date)
 
@@ -228,19 +224,27 @@ def history():
     netid = auth.authenticate()
     # find current user
     profile = dbusers.finduser(netid)
-    cal_his, carb_his, prot_his, fat_his, dates = utils.get_corresponding_arrays(profile['cal_his'], 
-                                                                                profile['carb_his'],
-                                                                                profile['prot_his'],
-                                                                                profile['fat_his']
-                                                                                )
-    # calculate averages with user's specified range (7 days)
-    his_range = 7
+    cals, carbs, prots, fats, dates = utils.get_corresponding_arrays(profile['cal_his'], 
+                                                                    profile['carb_his'],
+                                                                    profile['prot_his'],
+                                                                    profile['fat_his']
+                                                                    )
+    his_range = 7 # THIS IS THE ONLY NUMBER WE NEED TO CHANGE FOR STRETCH
+    cal_his = cals[:his_range]
+    carb_his = carbs[:his_range]
+    fat_his = fats[:his_range]
+    prot_his = prots[:his_range]
+    dates = dates[:7]
+
     avg_cals = utils.get_average(cal_his, his_range)
     avg_carbs = utils.get_average(carb_his, his_range)
     avg_pro = utils.get_average(prot_his, his_range)
     avg_fat = utils.get_average(fat_his, his_range)
     dates.reverse()
     cal_his.reverse()
+    carb_his.reverse()
+    prot_his.reverse()
+    fat_his.reverse()
 
     return render_template('history.html', 
                             avg_cals=round(avg_cals, 2), 
@@ -373,26 +377,26 @@ def editing_plate():
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
     netid = auth.authenticate()
-    current_date = datetime.datetime.now(timezone('US/Eastern'))
-    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
-
-    is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
-    print(current_date.now(timezone('US/Eastern')))
-    print(is_weekend_var)
-
     # Handle upload plate and return button
     if request.method == 'POST':
-        print("in post")
         # retreive json object
         data = request.get_json()
         entry_recids = data.get('entry_recids')
         entry_servings = data.get('entry_servings')
         dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings})
         return jsonify({"success": True, "redirect": url_for('homepage')})
+    else :
+        current_date = datetime.datetime.now(timezone('US/Eastern'))
+        current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
+        is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
+    
+        data = dbmenus.query_menu_display(current_date_zeros)
+        print(data)
+        recipeids = utils.gather_recipes(data)
+        nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+        print("about to render template for logfood")
 
-
-    else:
-        return render_template('logfood.html', is_weekend_var = is_weekend_var)
+        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
@@ -425,8 +429,6 @@ def log_food_data():
     is_weekend_var = utils.is_weekend(current_date.date())
 
     data = dbmenus.query_menu_display(current_date_zeros)
-
-    
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
@@ -434,6 +436,23 @@ def log_food_data():
     return render_template('logfood_update.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
 
+@app.route('/logfood/usdadata', methods=['GET'])
+def logfood_usdadata():
+    netid = auth.authenticate()
+    query = request.args.get('query', default="", type=str)
+    api_key = 'XBwD6rxHxWX1wTdECT9q778IWkDtNcxwkxOJECw9'  # API key
+
+    # Construct the USDA API URL
+    url = f"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}&query={query}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+        data = response.json()  # Convert response to JSON
+        return jsonify(data)  # Send JSON response back to client
+    except requests.exceptions.RequestException as e:
+        # Handle any errors that occur during the HTTP request
+        return jsonify({"error": str(e)}), 500
 '''
 @app.route('/logfood/data', methods=['GET'])
 def log_food_data():
@@ -520,4 +539,4 @@ def logoutcas():
 #--------------------------------------------------------------------
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=55556, debug=True)
+    app.run(host='localhost', port=55557, debug=True)
