@@ -105,7 +105,7 @@
         <div class="container p-5">
           <h5>Done adding food to your plate?</h5>
           <form action="/logfood" method="post" class="p-3">
-            <button type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
+            <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
           </form>
         </div>
         
@@ -234,35 +234,46 @@ function setup() {
 
   // NOT DONE (NOT WORKING LOL)
   // Event listener for submit button (to get entry and send to flask)
-  document.getElementById('my-plate').addEventListener('submit', function(event) {
-            
-            // Array to store each food in the entry
-            var plate = [];
-            
-            const inputs = document.querySelectorAll('.my-plate');
-            inputs.forEach(input => {
-              let recid = input.dataset.recid;
-              let serving = input.dataset.value;
-              plate.push({ food: recid, servingSize: serving});
-              });
+  document.getElementById('submitButton').addEventListener('click', function(event) {
+    event.preventDefault();
+    console.log("submit")
+    var recids = [];
+    var servings = [];
+    const inputs = document.querySelectorAll('.small-input');
+    inputs.forEach(input => {
+      let recid = input.dataset.recid;
+      let serving = parseFloat(input.value);
+      recids.push(recid)
+      servings.push(serving)
+      });
 
-            // convert to JSON object
-            var jsonData = JSON.stringify(plate);
+    // convert to JSON object
+    // var json_recids = JSON.stringify(recids);
+    // var json_servings = JSON.stringify(servings);
+    var dataToSend = {
+      entry_recids: recids,
+      entry_servings: servings
+    }
+   var jsonData = JSON.stringify(dataToSend);
 
-            // Send JSON data to Flask (AJAX)
-            $.ajax({
-                type: 'POST', 
-                url: '/logfood', 
-                data: { plateData: jsonData },
-                success: function(response) {
-                    console.log('data sent');
-                },
-                error: function(xhr, status, error) {
-                    console.error('error data not sent');
-                }
-            });
+    $.ajax({
+        type: 'POST',
+        url: '/logfood',
+        contentType: 'application/json', // This tells the server that you're sending JSON
+        data: jsonData, 
+        success: function(response) {
+            console.log('Data sent successfully:', response);
+            // Check if the server response includes the redirect URL
+            if(response.success && response.redirect) {
+                window.location.href = response.redirect;  // Perform the redirection
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error in data submission:', xhr.status, xhr.responseText);
+        }
         });
-
+  });
+ 
   let url = `/logfood/data`;
   let requestData = {
       type: 'GET',
