@@ -221,7 +221,7 @@ function appendDataToDOM(data) {
   if (data.foods && data.foods.length > 0) {
     data.foods.forEach(food => {
       const foodElement = document.createElement('div');
-      foodElement.innerHTML = `<strong>${food.description}</strong> - Calories: ${food.foodNutrients.find(n => n.nutrientName === 'Energy')?.value || 'NA'} kcal`;
+      foodElement.innerHTML = `<strong>${food.description}</strong> - Calories: ${food.foodNutrients.find(n => n.nutrientName === 'Energy')?.value || 'NA'} cal`;
       resultsContainer.appendChild(foodElement);
     });
   } else {
