@@ -1,21 +1,7 @@
-<!--==============================================================-->
-<!-- homepage.html                                                   -->
-<!--==============================================================-->
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>My Homepage</title>
-    {% include 'bootstrap.html' %}
-</head>
-
-<body>
-    {% include 'navbar.html' %}    
-    {% set current_page = 'home' %}
-
+{% extends "layout.html" %}
+{% set current_page = 'home' %}
+{% block title %}My Homepage{% endblock %}
+{% block content %}
     <h1 class="text-center m-3">Today's Breakdown</h1> 
     <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
@@ -101,6 +87,4 @@
           </div>
         </div>
       </div>           
-            
-</body>
-</html>
+{% endblock %}

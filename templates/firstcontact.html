@@ -1,20 +1,7 @@
-<!--==============================================================-->
-<!-- firstcontact.html                                                   -->
-<!--==============================================================-->
-
-<!DOCTYPE html>
-
-<html lang="en">
-    
-<head>
-    <meta charset="utf-8">
-    <title>Nutrition Goals</title>
-    {% include 'bootstrap.html' %}
-</head>
-
-<body>
-    {% include 'navbar.html' %}
-
+{% extends "layout.html" %}
+{% set current_page = 'firstcontact' %}
+{% block title %}Nutrition Goals{% endblock %}
+{% block content %}
     <div class="row p-5">
         <div class="'col-sm-9">
             <div class="card">
@@ -43,10 +30,8 @@
               </div>
         </div>
     </div>
-
-</body>
-</html>
-
+{% endblock %}
+{% block script %}
 <script>
 
     // Validate the serving inputs
@@ -69,3 +54,4 @@
         return true;
     }
 </script>
+{% endblock %}

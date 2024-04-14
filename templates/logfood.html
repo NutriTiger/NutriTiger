@@ -1,22 +1,7 @@
-<!--==============================================================-->
-<!-- logfood.html                                                   -->
-<!--==============================================================-->
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Log Food</title>
-    {% include 'bootstrap.html' %}
-</head>
-
-
-<body>
-    {% include 'navbar.html' %}
-    {% set current_page = 'logfood' %}
-
+{% extends "layout.html" %}
+{% set current_page = 'logfood' %}
+{% block title %}Log Food{% endblock %}
+{% block content %}
     <!--Give header white background -->
     <div class="p-3">
       <h1 class="text-center my-2">Log Food</h1>
@@ -116,16 +101,14 @@
         
       </div>
     </div>
-    
+{% endblock %}
 
-</body>
-
+{% block script %}
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-
 
 
 
@@ -347,4 +330,4 @@ function setup() {
 
 $('document').ready(setup);
 </script>
-</html>
+{% endblock %}

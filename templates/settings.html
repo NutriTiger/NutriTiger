@@ -1,16 +1,7 @@
-<!--==============================================================-->
-<!-- settings.html                                                   -->
-<!--==============================================================-->
+{% extends "layout.html" %}
 {% set current_page = 'settings' %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Settings</title>
-        {% include 'bootstrap.html' %}
-    </head>
-    <body>
-        {% include 'navbar.html' %}
+{% block title %}Settings{% endblock %}
+{% block content %}
         <div class="row p-5 mx-auto">
         <div class="card">
         <div class="card-body">
@@ -75,8 +66,8 @@
                 </div>
             </div>
         </div>
-    </body>
-</html>
+{% endblock %}
+{% block script %}
 <script>
     // Validate the serving inputs
     function isValid(input) {
@@ -98,3 +89,4 @@
         return true;
     }
 </script>
+{% endblock %}

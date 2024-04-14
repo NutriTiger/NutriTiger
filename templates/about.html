@@ -1,54 +1,36 @@
-<!--==============================================================-->
-<!-- about.html                                                   -->
-<!--==============================================================-->
+{% extends "layout.html" %}
 {% set current_page = 'about' %}
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>About NutriTiger</title>
-    {% include 'bootstrap.html' %}
-</head>
-
-<body>
-    {% include 'navbar.html' %}
-
-    <div class="container-fluid h-100">
-        <div class="row justify-content-center align-items-center h-100">
-            <div class="col-md-8">
-                <h1 class="text-center">About NutriTiger</h1> 
-                <p>
-                    General food information comes from the USDA FoodData Central:
-                    U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, 2019. fdc.nal.usda.gov.
-                    
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Aliquet nibh praesent tristique magna. 
-                    Purus ut faucibus pulvinar elementum. Cras semper auctor neque vitae tempus quam. 
-                    Amet porttitor eget dolor morbi. Neque laoreet suspendisse interdum consectetur libero 
-                    id faucibus nisl. Nec sagittis aliquam malesuada bibendum arcu vitae. Maecenas volutpat 
-                    blandit aliquam etiam erat velit scelerisque in dictum. Aliquam malesuada bibendum arcu vitae 
-                    elementum curabitur vitae nunc.
-                </p>
-                <h2 class="text-center">Disclaimer</h2>
-                <p> 
-                    NutriTiger & Campus Dining are committed to providing allergen & food preference 
-                    information to the Princeton University community. Nutritive values are approximate, 
-                    based on manufacturer data and an interface with the USDA Food and Nutrient Database. 
-                    For specific questions regarding our recipes, reach out to Campus Dining's chefs and 
-                    dietitians.
-                </p>
-                <h2 class="text-center">Acknowledgements</h2>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Aliquet nibh praesent tristique magna. 
-                    Purus ut faucibus pulvinar elementum. Cras semper auctor neque vitae tempus quam. 
-                    Amet porttitor eget dolor morbi.
-                </p>
-            </div>
+{% block title %}About{% endblock %}
+{% block content %}
+<div class="container-fluid h-100">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-md-8">
+            <h1 class="text-center">About NutriTiger</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                incididunt ut labore et dolore magna aliqua. Aliquet nibh praesent tristique magna. 
+                Purus ut faucibus pulvinar elementum. Cras semper auctor neque vitae tempus quam. 
+                Amet porttitor eget dolor morbi. Neque laoreet suspendisse interdum consectetur libero 
+                id faucibus nisl. Nec sagittis aliquam malesuada bibendum arcu vitae. Maecenas volutpat 
+                blandit aliquam etiam erat velit scelerisque in dictum. Aliquam malesuada bibendum arcu vitae 
+                elementum curabitur vitae nunc.
+            </p>
+            <h2 class="text-center">Disclaimer</h2>
+            <p> 
+                NutriTiger & Campus Dining are committed to providing allergen & food preference 
+                information to the Princeton University community. Nutritive values are approximate, 
+                based on manufacturer data and an interface with the USDA Food and Nutrient Database. 
+                For specific questions regarding our recipes, reach out to Campus Dining's chefs and 
+                dietitians.
+            </p>
+            <h2 class="text-center">Acknowledgements</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                incididunt ut labore et dolore magna aliqua. Aliquet nibh praesent tristique magna. 
+                Purus ut faucibus pulvinar elementum. Cras semper auctor neque vitae tempus quam. 
+                Amet porttitor eget dolor morbi.
+            </p>
         </div>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

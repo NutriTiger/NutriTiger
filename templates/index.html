@@ -1,16 +1,7 @@
-<!--==============================================================-->
-<!-- index.html                                                   -->
-<!--==============================================================-->
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Login to NutriTiger</title>
-</head>
-
+{% extends "layout.html" %}
+{% set current_page = 'login' %}
+{% block title %}Login{% endblock %}
+{% block content %}
 <body class="text-center">
         <img src="logo.jpg" alt="NutriTiger Logo">
         <h1>NutriTiger</h1> 
@@ -22,6 +13,4 @@
 
     <button onclick="window.location.href = 'path/to/another/file.html';">
         Login with NetID</button>
-        
-</body>
-</html>
+{% endblock %}

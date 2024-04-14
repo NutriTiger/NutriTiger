@@ -1,106 +1,85 @@
-<!--==============================================================-->
-<!-- history.html                                                   -->
-<!--==============================================================-->
+{% extends "layout.html" %}
 {% set current_page = 'history' %}
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>My History</title>
-    {% include 'bootstrap.html' %}
-    <link rel="stylesheet" href="../static/css/styles.css">
-</head>
-
-<body>
-    {% include 'navbar.html' %}
-
-    <h1 class="text-center">My History</h1>     
-    <h5 class="text-center">Select a date range from the dropdown to see your logged history for that period. </h5>
-
-    <div class="row p-2 justify-content-center">
-      <div class="col-sm-3 m-3">
-          <select class="btn btn-secondary dropdown-toggle form-select" id = "historyRangeSelect">
+{% block title %}My History{% endblock %}
+{% block content %}
+<h1 class="text-center">My History</h1>
+<h5 class="text-center">Select a date range from the dropdown to see your logged history for that period. </h5>
+<div class="row p-2 justify-content-center">
+    <div class="col-sm-3 m-3">
+        <select class="btn btn-secondary dropdown-toggle form-select" id = "historyRangeSelect">
             <option value="7" selected>Past 1 week</option>
             <option value="14">Past 2 weeks</option>
             <option value="31">Past month</option>
             <option value="93">Past 3 months</option>
-          </select>
-      </div>
-  </div>
-
-    <!--Four cards (for each average)-->
-    <div class="row p-5">
-        <div class="col-sm-3">
-          <div class="card avg-cals">
-            <div class="card-body text-center">
-              <h5 class="card-title">Avg. Calories/Day</h5>
-              <p>{{ avg_cals }}cal</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="card avg-prots">
-            <div class="card-body text-center">
-              <h5 class="card-title">Avg. Protein</h5>
-              <p>{{ avg_pro }}g</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="card avg-carbs">
-            <div class="card-body text-center">
-              <h5 class="card-title">Avg. Carbs</h5>
-              <p>{{ avg_carbs }}g</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="card avg-fats">
-            <div class="card-body text-center">
-              <h5 class="card-title">Avg. Fat</h5>
-              <p>{{ avg_fat }}g</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-    <div>
-      {% include 'historygraph.html' %}
+        </select>
     </div>
-    
-</body>
-</html>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+</div>
+<!--Four cards (for each average)-->
+<div class="row p-5">
+    <div class="col-sm-3">
+        <div class="card avg-cals">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Calories/Day</h5>
+                <p>{{ avg_cals }}cal</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card avg-prots">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Protein</h5>
+                <p>{{ avg_pro }}g</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card avg-carbs">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Carbs</h5>
+                <p>{{ avg_carbs }}g</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card avg-fats">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Fat</h5>
+                <p>{{ avg_fat }}g</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    {% include 'historygraph.html' %}
+</div>
+{% endblock %}
+{% block script %}
 <script>
-  function getHistory() {
-    let selectedRange = $('#historyRangeSelect').val();
-    console.log(selectedRange)
-
-    // send in selectedRange to Flask (# of days user selected)
-    $.ajax({
-      url: '/history-data',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({ selectedRange: selectedRange }),
-      success: function(response) {
-        console.log('Data sent successfully:', response);
-      },
-      error: function(xhr, status, error) {
-        console.error('Error sending data:', error);
-      }
-    });
-
-   }
-
-  function setup() {
-    const historyRangeSelect = document.getElementById('historyRangeSelect');
-    historyRangeSelect.addEventListener('change', getHistory);
-  }
-
-  $(document).ready(setup);
+    function getHistory() {
+      let selectedRange = $('#historyRangeSelect').val();
+      console.log(selectedRange)
+    
+      // send in selectedRange to Flask (# of days user selected)
+      $.ajax({
+        url: '/history-data',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ selectedRange: selectedRange }),
+        success: function(response) {
+          console.log('Data sent successfully:', response);
+        },
+        error: function(xhr, status, error) {
+          console.error('Error sending data:', error);
+        }
+      });
+    
+     }
+    
+    function setup() {
+      const historyRangeSelect = document.getElementById('historyRangeSelect');
+      historyRangeSelect.addEventListener('change', getHistory);
+    }
+    
+    $(document).ready(setup);
 </script>
+{% endblock %}

@@ -1,22 +1,7 @@
-<!--==============================================================-->
-<!-- personalfood.html                                                   -->
-<!--==============================================================-->
+{% extends "layout.html" %}
 {% set current_page = 'personalfood' %}
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Add Personal Recipe</title>
-    {% include 'bootstrap.html' %}
-</head>
-
-
-<body>
-    {% include 'navbar.html' %}
-    {% set current_page = 'personalfood' %}
-
+{% block title %}Add Personal Recipe{% endblock %}
+{% block content %}
     <h1 class="text-center m-3">Add Personal Recipe</h1> 
     <p class="custom-text-wrapper">
         {{message}}
@@ -83,8 +68,4 @@
         {% endif %}
 
     </div>
-    
-</body>
-  
-
-</html>
+{% endblock %}
