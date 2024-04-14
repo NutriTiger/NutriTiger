@@ -1,8 +1,8 @@
 import pymongo
 from dbfunctions import connectmongo
 import sys
-from datetime import datetime
-from pytz import timezone
+from datetime import datetime, time
+import pytz
 
 #----------------------------------------------------------------------
 # Contributors:
@@ -67,7 +67,7 @@ def find_one_nutrition(recipeid):
 
 # Create new food item -- should already include the net id field of user
 # Link is string, nutrition is dictionary
-def add_personal_food(name, netid, nutrition, link):
+def add_personal_food(name, netid, nutrition):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.personal_nutrition
@@ -79,11 +79,15 @@ def add_personal_food(name, netid, nutrition, link):
             num_current = len(prev_personal)
             print(num_current)
             recipeid = (num_current + 1)
+
+            date_obj = datetime.now(pytz.timezone('US/Eastern')).date()
+            today = datetime.combine(date_obj, time.min)
+
             try:
                 document_to_add = {"mealname" : name, 
                     "access": netid,
                     "recipeid" : recipeid,
-                    "link": link,
+                    "date": today,
                     **nutrition
                     }
                 result = nutrition_col.insert_one(document_to_add)
@@ -255,7 +259,7 @@ def main():
     result = find_many_nutrition(list)
     print(result[0]['calories'])
     link = "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html"
-    add_personal_food("ANOTHER", "oe7583", personal, link)
+    # add_personal_food("ANOTHER", "oe7583", personal, link)
     # list = find_all_personal_nutrition("oe7583")
     # for item in list:
     #     print(item)

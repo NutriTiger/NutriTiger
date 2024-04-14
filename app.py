@@ -495,14 +495,13 @@ def personal_food():
 
 @app.route('/addpersonalfood', methods=['POST'])
 def add_personal_food():
+    netid = auth.authenticate()
     if request.method == 'POST':
         recipename = request.form.get('name', type = str)
         cal = request.form.get('calories', type = int)
         protein = request.form.get('proteins', type = int)
         carbs = request.form.get('carbs', type = int)
         fats = request.form.get('fats', type = int)
-        netid = auth.authenticate()
-        link = "https://simple.wikipedia.org/wiki/Nutrition#:~:text=the%20provision%20to%20cells%20and,able%20to%20do%20certain%20things."
         nutrition_dict = {
                         "calories": cal,
                         "proteins": protein,
@@ -511,7 +510,7 @@ def add_personal_food():
                         }
         result = dbnutrition.find_one_personal_nutrition(netid, recipename)
         if not result:
-            dbnutrition.add_personal_food(recipename, netid, nutrition_dict, link)
+            dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
             return redirect('/homepage')
         else:
             msg = "A personal food item with this name already exists, please put a new name!"
