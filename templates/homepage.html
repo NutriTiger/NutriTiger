@@ -2,89 +2,97 @@
 {% set current_page = 'home' %}
 {% block title %}My Homepage{% endblock %}
 {% block content %}
-    <h1 class="text-center m-3">Today's Breakdown</h1> 
-    <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
+<h1 class="text-center m-3">Today's Breakdown</h1>
+<h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
+<!--Layout for the two main cards-->
+<div class="container-fluid">
+<div class="row p-xs-5 gx-5 mx-auto">
+	<div class="col-sm-6 pt-4">
+		<div class="card">
+			<div class="card-body">
+				<!--My Macros (left card)-->
+				<h4 class="text-center py-3">My Macros</h4>
+				<h5 class="text-center">Daily calorie goal: {{cal_goal}}cal</h5>
+				<div class="prog-container my-2" style="display: flex; justify-content: center;">
+					<div class="progress" style="height: 50px; width: 300px;">
+						<div class="progress-bar dynamic-progress-bar" 
+							role="progressbar" 
+							style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223);" 
+							aria-valuenow="{{curr_caltotal}}" 
+							aria-valuemin="0" 
+							aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal
+						</div>
+					</div>
+				</div>
+				<div class="prog-container my-5" style="display: flex; justify-content: center;">
+					<div style="width: 400px; height: 400px; display: flex; justify-content: center;">
+						{% include 'piechart.html' %}
+					</div>
+				</div>
+				<div class="text-center text-muted">
+					Clicking on elements in the legend will hide it from the pie chart.
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6 py-4">
+		<div class="card">
+			<div class="card-body">
+				<!--My Plate (right card)-->
+				<h4 class="text-center py-3">My Plate</h4>
+				<!-- Edit my plate button -->
+        <!-- Copy of bottom button for mobile compatibility -->
+				<div class="py-3 position-absolute top-0 end-0 mt-3 me-3 d-none d-lg-block">
+					<form action="/homepage" method="post">
+						<button type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+								<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+							</svg>
+							Edit Plate
+						</button>
+					</form>
+				</div>
+				<!--Create a card for each entry-->
+				<div class="col">
+					{% for entry, data in entries_food_dict.items() %}
+					{% set foods = data.foods %}
+					{% set nutrition_totals = data.nutrition_totals %}
+					<div class="row-cols-1 p-2">
+						<div class="card" style="background-color: lightgray; padding: 10px;">
+							<div class="card-body">
+								<h5 class="card-title">{{entry}}</h5>
+								<!--Labels for nutrient stats across the top of an entry -->
+								<div class="py-2">
+									<span class="badge badge-info" style="background-color: rgb(55, 127, 228);">{{ nutrition_totals.calories }}cals</span>
+									<span class="badge badge-info" style="background-color: rgb(255, 107, 130);">{{ nutrition_totals.proteins }}g Protein</span>
+									<span class="badge badge-info" style="background-color: rgb(49, 165, 74);">{{ nutrition_totals.carbs }}g Carbs</span>
+									<span class="badge badge-info" style="background-color: rgb(218, 184, 17);">{{ nutrition_totals.fats }}g Fat</span>
+								</div>
+								<ul>
+									{% for food in foods %}
+									<li>{{food}}</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+        <!-- Copy of top button for mobile compatibility -->
+        <div class="text-center d-block d-sm-block d-md-block d-lg-none">
+					<form action="/homepage" method="post">
+						<button type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+								<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+							</svg>
+							Edit Plate
+						</button>
+					</form>
+				</div>
 
-    <!--Layout for the two main cards-->
-    <div class="row p-5">
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-                <!--My Macros (left card)-->
-              <h4 class="text-center py-3">My Macros</h4>
-              <h5 class="text-center">Daily calorie goal: {{cal_goal}}cal</h5>
-
-                <div class="prog-container my-2" style="display: flex; justify-content: center;">
-                    <div class="progress" style="height: 50px; width: 300px;">
-                      <div class="progress-bar dynamic-progress-bar" 
-                          role="progressbar" 
-                          style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223);" 
-                          aria-valuenow="{{curr_caltotal}}" 
-                          aria-valuemin="0" 
-                          aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal
-                      </div>
-                    </div>
-                </div>
-                
-                <div class="prog-container my-5" style="display: flex; justify-content: center;">
-                    <div style="width: 400px; height: 400px; display: flex; justify-content: center;">
-                      {% include 'piechart.html' %}
-                  </div>
-                </div>
-
-                <div class="text-center text-muted">
-                  Clicking on elements in the legend will hide it from the pie chart.
-                </div>
-                
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-                <!--My Plate (right card)-->
-                <h4 class="text-center py-3">My Plate</h4>
-
-                <!-- Edit my plate button -->
-                <div class="py-3 position-absolute top-0 end-0 mt-3 me-3">
-                  <form action="/homepage" method="post">
-                    <button type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                    </svg> Edit Plate</button>
-                  </form>
-                </div>
-
-                <!--Create a card for each entry-->
-                <div class="col">
-                  {% for entry, data in entries_food_dict.items() %}
-                    {% set foods = data.foods %}
-                    {% set nutrition_totals = data.nutrition_totals %}
-                    <div class="row-cols-1 p-2">
-                        <div class="card" style="background-color: lightgray; padding: 10px;">
-                            <div class="card-body">
-                                <h5 class="card-title">{{entry}}</h5>
-
-                                <!--Labels for nutrient stats across the top of an entry -->
-                                <div class="py-2">
-                                  <span class="badge badge-info" style="background-color: rgb(55, 127, 228);">{{ nutrition_totals.calories }}cals</span>
-                                  <span class="badge badge-info" style="background-color: rgb(255, 107, 130);">{{ nutrition_totals.proteins }}g Protein</span>
-                                  <span class="badge badge-info" style="background-color: rgb(49, 165, 74);">{{ nutrition_totals.carbs }}g Carbs</span>
-                                  <span class="badge badge-info" style="background-color: rgb(218, 184, 17);">{{ nutrition_totals.fats }}g Fat</span>
-                                </div>
-
-                                <ul>
-                                    {% for food in foods %}
-                                    <li>{{food}}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>           
+			</div>
+		</div>
+	</div>
+</div>
+</div>
 {% endblock %}
