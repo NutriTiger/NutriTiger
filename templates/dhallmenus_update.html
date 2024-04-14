@@ -18,7 +18,7 @@
     <div class="col meal {{ item.mealtime }}" {% if item.mealtime != mealtime %} style = "display: none;" {% endif %}>
         <div class="card h-100 card-body-dhall-menus ">
             <div class="card-body"  >
-                <h5 class="card-title text-center">{{ item.dhall }}</h5>
+                <h3 class="card-title text-center">{{ item.dhall }}</h3>
                 {% set outer_outer_loop = loop %}
                 {% for category, foods in item.data.items() %}
                 <h6>{{ category }}</h6>
