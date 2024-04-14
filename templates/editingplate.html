@@ -1,21 +1,7 @@
-<!--==============================================================-->
-<!-- homepage.html                                                   -->
-<!--==============================================================-->
+{% extends "layout.html" %}
 {% set current_page = 'editingplate' %}
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>My Homepage</title>
-    {% include 'bootstrap.html' %}
-</head>
-
-<body>
-    {% include 'navbar.html' %}   
-
+{% block title %}My Homepage{% endblock %}
+{% block content %}
     <h1 class="text-center m-3">Editing My Plate</h1> 
     <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
@@ -105,6 +91,4 @@
 
         </tr>
     </table>
-        
-</body>
-</html>
+{% endblock %}

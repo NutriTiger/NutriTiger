@@ -1,103 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Include Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <style>
-
-        .hist-canvas {
-            height: 600px; /* Adjust the height as needed */
-            width: auto; /* Ensure width adjusts automatically */
-        }
-    </style>
-</head>
-
-<body>
-    <div class="histChart-container">
-        <!-- Calorie Chart -->
-        <canvas id="calHistoryChart" class="hist-canvas"></canvas>
-        <!-- Macros Chart -->
-        <canvas id="macroHistoryChart" class="hist-canvas"></canvas>
-    </div>
-
-    <script>
-        var cals = {{ cals | tojson | safe}};
-        var prots = {{ prots | tojson | safe}};
-        var carbs = {{ carbs | tojson | safe}};
-        var fats = {{ fats | tojson | safe}};
-        var dates = {{ dates | tojson | safe}};
-
-        //  Data for the line chart
-        var data1 = {
-            labels: dates,
-            datasets: [{
-                label: 'Calories', // Label for the dataset
-                data: cals,
-                borderColor: 'rgba(66, 142, 223)', // Line color
-                backgroundColor: 'rgba(66, 142, 223, 0.5)',
-                borderWidth: 2, // Line width
-                fill: true // Fill area under the line
-            }]
-        };
-        var data2 = {
-            labels: dates,
-            datasets: [{
-                label: 'Proteins', // Label for the dataset
-                data: prots,
-                borderColor: 'rgba(255, 182, 193, 1)', // Light pink line color
-                backgroundColor: 'rgba(255, 182, 193, 0.3)',
-                borderWidth: 2, // Line width
-                fill: true // Fill area under the line
-            },
-            {
-                label: 'Carbs', // Label for the dataset
-                data: carbs,
-                borderColor: 'rgba(67, 182, 107)', // Line color (green)
-                backgroundColor: 'rgba(67, 182, 107, 0.3)',
-                borderWidth: 2, // Line width
-                fill: true // Fill area under the line
-            },
-            {
-                label: 'Fats', // Label for the dataset
-                data: fats,
-                borderColor: 'rgba(255, 205, 86)', // Line color (yellow)
-                backgroundColor: 'rgba(255, 205, 86, 0.7)',
-                borderWidth: 2, // Line width
-                fill: true // Fill area under the line
-            }]
-        };
-
-        // Options object if you want to use the same options for both charts
-        var options = {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            responsive: true,
-            maintainAspectRatio: false
-        };
-
-        // Initialize the first chart
-        var ctx1 = document.getElementById('calHistoryChart').getContext('2d');
-        var myLineChart1 = new Chart(ctx1, {
-            type: 'line',
-            data: data1,
-            options: options
-        });
-
-        // Initialize the second chart
-        var ctx2 = document.getElementById('macroHistoryChart').getContext('2d');
-        var myLineChart2 = new Chart(ctx2, {
-            type: 'line',
-            data: data2,
-            options: options
-        });
-    </script>
-
-</body>
-</html>
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="../static/css/styles.css">
+<style>
+    .hist-canvas {
+    height: 600px; /* Adjust the height as needed */
+    width: auto; /* Ensure width adjusts automatically */
+    }
+</style>
+<div class="histChart-container pb-3">
+    <!-- Calorie Chart -->
+    <canvas id="calHistoryChart" class="hist-canvas"></canvas>
+    <!-- Macros Chart -->
+    <canvas id="macroHistoryChart" class="hist-canvas"></canvas>
+</div>
+<script>
+    var cals = {{ cals | tojson | safe}};
+    var prots = {{ prots | tojson | safe}};
+    var carbs = {{ carbs | tojson | safe}};
+    var fats = {{ fats | tojson | safe}};
+    var dates = {{ dates | tojson | safe}};
+    
+    //  Data for the line chart
+    var data1 = {
+        labels: dates,
+        datasets: [{
+            label: 'Calories', // Label for the dataset
+            data: cals,
+            borderColor: 'rgba(66, 142, 223)', // Line color
+            backgroundColor: 'rgba(66, 142, 223, 0.5)',
+            borderWidth: 2, // Line width
+            fill: true // Fill area under the line
+        }]
+    };
+    var data2 = {
+        labels: dates,
+        datasets: [{
+            label: 'Proteins', // Label for the dataset
+            data: prots,
+            borderColor: 'rgba(255, 182, 193, 1)', // Light pink line color
+            backgroundColor: 'rgba(255, 182, 193, 0.3)',
+            borderWidth: 2, // Line width
+            fill: true // Fill area under the line
+        },
+        {
+            label: 'Carbs', // Label for the dataset
+            data: carbs,
+            borderColor: 'rgba(67, 182, 107)', // Line color (green)
+            backgroundColor: 'rgba(67, 182, 107, 0.3)',
+            borderWidth: 2, // Line width
+            fill: true // Fill area under the line
+        },
+        {
+            label: 'Fats', // Label for the dataset
+            data: fats,
+            borderColor: 'rgba(255, 205, 86)', // Line color (yellow)
+            backgroundColor: 'rgba(255, 205, 86, 0.7)',
+            borderWidth: 2, // Line width
+            fill: true // Fill area under the line
+        }]
+    };
+    
+    // Options object if you want to use the same options for both charts
+    var options = {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false
+    };
+    
+    // Initialize the first chart
+    var ctx1 = document.getElementById('calHistoryChart').getContext('2d');
+    var myLineChart1 = new Chart(ctx1, {
+        type: 'line',
+        data: data1,
+        options: options
+    });
+    
+    // Initialize the second chart
+    var ctx2 = document.getElementById('macroHistoryChart').getContext('2d');
+    var myLineChart2 = new Chart(ctx2, {
+        type: 'line',
+        data: data2,
+        options: options
+    });
+</script>

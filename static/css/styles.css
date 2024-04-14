@@ -30,14 +30,16 @@ body {
     background-color: #F3DDC6 ; 
 }
 
-.row>* {
+.row-nt {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
     padding-right: calc(var(--bs-gutter-x));
     padding-left: calc(var(--bs-gutter-x));
 }
 
-.row {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
+.row-settings {
+    margin-right: 50px !important;
+    margin-left: 50px !important;
 }
 
 .p-5 {
