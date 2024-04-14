@@ -451,6 +451,7 @@ def logfood_usdadata():
         response = requests.get(url)
         response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
         data = response.json()  # Convert response to JSON
+        print(data)
         return jsonify(data)  # Send JSON response back to client
     except requests.exceptions.RequestException as e:
         # Handle any errors that occur during the HTTP request
