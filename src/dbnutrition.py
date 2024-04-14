@@ -82,12 +82,14 @@ def add_personal_food(name, netid, nutrition):
 
             date_obj = datetime.now(pytz.timezone('US/Eastern')).date()
             today = datetime.combine(date_obj, time.min)
+            formatted_date = today.strftime("%B %d, %Y")
 
             try:
                 document_to_add = {"mealname" : name, 
                     "access": netid,
                     "recipeid" : recipeid,
                     "date": today,
+                    "date_formatted": formatted_date,
                     **nutrition
                     }
                 result = nutrition_col.insert_one(document_to_add)
