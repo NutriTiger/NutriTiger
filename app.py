@@ -498,7 +498,7 @@ def personal_food():
     return render_template('personalfood.html', **form_data) 
 
 @app.route('/addpersonalfood', methods=['POST'])
-def add_personal_food():
+def add_personalfood():
     netid = auth.authenticate()
     if request.method == 'POST':
         recipename = request.form.get('name', type = str)
