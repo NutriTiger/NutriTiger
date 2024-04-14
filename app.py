@@ -57,17 +57,16 @@ def get_ampm():
 
 @app.route('/', methods=['GET'])
 def index():
-    netid = auth.authenticate()
+    #netid = auth.authenticate()
     # Check if it is a user's first visit
-    visited_before = request.cookies.get('visited_before')
+    visited_before = session.get('username')
 
     if visited_before is None:
         # Indicate first contact
-        visited_before = None
         # Set cookie to mark user as visited now
-        response = make_response(redirect('/welcome'))
-        response.set_cookie('visited_before', 'True')
-        return response
+        #response = make_response(redirect('/welcome'))
+        #response.set_cookie('visited_before', 'True')
+        return render_template('index.html')
     
     return redirect('/homepage')
 
@@ -203,6 +202,9 @@ def update_menus_mealtime():
 @app.route('/welcome', methods=['GET', 'POST'])
 def first_contact():
     netid = auth.authenticate()
+    if dbusers.finduser(netid) is not None:
+        return redirect('/homepage')
+    
     if request.method == 'POST':
         # Placeholder netID
         #netid = 'jm0278'
@@ -270,10 +272,12 @@ def settings():
         return redirect('/homepage')
     user_settings = dbusers.findsettings(netid)
     current_cal_goal = user_settings['caloricgoal']
-    join_date = user_settings['join_date']
+    join_date = utils.custom_strftime(user_settings['join_date'])
+    user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
+    #print(user_nutrition)
     
 
-    return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date)
+    return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date, user_nutrition=user_nutrition)
 
 #--------------------------------------------------------------------
 
@@ -511,7 +515,7 @@ def add_personal_food():
         result = dbnutrition.find_one_personal_nutrition(netid, recipename)
         if not result:
             dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
-            return redirect('/homepage')
+            return redirect((url_for('settings')))
         else:
             msg = "A personal food item with this name already exists, please put a new name!"
             # Store form data and message in session
@@ -536,4 +540,4 @@ def logoutcas():
 #--------------------------------------------------------------------
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=55557, debug=True)
+    app.run(host='0.0.0.0', port=55557, debug=True)
