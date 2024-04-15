@@ -22,6 +22,7 @@ from src import dbnutrition
 from src import utils
 from src import auth
 import requests
+import json
 
 
 #--------------------------------------------------------------------
@@ -379,6 +380,10 @@ def editing_plate():
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
     netid = auth.authenticate()
+
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
+    calc_mealtime = utils.time_of_day(current_date.date(), current_date.time())
+
     # Handle upload plate and return button
     if request.method == 'POST':
         # retreive json object
@@ -398,7 +403,7 @@ def log_food():
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
         print("about to render template for logfood")
 
-        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info)
+        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info, calc_mealtime = calc_mealtime)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
@@ -425,7 +430,7 @@ def log_food_myplate():
 def log_food_data():
     netid = auth.authenticate()
 
-    current_date = datetime.datetime.today()
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
     print(current_date)
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
@@ -443,18 +448,25 @@ def logfood_usdadata():
     netid = auth.authenticate()
     query = request.args.get('query', default="", type=str)
     api_key = 'XBwD6rxHxWX1wTdECT9q778IWkDtNcxwkxOJECw9'  # API key
+    limit = 25
 
     # Construct the USDA API URL
-    url = f"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}&query={query}"
+    url = f"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}&query={query}&pageSize={limit}"
 
     try:
         response = requests.get(url)
         response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
         data = response.json()  # Convert response to JSON
-        print(data)
-        return jsonify(data)  # Send JSON response back to client
+        print("API response:", json.dumps(data, indent=4))  # Log the full API response to understand its structure
+
+        if 'foods' in data:
+            food_items = data['foods']
+            unique_items = utils.trim_data(food_items)
+            data['foods'] = unique_items
+            return jsonify(data)  # Send JSON response back to client
+        else:
+            return jsonify({"error": "No foods found"}), 404
     except requests.exceptions.RequestException as e:
-        # Handle any errors that occur during the HTTP request
         return jsonify({"error": str(e)}), 500
 '''
 @app.route('/logfood/data', methods=['GET'])
