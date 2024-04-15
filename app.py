@@ -222,7 +222,7 @@ def first_contact():
 
 #--------------------------------------------------------------------
 
-@app.route('/history', methods=['GET'])
+@app.route('/history', methods=['GET', 'POST'])
 def history():
     netid = auth.authenticate()
     # find current user
@@ -232,12 +232,22 @@ def history():
                                                                     profile['prot_his'],
                                                                     profile['fat_his']
                                                                     )
-    his_range = 7 # THIS IS THE ONLY NUMBER WE NEED TO CHANGE FOR STRETCH
+    
+    # Default range of history shown = 7
+    his_range = 7
+
+    # If user selects a different range, update his_range value
+    if request.method == 'POST':
+        data = request.get_json()
+        selected_range = int(data.get("selectedRange"))
+        his_range = selected_range
+        print("his_range:", his_range)
+
     cal_his = cals[:his_range]
     carb_his = carbs[:his_range]
     fat_his = fats[:his_range]
     prot_his = prots[:his_range]
-    dates = dates[:7]
+    dates = dates[:his_range]
 
     avg_cals = utils.get_average(cal_his, his_range)
     avg_carbs = utils.get_average(carb_his, his_range)
