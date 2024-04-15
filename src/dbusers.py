@@ -51,13 +51,17 @@ def __calculatenutrition__(recipeids, servings):
 
     for recipeid, serving in zip(recipeids, servings):
         nut = find_one_nutrition(recipeid)
-        if nut is None:
-            print(f"Could not find recipe with recipid: {recipeid}")
-            return
-        entry_cal = entry_cal + nut["calories"]*serving
-        entry_carb = entry_carb + nut["carbs"]*serving
-        entry_fat = entry_fat + nut["fats"]*serving
-        entry_prot = entry_prot + nut["proteins"]*serving
+
+        # Editing to allow entry of food items that are outside of the dhalls
+        # if nut is None:
+        #     print(f"Could not find recipe with recipid: {recipeid}")
+        #     return
+        if nut is not None:
+            entry_cal = entry_cal + nut["calories"]*serving
+            entry_carb = entry_carb + nut["carbs"]*serving
+            entry_fat = entry_fat + nut["fats"]*serving
+            entry_prot = entry_prot + nut["proteins"]*serving
+    
     return {"calories" : entry_cal,
             "carbs" : entry_carb,
             "fats" : entry_fat,

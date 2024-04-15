@@ -110,8 +110,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
-
-
 function handleMyPlate(data) {
   console.log(data);
   $('#my-plate').append(data);
@@ -196,7 +194,7 @@ function searchUSDAFood() {
 
 function appendDataToDOM(data) {
   const resultsContainer = document.getElementById('usda-search-results');
-  resultsContainer.innerHTML = '';  // Clear previous results
+  resultsContainer.innerHTML = '';  // Clear previous results - BUG, need to figure out how to get rid of without deleting important info
 
   if (data.foods && data.foods.length > 0) {
     data.foods.forEach((food, index) => {
@@ -212,7 +210,7 @@ function appendDataToDOM(data) {
       foodElement.className = 'form-check';
 
       foodElement.innerHTML = `
-        <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" 
+        <input type="checkbox" data-usda="true" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-recid="${food.fdcId}"
                data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime={{ calc_mealtime }} data-servingsize="${servingSizeInfo}" data-cals="${calories}"
                data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
                onchange="handleCheckboxChange(this)">
@@ -225,6 +223,50 @@ function appendDataToDOM(data) {
     resultsContainer.innerHTML = '<div>No results found.</div>';
   }
 }
+
+
+function addUSDANutritionData() {
+  let nutritionData = [];
+
+  // Collect data from all checked USDA food checkboxes
+  document.querySelectorAll('.form-check-input:checked').forEach(checkbox => {
+      if (checkbox.dataset.usda === "true") {
+          let foodData = {
+              recipeid: checkbox.dataset.recid,
+              mealname: checkbox.dataset.mealname,
+              servingsize: checkbox.dataset.servingsize,
+              calories: parseFloat(checkbox.dataset.cals),
+              proteins: parseFloat(checkbox.dataset.prots),
+              carbs: parseFloat(checkbox.dataset.carbs),
+              fats: parseFloat(checkbox.dataset.fats),
+              source: "usda"
+          };
+          nutritionData.push(foodData);
+      }
+  });
+
+  // Send the data to the server if there is any
+  if (nutritionData.length > 0) {
+      $.ajax({
+          url: '/addingnutrition',  // URL to the server-side function handling the database insertion
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({nutritionData: nutritionData}), 
+          success: function(response) {
+              console.log('Nutrition data successfully sent and saved:', response);
+              // alert("Nutrition data added successfully!");
+          },
+          error: function(xhr, status, error) {
+              console.error('Failed to send nutrition data:', error);
+              // alert("Error adding nutrition data. Check console for details.");
+          }
+      });
+  } else {
+      console.log("No USDA food items selected or data is missing.");
+      alert("No USDA food items selected or data is incomplete.");
+  }
+}
+
 
 // Event setup
 $(document).ready(function() {
@@ -242,7 +284,6 @@ function debounce(func, delay) {
     debounceTimer = setTimeout(() => func.apply(context, args), delay);
   };
 }
-
 
 // fetch menu items based on selected dhall and mealtime + correct display
 function getResults() {
@@ -306,7 +347,8 @@ function setup() {
   // Event listener for submit button (to get entry and send to flask)
   document.getElementById('submitButton').addEventListener('click', function(event) {
     event.preventDefault();
-    console.log("submit")
+    addUSDANutritionData();
+    console.log("submit");
     var recids = [];
     var servings = [];
     const inputs = document.querySelectorAll('.small-input');
