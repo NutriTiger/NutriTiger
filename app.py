@@ -81,6 +81,8 @@ def homepage():
 
     # will need to call whenever an existing user logs in
     cursor = dbusers.finduser(netid)
+    if cursor is None:
+        return redirect('/welcome')
     curr_prots = round(float(cursor['prot_his'][0]), 1)
     curr_carbs = round(float(cursor['carb_his'][0]), 1)
     curr_fats = round(float(cursor['fat_his'][0]), 1)
