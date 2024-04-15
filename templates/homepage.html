@@ -63,10 +63,10 @@
 								<h5 class="card-title">{{entry}}</h5>
 								<!--Labels for nutrient stats across the top of an entry -->
 								<div class="py-2">
-									<span class="badge badge-info" style="background-color: rgb(55, 127, 228);">{{ nutrition_totals.calories }}cals</span>
-									<span class="badge badge-info" style="background-color: rgb(255, 107, 130);">{{ nutrition_totals.proteins }}g Protein</span>
-									<span class="badge badge-info" style="background-color: rgb(49, 165, 74);">{{ nutrition_totals.carbs }}g Carbs</span>
-									<span class="badge badge-info" style="background-color: rgb(218, 184, 17);">{{ nutrition_totals.fats }}g Fat</span>
+									<span class="badge badge-info" style="background-color: rgb(55, 127, 228);">{{ '%.2f'|format(nutrition_totals.calories) }}cals</span>
+									<span class="badge badge-info" style="background-color: rgb(255, 107, 130);">{{ '%.2f'|format(nutrition_totals.proteins) }}g Protein</span>
+									<span class="badge badge-info" style="background-color: rgb(49, 165, 74);">{{ '%.2f'|format(nutrition_totals.carbs) }}g Carbs</span>
+									<span class="badge badge-info" style="background-color: rgb(218, 184, 17);">{{ '%.2f'|format(nutrition_totals.fats) }}g Fat</span>
 								</div>
 								<ul>
 									{% for food in foods %}
