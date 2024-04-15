@@ -81,6 +81,8 @@ def homepage():
 
     # will need to call whenever an existing user logs in
     cursor = dbusers.finduser(netid)
+    if cursor is None:
+        return redirect('/welcome')
     curr_prots = round(float(cursor['prot_his'][0]), 1)
     curr_carbs = round(float(cursor['carb_his'][0]), 1)
     curr_fats = round(float(cursor['fat_his'][0]), 1)
@@ -292,6 +294,35 @@ def settings():
 
 #--------------------------------------------------------------------
 
+
+@app.route('/addingnutrition', methods=['POST'])
+def add_usda_nutrition():
+    netid = auth.authenticate()  # Authentication to identify the user
+
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            print("Received data:", data)
+
+            new_data = data.get("nutritionData")
+            print("new data:", new_data)
+            
+            if not new_data:
+                return jsonify({'error': 'No data provided'}), 400
+            
+            dbnutrition.update_nutrition(new_data)
+
+            return jsonify({'message': 'Nutrition data successfully added'}), 200
+        except Exception as e:
+            # Handle exceptions that may occur during the process
+            return jsonify({'error': str(e)}), 500
+
+    # Method not allowed
+    return jsonify({'error': 'Invalid method'}), 405
+
+
+#--------------------------------------------------------------------
+
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
@@ -396,7 +427,7 @@ def log_food():
 
     # Handle upload plate and return button
     if request.method == 'POST':
-        # retreive json object
+        # retrieve json object
         data = request.get_json()
         entry_recids = data.get('entry_recids')
         entry_servings = data.get('entry_servings')
@@ -408,7 +439,7 @@ def log_food():
         is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
     
         data = dbmenus.query_menu_display(current_date_zeros)
-        print(data)
+        # print(data)
         recipeids = utils.gather_recipes(data)
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
         print("about to render template for logfood")
@@ -467,7 +498,7 @@ def logfood_usdadata():
         response = requests.get(url)
         response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
         data = response.json()  # Convert response to JSON
-        print("API response:", json.dumps(data, indent=4))  # Log the full API response to understand its structure
+        # print("API response:", json.dumps(data, indent=4))  # Log the full API response to understand its structure
 
         if 'foods' in data:
             food_items = data['foods']
