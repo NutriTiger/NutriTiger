@@ -79,6 +79,25 @@ def gather_recipes(data):
                 recipe_ids.append(recipe_id)
     return recipe_ids
 
+def trim_data(data):
+    new_data = {}
+    
+    for item in data:
+        # Normalize the name to handle case sensitivity and spacing
+        normalized_name = item["description"].strip().lower()
+
+        # Check if the item already exists based on the normalized name
+        if normalized_name not in new_data:
+            new_data[normalized_name] = item
+        else:
+            # If a duplicate is found, decide which one to keep
+            # Example: Keep the item with more detailed nutritional data
+            existing_item = new_data[normalized_name]
+            if len(item.get('foodNutrients', [])) > len(existing_item.get('foodNutrients', [])):
+                new_data[normalized_name] = item
+
+    return list(new_data.values())
+
 def main():
     # Unit testing checks of functions
     date = datetime.datetime(2024, 3, 25)

@@ -22,6 +22,7 @@ from src import dbnutrition
 from src import utils
 from src import auth
 import requests
+import json
 
 
 #--------------------------------------------------------------------
@@ -221,7 +222,7 @@ def first_contact():
 
 #--------------------------------------------------------------------
 
-@app.route('/history', methods=['GET'])
+@app.route('/history', methods=['GET', 'POST'])
 def history():
     netid = auth.authenticate()
     # find current user
@@ -231,12 +232,22 @@ def history():
                                                                     profile['prot_his'],
                                                                     profile['fat_his']
                                                                     )
-    his_range = 7 # THIS IS THE ONLY NUMBER WE NEED TO CHANGE FOR STRETCH
+    
+    # Default range of history shown = 7
+    his_range = 7
+
+    # If user selects a different range, update his_range value
+    if request.method == 'POST':
+        data = request.get_json()
+        selected_range = int(data.get("selectedRange"))
+        his_range = selected_range
+        print("his_range:", his_range)
+
     cal_his = cals[:his_range]
     carb_his = carbs[:his_range]
     fat_his = fats[:his_range]
     prot_his = prots[:his_range]
-    dates = dates[:7]
+    dates = dates[:his_range]
 
     avg_cals = utils.get_average(cal_his, his_range)
     avg_carbs = utils.get_average(carb_his, his_range)
@@ -379,6 +390,10 @@ def editing_plate():
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
     netid = auth.authenticate()
+
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
+    calc_mealtime = utils.time_of_day(current_date.date(), current_date.time())
+
     # Handle upload plate and return button
     if request.method == 'POST':
         # retreive json object
@@ -398,7 +413,7 @@ def log_food():
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
         print("about to render template for logfood")
 
-        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info)
+        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info, calc_mealtime = calc_mealtime)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
@@ -425,7 +440,7 @@ def log_food_myplate():
 def log_food_data():
     netid = auth.authenticate()
 
-    current_date = datetime.datetime.today()
+    current_date = datetime.datetime.now(timezone('US/Eastern'))
     print(current_date)
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
@@ -443,17 +458,25 @@ def logfood_usdadata():
     netid = auth.authenticate()
     query = request.args.get('query', default="", type=str)
     api_key = 'XBwD6rxHxWX1wTdECT9q778IWkDtNcxwkxOJECw9'  # API key
+    limit = 25
 
     # Construct the USDA API URL
-    url = f"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}&query={query}"
+    url = f"https://api.nal.usda.gov/fdc/v1/foods/search?api_key={api_key}&query={query}&pageSize={limit}"
 
     try:
         response = requests.get(url)
         response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
         data = response.json()  # Convert response to JSON
-        return jsonify(data)  # Send JSON response back to client
+        print("API response:", json.dumps(data, indent=4))  # Log the full API response to understand its structure
+
+        if 'foods' in data:
+            food_items = data['foods']
+            unique_items = utils.trim_data(food_items)
+            data['foods'] = unique_items
+            return jsonify(data)  # Send JSON response back to client
+        else:
+            return jsonify({"error": "No foods found"}), 404
     except requests.exceptions.RequestException as e:
-        # Handle any errors that occur during the HTTP request
         return jsonify({"error": str(e)}), 500
 '''
 @app.route('/logfood/data', methods=['GET'])
@@ -498,15 +521,14 @@ def personal_food():
     return render_template('personalfood.html', **form_data) 
 
 @app.route('/addpersonalfood', methods=['POST'])
-def add_personal_food():
+def add_personalfood():
+    netid = auth.authenticate()
     if request.method == 'POST':
         recipename = request.form.get('name', type = str)
         cal = request.form.get('calories', type = int)
         protein = request.form.get('proteins', type = int)
         carbs = request.form.get('carbs', type = int)
         fats = request.form.get('fats', type = int)
-        netid = auth.authenticate()
-        link = "https://simple.wikipedia.org/wiki/Nutrition#:~:text=the%20provision%20to%20cells%20and,able%20to%20do%20certain%20things."
         nutrition_dict = {
                         "calories": cal,
                         "proteins": protein,
@@ -515,7 +537,7 @@ def add_personal_food():
                         }
         result = dbnutrition.find_one_personal_nutrition(netid, recipename)
         if not result:
-            dbnutrition.add_personal_food(recipename, netid, nutrition_dict, link)
+            dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
             return redirect((url_for('settings')))
         else:
             msg = "A personal food item with this name already exists, please put a new name!"

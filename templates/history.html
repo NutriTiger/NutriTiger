@@ -61,10 +61,10 @@
     
       // send in selectedRange to Flask (# of days user selected)
       $.ajax({
-        url: '/history-data',
+        url: '/history',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ selectedRange: selectedRange }),
+        data: JSON.stringify({ "selectedRange": selectedRange }),
         success: function(response) {
           console.log('Data sent successfully:', response);
         },
