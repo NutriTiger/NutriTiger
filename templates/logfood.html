@@ -184,10 +184,8 @@ function handleResponse(data) {
 // Function to handle USDA data search
 function searchUSDAFood() {
   const query = $('#searchBar').val().trim();
-  if (!query) {
-    $('#usda-search-results').empty();  // Clear results if query is empty
-    return;
-  }
+  // resultsContainer.children().hide(); // hide results if query is empty
+
   fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
@@ -196,15 +194,31 @@ function searchUSDAFood() {
     .catch(error => console.error('Error fetching USDA data:', error));
 }
 
-// Append fetched data to DOM
 function appendDataToDOM(data) {
   const resultsContainer = document.getElementById('usda-search-results');
   resultsContainer.innerHTML = '';  // Clear previous results
 
   if (data.foods && data.foods.length > 0) {
-    data.foods.forEach(food => {
+    data.foods.forEach((food, index) => {
+      const calories = food.foodNutrients.find(n => n.nutrientName === 'Energy')?.value || 0;
+      const proteins = food.foodNutrients.find(n => n.nutrientName === 'Protein')?.value || 0;
+      const carbs = food.foodNutrients.find(n => n.nutrientName === 'Carbohydrate, by difference')?.value || 0;
+      const fats = food.foodNutrients.find(n => n.nutrientName === 'Total lipid (fat)')?.value || 0;
+
+      // Check if food portions are available and extract the first one
+      const servingSizeInfo = food.foodPortions && food.foodPortions.length > 0 ? food.foodPortions[0].portionDescription : "100g";
+
       const foodElement = document.createElement('div');
-      foodElement.innerHTML = `<strong>${food.description}</strong> - Calories: ${food.foodNutrients.find(n => n.nutrientName === 'Energy')?.value || 'NA'} cal`;
+      foodElement.className = 'form-check';
+
+      foodElement.innerHTML = `
+        <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" 
+               data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime={{ calc_mealtime }} data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+               data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
+               onchange="handleCheckboxChange(this)">
+        <label class="form-check-label" for="usda-checkbox-${food.fdcId}">${food.description}</label>
+        <p id="nf-usda-${food.fdcId}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+      `;
       resultsContainer.appendChild(foodElement);
     });
   } else {
@@ -241,13 +255,16 @@ function getResults() {
   if (selectedHall === "Personal Food Items") {
     $('#searchBar').hide();
     $('#mealTimeTab').hide();
+    $('#usda-search-results').hide();
   }
   else if (selectedHall === "USDA FoodData Central") {
     $('#mealTimeTab').hide();
     $('#searchBar').show();
+    $('#usda-search-results').show();
   }
   else {
     $('#searchBar').hide();
+    $('#usda-search-results').hide();
     $('#mealTimeTab').show();
     let mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
     dhallCode = selectedHall.substring(0, 2)
