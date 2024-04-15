@@ -67,9 +67,10 @@
 									<li>{{food}}</li>
 									{% endfor %}
 								</ul>
-
+								
+								<hr>
 								<!--Labels for nutrient stats across the top of an entry -->
-								<div class="d-flex align-items-center">
+								<div class="d-flex align-items-center py-0">
 									<strong>Entry Totals:</strong>
 								<div class="p-2">
 									<span class="badge badge-info" style="background-color: rgb(55, 127, 228);">{{ '%.2f'|format(nutrition_totals.calories) }} Calories</span>
