@@ -114,7 +114,7 @@ function handleRightArrowClick() {
 
 $(document).ready(function() {
     // Hide loading animation initially
-    $('#loading-animation').hide();
+    hideLoadingAnimation();
 
     // Call getResults function to initiate the initial AJAX request
     getResults();

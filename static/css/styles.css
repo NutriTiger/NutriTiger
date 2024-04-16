@@ -236,11 +236,11 @@ body {
 }
 
 .loading-spinner {
-    border: 20px solid rgba(0, 0, 0, 0.1);
+    border: 15px solid rgba(0, 0, 0, 0.1);
     border-left-color: #ff7300; /* Change the color of the spinner */
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     animation: spin 1s linear infinite;
 }
 

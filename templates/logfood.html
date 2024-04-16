@@ -2,6 +2,9 @@
 {% set current_page = 'logfood' %}
 {% block title %}Log Food{% endblock %}
 {% block content %}
+<div id="loading-animation" class="loading-animation">
+  <div class="loading-spinner"></div>
+</div>
     <!--Give header white background -->
     <div class="p-3">
       <h1 class="text-center my-2">Log Food</h1>
@@ -120,8 +123,18 @@ let entry_nutrition = {"calories" : 0,
 function handleMyPlate(data) {
   console.log(data);
   $('#my-plate').append(data);
+  hideLoadingAnimation();
 }
 
+function showLoadingAnimation() {
+    // Show the loading animation covering the entire screen
+    $('#loading-animation').show();
+}
+
+function hideLoadingAnimation() {
+    // Hide the loading animation
+    $('#loading-animation').hide();
+}
 
 // function to handle removing a food-item from myplate
 function closeMyPlate(element) {
@@ -161,6 +174,7 @@ function handleCheckboxChange(element) {
         success: handleMyPlate,
         error: handleError
     });
+    showLoadingAnimation();
     request = $.ajax(requestData);
  
   }
@@ -179,12 +193,14 @@ function handleCheckboxChange(element) {
 // for when AJAX Request encounters an error
 function handleError() {
   console.log('error');
+  hideLoadingAnimation();
 }
 
 // function to insert food-items into the menu container
 function handleResponse(data) {
   console.log(data);
   $('#menu-items').html(data);
+  hideLoadingAnimation();
 }
 
 
@@ -192,7 +208,7 @@ function handleResponse(data) {
 function searchUSDAFood() {
   const query = $('#searchBar').val().trim();
   // resultsContainer.children().hide(); // hide results if query is empty
-
+  showLoadingAnimation();
   fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
@@ -202,6 +218,7 @@ function searchUSDAFood() {
 }
 
 function appendDataToDOM(data) {
+  
   const resultsContainer = document.getElementById('usda-search-results');
   resultsContainer.innerHTML = '';  // Clear previous results - BUG, need to figure out how to get rid of without deleting important info
 
@@ -231,6 +248,7 @@ function appendDataToDOM(data) {
   } else {
     resultsContainer.innerHTML = '<div>No results found.</div>';
   }
+  hideLoadingAnimation();
 }
 
 
@@ -256,6 +274,7 @@ function addUSDANutritionData() {
 
   // Send the data to the server if there is any
   if (nutritionData.length > 0) {
+      showLoadingAnimation();
       $.ajax({
           url: '/addingnutrition',  // URL to the server-side function handling the database insertion
           type: 'POST',
@@ -277,12 +296,6 @@ function addUSDANutritionData() {
 }
 
 
-// Event setup
-$(document).ready(function() {
-  $('#diningHallSelect').change(getResults);  // Toggle search bar on selection change
-  $('#searchBar').on('input', debounce(searchUSDAFood, 500));  // Debounce the search input
-});
-
 // Debounce function to limit rate of invoking functions
 function debounce(func, delay) {
   let debounceTimer;
@@ -296,6 +309,7 @@ function debounce(func, delay) {
 
 // fetch menu items based on selected dhall and mealtime + correct display
 function getResults() {
+  
   $('.menu-items-content').hide();
   $('#select').hide();
   $('#noDataMessage').hide();
@@ -351,6 +365,9 @@ function handleServingChange() {
 
 // set up event listeners for dhall select and mealtime tab
 function setup() {
+  hideLoadingAnimation();
+  $('#diningHallSelect').change(getResults);  // Toggle search bar on selection change
+  $('#searchBar').on('input', debounce(searchUSDAFood, 500));  // Debounce the search input
   const diningHallSelect = document.getElementById('diningHallSelect');
 
   // Event listener for the dropdown selection change
@@ -378,7 +395,7 @@ function setup() {
       entry_nutrition: entry_nutrition
     }
    var jsonData = JSON.stringify(dataToSend);
-
+   showLoadingAnimation();
     $.ajax({
         type: 'POST',
         url: '/logfood',
@@ -387,8 +404,12 @@ function setup() {
         success: function(response) {
             console.log('Data sent successfully:', response);
             // Check if the server response includes the redirect URL
-            if(response.success && response.redirect) {
-                window.location.href = response.redirect;  // Perform the redirection
+            if (response.success && response.redirect) {
+                // Hide the loading animation before redirection
+                
+                window.location.href = response.redirect;
+                // Delay the redirection slightly to ensure the loading animation is hidden
+                
             }
         },
         error: function(xhr, status, error) {
