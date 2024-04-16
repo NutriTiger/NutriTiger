@@ -80,7 +80,7 @@ def homepage():
     #netid = netid.rstrip()
 
     # will need to call whenever an existing user logs in
-    cursor = dbusers.finduser(netid)
+    cursor = dbusers.userlogin(netid)
     if cursor is None:
         return redirect('/welcome')
     curr_prots = round(float(cursor['prot_his'][0]), 1)
@@ -459,12 +459,13 @@ def log_food_myplate():
     prots = request.args.get('prots', type = float)
     carbs = request.args.get('carbs', type = float)
     fats = request.args.get('fats', type = float)
+    usda = request.args.get('usda', type = bool)
     uniqueid = checkid[8:]
     print(mealname, cals, prots, carbs, fats)
 
     html_code = render_template('myplateelements.html', checkid=checkid, uniqueid=uniqueid, mealname=mealname, 
                                 recid=recid, location=location, mealtime=mealtime, servingsize=servingsize, 
-                                cals=cals, prots=prots, carbs=carbs, fats=fats)
+                                cals=cals, prots=prots, carbs=carbs, fats=fats, usda = usda)
     return make_response(html_code)
 
 @app.route('/logfood/data', methods=['GET'])
