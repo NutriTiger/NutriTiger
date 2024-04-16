@@ -3,10 +3,10 @@
 {% block title %}My History{% endblock %}
 {% block content %}
 <h1 class="text-center pt-2">My History</h1>
-<h5 class="text-center">Select a date range from the dropdown to see your logged history for that period. </h5>
+<h5 class="text-center px-2">Select a date range from the dropdown to see your logged history for that period. </h5>
 <div class = "container-fluid">
 <div class="row pt-2 px-2 justify-content-center">
-    <div class="col-sm-3 m-3">
+    <div class="col-6 col-sm-3 m-3">
         <select class="btn btn-secondary dropdown-toggle form-select" id = "historyRangeSelect">
             <option value="7" selected>Past 1 week</option>
             <option value="14">Past 2 weeks</option>
@@ -16,33 +16,33 @@
     </div>
 </div>
 <!--Four cards (for each average)-->
-<div class="row p-5">
-    <div class="col-sm-3 py-2">
-        <div class="card avg-cals">
+<div class="row p-sm-5 card-group">
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-cals h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Avg. Calories/Day</h5>
                 <p>{{ avg_cals }}cal</p>
             </div>
         </div>
     </div>
-    <div class="col-sm-3 py-2">
-        <div class="card avg-prots">
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-prots h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Avg. Protein</h5>
                 <p>{{ avg_pro }}g</p>
             </div>
         </div>
     </div>
-    <div class="col-sm-3 py-2">
-        <div class="card avg-carbs">
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-carbs h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Avg. Carbs</h5>
                 <p>{{ avg_carbs }}g</p>
             </div>
         </div>
     </div>
-    <div class="col-sm-3 py-2">
-        <div class="card avg-fats">
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-fats h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Avg. Fat</h5>
                 <p>{{ avg_fat }}g</p>
