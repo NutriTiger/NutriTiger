@@ -151,6 +151,9 @@ def homepage():
 
     # When Edit Plate button is pressed
     if request.method == 'POST':
+        if 'add_entry' in request.form:
+            return redirect('/logfood')
+        
         return redirect('/editingplate')
 
     return render_template('homepage.html', 
@@ -421,9 +424,6 @@ def editing_plate():
             return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
                     curr_caltotal=curr_caltotal, cal_goal=cal_goal,
                     entries_food_dict=entries_food_dict)
-
-        elif 'add_entry' in request.form:
-            return redirect('/logfood')
 
         elif 'save_plate' in request.form:
             # Save button action (update database)
