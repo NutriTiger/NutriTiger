@@ -4,7 +4,7 @@ from pymongo.server_api import ServerApi
 from datetime import datetime, time
 import pytz
 from dbfunctions import connectmongo
-from dbnutrition import find_one_nutrition
+import dbnutrition
 import bson
 import ssl
 import os
@@ -49,18 +49,13 @@ def __calculatenutrition__(recipeids, servings):
     entry_fat = 0
     entry_prot = 0
 
-    for recipeid, serving in zip(recipeids, servings):
-        nut = find_one_nutrition(recipeid)
-
-        # Editing to allow entry of food items that are outside of the dhalls
-        # if nut is None:
-        #     print(f"Could not find recipe with recipid: {recipeid}")
-        #     return
-        if nut is not None:
-            entry_cal = entry_cal + nut["calories"]*serving
-            entry_carb = entry_carb + nut["carbs"]*serving
-            entry_fat = entry_fat + nut["fats"]*serving
-            entry_prot = entry_prot + nut["proteins"]*serving
+    nut = dbnutrition.find_many_nutrition(recipeids)
+    for index, dictionary in enumerate(nut):
+        if dictionary:
+            entry_cal += dictionary["calories"] * servings[index]
+            entry_carb += dictionary["carbs"] * servings[index]
+            entry_fat += dictionary["fats"] * servings[index]
+            entry_prot += dictionary["proteins"] * servings[index]
     
     return {"calories" : entry_cal,
             "carbs" : entry_carb,
@@ -95,19 +90,12 @@ def newuser(netid, cal):
     if this_user is not None:
         print(f"A user with netid {netid} already exists.")
         return this_user
-    
-    ########### FOR TESTING DATE
-    #eastern_time = pytz.timezone('US/Eastern')
-    #today_date = datetime(2024, 3, 14)
-    #today = eastern_time.localize(today_date)
 
     # create new document for this user
     date_obj = datetime.now(pytz.timezone('US/Eastern')).date()
     today = datetime.combine(date_obj, time.min)
     user_document = {"_id": bson.ObjectId(), 
-                    #"name" : name, 
-                    "netid" : netid, 
-                    #"bday" : bday, 
+                    "netid" : netid,  
                     "caloricgoal" : cal,
                     "join_date" : today,
                     "last_login" : today,
@@ -195,7 +183,7 @@ def addEntry(netid, entry):
         return None
 
     # calculated added cals and macronutrients
-    entry_nut = __calculatenutrition__(entry["recipeids"], entry["servings"])
+    entry_nut = entry["nutrition"]
 
     # update
     this_user["daily_rec"].append(entry["recipeids"])
@@ -223,6 +211,36 @@ def deleteEntry(netid, entry_num):
     this_user["daily_serv"].pop(entry_num)
     this_user["daily_nut"].pop(entry_num)
     __updatehistory__(this_user, entry_nut, -1)
+    
+    return __setuser__(netid, this_user)
+
+#-----------------------------------------------------------------------
+'''
+Deletes each entry with in the array of entry numbers from the daily plate of the user with netid: netid 
+Returns the updated user profile
+Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
+'''
+def deleteManyEntry(netid, array_of_entry_nums):
+    this_user = finduser(netid)
+    if this_user is None:
+        return None
+
+    totalNut = {"calories": 0, 
+                "carbs": 0, 
+                "fats": 0, 
+                "proteins": 0}
+    # update
+    for entry_num in array_of_entry_nums:
+        entry_nut = this_user["daily_nut"][entry_num]
+        totalNut["calories"] += entry_nut["calories"]
+        totalNut["carbs"] += entry_nut["carbs"]
+        totalNut["fats"] += entry_nut["fats"]
+        totalNut["proteins"] += entry_nut["proteins"]
+
+        this_user["daily_rec"].pop(entry_num)
+        this_user["daily_serv"].pop(entry_num)
+        this_user["daily_nut"].pop(entry_num)
+    __updatehistory__(this_user, totalNut, -1)
     
     return __setuser__(netid, this_user)
 
@@ -364,12 +382,7 @@ def deleteuser(netid):
 
 # USED FOR TESTING FOR NOW 
 def main(): 
-    print(find_one_nutrition(24821))
-    print(find_one_nutrition(12345))
-    entry = {"recipeids": [24821, 12345], "servings": [2, 1.5]}
-    # addEntry("jm0278", entry)
-    addEntry("so3756", entry)
-    # print(deleteEntry("jm0278", 0))
+    editFood("jm0278", 0, 0, 100)
 
 #-----------------------------------------------------------------------
 

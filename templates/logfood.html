@@ -110,15 +110,20 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
+// global variable for entry nutrition
+let entry_nutrition = {"calories" : 0,
+                        "carbs" : 0,
+                        "fats" : 0,
+                        "proteins": 0}
 
-// 
+// function to insert food-items into myplate from ajax call
 function handleMyPlate(data) {
   console.log(data);
   $('#my-plate').append(data);
 }
 
 
-// 
+// function to handle removing a food-item from myplate
 function closeMyPlate(element) {
   let checkid = element.dataset.checkid;
   let checkbox = document.getElementById(checkid);
@@ -157,7 +162,7 @@ function handleCheckboxChange(element) {
         error: handleError
     });
     request = $.ajax(requestData);
-
+ 
   }
   else {
     let checkid = element.id 
@@ -176,7 +181,7 @@ function handleError() {
   console.log('error');
 }
 
-/* request fetch menu items (AJAX request) */
+// function to insert food-items into the menu container
 function handleResponse(data) {
   console.log(data);
   $('#menu-items').html(data);
@@ -335,6 +340,11 @@ function handleServingChange() {
     totalFats += serving*input.dataset.fats
     totalProts += serving*input.dataset.prots
     });
+  entry_nutrition["calories"] = totalCals;
+  entry_nutrition["carbs"] = totalCarbs;
+  entry_nutrition["fats"] = totalFats;
+  entry_nutrition["proteins"] = totalProts;
+  
   const plateTotals = document.getElementById("plateTotals")
   plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
 }
@@ -347,7 +357,6 @@ function setup() {
   $('#mealTimeTab a').on('shown.bs.tab', getResults);
   diningHallSelect.addEventListener('change', getResults);
 
-  // NOT DONE (NOT WORKING LOL)
   // Event listener for submit button (to get entry and send to flask)
   document.getElementById('submitButton').addEventListener('click', function(event) {
     event.preventDefault();
@@ -363,12 +372,10 @@ function setup() {
       servings.push(serving)
       });
 
-    // convert to JSON object
-    // var json_recids = JSON.stringify(recids);
-    // var json_servings = JSON.stringify(servings);
     var dataToSend = {
       entry_recids: recids,
-      entry_servings: servings
+      entry_servings: servings,
+      entry_nutrition: entry_nutrition
     }
    var jsonData = JSON.stringify(dataToSend);
 
