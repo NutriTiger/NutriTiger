@@ -11,7 +11,8 @@
             <!-- Serving Lineedit Column and Close button -->
             <div id="new_entry" class="d-flex align-items-center">
                 <!-- Serving Lineedit -->
-                <input type="number" min="0" class="form-control small-input mr-2" data-cals="{{ cals }}"
+                <input type="number" min="0" class="form-control small-input mr-2" data-usda="{{ usda }}"
+                data-cals="{{ cals }}"
                 data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
                 placeholder="Servings" oninput="handleServingChange()" required
                 onkeypress="return isValid(event)">
