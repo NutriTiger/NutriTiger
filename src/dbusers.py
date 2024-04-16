@@ -95,19 +95,12 @@ def newuser(netid, cal):
     if this_user is not None:
         print(f"A user with netid {netid} already exists.")
         return this_user
-    
-    ########### FOR TESTING DATE
-    #eastern_time = pytz.timezone('US/Eastern')
-    #today_date = datetime(2024, 3, 14)
-    #today = eastern_time.localize(today_date)
 
     # create new document for this user
     date_obj = datetime.now(pytz.timezone('US/Eastern')).date()
     today = datetime.combine(date_obj, time.min)
     user_document = {"_id": bson.ObjectId(), 
-                    #"name" : name, 
-                    "netid" : netid, 
-                    #"bday" : bday, 
+                    "netid" : netid,  
                     "caloricgoal" : cal,
                     "join_date" : today,
                     "last_login" : today,
@@ -195,7 +188,7 @@ def addEntry(netid, entry):
         return None
 
     # calculated added cals and macronutrients
-    entry_nut = __calculatenutrition__(entry["recipeids"], entry["servings"])
+    entry_nut = entry["nutrition"]
 
     # update
     this_user["daily_rec"].append(entry["recipeids"])

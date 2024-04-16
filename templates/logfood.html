@@ -109,7 +109,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-
+let entry_nutrition = {"calories" : 0,
+                        "carbs" : 0,
+                        "fats" : 0,
+                        "proteins": 0}
 
 // 
 function handleMyPlate(data) {
@@ -157,7 +160,7 @@ function handleCheckboxChange(element) {
         error: handleError
     });
     request = $.ajax(requestData);
-
+ 
   }
   else {
     let checkid = element.id 
@@ -335,6 +338,11 @@ function handleServingChange() {
     totalFats += serving*input.dataset.fats
     totalProts += serving*input.dataset.prots
     });
+  entry_nutrition["calories"] = totalCals;
+  entry_nutrition["carbs"] = totalCarbs;
+  entry_nutrition["fats"] = totalFats;
+  entry_nutrition["proteins"] = totalProts;
+  
   const plateTotals = document.getElementById("plateTotals")
   plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
 }
@@ -368,7 +376,8 @@ function setup() {
     // var json_servings = JSON.stringify(servings);
     var dataToSend = {
       entry_recids: recids,
-      entry_servings: servings
+      entry_servings: servings,
+      entry_nutrition: entry_nutrition
     }
    var jsonData = JSON.stringify(dataToSend);
 
