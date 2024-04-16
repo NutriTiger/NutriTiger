@@ -8,8 +8,9 @@
 from sys import path
 path.append('src')
 path.append('src/db')
-
-from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for
+from werkzeug.utils import secure_filename
+from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for, flash
+from bson.binary import Binary
 import time
 import datetime
 import os
@@ -485,7 +486,7 @@ def log_food_data():
     return render_template('logfood_update.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
 
-@app.route('/logfood/usdadata', methods=['GET'])
+@app.route('/logfood', methods=['GET'])
 def logfood_usdadata():
     netid = auth.authenticate()
     query = request.args.get('query', default="", type=str)
@@ -552,6 +553,15 @@ def personal_food():
     }
     return render_template('personalfood.html', **form_data) 
 
+#--------------------------------------------------------------------
+
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+#--------------------------------------------------------------------
+
 @app.route('/addpersonalfood', methods=['POST'])
 def add_personalfood():
     netid = auth.authenticate()
@@ -561,16 +571,33 @@ def add_personalfood():
         protein = request.form.get('proteins', type = int)
         carbs = request.form.get('carbs', type = int)
         fats = request.form.get('fats', type = int)
+        desc = request.form.get('description', type = str)
+        file = request.form.get('image')
         nutrition_dict = {
                         "calories": cal,
                         "proteins": protein,
                         "carbs": carbs,
                         "fats": fats,
+                        "description": desc
                         }
+        
+        binary_data = None  # Initialize binary_data
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join('/path/to/temp', filename)
+            file.save(filepath)
+            
+            # Convert the file to binary
+            with open(filepath, 'rb') as image_file:
+                binary_data = Binary(image_file.read())
+            os.remove(filepath)  # Clean up the file after reading
+
         result = dbnutrition.find_one_personal_nutrition(netid, recipename)
         if not result:
+            if binary_data:
+                nutrition_dict['image_data'] = binary_data  # Include image data if available
             dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
-            return redirect((url_for('settings')))
+            return redirect(url_for('settings'))
         else:
             msg = "A personal food item with this name already exists, please put a new name!"
             # Store form data and message in session

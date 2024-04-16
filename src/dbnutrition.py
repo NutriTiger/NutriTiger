@@ -66,8 +66,8 @@ def find_one_nutrition(recipeid):
             sys.exit(1)
 
 # Create new food item -- should already include the net id field of user
-# Link is string, nutrition is dictionary
-def add_personal_food(name, netid, nutrition):
+# Nutrition is dictionary
+def add_personal_food(name, netid, nutrition, binary_data = None):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.personal_nutrition
@@ -90,6 +90,7 @@ def add_personal_food(name, netid, nutrition):
                     "recipeid" : recipeid,
                     "date": today,
                     "date_formatted": formatted_date,
+                    "image": binary_data,
                     **nutrition
                     }
                 result = nutrition_col.insert_one(document_to_add)
