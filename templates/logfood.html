@@ -110,11 +110,15 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
+
+// 
 function handleMyPlate(data) {
   console.log(data);
   $('#my-plate').append(data);
 }
 
+
+// 
 function closeMyPlate(element) {
   let checkid = element.dataset.checkid;
   let checkbox = document.getElementById(checkid);
@@ -134,7 +138,6 @@ function closeMyPlate(element) {
 function handleCheckboxChange(element) {
   if (element.checked) {
     console.log("checked: ", element.dataset.mealname)
-  
     let url = `/logfood/myplate?checkid=${encodeURIComponent(element.id)}` + 
               `&mealname=${encodeURIComponent(element.dataset.mealname)}` + 
               `&recid=${encodeURIComponent(element.dataset.recid)}` + 
@@ -144,7 +147,8 @@ function handleCheckboxChange(element) {
               `&cals=${encodeURIComponent(element.dataset.cals)}` + 
               `&carbs=${encodeURIComponent(element.dataset.carbs)}` + 
               `&prots=${encodeURIComponent(element.dataset.prots)}` + 
-              `&fats=${encodeURIComponent(element.dataset.fats)}`;
+              `&fats=${encodeURIComponent(element.dataset.fats)}` +
+              `&usda=${encodeURIComponent(element.dataset.usda)}`;
 
     let requestData = ({
         type: 'GET',
@@ -210,7 +214,7 @@ function appendDataToDOM(data) {
       foodElement.className = 'form-check';
 
       foodElement.innerHTML = `
-        <input type="checkbox" data-usda="true" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-recid="${food.fdcId}"
+        <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-usda="true" data-recid="${food.fdcId}"
                data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime={{ calc_mealtime }} data-servingsize="${servingSizeInfo}" data-cals="${calories}"
                data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
                onchange="handleCheckboxChange(this)">
@@ -229,8 +233,8 @@ function addUSDANutritionData() {
   let nutritionData = [];
 
   // Collect data from all checked USDA food checkboxes
-  document.querySelectorAll('.form-check-input:checked').forEach(checkbox => {
-      if (checkbox.dataset.usda === "true") {
+  document.querySelectorAll('.small-input').forEach(input => {
+      if (input.dataset.usda === "true") {
           let foodData = {
               recipeid: checkbox.dataset.recid,
               mealname: checkbox.dataset.mealname,
