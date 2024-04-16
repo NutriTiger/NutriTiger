@@ -230,7 +230,7 @@ def deleteManyEntry(netid, array_of_entry_nums):
                 "fats": 0, 
                 "proteins": 0}
     # update
-    for entry_nun in array_of_entry_nums
+    for entry_num in array_of_entry_nums:
         entry_nut = this_user["daily_nut"][entry_num]
         totalNut["calories"] += entry_nut["calories"]
         totalNut["carbs"] += entry_nut["carbs"]
