@@ -57,6 +57,7 @@
 					{% for entry, data in entries_food_dict.items() %}
 					{% set foods = data.foods %}
 					{% set nutrition_totals = data.nutrition_totals %}
+					{% set servings = data.servings %}
 					<div class="row-cols-1 p-2">
 						<div class="card" style="background-color: lightgray;">
 							<div class="card-body">
@@ -65,6 +66,7 @@
 								<ul>
 									{% for food in foods %}
 									<li>{{food}}</li>
+									<span class="text-muted">Servings: {{ servings[loop.index - 1] }}</span>
 									{% endfor %}
 								</ul>
 								

@@ -94,6 +94,8 @@ def homepage():
     # A list of lists: holds recipeids for each entry
     entries_info = cursor['daily_rec']
     user_info = cursor['daily_nut']
+    serv_info = cursor['daily_serv'] # List of lists of servings for each entry
+
 
     # Entry title strings array ("Entry #")
     ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
@@ -123,13 +125,29 @@ def homepage():
             # Append the list of mealnames for this entry
             foods_lists.append(mealnames)
             
+    # Add servings for each food
+    servs_lists = []
+    for entry in serv_info:
+
+
+        entry_servings = entry[:]
+
+
+        servings = []
+        for serv in entry_servings:
+            servings.append(serv)
+            print(serv)
+       
+        servs_lists.append(servings)
+
     # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
     for i in range(len(ENTRIES)):
         entry = ENTRIES[i]
         foods = foods_lists[i]
         totals = user_info[i]
-        entries_food_dict[entry] = {"foods": foods, "nutrition_totals": totals}
+        servings = servs_lists[i]
+        entries_food_dict[entry] = {"foods": foods, "nutrition_totals": totals, "servings" : servings}
 
     # When Edit Plate button is pressed
     if request.method == 'POST':
