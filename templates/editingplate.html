@@ -55,18 +55,33 @@
                                 </div>
                                 <ul class="list-group">
                                     {% for food in foods %}
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <span>{{food}}</span>
-                                        <!-- Serving lineedit -->
-                                        <div class="d-flex align-items-center">
-                                            <input type="serving" class="form-control small-input" placeholder="Edit Serv">
-                                            <!--Add an X button for each food item in entry-->
-                                        <button type="button" class="btn-close btn-sm" aria-label="Close"></button>
+                                    <!--Border with close buttons for each food-->
+                                    <div class="card border-primary p-2 mb-3" id="myplate-{{ uniqueid }}">
+                                        <div class="row">
+                                            <div class="col">
+                                                <!-- Food name label-->
+                                                <span>{{ food }}</span>
+                                            </div>
+                                            <div class="col-auto d-flex align-items-center">
+                                                <!-- Serving Lineedit Column and Close button -->
+                                                <div id="new_entry" class="d-flex align-items-center">
+                                                    <!-- Serving Lineedit -->
+                                                    <input type="number" min="0" class="form-control small-input mr-2" data-cals="{{ cals }}"
+                                                    data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
+                                                    placeholder="Servings" oninput="handleServingChange()" required
+                                                    onkeypress="return isValid(event)">
+                                    
+                                                    <!-- Close button -->
+                                                    <button type="button" id="close-{{ uniqueid }}" class="btn btn-close btn-sm" aria-label="Close"
+                                                    onclick="closeMyPlate(this)" data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </li>
+                                    </div>
                                     {% endfor %}
                                 </ul>
                             </div>
+                                                        
                     </div>
                 </div>
 
@@ -91,4 +106,26 @@
 
         </tr>
     </table>
+
+    <script>
+
+        function isValid(input) {
+            var charCode = input.which || input.keyCode;
+            var value = input.target.value;
+        
+            // If the pressed key is a '-'
+            if (input.charCode === 45)
+                return false;
+        
+            // If the key contains nonvalid chars 
+            if ((input.charCode < 48 || input.charCode > 57) && input.charCode !== 46)
+                return false;
+        
+            // Allow only 2 decimal places
+            if (value.indexOf('.') !== -1 && value.length - value.indexOf('.') > 2)
+                return false;
+        
+            return true;
+        }
+        </script>
 {% endblock %}
