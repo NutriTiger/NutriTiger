@@ -459,7 +459,7 @@ def log_food_myplate():
     prots = request.args.get('prots', type = float)
     carbs = request.args.get('carbs', type = float)
     fats = request.args.get('fats', type = float)
-    usda = request.args.get('usda', type = bool)
+    usda = request.args.get('usda', type = str)
     uniqueid = checkid[8:]
     print(mealname, cals, prots, carbs, fats)
 

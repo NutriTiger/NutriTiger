@@ -236,13 +236,13 @@ function addUSDANutritionData() {
   document.querySelectorAll('.small-input').forEach(input => {
       if (input.dataset.usda === "true") {
           let foodData = {
-              recipeid: checkbox.dataset.recid,
-              mealname: checkbox.dataset.mealname,
-              servingsize: checkbox.dataset.servingsize,
-              calories: parseFloat(checkbox.dataset.cals),
-              proteins: parseFloat(checkbox.dataset.prots),
-              carbs: parseFloat(checkbox.dataset.carbs),
-              fats: parseFloat(checkbox.dataset.fats),
+              recipeid: input.dataset.recid,
+              mealname: input.dataset.mealname,
+              servingsize: input.dataset.servingsize,
+              calories: parseFloat(input.dataset.cals),
+              proteins: parseFloat(input.dataset.prots),
+              carbs: parseFloat(input.dataset.carbs),
+              fats: parseFloat(input.dataset.fats),
               source: "usda"
           };
           nutritionData.push(foodData);
