@@ -9,13 +9,31 @@ function handleResponse(data) {
     
     // After adding dynamic content to the DOM, call the setup function
     setup();
+
+    // Hide the loading animation when AJAX request completes
+    hideLoadingAnimation();
 }
 
 function handleError() {
     alert('Error: Failed to fetch data from server');
+    // Hide the loading animation when AJAX request fails
+    hideLoadingAnimation();
+}
+
+function showLoadingAnimation() {
+    // Show the loading animation covering the entire screen
+    $('#loading-animation').show();
+}
+
+function hideLoadingAnimation() {
+    // Hide the loading animation
+    $('#loading-animation').hide();
 }
 
 function getResults() {
+    // Show loading animation before making the AJAX request
+    showLoadingAnimation();
+
     let mealtime = $("input[name='mealtime_btnradio']:checked").val();
     const currentDate = $('#currentDateDiv').text();
     let encoded_mealtime = encodeURIComponent(mealtime);
@@ -45,6 +63,7 @@ function setup() {
     }
 });
 }
+
 function debouncedGetResults() {
     clearTimeout(timer);
     timer = setTimeout(getResults, 500);
@@ -94,7 +113,13 @@ function handleRightArrowClick() {
 }
 
 $(document).ready(function() {
+    // Hide loading animation initially
+    $('#loading-animation').hide();
+
+    // Call getResults function to initiate the initial AJAX request
     getResults();
+
+    // Event listeners...
     $(document).on("change", "input[name='mealtime_btnradio']", function() {
         var selectedMealtime = $(this).val();
         // hide meal elements - "caching"
