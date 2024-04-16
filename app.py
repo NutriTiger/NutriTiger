@@ -431,7 +431,8 @@ def log_food():
         data = request.get_json()
         entry_recids = data.get('entry_recids')
         entry_servings = data.get('entry_servings')
-        dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings})
+        entry_nutrition = data.get('entry_nutrition')
+        dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings, "nutrition": entry_nutrition})
         return jsonify({"success": True, "redirect": url_for('homepage')})
     else :
         current_date = datetime.datetime.now(timezone('US/Eastern'))
