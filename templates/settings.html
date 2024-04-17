@@ -5,14 +5,6 @@
         <div class="row p-md-5 p-sm-4 p-3 mx-auto">
         <div class="card">
         <div class="card-body">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane" type="button" role="tab" aria-controls="settings-tab-pane" aria-selected="true">Settings</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="personal-nutritition-tab" data-bs-toggle="tab" data-bs-target="#personal-nutritition-tab-pane" type="button" role="tab" aria-controls="personal-nutritition-tab-pane" aria-selected="false">Personal Nutrition</button>
-                </li>
-            </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
                     <h1 class="py-3 text-center">{{ netid }}'s Information</h1>
@@ -31,40 +23,6 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="personal-nutritition-tab-pane" role="tabpanel" aria-labelledby="personal-nutritition-tab" tabindex="0">
-                    {% if user_nutrition is not none %}
-                    <div class="py-3 row g-4 justify-content-center">
-                        {% for item in user_nutrition %}
-                        <div class="col col-md-4 col-xl-3 col-xxl-2">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ item['mealname'] }} ({{ item['recipeid'] }})</h5>
-                                </div>
-                                <ul class="list-group list-group-flush">
-                                    {% if item['image'] %}
-                                        <li class="list-group-item"><img src="{{ url_for('serve_image', image_id=item['_id']) }}" alt="Meal Image" class = "fitted-image"></li>
-                                    {% endif %}
-                                    <li class="list-group-item"><p class="card-text"><strong>Description: </strong>{{ item['description']}}</p></li>
-                                    <li class="list-group-item"><strong>Calories:</strong> {{ item['calories']}}</li>
-                                    <li class="list-group-item"><strong>Proteins:</strong> {{ item['proteins']}}</li>
-                                    <li class="list-group-item"><strong>Carbs:</strong> {{ item['carbs'] }}</li>
-                                    <li class="list-group-item"><strong>Fats:</strong> {{ item['fats'] }}</li>
-                                  </ul>
-                                <div class="card-footer">
-                                    <small class="text-body-secondary">Created on {{ item['date_formatted'] }}</small>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                       
-                    </div>
-                    {% else %}
-                    <div class="text-center p-5"><h1>No personal nutrition found.</h1></div>
-                    {% endif %}
-                    <div class="text-center">
-                        <a href="{{ url_for('personal_food') }}" class="btn btn-primary">Add Personal Nutrition</a>
                     </div>
                 </div>
             </div>

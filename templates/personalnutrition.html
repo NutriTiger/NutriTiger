@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% set current_page = 'personalfood' %}
+{% block title %}Personal Nutrition{% endblock %}
+{% block content %}
+{% if user_nutrition is not none %}
+<div class = "p-5">
+    <div class = "text-center">
+        <h1 class="display-3 pb-2"><strong>Personal Nutrition</strong></h1>
+    </div>
+<div class="py-3 row g-4 justify-content-center">
+    {% for item in user_nutrition %}
+    <div class="col col-md-4 col-xl-3 col-xxl-2">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title text-center">{{ item['mealname'] }} ({{ item['recipeid'] }})</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if item['image'] %}
+                    <li class="list-group-item"><img src="{{ url_for('serve_image', image_id=item['_id']) }}" alt="Meal Image" class = "fitted-image"></li>
+                {% endif %}
+                <li class="list-group-item"><p class="card-text"><strong>Description: </strong>{{ item['description']}}</p></li>
+                <li class="list-group-item"><strong>Calories:</strong> {{ item['calories']}}</li>
+                <li class="list-group-item"><strong>Proteins:</strong> {{ item['proteins']}}</li>
+                <li class="list-group-item"><strong>Carbs:</strong> {{ item['carbs'] }}</li>
+                <li class="list-group-item"><strong>Fats:</strong> {{ item['fats'] }}</li>
+              </ul>
+            <div class="card-footer">
+                <small class="text-body-secondary">Created on {{ item['date_formatted'] }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+   
+</div>
+{% else %}
+<div class="text-center p-5"><h1>No personal nutrition found.</h1></div>
+{% endif %}
+<div class="text-center">
+    <a href="{{ url_for('personal_food') }}" class="btn btn-primary">Add Personal Nutrition</a>
+</div>
+</div>
+{% endblock %}
