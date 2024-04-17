@@ -205,11 +205,14 @@ function handleResponse(data) {
 // Function to handle USDA data search
 function searchUSDAFood() {
   const query = $('#searchBar').val().trim();
+  console.log("within search")
+  console.log(query)
   // resultsContainer.children().hide(); // hide results if query is empty
   //showLoadingAnimation();
   fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
+      console.log("append the response")
       appendDataToDOM(data);
     })
     .catch(error => console.error('Error fetching USDA data:', error));

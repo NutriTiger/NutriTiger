@@ -524,7 +524,7 @@ def log_food_data():
     return render_template('logfood_update.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
 
-@app.route('/logfood', methods=['GET'])
+@app.route('/logfood/usdadata', methods=['GET'])
 def logfood_usdadata():
     netid = auth.authenticate()
     query = request.args.get('query', default="", type=str)
