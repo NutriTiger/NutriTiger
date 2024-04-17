@@ -591,7 +591,7 @@ def personal_nutrition():
     return render_template('personalnutrition.html', user_nutrition=user_nutrition)
 #--------------------------------------------------------------------
 
-@app.route('/addpersonalfood', methods=['GET', 'POST'])
+@app.route('/addpersonalfood', methods=['GET'])
 def personal_food():
     netid = auth.authenticate()
 
@@ -660,7 +660,7 @@ def add_personalfood():
         if file:
             print("there is an image")
         dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
-        return redirect(url_for('settings'))
+        return redirect(url_for('personal_nutrition'))
     
     message = "A personal food item with this name already exists, please put a new name!"
     add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
