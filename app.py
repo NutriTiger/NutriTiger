@@ -583,9 +583,18 @@ def log_food_data():
     return make_response(html_code)
 '''
 #--------------------------------------------------------------------
+@app.route('/personalnutrition', methods=['GET', 'POST'])
+def personal_nutrition():
+    netid = auth.authenticate()
+    user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
 
-@app.route('/personalfood', methods=['GET', 'POST'])
+    return render_template('personalnutrition.html', user_nutrition=user_nutrition)
+#--------------------------------------------------------------------
+
+@app.route('/addpersonalfood', methods=['GET', 'POST'])
 def personal_food():
+    netid = auth.authenticate()
+
     form_data = session.pop('form_data', None) if 'form_data' in session else {
         'name': "i.e. overnight oats", 'calories': 0, 'carbs': 0, 'proteins': 0, 'fats': 0, 'message': "Enter nutrition information for your own food items!"
     }
