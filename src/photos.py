@@ -22,7 +22,7 @@ def edit_photo_width(file, format):
     try:
         im = Image.open(file.stream)
         # Specify the desired width
-        desired_width = 300
+        desired_width = 210
         # Calculate the new height to maintain the aspect ratio
         ratio = desired_width / im.width
         new_height = int(im.height * ratio)
