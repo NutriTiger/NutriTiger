@@ -2,10 +2,14 @@
 {% set current_page = 'personalfood' %}
 {% block title %}Add Personal Recipe{% endblock %}
 {% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-warning">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+{% endwith %}
     <h1 class="text-center m-3">Add Personal Recipe</h1> 
-    <p class="custom-text-wrapper">
-        {{message}}
-    </p>
     <div class="container">
         <form action="/addpersonalfood" method="post" enctype="multipart/form-data">
             <div class="col-12">

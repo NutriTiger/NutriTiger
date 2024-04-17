@@ -90,8 +90,7 @@ def trim_data(data):
         if normalized_name not in new_data:
             new_data[normalized_name] = item
         else:
-            # If a duplicate is found, decide which one to keep
-            # Example: Keep the item with more detailed nutritional data
+            # If a duplicate is found, keep the item with more nutritional data
             existing_item = new_data[normalized_name]
             if len(item.get('foodNutrients', [])) > len(existing_item.get('foodNutrients', [])):
                 new_data[normalized_name] = item

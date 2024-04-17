@@ -8,9 +8,7 @@
 from sys import path
 path.append('src')
 path.append('src/db')
-from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for, flash
-from bson.binary import Binary
+from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for, flash, send_file, Response
 import time
 import datetime
 import os
@@ -20,11 +18,16 @@ from pytz import timezone
 from src import dbusers
 from src import dbmenus
 from src import dbnutrition
+from src import dbfunctions
 from src import utils
 from src import auth
+from src import photos
 import requests
 import json
-
+from bson.objectid import ObjectId
+from PIL import Image
+import io
+from bson.binary import Binary
 
 #--------------------------------------------------------------------
 
@@ -182,7 +185,7 @@ def dhall_menus():
     # Fetch menu data from database
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     #current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
-    print(current_date.now(timezone('US/Eastern')))
+    # print(current_date.now(timezone('US/Eastern')))
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
     is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
     
@@ -295,6 +298,21 @@ def history():
                             carbs = carb_his,
                             fats = fat_his
                             )
+
+#--------------------------------------------------------------------
+
+@app.route('/image/<image_id>')
+def serve_image(image_id):
+    client = dbfunctions.connectmongo()
+    db = client['db']
+    collection = db['personal_nutrition']
+
+    document = collection.find_one({'_id': ObjectId(image_id)})
+
+    if document and 'image' in document:
+        return Response(document['image'], mimetype=document['filetype'])  
+    else:
+        return "Image not found", 404
 
 #--------------------------------------------------------------------
 
@@ -575,62 +593,69 @@ def personal_food():
 
 #--------------------------------------------------------------------
 
-
-def allowed_file(filename):
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+# Flashes an issue with the submission and returns the previously
+# typed elements back into the input areas
+def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc):
+    flash(message)
+    # Store form data and message in session
+    session['form_data'] = {
+        'name': recipename,
+        'calories': cal,
+        'carbs': carbs,
+        'proteins': protein,
+        'fats': fats,
+        'description': desc,
+    }
+    return redirect(url_for('personal_food'))
 
 #--------------------------------------------------------------------
 
 @app.route('/addpersonalfood', methods=['POST'])
 def add_personalfood():
     netid = auth.authenticate()
-    if request.method == 'POST':
-        recipename = request.form.get('name', type = str)
-        cal = request.form.get('calories', type = int)
-        protein = request.form.get('proteins', type = int)
-        carbs = request.form.get('carbs', type = int)
-        fats = request.form.get('fats', type = int)
-        desc = request.form.get('description', type = str)
-        file = request.form.get('image')
-        nutrition_dict = {
-                        "calories": cal,
-                        "proteins": protein,
-                        "carbs": carbs,
-                        "fats": fats,
-                        "description": desc
-                        }
-        
-        binary_data = None  # Initialize binary_data
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join('/path/to/temp', filename)
-            file.save(filepath)
-            
-            # Convert the file to binary
-            with open(filepath, 'rb') as image_file:
-                binary_data = Binary(image_file.read())
-            os.remove(filepath)  # Clean up the file after reading
 
-        result = dbnutrition.find_one_personal_nutrition(netid, recipename)
-        if not result:
-            if binary_data:
-                nutrition_dict['image_data'] = binary_data  # Include image data if available
-            dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
-            return redirect(url_for('settings'))
-        else:
-            msg = "A personal food item with this name already exists, please put a new name!"
-            # Store form data and message in session
-            session['form_data'] = {
-                'name': recipename,
-                'calories': cal,
-                'carbs': carbs,
-                'proteins': protein,
-                'fats': fats,
-                'message': msg
-            }
-            return redirect(url_for('personal_food'))
+    recipename = request.form.get('name', type = str)
+    cal = request.form.get('calories', type = int)
+    protein = request.form.get('proteins', type = int)
+    carbs = request.form.get('carbs', type = int)
+    fats = request.form.get('fats', type = int)
+    desc = request.form.get('description', type = str)
+    file = request.files['image']
+
+    image_data = None
+    file_ext = None
+    if file:
+        correct_type, file_ext = photos.allowed_file(file.filename)
+    
+        if not correct_type:
+            message = "Invalid file type :("
+            add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
         
+        image_data = photos.edit_photo_width(file, file_ext)
+        if image_data == 'n/a':
+            message = "Yikes, we couldn't resize this image. Can you try another photo?"
+            add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+
+    nutrition_dict = {
+                    "calories": cal,
+                    "proteins": protein,
+                    "carbs": carbs,
+                    "fats": fats,
+                    "description": desc,
+                    "image": image_data,
+                    "filetype": file_ext
+                    }
+
+    result = dbnutrition.find_one_personal_nutrition(netid, recipename)
+    if not result:
+        if file:
+            print("there is an image")
+        dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
+        return redirect(url_for('settings'))
+    else:
+        message = "A personal food item with this name already exists, please put a new name!"
+        add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+    
     return
     
 #--------------------------------------------------------------------

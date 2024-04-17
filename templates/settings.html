@@ -43,7 +43,10 @@
                                     <h5 class="card-title text-center">{{ item['mealname'] }} ({{ item['recipeid'] }})</h5>
                                 </div>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><p class="card-text"><strong>Description:</strong> yay oats</p></li>
+                                    {% if item['image'] %}
+                                        <li class="list-group-item"><img src="{{ url_for('serve_image', image_id=item['_id']) }}" alt="Meal Image" class = "fitted-image"></li>
+                                    {% endif %}
+                                    <li class="list-group-item"><p class="card-text"><strong>Description: </strong>{{ item['description']}}</p></li>
                                     <li class="list-group-item"><strong>Calories:</strong> {{ item['calories']}}</li>
                                     <li class="list-group-item"><strong>Proteins:</strong> {{ item['proteins']}}</li>
                                     <li class="list-group-item"><strong>Carbs:</strong> {{ item['carbs'] }}</li>

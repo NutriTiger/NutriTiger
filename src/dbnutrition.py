@@ -3,7 +3,9 @@ from dbfunctions import connectmongo
 import sys
 from datetime import datetime, time
 import pytz
-
+from PIL import Image
+import io
+from bson.binary import Binary
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
@@ -65,13 +67,17 @@ def find_one_nutrition(recipeid):
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
 
+
+
 # Create new food item -- should already include the net id field of user
 # Nutrition is dictionary
-def add_personal_food(name, netid, nutrition, binary_data = None):
+def add_personal_food(name, netid, nutrition):
+    
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.personal_nutrition
         items_to_find = {"access": netid}
+
 
         try:
             find_prev_personal = nutrition_col.find(items_to_find)
@@ -90,7 +96,6 @@ def add_personal_food(name, netid, nutrition, binary_data = None):
                     "recipeid" : recipeid,
                     "date": today,
                     "date_formatted": formatted_date,
-                    "image": binary_data,
                     **nutrition
                     }
                 result = nutrition_col.insert_one(document_to_add)
@@ -255,19 +260,29 @@ def main():
          "access": "oe7583"
         }
 
-    update_nutrition(nutrition)
-    data = find_one_nutrition('560154')
-    print(data['calories'])
-    list = [12345, 54321]
-    result = find_many_nutrition(list)
-    print(result[0]['calories'])
-    link = "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html"
+    # update_nutrition(nutrition)
+    # data = find_one_nutrition('560154')
+    # print(data['calories'])
+    # list = [12345, 54321]
+    # result = find_many_nutrition(list)
+    # print(result[0]['calories'])
+    # link = "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html"
     # add_personal_food("ANOTHER", "oe7583", personal, link)
     # list = find_all_personal_nutrition("oe7583")
     # for item in list:
     #     print(item)
     # find_one_personal_nutrition("oe7583", 1)
 
+    # date_obj = datetime.now(timezone('US/Eastern')).date()
+        # today = datetime.combine(date_obj, time.min)
+    
+    with connectmongo() as client:
+        db = client.db
+        col = db.personal_nutrition
+        documents_to_delete = {"access": "oe7583"}
+
+        del_result = col.delete_many(documents_to_delete)
+        print(del_result)
 
 #-----------------------------------------------------------------------
 
