@@ -652,11 +652,10 @@ def add_personalfood():
             print("there is an image")
         dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
         return redirect(url_for('settings'))
-    else:
-        message = "A personal food item with this name already exists, please put a new name!"
-        add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
     
-    return
+    message = "A personal food item with this name already exists, please put a new name!"
+    add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+    
     
 #--------------------------------------------------------------------
 
