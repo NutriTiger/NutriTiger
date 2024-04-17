@@ -2,9 +2,7 @@
 {% set current_page = 'logfood' %}
 {% block title %}Log Food{% endblock %}
 {% block content %}
-<div id="loading-animation" class="loading-animation">
-  <div class="loading-spinner"></div>
-</div>
+
     <!--Give header white background -->
     <div class="p-3">
       <h1 class="text-center my-2">Log Food</h1>
@@ -123,18 +121,18 @@ let entry_nutrition = {"calories" : 0,
 function handleMyPlate(data) {
   console.log(data);
   $('#my-plate').append(data);
-  hideLoadingAnimation();
+  //hideLoadingAnimation();
 }
 
-function showLoadingAnimation() {
+//function showLoadingAnimation() {
     // Show the loading animation covering the entire screen
-    $('#loading-animation').show();
-}
+  //  $('#loading-animation').show();
+///}
 
-function hideLoadingAnimation() {
+//function hideLoadingAnimation() {
     // Hide the loading animation
-    $('#loading-animation').hide();
-}
+  //  $('#loading-animation').hide();
+//}
 
 // function to handle removing a food-item from myplate
 function closeMyPlate(element) {
@@ -174,7 +172,7 @@ function handleCheckboxChange(element) {
         success: handleMyPlate,
         error: handleError
     });
-    showLoadingAnimation();
+    //showLoadingAnimation();
     request = $.ajax(requestData);
  
   }
@@ -193,14 +191,14 @@ function handleCheckboxChange(element) {
 // for when AJAX Request encounters an error
 function handleError() {
   console.log('error');
-  hideLoadingAnimation();
+  //hideLoadingAnimation();
 }
 
 // function to insert food-items into the menu container
 function handleResponse(data) {
   console.log(data);
   $('#menu-items').html(data);
-  hideLoadingAnimation();
+ // hideLoadingAnimation();
 }
 
 
@@ -208,7 +206,7 @@ function handleResponse(data) {
 function searchUSDAFood() {
   const query = $('#searchBar').val().trim();
   // resultsContainer.children().hide(); // hide results if query is empty
-  showLoadingAnimation();
+  //showLoadingAnimation();
   fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
@@ -248,7 +246,7 @@ function appendDataToDOM(data) {
   } else {
     resultsContainer.innerHTML = '<div>No results found.</div>';
   }
-  hideLoadingAnimation();
+  //hideLoadingAnimation();
 }
 
 
@@ -274,7 +272,7 @@ function addUSDANutritionData() {
 
   // Send the data to the server if there is any
   if (nutritionData.length > 0) {
-      showLoadingAnimation();
+      //showLoadingAnimation();
       $.ajax({
           url: '/addingnutrition',  // URL to the server-side function handling the database insertion
           type: 'POST',
@@ -365,7 +363,7 @@ function handleServingChange() {
 
 // set up event listeners for dhall select and mealtime tab
 function setup() {
-  hideLoadingAnimation();
+  //hideLoadingAnimation();
   $('#diningHallSelect').change(getResults);  // Toggle search bar on selection change
   $('#searchBar').on('input', debounce(searchUSDAFood, 500));  // Debounce the search input
   const diningHallSelect = document.getElementById('diningHallSelect');
@@ -395,7 +393,7 @@ function setup() {
       entry_nutrition: entry_nutrition
     }
    var jsonData = JSON.stringify(dataToSend);
-   showLoadingAnimation();
+   //showLoadingAnimation();
     $.ajax({
         type: 'POST',
         url: '/logfood',
