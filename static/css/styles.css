@@ -94,6 +94,7 @@ body {
 
 .dynamic-progress-bar {
     width: 0%; /* Initial width */
+    font-size: 20px;
   }
 
 .header-container {
@@ -254,4 +255,14 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.homepage-card {
+    min-height: 700px;
+}
+
+.select-dropdown {
+    background-color: #FFB672;
+    color: black;
+    justify-content: center;
 }
