@@ -260,3 +260,9 @@ body {
 .homepage-card {
     min-height: 700px;
 }
+
+.select-dropdown {
+    background-color: #FFB672;
+    color: black;
+    justify-content: center;
+}

@@ -8,7 +8,7 @@
 <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
 <!--Placeholder Message (when no entries exist)-->
-<div id="placeholder" class="text-center" style="display: none;">
+<div id="placeholder" class="text-center">
 	<h4>Looks like you haven't logged any food for today.</h4>
 	<h4 class="pt-2">Want to add a meal?</h4>
 	<!--"Click to add an entry" Button-->
@@ -43,7 +43,7 @@
 			<div class="card-body">
 				<!--My Macros (left card)-->
 				<h4 class="text-center py-3">My Macros</h4>
-				<h5 class="text-center">Daily Calorie Goal: <strong>{{cal_goal}} cal</strong></h5>
+				<h5 class="text-center">Current Calorie Progress: <strong>{{curr_caltotal}} cal / {{cal_goal}} cal</strong></h5>
 				<div class="prog-container my-2" style="display: flex; justify-content: center;">
 					<div class="progress" style="height: 50px; width: 300px;">
 						<div class="progress-bar dynamic-progress-bar" 
@@ -148,16 +148,17 @@
 
 <script>
 	function showHomepageCards() {
+		// Hide the placeholder message/buttons
+		document.getElementById("placeholder").style.display = "none";
+		
 		// Show the homepage cards 
 		document.getElementById("leftCard").style.display = "block";
 		document.getElementById("rightCard").style.display = "block";
-		// Hide the placeholder message/buttons
-		document.getElementById("placeholder").style.display = "none";
 	}
 
 	function showPlaceholder() {
 		// Show the placeholder message/buttons
-		//document.getElementbyId("placeholder").style.display = "block"
+		document.getElementbyId("placeholder").style.display = "block"
 		// Hide the homepage cards
 		document.getElementById("leftCard").style.display = "none";
 		document.getElementById("rightCard").style.display = "none"
