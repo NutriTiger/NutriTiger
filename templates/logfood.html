@@ -354,6 +354,18 @@
 	  plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
 	}
 	
+	// CHECKS THAT ALL SERVING SIZE LINEEDITS HAVE BEEN FILLED OUT
+	function submitForm(inputField) {
+        var servingValue = inputField.value.trim();
+
+        if (servingValue === "" || servingValue.toLowerCase() === 'none') {
+            alert("Please enter a serving value for each food in your plate.");
+            return false;
+        }
+
+        return true; // allows form submission
+    }
+
 	// set up event listeners for dhall select and mealtime tab
 	function setup() {
 	  hideLoadingAnimation();
@@ -374,6 +386,7 @@
 	    var servings = [];
 	    const inputs = document.querySelectorAll('.small-input');
 	    inputs.forEach(input => {
+			submitForm(input); // CHECK THIS VALIDATION
 	      let recid = input.dataset.recid;
 	      let serving = parseFloat(input.value);
 	      recids.push(recid)
@@ -390,7 +403,7 @@
 	    $.ajax({
 	        type: 'POST',
 	        url: '/logfood',
-	        contentType: 'application/json', // This tells the server that you're sending JSON
+	        contentType: 'application/json', 
 	        data: jsonData, 
 	        success: function(response) {
 	            console.log('Data sent successfully:', response);
