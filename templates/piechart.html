@@ -1,4 +1,5 @@
-<!-- JUST MESSING AROUND WITH CHART.JS -->
+<!--Homepage Pie Chart with macronutrient breakdown
+ for today's logged foods-->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,7 +40,7 @@
                     `Fat (${fatsInGrams}g)`
                 ],
                 datasets: [{
-                    data: [proteinsCalories, carbsCalories, fatsCalories], // Proportions based on calories
+                    data: [proteinsCalories.toFixed(2), carbsCalories.toFixed(2), fatsCalories.toFixed(2)], // Proportions based on calories
                     backgroundColor: [
                         'rgba(255, 182, 193, 1)',
                         'rgba(67, 182, 107)',
@@ -61,7 +62,7 @@
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'bottom' // Position the legend at the bottom
+                            position: 'bottom'
                         },
                         tooltip: {
                             callbacks: {

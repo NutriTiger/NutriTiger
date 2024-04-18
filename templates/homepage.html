@@ -2,17 +2,48 @@
 {% set current_page = 'home' %}
 {% block title %}My Homepage{% endblock %}
 {% block content %}
-<h1 class="text-center m-3">Today's Breakdown</h1>
+
+<!--Page Headers-->
+<h1 class="text-center m-3">Today's Nutritional Breakdown</h1>
 <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
+
+<!--Placeholder Message (when no entries exist)-->
+<div id="placeholder" class="text-center" style="display: none;">
+	<h4>Looks like you haven't logged any food for today.</h4>
+	<h4 class="pt-2">Want to add a meal?</h4>
+	<!--"Click to add an entry" Button-->
+	<div class="p-3">
+		<form action="/homepage" method="post">
+			<center>
+				<button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a meal</button>
+			</center>
+		</form>
+	</div>
+	<h5>Or, see what's on the <a href="/menus"> dining hall menus</a>.</h5>
+</div>
+
+<!--CHECK IF ENTRIES ARE EMPTY, SHOW PLACEHOLDER IF SO-->
+<!--This must be updated with ajax implementation!!-->
+{% if entries_food_dict.items()|length == 0 %}
+	<!-- Show placeholder function -->
+	<script>
+		showPlaceholder();
+	</script>
+{% else %}
+	<!--Show homepage cards function-->
+	<script>
+		showHomepageCards();
+	</script>
+
 <!--Layout for the two main cards-->
 <div class="container-fluid">
 <div class="row p-xs-5 gx-5 mx-auto">
 	<div class="col-md-6 pt-4">
-		<div class="card">
+		<div id="leftCard" class="card homepage-card">
 			<div class="card-body">
 				<!--My Macros (left card)-->
 				<h4 class="text-center py-3">My Macros</h4>
-				<h5 class="text-center">Daily calorie goal: {{cal_goal}}cal</h5>
+				<h5 class="text-center">Daily Calorie Goal: <strong>{{cal_goal}} cal</strong></h5>
 				<div class="prog-container my-2" style="display: flex; justify-content: center;">
 					<div class="progress" style="height: 50px; width: 300px;">
 						<div class="progress-bar dynamic-progress-bar" 
@@ -20,7 +51,7 @@
 							style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223);" 
 							aria-valuenow="{{curr_caltotal}}" 
 							aria-valuemin="0" 
-							aria-valuemax="{{cal_goal}}">{{ curr_caltotal }}cal
+							aria-valuemax="{{cal_goal}}">{{ curr_caltotal }} cal
 						</div>
 					</div>
 				</div>
@@ -29,14 +60,14 @@
 						{% include 'piechart.html' %}
 					</div>
 				</div>
-				<div class="text-center text-muted">
+				<div id="chartSubtitle" class="text-center text-muted">
 					Clicking on elements in the legend will hide it from the pie chart.
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-6 py-4">
-		<div class="card">
+		<div id="rightCard" class="card homepage-card">
 			<div class="card-body">
 				<!--My Plate (right card)-->
 				<h4 class="text-center py-3">My Plate</h4>
@@ -113,4 +144,30 @@
 	</div>
 </div>
 </div>
+{% endif %}
+
+<script>
+	function showHomepageCards() {
+		// Show the homepage cards 
+		document.getElementById("leftCard").style.display = "block";
+		document.getElementById("rightCard").style.display = "block";
+		// Hide the placeholder message/buttons
+		document.getElementById("placeholder").style.display = "none";
+	}
+
+	function showPlaceholder() {
+		// Show the placeholder message/buttons
+		//document.getElementbyId("placeholder").style.display = "block"
+		// Hide the homepage cards
+		document.getElementById("leftCard").style.display = "none";
+		document.getElementById("rightCard").style.display = "none"
+	}
+
+	// if (entries exist) {
+		// showHomepageCards();
+	// } else {
+		// showPlaceholder();
+	//}
+
+</script>
 {% endblock %}
