@@ -2,424 +2,414 @@
 {% set current_page = 'logfood' %}
 {% block title %}Log Food{% endblock %}
 {% block content %}
-
-    <!--Give header white background -->
-    <div class="p-3">
-      <h1 class="text-center my-2">Log Food</h1>
-      <p class="text-center">
-          Select your dining hall from the drop down below or search for the recipe name in the
-          search bar.
-          Once you select your dish(es), estimate the number of servings you consumed in the “My Plate” window below.
-
-
-      </p>
-    </div>
-
-    <div class="row p-2">
-      <div class="col-md-6 m-3">
-        <select class="btn btn-secondary dropdown-toggle form-select custom-dropdown" id="diningHallSelect" aria-label="select_dhall" style="display: block;">
-          <option value="Select Food Source" selected>Select Food Source</option>
-          <option value="Center for Jewish Life">Center for Jewish Life</option>
-          <option value="Forbes College">Forbes College</option>
-          <option value="Graduate College">Graduate College</option>
-          <option value="Yeh & New West Colleges">Yeh & New West Colleges</option>
-          <option value="Rockefeller & Mathey Colleges">Rockefeller & Mathey Colleges</option>
-          <option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
-          <option value="Personal Food Items">Personal Food Items</option>
-          <option value="USDA FoodData Central">USDA FoodData Central</option>
-        </select>
-      </div>
-      <div class="col-md-6 m-3">
-        <input type="text" id = "searchBar" class="form-control" placeholder="Search..." style="display: none;">
-      </div>
-    </div>
-
-    <!--Two cards: one for the dining hall food display, and one for My Plate-->
-    <div class="row p-2">
-      <div class="col-md-6 m-3">
-        <!--Putting entire food selection menu in one background card-->
-        <div class="logfood-card card">
-          <div class="card-body">
-
-        <!-- Mealtime Tab Navs -->
-        <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
-          {% if not is_weekend_var: %}
-            <li class="custom-nav-item">
-              <a class="nav-link active" id="Breakfast-tab" data-toggle="tab" href="#breakfast" role="tab" aria-controls="breakfast" aria-selected="true">Breakfast</a>
-            </li>
-            <li class="custom-nav-item">
-              <a class="nav-link" id="Lunch-tab" data-toggle="tab" href="#lunch" role="tab" aria-controls="lunch" aria-selected="false">Lunch</a>
-            </li>
-          {% endif %}
-          {% if is_weekend_var: %}
-            <li class="custom-nav-item">
-              <a class="nav-link active" id="Lunch-tab" data-toggle="tab" href="#lunch" role="tab" aria-controls="lunch" aria-selected="false">Brunch</a>
-            </li>
-          {% endif %}
-          
-          <li class="custom-nav-item">
-              <a class="nav-link" id="Dinner-tab" data-toggle="tab" href="#dinner" role="tab" aria-controls="dinner" aria-selected="false">Dinner</a>
-          </li>
-        </ul>
-
-
-        <div class="card">
-          <div class="card-body" id="usda-search-results"></div>
-          <div class="card-body" id="menu-items">
-            {% include 'logfood_update.html' %}
+<!--Give header white background -->
+<div id="loading-animation" class="loading-animation">
+  <div class="loading-spinner"></div>
+</div>
+<div class="p-3">
+	<h1 class="text-center my-2">Log Food</h1>
+	<p class="text-center px-5">
+		Select your dining hall from the drop down below or search for the recipe name in the
+		search bar.
+		Once you select your dish(es), estimate the number of servings you consumed in the “My Plate” window below.
+	</p>
+</div>
+<div class = "container-fluid">
+<div class="row p-2">
+	<div class="col-md-8 p-3">
+		<select class="btn btn-secondary dropdown-toggle form-select custom-dropdown" id="diningHallSelect" aria-label="select_dhall" style="display: block;">
+			<option value="Select Food Source" selected>Select Food Source</option>
+			<option value="Center for Jewish Life">Center for Jewish Life</option>
+			<option value="Forbes College">Forbes College</option>
+			<option value="Graduate College">Graduate College</option>
+			<option value="Yeh & New West Colleges">Yeh & New West Colleges</option>
+			<option value="Rockefeller & Mathey Colleges">Rockefeller & Mathey Colleges</option>
+			<option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
+			<option value="Personal Food Items">Personal Food Items</option>
+			<option value="USDA FoodData Central">USDA FoodData Central</option>
+		</select>
+	</div>
+	<span id = "searchBar" class="col-10 col-sm-6 p-3" style="display: none;">
+		<input type="text"  class="form-control" placeholder="Search..." >
+  </span>
+</div>
+<!--Two cards: one for the dining hall food display, and one for My Plate-->
+<div class="row px-2">
+	<div class="col-md-12 col-lg-6 p-3">
+		<!--Putting entire food selection menu in one background card-->
+		<div class="logfood-card card">
+			<div class="card-body">
+				<!-- Mealtime Tab Navs -->
+				<ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
+					{% if not is_weekend_var: %}
+					<li class="custom-nav-item">
+						<a class="nav-link active" id="Breakfast-tab" data-toggle="tab" href="#breakfast" role="tab" aria-controls="breakfast" aria-selected="true">Breakfast</a>
+					</li>
+					<li class="custom-nav-item">
+						<a class="nav-link" id="Lunch-tab" data-toggle="tab" href="#lunch" role="tab" aria-controls="lunch" aria-selected="false">Lunch</a>
+					</li>
+					{% endif %}
+					{% if is_weekend_var: %}
+					<li class="custom-nav-item">
+						<a class="nav-link active" id="Lunch-tab" data-toggle="tab" href="#lunch" role="tab" aria-controls="lunch" aria-selected="false">Brunch</a>
+					</li>
+					{% endif %}
+					<li class="custom-nav-item">
+						<a class="nav-link" id="Dinner-tab" data-toggle="tab" href="#dinner" role="tab" aria-controls="dinner" aria-selected="false">Dinner</a>
+					</li>
+				</ul>
+				<div class="card">
+					<div class="card-body" id="usda-search-results">
           </div>
-        </div>
-
-      </div>
-        </div>
-      </div>
-
-      <!--My Plate Card (right side)-->
-      <div class="col-sm-5 m-3">
-        <div class="logfood-card card">
-          <div class="card-body">
-            <h5 class="card-title text-center">My Plate</h5>
-            <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
-            <div id="my-plate"></div>
-          </div>
-
-          <!--My Plate Footer: display plate macro totals-->
-          <div class="card-footer text-center">
-            <strong>Plate Totals:</strong>
-            <br>
-            <div id="plateTotals"> 
-            </div>
-          </div>
-        </div>
-
-        <!--Upload plate button-->
-        <div class="container p-5">
-          <h5>Done adding food to your plate?</h5>
-          <form action="/logfood" method="post" class="p-3">
-            <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
-          </form>
-        </div>
-        
-      </div>
-    </div>
+					<div class="card-body" id="menu-items">
+						{% include 'logfood_update.html' %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--My Plate Card (right side)-->
+	<div class="col-md-12 col-lg-6 p-3">
+		<div class="logfood-card card">
+			<div class="card-body">
+				<h5 class="card-title text-center">My Plate</h5>
+				<p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
+				<div id="my-plate"></div>
+			</div>
+			<!--My Plate Footer: display plate macro totals-->
+			<div class="card-footer text-center">
+				<strong>Plate Totals:</strong>
+				<br>
+				<div id="plateTotals"> 
+				</div>
+			</div>
+		</div>
+		<!--Upload plate button-->
+		<div class="container p-5">
+			<h5>Done adding food to your plate?</h5>
+			<form action="/logfood" method="post" class="p-3">
+				<button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
+			</form>
+		</div>
+	</div>
+</div>
+</div>
 {% endblock %}
-
 {% block script %}
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-
-// global variable for entry nutrition
-let entry_nutrition = {"calories" : 0,
-                        "carbs" : 0,
-                        "fats" : 0,
-                        "proteins": 0}
-
-// function to insert food-items into myplate from ajax call
-function handleMyPlate(data) {
-  console.log(data);
-  $('#my-plate').append(data);
-  //hideLoadingAnimation();
-}
-
-//function showLoadingAnimation() {
-    // Show the loading animation covering the entire screen
-  //  $('#loading-animation').show();
-///}
-
-//function hideLoadingAnimation() {
-    // Hide the loading animation
-  //  $('#loading-animation').hide();
-//}
-
-// function to handle removing a food-item from myplate
-function closeMyPlate(element) {
-  let checkid = element.dataset.checkid;
-  let checkbox = document.getElementById(checkid);
-  if (checkbox) {
-    checkbox.checked = false;
-  }
-  let myplateid = element.dataset.myplateid;
-  let myplatebox = document.getElementById(myplateid);
-  if (myplatebox) {
-    myplatebox.remove()
-  }
-  handleServingChange()
-}
-
-// Function to handle checkbox change event: gets label text, macro data, makes URL, and 
-// sends AJAX GET request to server
-function handleCheckboxChange(element) {
-  if (element.checked) {
-    console.log("checked: ", element.dataset.mealname)
-    let url = `/logfood/myplate?checkid=${encodeURIComponent(element.id)}` + 
-              `&mealname=${encodeURIComponent(element.dataset.mealname)}` + 
-              `&recid=${encodeURIComponent(element.dataset.recid)}` + 
-              `&location=${encodeURIComponent(element.dataset.location)}`+ 
-              `&mealtime=${encodeURIComponent(element.dataset.mealtime)}` + 
-              `&servingsize=${encodeURIComponent(element.dataset.servingsize)}` + 
-              `&cals=${encodeURIComponent(element.dataset.cals)}` + 
-              `&carbs=${encodeURIComponent(element.dataset.carbs)}` + 
-              `&prots=${encodeURIComponent(element.dataset.prots)}` + 
-              `&fats=${encodeURIComponent(element.dataset.fats)}` +
-              `&usda=${encodeURIComponent(element.dataset.usda)}`;
-
-    let requestData = ({
-        type: 'GET',
-        url: url,
-        success: handleMyPlate,
-        error: handleError
-    });
-    //showLoadingAnimation();
-    request = $.ajax(requestData);
- 
-  }
-  else {
-    let checkid = element.id 
-    let uniqueid = checkid.slice(8);
-    let myplatebox = document.getElementById("myplate-"+uniqueid)
-    if (myplatebox) {
-      myplatebox.remove()
-    }
-    console.log('unchecked');
-  }
-  handleServingChange()
-}
-
-// for when AJAX Request encounters an error
-function handleError() {
-  console.log('error');
-  //hideLoadingAnimation();
-}
-
-// function to insert food-items into the menu container
-function handleResponse(data) {
-  console.log(data);
-  $('#menu-items').html(data);
- // hideLoadingAnimation();
-}
-
-
-// Function to handle USDA data search
-function searchUSDAFood() {
-  const query = $('#searchBar').val().trim();
-  console.log("within search")
-  console.log(query)
-  // resultsContainer.children().hide(); // hide results if query is empty
-  //showLoadingAnimation();
-  fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
-    .then(response => response.json())
-    .then(data => {
-      console.log("append the response")
-      appendDataToDOM(data);
-    })
-    .catch(error => console.error('Error fetching USDA data:', error));
-}
-
-function appendDataToDOM(data) {
-  
-  const resultsContainer = document.getElementById('usda-search-results');
-  resultsContainer.innerHTML = '';  // Clear previous results - BUG, need to figure out how to get rid of without deleting important info
-
-  if (data.foods && data.foods.length > 0) {
-    data.foods.forEach((food, index) => {
-      const calories = food.foodNutrients.find(n => n.nutrientName === 'Energy')?.value || 0;
-      const proteins = food.foodNutrients.find(n => n.nutrientName === 'Protein')?.value || 0;
-      const carbs = food.foodNutrients.find(n => n.nutrientName === 'Carbohydrate, by difference')?.value || 0;
-      const fats = food.foodNutrients.find(n => n.nutrientName === 'Total lipid (fat)')?.value || 0;
-
-      // Check if food portions are available and extract the first one
-      const servingSizeInfo = food.foodPortions && food.foodPortions.length > 0 ? food.foodPortions[0].portionDescription : "100g";
-
-      const foodElement = document.createElement('div');
-      foodElement.className = 'form-check';
-
-      foodElement.innerHTML = `
-        <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-usda="true" data-recid="${food.fdcId}"
-               data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime={{ calc_mealtime }} data-servingsize="${servingSizeInfo}" data-cals="${calories}"
-               data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
-               onchange="handleCheckboxChange(this)">
-        <label class="form-check-label" for="usda-checkbox-${food.fdcId}">${food.description}</label>
-        <p id="nf-usda-${food.fdcId}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
-      `;
-      resultsContainer.appendChild(foodElement);
-    });
-  } else {
-    resultsContainer.innerHTML = '<div>No results found.</div>';
-  }
-  //hideLoadingAnimation();
-}
-
-
-function addUSDANutritionData() {
-  let nutritionData = [];
-
-  // Collect data from all checked USDA food checkboxes
-  document.querySelectorAll('.small-input').forEach(input => {
-      if (input.dataset.usda === "true") {
-          let foodData = {
-              recipeid: input.dataset.recid,
-              mealname: input.dataset.mealname,
-              servingsize: input.dataset.servingsize,
-              calories: parseFloat(input.dataset.cals),
-              proteins: parseFloat(input.dataset.prots),
-              carbs: parseFloat(input.dataset.carbs),
-              fats: parseFloat(input.dataset.fats),
-              source: "usda"
-          };
-          nutritionData.push(foodData);
-      }
-  });
-
-  // Send the data to the server if there is any
-  if (nutritionData.length > 0) {
-      //showLoadingAnimation();
-      $.ajax({
-          url: '/addingnutrition',  // URL to the server-side function handling the database insertion
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({nutritionData: nutritionData}), 
-          success: function(response) {
-              console.log('Nutrition data successfully sent and saved:', response);
-              // alert("Nutrition data added successfully!");
-          },
-          error: function(xhr, status, error) {
-              console.error('Failed to send nutrition data:', error);
-              // alert("Error adding nutrition data. Check console for details.");
-          }
-      });
-  } else {
-      console.log("No USDA food items selected or data is missing.");
-      // alert("No USDA food items selected or data is incomplete.");
-  }
-}
-
-
-// Debounce function to limit rate of invoking functions
-function debounce(func, delay) {
-  let debounceTimer;
-  return function() {
-    const context = this;
-    const args = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-}
-
-// fetch menu items based on selected dhall and mealtime + correct display
-function getResults() {
-  
-  $('.menu-items-content').hide();
-  $('#select').hide();
-  $('#noDataMessage').hide();
-  let selectedHall = $('#diningHallSelect').val();
-  console.log(selectedHall)
-
-  if (selectedHall === "Personal Food Items") {
-    $('#searchBar').hide();
-    $('#mealTimeTab').hide();
-    $('#usda-search-results').hide();
-  }
-  else if (selectedHall === "USDA FoodData Central") {
-    $('#mealTimeTab').hide();
-    $('#searchBar').show();
-    $('#usda-search-results').show();
-  }
-  else {
-    $('#searchBar').hide();
-    $('#usda-search-results').hide();
-    $('#mealTimeTab').show();
-    let mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
-    dhallCode = selectedHall.substring(0, 2)
-    let divToShow = dhallCode + "-" + mealtime
-    if ($('#' + divToShow).length > 0) {
-      $('#' + divToShow).show();
-    } else {
-      $('#noDataMessage').show();
-    }
-  }
-}
-
-function handleServingChange() {
-  const inputs = document.querySelectorAll('.small-input');
-  let totalCals = 0
-  let totalCarbs = 0
-  let totalFats = 0
-  let totalProts = 0
-  inputs.forEach(input => {
-    let serving = input.value
-    totalCals += serving*input.dataset.cals
-    totalCarbs += serving*input.dataset.carbs
-    totalFats += serving*input.dataset.fats
-    totalProts += serving*input.dataset.prots
-    });
-  entry_nutrition["calories"] = totalCals;
-  entry_nutrition["carbs"] = totalCarbs;
-  entry_nutrition["fats"] = totalFats;
-  entry_nutrition["proteins"] = totalProts;
-  
-  const plateTotals = document.getElementById("plateTotals")
-  plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
-}
-
-// set up event listeners for dhall select and mealtime tab
-function setup() {
-  //hideLoadingAnimation();
-  $('#diningHallSelect').change(getResults);  // Toggle search bar on selection change
-  $('#searchBar').on('input', debounce(searchUSDAFood, 500));  // Debounce the search input
-  const diningHallSelect = document.getElementById('diningHallSelect');
-
-  // Event listener for the dropdown selection change
-  $('#mealTimeTab a').on('shown.bs.tab', getResults);
-  diningHallSelect.addEventListener('change', getResults);
-
-  // Event listener for submit button (to get entry and send to flask)
-  document.getElementById('submitButton').addEventListener('click', function(event) {
-    event.preventDefault();
-    addUSDANutritionData();
-    console.log("submit");
-    var recids = [];
-    var servings = [];
-    const inputs = document.querySelectorAll('.small-input');
-    inputs.forEach(input => {
-      let recid = input.dataset.recid;
-      let serving = parseFloat(input.value);
-      recids.push(recid)
-      servings.push(serving)
-      });
-
-    var dataToSend = {
-      entry_recids: recids,
-      entry_servings: servings,
-      entry_nutrition: entry_nutrition
-    }
-   var jsonData = JSON.stringify(dataToSend);
-   //showLoadingAnimation();
-    $.ajax({
-        type: 'POST',
-        url: '/logfood',
-        contentType: 'application/json', // This tells the server that you're sending JSON
-        data: jsonData, 
-        success: function(response) {
-            console.log('Data sent successfully:', response);
-            // Check if the server response includes the redirect URL
-            if (response.success && response.redirect) {
-                // Hide the loading animation before redirection
-                
-                window.location.href = response.redirect;
-                // Delay the redirection slightly to ensure the loading animation is hidden
-                
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error in data submission:', xhr.status, xhr.responseText);
-        }
-        });
-  });
-}
-
-$('document').ready(setup);
+	// global variable for entry nutrition
+	let entry_nutrition = {"calories" : 0,
+	                        "carbs" : 0,
+	                        "fats" : 0,
+	                        "proteins": 0}
+	
+	// function to insert food-items into myplate from ajax call
+	function handleMyPlate(data) {
+	  console.log(data);
+	  $('#my-plate').append(data);
+	  hideLoadingAnimation();
+	}
+	
+	function showLoadingAnimation() {
+	    // Show the loading animation covering the entire screen
+	  $('#loading-animation').show();
+	}
+	
+	function hideLoadingAnimation() {
+	    // Hide the loading animation
+	  $('#loading-animation').hide();
+	}
+	
+	// function to handle removing a food-item from myplate
+	function closeMyPlate(element) {
+	  let checkid = element.dataset.checkid;
+	  let checkbox = document.getElementById(checkid);
+	  if (checkbox) {
+	    checkbox.checked = false;
+	  }
+	  let myplateid = element.dataset.myplateid;
+	  let myplatebox = document.getElementById(myplateid);
+	  if (myplatebox) {
+	    myplatebox.remove()
+	  }
+	  handleServingChange()
+	}
+	
+	// Function to handle checkbox change event: gets label text, macro data, makes URL, and 
+	// sends AJAX GET request to server
+	function handleCheckboxChange(element) {
+	  if (element.checked) {
+	    console.log("checked: ", element.dataset.mealname)
+	    let url = `/logfood/myplate?checkid=${encodeURIComponent(element.id)}` + 
+	              `&mealname=${encodeURIComponent(element.dataset.mealname)}` + 
+	              `&recid=${encodeURIComponent(element.dataset.recid)}` + 
+	              `&location=${encodeURIComponent(element.dataset.location)}`+ 
+	              `&mealtime=${encodeURIComponent(element.dataset.mealtime)}` + 
+	              `&servingsize=${encodeURIComponent(element.dataset.servingsize)}` + 
+	              `&cals=${encodeURIComponent(element.dataset.cals)}` + 
+	              `&carbs=${encodeURIComponent(element.dataset.carbs)}` + 
+	              `&prots=${encodeURIComponent(element.dataset.prots)}` + 
+	              `&fats=${encodeURIComponent(element.dataset.fats)}` +
+	              `&usda=${encodeURIComponent(element.dataset.usda)}`;
+	
+	    let requestData = ({
+	        type: 'GET',
+	        url: url,
+	        success: handleMyPlate,
+	        error: handleError
+	    });
+	    showLoadingAnimation();
+	    request = $.ajax(requestData);
+	 
+	  }
+	  else {
+	    let checkid = element.id 
+	    let uniqueid = checkid.slice(8);
+	    let myplatebox = document.getElementById("myplate-"+uniqueid)
+	    if (myplatebox) {
+	      myplatebox.remove()
+	    }
+	    console.log('unchecked');
+	  }
+	  handleServingChange()
+	}
+	
+	// for when AJAX Request encounters an error
+	function handleError() {
+	  console.log('error');
+	  hideLoadingAnimation();
+	}
+	
+	// function to insert food-items into the menu container
+	function handleResponse(data) {
+	  console.log(data);
+	  $('#menu-items').html(data);
+	  hideLoadingAnimation();
+	}
+	
+	
+	// Function to handle USDA data search
+	function searchUSDAFood() {
+	  const query = $('#searchBar').val().trim();
+	  console.log("within search")
+	  console.log(query)
+	  // resultsContainer.children().hide(); // hide results if query is empty
+	  showLoadingAnimation();
+	  fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
+	    .then(response => response.json())
+	    .then(data => {
+	      console.log("append the response")
+	      appendDataToDOM(data);
+	    })
+	    .catch(error => console.error('Error fetching USDA data:', error));
+	}
+	
+	function appendDataToDOM(data) {
+	  
+	  const resultsContainer = document.getElementById('usda-search-results');
+	  resultsContainer.innerHTML = '';  // Clear previous results - BUG, need to figure out how to get rid of without deleting important info
+	
+	  if (data.foods && data.foods.length > 0) {
+	    data.foods.forEach((food, index) => {
+	      const calories = food.foodNutrients.find(n => n.nutrientName === 'Energy')?.value || 0;
+	      const proteins = food.foodNutrients.find(n => n.nutrientName === 'Protein')?.value || 0;
+	      const carbs = food.foodNutrients.find(n => n.nutrientName === 'Carbohydrate, by difference')?.value || 0;
+	      const fats = food.foodNutrients.find(n => n.nutrientName === 'Total lipid (fat)')?.value || 0;
+	
+	      // Check if food portions are available and extract the first one
+	      const servingSizeInfo = food.foodPortions && food.foodPortions.length > 0 ? food.foodPortions[0].portionDescription : "100g";
+	
+	      const foodElement = document.createElement('div');
+	      foodElement.className = 'form-check';
+	
+	      foodElement.innerHTML = `
+	        <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-usda="true" data-recid="${food.fdcId}"
+	               data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime={{ calc_mealtime }} data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+	               data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
+	               onchange="handleCheckboxChange(this)">
+	        <label class="form-check-label" for="usda-checkbox-${food.fdcId}">${food.description}</label>
+	        <p id="nf-usda-${food.fdcId}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+	      `;
+	      resultsContainer.appendChild(foodElement);
+	    });
+	  } else {
+	    resultsContainer.innerHTML = '<div>No results found.</div>';
+	  }
+	  hideLoadingAnimation();
+	}
+	
+	
+	function addUSDANutritionData() {
+	  let nutritionData = [];
+	
+	  // Collect data from all checked USDA food checkboxes
+	  document.querySelectorAll('.small-input').forEach(input => {
+	      if (input.dataset.usda === "true") {
+	          let foodData = {
+	              recipeid: input.dataset.recid,
+	              mealname: input.dataset.mealname,
+	              servingsize: input.dataset.servingsize,
+	              calories: parseFloat(input.dataset.cals),
+	              proteins: parseFloat(input.dataset.prots),
+	              carbs: parseFloat(input.dataset.carbs),
+	              fats: parseFloat(input.dataset.fats),
+	              source: "usda"
+	          };
+	          nutritionData.push(foodData);
+	      }
+	  });
+	
+	  // Send the data to the server if there is any
+	  if (nutritionData.length > 0) {
+	      showLoadingAnimation();
+	      $.ajax({
+	          url: '/addingnutrition',  // URL to the server-side function handling the database insertion
+	          type: 'POST',
+	          contentType: 'application/json',
+	          data: JSON.stringify({nutritionData: nutritionData}), 
+	          success: function(response) {
+	              console.log('Nutrition data successfully sent and saved:', response);
+	              // alert("Nutrition data added successfully!");
+	          },
+	          error: function(xhr, status, error) {
+	              console.error('Failed to send nutrition data:', error);
+	              // alert("Error adding nutrition data. Check console for details.");
+	          }
+	      });
+	  } else {
+	      console.log("No USDA food items selected or data is missing.");
+	      // alert("No USDA food items selected or data is incomplete.");
+	  }
+	}
+	
+	
+	// Debounce function to limit rate of invoking functions
+	function debounce(func, delay) {
+	  let debounceTimer;
+	  return function() {
+	    const context = this;
+	    const args = arguments;
+	    clearTimeout(debounceTimer);
+	    debounceTimer = setTimeout(() => func.apply(context, args), delay);
+	  };
+	}
+	
+	// fetch menu items based on selected dhall and mealtime + correct display
+	function getResults() {
+	  
+	  $('.menu-items-content').hide();
+	  $('#select').hide();
+	  $('#noDataMessage').hide();
+	  let selectedHall = $('#diningHallSelect').val();
+	  console.log(selectedHall)
+	
+	  if (selectedHall === "Personal Food Items") {
+	    $('#searchBar').hide();
+	    $('#mealTimeTab').hide();
+	    $('#usda-search-results').hide();
+	  }
+	  else if (selectedHall === "USDA FoodData Central") {
+	    $('#mealTimeTab').hide();
+	    $('#searchBar').show();
+	    $('#usda-search-results').show();
+	  }
+	  else {
+	    $('#searchBar').hide();
+	    $('#usda-search-results').hide();
+	    $('#mealTimeTab').show();
+	    let mealtime = $('.nav-tabs .active').attr('id').replace('-tab', '');
+	    dhallCode = selectedHall.substring(0, 2)
+	    let divToShow = dhallCode + "-" + mealtime
+	    if ($('#' + divToShow).length > 0) {
+	      $('#' + divToShow).show();
+	    } else {
+	      $('#noDataMessage').show();
+	    }
+	  }
+	}
+	
+	function handleServingChange() {
+	  const inputs = document.querySelectorAll('.small-input');
+	  let totalCals = 0
+	  let totalCarbs = 0
+	  let totalFats = 0
+	  let totalProts = 0
+	  inputs.forEach(input => {
+	    let serving = input.value
+	    totalCals += serving*input.dataset.cals
+	    totalCarbs += serving*input.dataset.carbs
+	    totalFats += serving*input.dataset.fats
+	    totalProts += serving*input.dataset.prots
+	    });
+	  entry_nutrition["calories"] = totalCals;
+	  entry_nutrition["carbs"] = totalCarbs;
+	  entry_nutrition["fats"] = totalFats;
+	  entry_nutrition["proteins"] = totalProts;
+	  
+	  const plateTotals = document.getElementById("plateTotals")
+	  plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
+	}
+	
+	// set up event listeners for dhall select and mealtime tab
+	function setup() {
+	  hideLoadingAnimation();
+	  $('#diningHallSelect').change(getResults);  // Toggle search bar on selection change
+	  $('#searchBar').on('input', debounce(searchUSDAFood, 500));  // Debounce the search input
+	  const diningHallSelect = document.getElementById('diningHallSelect');
+	
+	  // Event listener for the dropdown selection change
+	  $('#mealTimeTab a').on('shown.bs.tab', getResults);
+	  diningHallSelect.addEventListener('change', getResults);
+	
+	  // Event listener for submit button (to get entry and send to flask)
+	  document.getElementById('submitButton').addEventListener('click', function(event) {
+	    event.preventDefault();
+	    addUSDANutritionData();
+	    console.log("submit");
+	    var recids = [];
+	    var servings = [];
+	    const inputs = document.querySelectorAll('.small-input');
+	    inputs.forEach(input => {
+	      let recid = input.dataset.recid;
+	      let serving = parseFloat(input.value);
+	      recids.push(recid)
+	      servings.push(serving)
+	      });
+	
+	    var dataToSend = {
+	      entry_recids: recids,
+	      entry_servings: servings,
+	      entry_nutrition: entry_nutrition
+	    }
+	   var jsonData = JSON.stringify(dataToSend);
+	   showLoadingAnimation();
+	    $.ajax({
+	        type: 'POST',
+	        url: '/logfood',
+	        contentType: 'application/json', // This tells the server that you're sending JSON
+	        data: jsonData, 
+	        success: function(response) {
+	            console.log('Data sent successfully:', response);
+	            // Check if the server response includes the redirect URL
+	            if (response.success && response.redirect) {
+	                // Hide the loading animation before redirection
+	                
+	                window.location.href = response.redirect;
+	                // Delay the redirection slightly to ensure the loading animation is hidden
+	                
+	            }
+	        },
+	        error: function(xhr, status, error) {
+	            console.error('Error in data submission:', xhr.status, xhr.responseText);
+	        }
+	        });
+	  });
+	}
+	
+	$('document').ready(setup);
 </script>
 {% endblock %}
