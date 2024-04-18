@@ -2,12 +2,18 @@
 {% set current_page = 'personalfood' %}
 {% block title %}Personal Nutrition{% endblock %}
 {% block content %}
-{% if user_nutrition is not none %}
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 <div class = "p-5">
     <div class = "text-center">
         <h1 class="display-3 pb-2"><strong>Personal Nutrition</strong></h1>
+        <h5 class="text-center px-2">See an overview of your custom foods and add to your collection of recipes.</h5>
     </div>
-<div class="py-3 row g-4 justify-content-center">
+    <div class="text-center">
+        <a href="{{ url_for('personal_food') }}" class="btn btn-primary">Add Personal Nutrition</a>
+    </div>
+    <br>
+{% if user_nutrition is not none %}
+<div id = "masonry-grid" class="py-3 row g-4 justify-content-center" data-masonry='{"percentPosition": true }'>
     {% for item in user_nutrition %}
     <div class="col col-md-4 col-xl-3 col-xxl-2">
         <div class="card h-100">
@@ -18,14 +24,14 @@
                 {% if item['image'] %}
                     <li class="list-group-item"><img src="{{ url_for('serve_image', image_id=item['_id']) }}" alt="Meal Image" class = "fitted-image"></li>
                 {% endif %}
-                <li class="list-group-item"><p class="card-text"><strong>Description: </strong>{{ item['description']}}</p></li>
+                {% if item['description'] != '' %}<li class="list-group-item"><strong>Description: </strong>{{ item['description']}}</li>{% endif %}
                 <li class="list-group-item"><strong>Calories:</strong> {{ item['calories']}}</li>
-                <li class="list-group-item"><strong>Proteins:</strong> {{ item['proteins']}}</li>
-                <li class="list-group-item"><strong>Carbs:</strong> {{ item['carbs'] }}</li>
-                <li class="list-group-item"><strong>Fats:</strong> {{ item['fats'] }}</li>
+                <li class="list-group-item"><strong>Proteins:</strong> {{ item['proteins']}}g</li>
+                <li class="list-group-item"><strong>Carbs:</strong> {{ item['carbs'] }}g</li>
+                <li class="list-group-item"><strong>Fats:</strong> {{ item['fats'] }}g</li>
               </ul>
             <div class="card-footer">
-                <small class="text-body-secondary">Created on {{ item['date_formatted'] }}</small>
+                <small class="text-body-secondary">Created on {{ custom_strftime(item['date']) }}</small>
             </div>
         </div>
     </div>
@@ -35,8 +41,22 @@
 {% else %}
 <div class="text-center p-5"><h1>No personal nutrition found.</h1></div>
 {% endif %}
-<div class="text-center">
-    <a href="{{ url_for('personal_food') }}" class="btn btn-primary">Add Personal Nutrition</a>
+
 </div>
-</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+<script>
+$(document).ready(function(){
+    // Initialize Masonry after all images have loaded
+    $('#masonry-grid').imagesLoaded(function(){
+        $('#masonry-grid').masonry({
+            // Masonry options
+            itemSelector: '.col',
+            percentPosition: true
+        });
+    });
+});
+</script>
 {% endblock %}

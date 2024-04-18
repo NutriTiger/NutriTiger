@@ -587,8 +587,7 @@ def log_food_data():
 def personal_nutrition():
     netid = auth.authenticate()
     user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
-
-    return render_template('personalnutrition.html', user_nutrition=user_nutrition)
+    return render_template('personalnutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
 #--------------------------------------------------------------------
 
 @app.route('/addpersonalfood', methods=['GET'])

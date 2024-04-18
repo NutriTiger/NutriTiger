@@ -10,6 +10,7 @@
         <label class="nt-btn btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
     </div>
     <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
+    <a href="{{ url_for('log_food') }}" class="btn btn-primary">Log Food</a>
 </div>
 <div style = "display:none;" id="todaysDateDivUpdate">{{ todays_date }}</div>
 <div class="p-5 row row-nt row-cols-1 row-cols-md-3 g-4">
@@ -21,7 +22,7 @@
                 <h3 class="card-title text-center">{{ item.dhall }}</h3>
                 {% set outer_outer_loop = loop %}
                 {% for category, foods in item.data.items() %}
-                <h6>{{ category }}</h6>
+                <strong><h6>{{ category }}</h6></strong>
                 {% set outer_loop = loop %}
                 {% for food, code in foods.items() %}
                 <a tabindex="0" class="nt-btn btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-container="body" data-content-id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">{{ food }}</a>
