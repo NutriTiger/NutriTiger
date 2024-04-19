@@ -13,6 +13,7 @@ import time
 import datetime
 import os
 import dotenv
+import pytz
 from pytz import timezone
 #from CASClient import CASClient
 from src import dbusers
@@ -59,6 +60,11 @@ def get_ampm():
         return 'afternoon'
     return 'evening'
 
+def get_date():
+
+    eastern = pytz.timezone('US/Eastern')
+    today = datetime.datetime.now(eastern).date()
+    return today
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
@@ -81,8 +87,8 @@ def index():
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
     netid = auth.authenticate()
-    #netid = _cas.authenticate()
-    #netid = netid.rstrip()
+    
+    date = get_date()
 
     # will need to call whenever an existing user logs in
     cursor = dbusers.userlogin(netid)
@@ -162,7 +168,7 @@ def homepage():
 
     return render_template('homepage.html', 
                             ampm=get_ampm(), 
-                            netid=netid,
+                            netid=netid, date=date,
                             prots=curr_prots,
                             carbs=curr_carbs,
                             fats=curr_fats,
