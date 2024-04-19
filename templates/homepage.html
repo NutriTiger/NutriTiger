@@ -150,15 +150,16 @@
 	function showHomepageCards() {
 		// Hide the placeholder message/buttons
 		document.getElementById("placeholder").style.display = "none";
-		
+
 		// Show the homepage cards 
 		document.getElementById("leftCard").style.display = "block";
 		document.getElementById("rightCard").style.display = "block";
 	}
 
 	function showPlaceholder() {
+		console.log("showing placeholder")
 		// Show the placeholder message/buttons
-		document.getElementbyId("placeholder").style.display = "block"
+		document.getElementById("placeholder").style.display = "block"
 		// Hide the homepage cards
 		document.getElementById("leftCard").style.display = "none";
 		document.getElementById("rightCard").style.display = "none"
@@ -169,6 +170,9 @@
 	// } else {
 		// showPlaceholder();
 	//}
+	window.onload = function() {
+		showHomepageCards();
+	}
 
 </script>
 {% endblock %}
