@@ -10,21 +10,25 @@
         <div class="col-sm-9 mx-auto">
           <div class="card">
             <div class="card-body">
+
                 <!--My Plate (right card)-->
                 <h4 class="text-center py-3">My Plate</h4>
+
                 <!--Create a card for each entry-->
                 <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
                     <div class="row-cols-1 p-2">
-                        <div class="card border-primary" id="{{entry}}" style="padding: 10px;">
+                        <div class="card border-primary" id="{{ entry }}" style="padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
                                     <h5 class="card-title py-1">{{entry}}</h5>
                                     <form action="/editingplate" method="post">
                                         <input type="hidden" name="card_id" value="{{ entry }}">
-                                        <button type="submit" data-cardid="{{entry}}" class="btn-close" aria-label="Close"></button>
+                                        <button type="submit" data-entry-id="{{ entry }}" class="btn-close" aria-label="Close"></button>
                                     </form>
                                 </div>
+
+                                <!--Create a bordered element for each food in the entry-->
                                 <ul class="list-group">
                                     {% for food in foods %}
                                     <!--Border with close buttons for each food-->
@@ -45,23 +49,24 @@
                                     
                                                     <!-- Close button -->
                                                     <button type="button" id="close-{{ uniqueid }}" class="btn btn-close btn-sm" aria-label="Close"
-                                                    onclick="closeMyPlate(this)" data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
+                                                    data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     {% endfor %}
                                 </ul>
-                            </div>
-                                                        
+
+                            </div>                             
+                        </div>
                     </div>
-                </div>
 
                 {% endfor %}
 
+                <!--Save plate button-->
                 <div class="py-3">
                     <form action="/editingplate" method="post">
-                        <button type="submit" name="save_plate" class="btn btn-secondary btn-lg btn-block">Save Plate</button>
+                        <button id="savePlate" type="submit" name="save_plate" class="btn btn-secondary btn-lg btn-block">Save Plate</button>
                     </form>
                 </div>
                 
@@ -72,6 +77,42 @@
 
     <script>
 
+        // List of deleted entries' indices
+        let deletedEntries = [];
+        // List of lists of deleted foods & their entries
+        let deletedFoods = [];
+
+        function appendEntrytoDelete(entryId) {
+            
+            // Get index of entry from "entry" string
+            var entry = document.getElementById(entryId).dataset.id;
+            var entryIndex = parseInt(entry.substring(5));
+            console.log(entryIndex);
+            // append to deletedEntriesList
+            deletedEntries.push(entryIndex);
+        }
+
+        function appendFoodtoDelete(entryId, foodId) {
+
+            // make entryId an index 
+            var entry = document.getElementById(entryId).dataset.id;
+            var entryIndex = parseInt(entry.substring(5));
+
+            // append to deleted foods list at the index that corresponds to its entry
+            deletedFoods[entryIndex].push(foodId);
+        }
+
+        // once an entry has been appended to be deleted, hide it from view
+        function hideEntry(entryId) {
+            document.getElementById(entryId).style.display = "none";
+        }
+
+        // once an entry has been appended to be deleted, hide it from view
+        function hideFood(foodId) {
+            document.getElementById(foodId).style.display = "none";
+        }
+
+        // Serving input validation function
         function isValid(input) {
             var charCode = input.which || input.keyCode;
             var value = input.target.value;
@@ -90,5 +131,52 @@
         
             return true;
         }
+
+        // Event listener for close (X) buttons
+        document.addEventListener('click', function(event) {
+
+            // If an entry was deleted 
+            if (event.target.classList.contains('btn-close')) {
+
+                console.log("delete entry button clicked");
+                var entryId = event.target.dataset.entryId;
+                // append to list and hide from view
+                appendEntrytoDelete(entryId);
+                hideEntry(entryId);      
+            }
+
+            // If a food was deleted
+            else if (event.target.classList.contains('btn-sm')) {
+
+                console.log("delete a food button clicked");
+                var foodId = event.target.dataset.myplateid;
+                // append to list and hide from view
+                // get entryId of this food
+                appendFoodtoDelete(foodId);
+                hideFood(foodId);
+            }
+        });
+        
+        // once submit button is clicked, send everything to be deleted as an AJAX call
+        document.getElementById('savePlate').addEventListener('click', function(event) {
+	    
+	        console.log("save plate button clicked");
+            
+            // Send AJAX request with everything to delete
+            $.ajax({
+                url: '/editingplate',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ "deletedEntries": deletedEntries, "deletedFoods":deletedFoods }),
+                success: function(response) {
+                    console.log('Data sent successfully:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error sending data:', error);
+                }
+            });
+
+        });
+
         </script>
 {% endblock %}

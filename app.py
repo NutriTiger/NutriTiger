@@ -368,8 +368,6 @@ def add_usda_nutrition():
 def editing_plate():
     netid = auth.authenticate()
 
-    # Placeholder values
-    #netid = 'jm0278' 
     cursor = dbusers.finduser(netid)
     curr_prots = round(float(cursor['prot_his'][0]), 1)
     curr_carbs = round(float(cursor['carb_his'][0]), 1)
@@ -415,7 +413,7 @@ def editing_plate():
         entries_food_dict[entry] = foods
 
     if request.method == 'POST':
-
+        '''
         if 'card_id' in request.form:
             # Retreive entry ID (which should be the direct entry name)
             card_id = request.form.get('card_id')
@@ -446,7 +444,19 @@ def editing_plate():
 
         elif 'save_plate' in request.form:
             # Save button action (update database)
-    
+            return redirect('/homepage')
+        '''
+        if 'save_plate' in request.form:
+            # Unpack AJAX call 
+            data = request.get_json()
+            entriesToDel = data.get("deletedEntries", [])
+            foodsToDel = data.get("deletedFoods", [])
+
+            # delete entries/foods from user DB
+            dbusers.deleteManyEntry(entriesToDel)
+            for food in foodsToDel:
+                dbusers.delFood(food)
+
             return redirect('/homepage')
     
     return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
