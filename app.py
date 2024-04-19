@@ -369,11 +369,6 @@ def editing_plate():
     netid = auth.authenticate()
 
     cursor = dbusers.finduser(netid)
-    curr_prots = round(float(cursor['prot_his'][0]), 1)
-    curr_carbs = round(float(cursor['carb_his'][0]), 1)
-    curr_fats = round(float(cursor['fat_his'][0]), 1)
-    cal_goal = int(cursor['caloricgoal'])
-    curr_caltotal = cursor['cal_his'][0]
     entries_info = cursor['daily_rec']
 
     # Testing filling the entries
@@ -453,16 +448,15 @@ def editing_plate():
             foodsToDel = data.get("deletedFoods", [])
 
             # delete entries/foods from user DB
-            dbusers.deleteManyEntry(entriesToDel)
-            for food in foodsToDel:
-                dbusers.delFood(food)
+            if len(entriesToDel) > 0:
+                dbusers.deleteManyEntry(entriesToDel)
+                for food in foodsToDel:
+                    dbusers.delFood(food)
 
             return redirect('/homepage')
     
     return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
-                           curr_caltotal=curr_caltotal, cal_goal=cal_goal,
-                           entries_food_dict=entries_food_dict,
-                           prots=curr_prots, carbs=curr_carbs, fats=curr_fats,)
+                           entries_food_dict=entries_food_dict)
 
 #--------------------------------------------------------------------
 
