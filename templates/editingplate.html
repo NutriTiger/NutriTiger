@@ -24,7 +24,7 @@
                                     <h5 class="card-title py-1">{{entry}}</h5>
                                     <form action="/editingplate" method="post">
                                         <input type="hidden" name="card_id" value="{{ entry }}">
-                                        <button type="submit" data-entry-id="{{ entry }}" class="btn-close" aria-label="Close"></button>
+                                        <button type="submit" data-entryId="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
                                     </form>
                                 </div>
 
@@ -85,8 +85,7 @@
         function appendEntrytoDelete(entryId) {
             
             // Get index of entry from "entry" string
-            var entry = document.getElementById(entryId).dataset.id;
-            var entryIndex = parseInt(entry.substring(5));
+            var entryIndex = parseInt(entryId.substring(5));
             console.log(entryIndex);
             // append to deletedEntriesList
             deletedEntries.push(entryIndex);
@@ -133,15 +132,19 @@
         }
 
         // Event listener for close (X) buttons
-        document.addEventListener('click', function(event) {
-
+        // add one for each button 
+        document.getElementsByClassName('entryCloseBtn').addEventListener('click', function(event) {
+            
+            event.preventDefault();
             // If an entry was deleted 
             if (event.target.classList.contains('btn-close')) {
 
                 console.log("delete entry button clicked");
-                var entryId = event.target.dataset.entryId;
+                var entryId = event.target.dataset.id;
                 // append to list and hide from view
+                console.log(entryId)
                 appendEntrytoDelete(entryId);
+                console.log(entryId)
                 hideEntry(entryId);      
             }
 
@@ -161,7 +164,7 @@
         document.getElementById('savePlate').addEventListener('click', function(event) {
 	    
 	        console.log("save plate button clicked");
-            
+            console.log(deletedEntries)
             // Send AJAX request with everything to delete
             $.ajax({
                 url: '/editingplate',
