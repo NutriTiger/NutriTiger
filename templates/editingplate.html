@@ -32,7 +32,7 @@
                                 <ul class="list-group">
                                     {% for food in foods %}
                                     <!--Border with close buttons for each food-->
-                                    <div class="card border-primary p-2 mb-3" id="myplate-{{ uniqueid }}">
+                                    <div class="foodCard card border-primary p-2 mb-3" id="{{ loop.index }}">
                                         <div class="row">
                                             <div class="col">
                                                 <!-- Food name label-->
@@ -48,8 +48,8 @@
                                                     onkeypress="return isValid(event)">
                                     
                                                     <!-- Close button -->
-                                                    <button type="button" id="close-{{ uniqueid }}" class="btn btn-close btn-sm" aria-label="Close"
-                                                    data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
+                                                    <button type="button" id="close-{{ uniqueid }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close"
+                                                    data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}" data-foodId="{{ loop.index0 }}"></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -89,7 +89,7 @@
             var entryIndex = parseInt(entryId.substring(5));
             console.log(entryIndex);
             // append to deletedEntriesList
-            deletedEntries.push(entryIndex);
+            deletedEntries.push(entryIndex - 1);
         }
 
         function appendFoodtoDelete(entryId, foodId) {
@@ -98,7 +98,7 @@
             var entryIndex = parseInt(entryId.substring(5));
 
             // append to deleted foods list at the index that corresponds to its entry
-            deletedFoods[entryIndex].push(foodId);
+            deletedFoods.push({index: entryIndex - 1, foodnums: [foodId]});
         }
 
         // once an entry has been appended to be deleted, hide it from view
@@ -135,6 +135,28 @@
         var entryCards = document.querySelectorAll('.entryCard');
 
         entryCards.forEach(function(card) {
+
+            //add event listener to each food close button
+            var foodCloseButtons = card.querySelectorAll('.foodCloseBtn');
+            foodCloseButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log("delete food button clicked");
+
+                    var foodId = button.dataset.foodId;
+                    var entryId = card.id;
+                    
+                    // get id of the food card "parent"
+                    var foodCard = button.closest('.foodCard'); // Find the closest food card element
+                    var foodCardId = foodCard.id; // Get the ID of the food card
+
+                    console.log("foodcard id is ", foodCardId);
+                    appendFoodtoDelete(entryId, foodId);
+                    hideFood(foodCardId);
+                })
+            });
+
+            // add event listener to each entry close button
             card.addEventListener('click', function(event) {
                 event.preventDefault();
                 console.log("Del entry button clicked");
