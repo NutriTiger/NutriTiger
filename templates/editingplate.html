@@ -18,13 +18,13 @@
                 <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
                     <div class="row-cols-1 p-2">
-                        <div class="card border-primary" id="{{ entry }}" style="padding: 10px;">
+                        <div class="entryCard card border-primary" id="{{ entry }}" style="padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
                                     <h5 class="card-title py-1">{{entry}}</h5>
                                     <form action="/editingplate" method="post">
                                         <input type="hidden" name="card_id" value="{{ entry }}">
-                                        <button type="submit" data-entryId="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
+                                        <button id="{{ entry }}" type="submit" data-entryId="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
                                     </form>
                                 </div>
 
@@ -82,6 +82,7 @@
         // List of lists of deleted foods & their entries
         let deletedFoods = [];
 
+        // pass in "Entry _" string
         function appendEntrytoDelete(entryId) {
             
             // Get index of entry from "entry" string
@@ -94,8 +95,7 @@
         function appendFoodtoDelete(entryId, foodId) {
 
             // make entryId an index 
-            var entry = document.getElementById(entryId).dataset.id;
-            var entryIndex = parseInt(entry.substring(5));
+            var entryIndex = parseInt(entryId.substring(5));
 
             // append to deleted foods list at the index that corresponds to its entry
             deletedFoods[entryIndex].push(foodId);
@@ -131,34 +131,49 @@
             return true;
         }
 
-        // Event listener for close (X) buttons
-        // add one for each button 
-        document.getElementsByClassName('entryCloseBtn').addEventListener('click', function(event) {
-            
-            event.preventDefault();
-            // If an entry was deleted 
-            if (event.target.classList.contains('btn-close')) {
+        // select all Entry cards and add close button event listeners for each
+        var entryCards = document.querySelectorAll('.entryCard');
 
-                console.log("delete entry button clicked");
-                var entryId = event.target.dataset.id;
+        entryCards.forEach(function(card) {
+            card.addEventListener('click', function(event) {
+                event.preventDefault();
+                console.log("Del entry button clicked");
+
+                var entryId = event.target.id;
                 // append to list and hide from view
-                console.log(entryId)
+                console.log("Printing entryid", entryId)
                 appendEntrytoDelete(entryId);
                 console.log(entryId)
-                hideEntry(entryId);      
-            }
-
-            // If a food was deleted
-            else if (event.target.classList.contains('btn-sm')) {
-
-                console.log("delete a food button clicked");
-                var foodId = event.target.dataset.myplateid;
-                // append to list and hide from view
-                // get entryId of this food
-                appendFoodtoDelete(foodId);
-                hideFood(foodId);
-            }
+                hideEntry(entryId); 
+            });
         });
+
+        // document.getElementsByClassName('entryCloseBtn').addEventListener('click', function(event) {
+            
+        //     event.preventDefault();
+        //     // If an entry was deleted 
+        //     if (event.target.classList.contains('btn-close')) {
+
+        //         console.log("delete entry button clicked");
+        //         var entryId = event.target.dataset.id;
+        //         // append to list and hide from view
+        //         console.log(entryId)
+        //         appendEntrytoDelete(entryId);
+        //         console.log(entryId)
+        //         hideEntry(entryId);      
+        //     }
+
+        //     // If a food was deleted
+        //     else if (event.target.classList.contains('btn-sm')) {
+
+        //         console.log("delete a food button clicked");
+        //         var foodId = event.target.dataset.myplateid;
+        //         // append to list and hide from view
+        //         // get entryId of this food
+        //         appendFoodtoDelete(foodId);
+        //         hideFood(foodId);
+        //     }
+        // });
         
         // once submit button is clicked, send everything to be deleted as an AJAX call
         document.getElementById('savePlate').addEventListener('click', function(event) {
