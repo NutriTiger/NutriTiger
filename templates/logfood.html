@@ -72,7 +72,7 @@
         </div>
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
-            <div class="logfood-card card">
+            <div class="logfood-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Plate</h5>
                     <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
@@ -358,6 +358,7 @@
 	function startTutorial(){
 		introJs().setOptions({
 			disableInteraction: true,
+			showBullets: false,
 			steps: [{
 				title: 'Welcome',
 				intro: 'Welcome to the tutorial to learn how to log your food for the day!'
@@ -368,19 +369,61 @@
 				intro: "First, you will select the source of your food here. This can be from Princeton's dining halls, your custom recipes, or from a generic USDA database if you can't find it. We have picked a dining hall for you for this demonstration."
 			},
 			{
-				title: 'Farewell!',
-				element: document.querySelector('.menu-items-content'),
-				intro: 'And this is our final step!'
-			}]
-		}).onbeforechange(function(targetElement) {
+				title: 'Select Mealtime',
+				element: document.querySelector('#mealTimeTab'),
+				intro: 'Here you can select your mealtime!'
+			},
+			{
+				title: 'Select Foods',
+				element: document.querySelector('#menu-items'),
+				intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
+			},
+			{
+				title: 'Select Item',
+				element: document.querySelector('#checkbox-5-1-1'),
+				intro: "Let's select an item as an example."
+			},
+			{
+				title: 'Edit Servings',
+				element: document.querySelector('#tutorial-my-plate'),
+				intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. Let's put one serving for now."
+			},
+			{
+				title: 'Plate Totals',
+				element: document.querySelector('.card-footer'),
+				intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
+			},
+			{
+				title: 'Upload plate',
+				element: document.querySelector('#submitButton'),
+				intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage."
+			},
+		]
+		}).onchange(function(targetElement) {
 			// Check if we are on the step where we want to auto-select an option from the dropdown
 			if (targetElement.classList.contains('select-dropdown')) {
 				// Simulate selecting an option by triggering a change event
-				// You can adjust the option to be selected based on your specific needs
-				document.querySelector('.select-dropdown').value = 'Whitman & Butler Colleges'; // Replace 'OptionValue' with the value of the option you want to select
+				document.querySelector('.select-dropdown').value = 'Whitman & Butler Colleges'; 
 				document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
 			}
-		}).start();
+			if (targetElement.id == 'checkbox-5-1-1') {
+				var checkbox = document.querySelector('#checkbox-5-1-1');
+				checkbox.checked = true;
+				handleCheckboxChange(checkbox);
+			}
+			if (targetElement.id == 'tutorial-my-plate') {
+				var servingInput = document.querySelector('#new_entry input[type="number"]');
+
+				// Set the value of the input field to 1
+				servingInput.value = 1;
+				handleServingChange();
+			}
+		}).onexit(function() {
+			console.log('tour completed');
+			document.querySelector('.select-dropdown').value = 'Select Food Source'; 
+			document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+			document.getElementById('close--5-1-1').click();
+    	}).start();
 	}
 
     // set up event listeners for dhall select and mealtime tab
