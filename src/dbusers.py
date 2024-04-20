@@ -216,7 +216,7 @@ def deleteEntry(netid, entry_num):
 
 #-----------------------------------------------------------------------
 '''
-Deletes each entry with in the array of entry numbers from the daily plate of the user with netid: netid 
+Deletes each entry within the array of entry numbers from the daily plate of this_user 
 Returns the updated user profile
 Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
 '''
@@ -245,7 +245,7 @@ def deleteManyEntry(this_user, array_of_entry_nums):
 #-----------------------------------------------------------------------
 
 '''
-Deletes a food item with food_num from entry with entry_num from the daily plate of the user with netid: netid 
+Deletes a food item with food_num from entry with entry_num from the daily plate of this_user
 Returns the updated user profile
 Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
 Note: Food num is also 0th indexed
@@ -267,7 +267,7 @@ def delFood(this_user, entry_num, food_num):
 #-----------------------------------------------------------------------
 
 '''
-Updates serving size to new_serv of a food item with food_num from entry with entry_num from the daily plate of the user with netid: netid 
+Updates serving size to new_serv of a food item with food_num from entry with entry_num from the daily plate of this_user 
 Returns the updated user profile
 Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
 Note: Food num is also 0th indexed
