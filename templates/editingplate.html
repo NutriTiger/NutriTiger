@@ -157,16 +157,19 @@
             });
 
             // add event listener to each entry close button
-            card.addEventListener('click', function(event) {
-                event.preventDefault();
-                console.log("Del entry button clicked");
+            var entryCloseButtons = card.querySelectorAll('.entryCloseBtn');
+            entryCloseButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log("Del entry button clicked");
 
-                var entryId = event.target.id;
-                // append to list and hide from view
-                console.log("Printing entryid", entryId)
-                appendEntrytoDelete(entryId);
-                console.log(entryId)
-                hideEntry(entryId); 
+                    var entryId = button.dataset.entryId;
+                    // append to list and hide from view
+                    console.log("Printing entryid", entryId)
+                    appendEntrytoDelete(entryId);
+                    console.log(entryId)
+                    hideEntry(entryId); 
+                });
             });
         });
 
@@ -207,7 +210,7 @@
                 url: '/editingplate',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ "deletedEntries": deletedEntries, "deletedFoods":deletedFoods }),
+                data: JSON.stringify({ "deletedEntries": deletedEntries, "deletedFoods": deletedFoods }),
                 success: function(response) {
                     console.log('Data sent successfully:', response);
                 },
