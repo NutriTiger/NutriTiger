@@ -23,10 +23,7 @@ from src import utils
 from src import auth
 from src import photos
 import requests
-import json
 from bson.objectid import ObjectId
-from PIL import Image
-import io
 from bson.binary import Binary
 
 #--------------------------------------------------------------------
