@@ -216,21 +216,19 @@ def deleteEntry(netid, entry_num):
 
 #-----------------------------------------------------------------------
 '''
-Deletes each entry with in the array of entry numbers from the daily plate of the user with netid: netid 
+Deletes each entry within the array of entry numbers from the daily plate of this_user 
 Returns the updated user profile
 Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
 '''
-def deleteManyEntry(netid, array_of_entry_nums):
-    this_user = finduser(netid)
-    if this_user is None:
-        return None
+def deleteManyEntry(this_user, array_of_entry_nums):
+    sorted_entry_nums = sorted(array_of_entry_nums)
 
     totalNut = {"calories": 0, 
                 "carbs": 0, 
                 "fats": 0, 
                 "proteins": 0}
     # update
-    for entry_num in array_of_entry_nums:
+    for entry_num in sorted_entry_nums:
         entry_nut = this_user["daily_nut"][entry_num]
         totalNut["calories"] += entry_nut["calories"]
         totalNut["carbs"] += entry_nut["carbs"]
@@ -242,20 +240,17 @@ def deleteManyEntry(netid, array_of_entry_nums):
         this_user["daily_nut"].pop(entry_num)
     __updatehistory__(this_user, totalNut, -1)
     
-    return __setuser__(netid, this_user)
+    return this_user
 
 #-----------------------------------------------------------------------
 
 '''
-Deletes a food item with food_num from entry with entry_num from the daily plate of the user with netid: netid 
+Deletes a food item with food_num from entry with entry_num from the daily plate of this_user
 Returns the updated user profile
 Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
 Note: Food num is also 0th indexed
 '''
-def delFood(netid, entry_num, food_num):
-    this_user = finduser(netid)
-    if this_user is None:
-        return None
+def delFood(this_user, entry_num, food_num):
     
     food_rec = this_user["daily_rec"][entry_num].pop(food_num)
     food_serv = this_user["daily_serv"][entry_num].pop(food_num)
@@ -267,22 +262,18 @@ def delFood(netid, entry_num, food_num):
     entry_nut["proteins"] = entry_nut["proteins"] - food_nut["proteins"]
     __updatehistory__(this_user, food_nut, -1)
     
-    return __setuser__(netid, this_user)
+    return this_user
 
 #-----------------------------------------------------------------------
 
 '''
-Updates serving size to new_serv of a food item with food_num from entry with entry_num from the daily plate of the user with netid: netid 
+Updates serving size to new_serv of a food item with food_num from entry with entry_num from the daily plate of this_user 
 Returns the updated user profile
 Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
 Note: Food num is also 0th indexed
 Note: New serving size is a double
 '''
-def editFood(netid, entry_num, food_num, new_serv):
-    this_user = finduser(netid)
-    if this_user is None:
-        return None
-    
+def editFood(this_user, entry_num, food_num, new_serv):
     # calculate difference
     food_serv = this_user["daily_serv"][entry_num][food_num]
     if (food_serv == new_serv):
@@ -304,8 +295,40 @@ def editFood(netid, entry_num, food_num, new_serv):
     entry_nut["fats"] = entry_nut["fats"] + diff_nut["fats"]
     entry_nut["proteins"] = entry_nut["proteins"] + diff_nut["proteins"]
     __updatehistory__(this_user, diff_nut, 1)
+
+    return this_user
+
+#-----------------------------------------------------------------------
+'''
+One function for all edit plate possibilities. Takes 3 arguments:
+    netid
+    entriesToDelete: an array of entry numbers (0 indexed) to be deleted
+    foodsToDelete: an array of dictionaries [{index: entrynum, foods:[foodnums]}]
+    servingsToEdit: a dictionary {entrynum-foodnum: new_serving}
+'''
+
+def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
+    this_user = finduser(netid)
+    if this_user is None:
+        return None
     
+    # edit all of the servings first
+    for key, value in servingsToEdit.items():
+        entrynum, foodnum = key.split('-')
+        editFood(this_user, int(entrynum) - 1, int(foodnum) - 1, value)
+    
+    # delete foods
+    for dictionary in foodsToDelete:
+        foods = sorted(dictionary["foods"], reverse=True)
+        for foodnum in foods:
+            delFood(this_user, dictionary["index"], foodnum)
+    
+    # delete entries
+    deleteManyEntry(this_user, entriesToDelete)
+
+    # update profile
     return __setuser__(netid, this_user)
+    
 
 #-----------------------------------------------------------------------
 

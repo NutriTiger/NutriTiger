@@ -2,6 +2,11 @@
 {% set current_page = 'editingplate' %}
 {% block title %}My Homepage{% endblock %}
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--Give header white background -->
+<div id="loading-animation" class="loading-animation" style="display:none;">
+    <div class="loading-spinner"></div>
+</div>
     <h1 class="text-center m-3">Editing My Plate</h1> 
     <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
@@ -10,58 +15,67 @@
         <div class="col-sm-9 mx-auto">
           <div class="card">
             <div class="card-body">
+
                 <!--My Plate (right card)-->
                 <h4 class="text-center py-3">My Plate</h4>
+
                 <!--Create a card for each entry-->
                 <div class="col">
-                    {% for entry, foods in entries_food_dict.items() %}
+                    {% for entry, foods in entry_info.items() %}
                     <div class="row-cols-1 p-2">
-                        <div class="card border-primary" id="{{entry}}" style="padding: 10px;">
+                        <div class="entryCard card border-primary" id="entry-{{ entry }}" style="padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
-                                    <h5 class="card-title py-1">{{entry}}</h5>
-                                    <form action="/editingplate" method="post">
-                                        <input type="hidden" name="card_id" value="{{ entry }}">
-                                        <button type="submit" data-cardid="{{entry}}" class="btn-close" aria-label="Close"></button>
-                                    </form>
+                                    <h5 class="card-title py-1"><b>Entry {{ entry +1}}</b></h5>
+                                    <button type="submit" data-entrynum="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
                                 </div>
+
+                                <!--Create a bordered element for each food in the entry-->
                                 <ul class="list-group">
-                                    {% for food in foods %}
+                                    {% for food_dict, serving in foods %}
                                     <!--Border with close buttons for each food-->
-                                    <div class="card border-primary p-2 mb-3" id="myplate-{{ uniqueid }}">
+                                    <div class="foodCard card border-primary p-2 mb-3" id="{{ entry }}-{{ loop.index - 1}}">
                                         <div class="row">
                                             <div class="col">
                                                 <!-- Food name label-->
-                                                <span>{{ food }}</span>
+                                                <span><b>{{ food_dict.mealname }}</b></span>
+                                                <p class="nutrition-container">
+                                                    <span class="nutrition-fact">Serving Size: {{ food_dict.servingsize }}</span>
+                                                    <span class="nutrition-fact">Calories: {{ food_dict.calories }}</span>
+                                                    <span class="nutrition-fact">Proteins: {{ food_dict.proteins }}g</span>
+                                                    <span class="nutrition-fact">Carbs: {{ food_dict.carbs }}g</span>
+                                                    <span class="nutrition-fact">Fats: {{ food_dict.fats }}g</span>
+                                                </p>
                                             </div>
                                             <div class="col-auto d-flex align-items-center">
                                                 <!-- Serving Lineedit Column and Close button -->
-                                                <div id="new_entry" class="d-flex align-items-center">
+                                                <div data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="d-flex align-items-center">
                                                     <!-- Serving Lineedit -->
-                                                    <input type="number" min="0" class="form-control small-input mr-2" data-cals="{{ cals }}"
-                                                    data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
-                                                    placeholder="Servings" oninput="handleServingChange()" required
+                                                    <input type="number" min="0" class="form-control small-input mr-2"
+                                                    value="{{ serving }}" oninput="handleServingChange(this)" required
+                                                    data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}" step="0.01"
                                                     onkeypress="return isValid(event)">
                                     
                                                     <!-- Close button -->
-                                                    <button type="button" id="close-{{ uniqueid }}" class="btn btn-close btn-sm" aria-label="Close"
-                                                    onclick="closeMyPlate(this)" data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}"></button>
+                                                    <button type="button" data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     {% endfor %}
                                 </ul>
-                            </div>
-                                                        
+
+                            </div>                             
+                        </div>
                     </div>
-                </div>
 
                 {% endfor %}
 
+                <!--Save plate button-->
                 <div class="py-3">
-                    <form action="/editingplate" method="post">
-                        <button type="submit" name="save_plate" class="btn btn-secondary btn-lg btn-block">Save Plate</button>
+                    <form>
+                        <button id="savePlate" type="submit" class="btn btn-secondary btn-lg btn-block">Save Plate</button>
                     </form>
                 </div>
                 
@@ -72,6 +86,33 @@
 
     <script>
 
+        // List of deleted entries' indices
+        let deletedEntries = [];
+        // List of lists of deleted foods & their entries
+        let deletedFoods = [];
+        let servingsChanged = {};
+
+        function appendEntrytoDelete(entryIndex) {
+            console.log("entry " + entryIndex + " will be deleted")
+            deletedEntries.push(entryIndex);
+        }
+
+        function appendFoodtoDelete(entryIndex, foodIndex) {
+            console.log("will delete food " + foodIndex + " from entry " + entryIndex);
+            deletedFoods.push({index: entryIndex, foods: [foodIndex]});
+        }
+
+        // once an entry has been appended to be deleted, hide it from view
+        function hideEntry(entryId) {
+            document.getElementById(entryId).style.display = "none";
+        }
+
+        // once an entry has been appended to be deleted, hide it from view
+        function hideFood(foodCardId) {
+            document.getElementById(foodCardId).style.display = "none";
+        }
+
+        // Serving input validation function
         function isValid(input) {
             var charCode = input.which || input.keyCode;
             var value = input.target.value;
@@ -90,5 +131,127 @@
         
             return true;
         }
-        </script>
+
+        function debouncedHandleInput() {
+            console.log("in debounce")
+            let debounceTimer;
+            return function(input) {
+                console.log("in inner function")
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => handleServingChange(input), 500); // Adjust the delay as needed
+            };
+        }
+        const debouncedInputHandler = debouncedHandleInput();
+
+        function handleServingChange(input) {
+            input.setCustomValidity('');
+            customCheckValidity(input)
+            let serving = parseFloat(input.value);
+            let entry_food_num = input.dataset.entrynum + "-" + input.dataset.foodnum
+            console.log(entry_food_num, serving)
+            servingsChanged[entry_food_num] = serving
+        };
+
+        function showLoadingAnimation() {
+            // Show the loading animation covering the entire screen
+            $("#loading-animation").show();
+        }
+
+
+        // select all Entry cards and add close button event listeners for each
+        var entryCards = document.querySelectorAll('.entryCard');
+        entryCards.forEach(function(card) {
+            //add event listener to each food close button
+            var foodCloseButtons = card.querySelectorAll('.foodCloseBtn');
+            foodCloseButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log("delete food button clicked");
+
+                    var foodnum = button.dataset.foodnum;
+                    var entrynum = button.dataset.entrynum;
+
+                    console.log("foodnum is ", foodnum);
+
+                    // append 0-indexed indices for deleted food
+                    appendFoodtoDelete(parseInt(entrynum), parseInt(foodnum));
+                    hideFood(entrynum + "-" + foodnum);
+                })
+            });
+
+            // add event listener to each entry close button
+            var entryCloseButtons = card.querySelectorAll('.entryCloseBtn');
+            entryCloseButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log("Del entry button clicked");
+
+                    var entrynum = button.dataset.entrynum
+                    var entryId = "entry-" + entrynum
+                    // append to list and hide from view
+                    console.log("Printing entryid", entryId)
+                    appendEntrytoDelete(parseInt(entrynum));
+                    hideEntry(entryId); 
+                });
+            });
+        });
+
+        function customCheckValidity(input) {
+            let isValid = true;
+            // Check if the input is empty
+            if (!input.value || input.value==0) {
+                input.setCustomValidity("Please fill out a non-zero serving size"); // Set custom message
+                input.reportValidity(); // Show the error message
+                isValid = false;
+            } else {
+                input.setCustomValidity(""); // Clear any previous custom validity messages
+            }
+            return isValid;
+        }
+
+        function validateInputs() {
+            const inputs = document.querySelectorAll(".small-input");
+            valid = true;
+            inputs.forEach((input) => {
+                if (!customCheckValidity(input)) {
+                    valid=false
+                }
+            });
+            return valid
+        }
+        
+        // once submit button is clicked, send everything to be deleted as an AJAX call
+        document.getElementById('savePlate').addEventListener('click', function(event) {
+            event.preventDefault();
+	        console.log("save plate button clicked");
+            if (!validateInputs()) {
+                return
+            }
+            console.log(deletedEntries)
+            var dataToSend = {
+                entriesToDelete: deletedEntries,
+                foodsToDelete: deletedFoods,
+                servingsToChange: servingsChanged
+            };
+            var jsonData = JSON.stringify(dataToSend);
+            showLoadingAnimation();
+            $.ajax({
+                type: "POST",
+                url: "/editingplate",
+                contentType: "application/json",
+                data: jsonData,
+                success: function (response) {
+                    console.log("Data sent successfully:", response);
+                    // Check if the server response includes the redirect URL
+                    if (response.success && response.redirect) {
+                        // Hide the loading animation before redirection
+                        window.location.href = response.redirect;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in data submission:", xhr.status, xhr.responseText);
+                },
+            });
+        });
+    </script>
 {% endblock %}

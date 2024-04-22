@@ -14,7 +14,7 @@
                 <input type="number" min="0" class="form-control small-input mr-2" data-usda="{{ usda }}"
                 data-cals="{{ cals }}"
                 data-recid="{{ recid }}" data-mealname="{{ mealname }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
-                placeholder="Servings" oninput="handleServingChange(); submitForm(this)" required
+                placeholder="Servings" oninput="handleServingChange()" required
                 onkeypress="return isValid(event)">
 
 
@@ -48,16 +48,5 @@
 
         return true;
     }
-
-    function submitForm(inputField) {
-    var servingValue = inputField.value.trim();
-
-    if (servingValue === "" || servingValue.toLowerCase() === 'none') {
-        alert("Please enter a serving value.");
-        return false;
-    }
-
-    return true; // allows form submission
-}
 
 </script>

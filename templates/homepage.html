@@ -4,22 +4,30 @@
 {% block content %}
 
 <!--Page Headers-->
-<h1 class="text-center m-3">Today's Nutritional Breakdown</h1>
-<h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
+<h1 id="homepage-title" class="text-center m-3">Today's Nutritional Breakdown</h1>
+<h3 id="homepage-subtitle" class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}. Today is {{ date }}th.</h3>
 
 <!--Placeholder Message (when no entries exist)-->
-<div id="placeholder" class="text-center">
-	<h4>Looks like you haven't logged any food for today.</h4>
-	<h4 class="pt-2">Want to add a meal?</h4>
-	<!--"Click to add an entry" Button-->
-	<div class="p-3">
-		<form action="/homepage" method="post">
-			<center>
-				<button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a meal</button>
-			</center>
-		</form>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div id="placeholder" class="text-center mx-auto">
+	<div class="mx-auto" style="padding: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+		<div class="m-3 p-3">
+			<h1>Good {{ampm}}, {{netid}}. </h1>
+			<h1 class="pt-3">Today is {{ date }}th.</h1>
+		</div>
+
+		<h3>Looks like you haven't logged any food for today yet.</h3>
+		<!--"Click to add an entry" Button-->
+		<div class="p-3">
+			<form action="/homepage" method="post">
+				<center>
+					<button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a meal</button>
+				</center>
+			</form>
+		</div>
+		<h4 class="p-3">Or, see what's on the <a href="/menus"> dining hall menus. <i class="fa-solid fa-arrow-up-right-from-square"></i> </a></h4>
 	</div>
-	<h5>Or, see what's on the <a href="/menus"> dining hall menus</a>.</h5>
 </div>
 
 <!--CHECK IF ENTRIES ARE EMPTY, SHOW PLACEHOLDER IF SO-->
@@ -90,7 +98,7 @@
 					{% set nutrition_totals = data.nutrition_totals %}
 					{% set servings = data.servings %}
 					<div class="row-cols-1 p-2">
-						<div class="card" style="background-color: lightgray;">
+						<div class="card entryCard" style="background-color: lightgray;">
 							<div class="card-body">
 								<h5 class="card-title">{{entry}}</h5>
 		
@@ -150,25 +158,33 @@
 	function showHomepageCards() {
 		// Hide the placeholder message/buttons
 		document.getElementById("placeholder").style.display = "none";
-		
+
 		// Show the homepage cards 
 		document.getElementById("leftCard").style.display = "block";
 		document.getElementById("rightCard").style.display = "block";
 	}
 
 	function showPlaceholder() {
+		console.log("showing placeholder")
 		// Show the placeholder message/buttons
-		document.getElementbyId("placeholder").style.display = "block"
-		// Hide the homepage cards
+		document.getElementById("placeholder").style.display = "block";
+		// Hide the homepage cards and header
+		document.getElementById("homepage-title").style.display = "none";
+		document.getElementById("homepage-subtitle").style.display = "none";
 		document.getElementById("leftCard").style.display = "none";
-		document.getElementById("rightCard").style.display = "none"
+		document.getElementById("rightCard").style.display = "none";
 	}
 
-	// if (entries exist) {
-		// showHomepageCards();
-	// } else {
-		// showPlaceholder();
-	//}
+	window.onload = function() {
+		
+		// if there are no entries, show the placeholder
+		if (document.getElementsByClassName("entryCard").length == 0) {
+			showPlaceholder();
+
+		} else {
+			showHomepageCards();
+		}
+	}
 
 </script>
 {% endblock %}

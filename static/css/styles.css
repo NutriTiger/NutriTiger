@@ -225,9 +225,8 @@ body {
 }
 
 /* Setting min heights for logfood page cards */
-
 .logfood-card {
-    min-height: 400px; /* Set minimum height */
+    min-height: 500px; /* Set minimum height */
   }
 
 .loading-animation {
@@ -266,3 +265,22 @@ body {
     color: black;
     justify-content: center;
 }
+
+/* for individual food item nutrition facts ***********************/
+.nutrition-container {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 5px;
+}
+
+.nutrition-fact {
+    background-color: #e0e0e0; 
+    padding: 2px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+.nutrition-fact:last-child {
+    margin-right: 0;
+}
+/*******************************************************************/

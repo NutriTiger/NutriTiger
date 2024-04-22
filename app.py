@@ -13,6 +13,7 @@ import time
 import datetime
 import os
 import dotenv
+import pytz
 from pytz import timezone
 #from CASClient import CASClient
 from src import dbusers
@@ -56,6 +57,13 @@ def get_ampm():
         return 'afternoon'
     return 'evening'
 
+def get_date():
+
+    eastern = pytz.timezone('US/Eastern')
+    today = datetime.datetime.now(eastern)
+
+    formatted_date = today.strftime("%A, %B, %d")
+    return formatted_date
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
@@ -78,8 +86,8 @@ def index():
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
     netid = auth.authenticate()
-    #netid = _cas.authenticate()
-    #netid = netid.rstrip()
+    
+    date = get_date()
 
     # will need to call whenever an existing user logs in
     cursor = dbusers.userlogin(netid)
@@ -159,7 +167,7 @@ def homepage():
 
     return render_template('homepage.html', 
                             ampm=get_ampm(), 
-                            netid=netid,
+                            netid=netid, date=date,
                             prots=curr_prots,
                             carbs=curr_carbs,
                             fats=curr_fats,
@@ -364,92 +372,27 @@ def add_usda_nutrition():
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
-
-    # Placeholder values
-    #netid = 'jm0278' 
-    cursor = dbusers.finduser(netid)
-    curr_prots = round(float(cursor['prot_his'][0]), 1)
-    curr_carbs = round(float(cursor['carb_his'][0]), 1)
-    curr_fats = round(float(cursor['fat_his'][0]), 1)
-    cal_goal = int(cursor['caloricgoal'])
-    curr_caltotal = cursor['cal_his'][0]
-    entries_info = cursor['daily_rec']
-
-    # Testing filling the entries
-    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
-    # A list of lists: holds recipeids for each entry
-    entries_info = cursor['daily_rec']
-
-    # Entry title strings array ("Entry #")
-    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
-
-    # List of lists of foods, should match up with ENTRIES array
-    foods_lists = []
-    for entry in entries_info:
-
-        entry_recipeids = entry[:]
-    
-        # Get nutrition info for entries
-        entry_nutrition = dbnutrition.find_many_nutrition(entry_recipeids)
-
-        # Check for None values in entry_nutrition (maybe ask Oyu to catch these in dbnutrition?)
-        if entry_nutrition is None:
-            foods_lists.append([])
-        
-        # If "mealname" for this recipeid, then add it to the list for current entry
-        else:
-            mealnames = []
-            for meal in entry_nutrition:
-                if isinstance(meal, dict) and "mealname" in meal:
-                    mealnames.append(meal["mealname"])
-            foods_lists.append(mealnames)
-
-    # Create dict to pass in: match up ENTRIES list with foods_lists list
-    entries_food_dict = {}
-    for i in range(len(ENTRIES)):
-        entry = ENTRIES[i]
-        foods = foods_lists[i]
-        entries_food_dict[entry] = foods
-
-    if request.method == 'POST':
-
-        if 'card_id' in request.form:
-            # Retreive entry ID (which should be the direct entry name)
-            card_id = request.form.get('card_id')
-
-            # Close button
-            for entry in ENTRIES:
-                if entry == card_id:
-                    #ENTRIES.remove(entry)
-                    entrynum = int(entry[5:]) - 1
-                    dbusers.deleteEntry(netid, entrynum)
-                    
-                    # REFILL ENTRIES?
-                    cursor = dbusers.finduser(netid)
-                    entries_info = cursor['daily_rec']
-                    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
-                    foods_lists = [entry[:] for entry in entries_info]
-
-                    entries_food_dict = {}
-                    for i in range(len(ENTRIES)):
-                        entry = ENTRIES[i]
-                        foods = foods_lists[i]
-                        entries_food_dict[entry] = foods
-                    break
-
-            return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
-                    curr_caltotal=curr_caltotal, cal_goal=cal_goal,
-                    entries_food_dict=entries_food_dict)
-
-        elif 'save_plate' in request.form:
-            # Save button action (update database)
-    
-            return redirect('/homepage')
-    
-    return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
-                           curr_caltotal=curr_caltotal, cal_goal=cal_goal,
-                           entries_food_dict=entries_food_dict,
-                           prots=curr_prots, carbs=curr_carbs, fats=curr_fats,)
+    if request.method=='GET':
+        cursor = dbusers.finduser(netid)
+        daily_rec = cursor['daily_rec']
+        daily_serv = cursor['daily_serv']
+        entry_info = {}
+        for entrynum, recids in enumerate(daily_rec):
+            nutrition_info = dbnutrition.find_many_nutrition(recids)
+            entry_info[entrynum] = zip(nutrition_info, daily_serv[entrynum])
+        return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
+                           entry_info = entry_info)
+    else:
+        # Unpack AJAX call 
+        data = request.get_json()
+        entriesToDel = data.get("entriesToDelete", [])
+        foodsToDel = data.get("foodsToDelete", [])
+        servingsToChange = data.get("servingsToChange", {})
+        print(servingsToChange)
+        # delete entries/foods from user DB
+        #print(netid, entriesToDel, foodsToDel)
+        print(dbusers.editPlateAll(netid, entriesToDel, foodsToDel, servingsToChange))
+        return jsonify({"success": True, "redirect": url_for('homepage')})
 
 #--------------------------------------------------------------------
 
