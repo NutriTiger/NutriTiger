@@ -376,43 +376,15 @@ def add_usda_nutrition():
 def editing_plate():
     netid = auth.authenticate()
     if request.method=='GET':
-
         cursor = dbusers.finduser(netid)
-        entries_info = cursor['daily_rec'] # holds list of recids for each entry
-
-        # Entry title strings array ("Entry #")
-        ENTRIES = [i + 1 for i in range(len(entries_info))]
-
-        # List of lists of foods, should match up with ENTRIES array
-        foods_lists = []
-        for entry in entries_info:
-
-            entry_recipeids = entry[:]
-        
-            # Get nutrition info for entries
-            entry_nutrition = dbnutrition.find_many_nutrition(entry_recipeids)
-
-            # Check for None values in entry_nutrition (maybe ask Oyu to catch these in dbnutrition?)
-            if entry_nutrition is None:
-                foods_lists.append([])
-            
-            # If "mealname" for this recipeid, then add it to the list for current entry
-            else:
-                mealnames = []
-                for meal in entry_nutrition:
-                    if isinstance(meal, dict) and "mealname" in meal:
-                        mealnames.append(meal["mealname"])
-                foods_lists.append(mealnames)
-
-        # Create dict to pass in: match up ENTRIES list with foods_lists list
-        entries_food_dict = {}
-        for i in range(len(ENTRIES)):
-            entry = ENTRIES[i]
-            foods = foods_lists[i]
-            entries_food_dict[entry] = foods
-        print(entries_food_dict)
+        daily_rec = cursor['daily_rec']
+        daily_serv = cursor['daily_serv']
+        entry_info = {}
+        for entrynum, recids in enumerate(daily_rec):
+            nutrition_info = dbnutrition.find_many_nutrition(recids)
+            entry_info[entrynum] = zip(nutrition_info, daily_serv[entrynum])
         return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
-                           entries_food_dict=entries_food_dict)
+                           entry_info = entry_info)
     else:
         # Unpack AJAX call 
         data = request.get_json()
