@@ -78,20 +78,13 @@
         // List of lists of deleted foods & their entries
         let deletedFoods = [];
 
-        // pass in "Entry _" string
-        function appendEntrytoDelete(entryId) {
-            
-            // Get index of entry from entry index
-            var entryIndex = parseInt(entryId);
-            console.log("The entry index appended is:", entryIndex);
-            // append to deletedEntriesList
+        function appendEntrytoDelete(entryIndex) {
+            console.log("entry " + entryIndex + " will be deleted")
             deletedEntries.push(entryIndex);
         }
 
         function appendFoodtoDelete(entryIndex, foodIndex) {
-            // make entryId an index (0-indexed already)
             console.log("will delete food " + foodIndex + " from entry " + entryIndex);
-            // append to deleted foods list at the index that corresponds to its entry
             deletedFoods.push({index: entryIndex, foods: [foodIndex]});
         }
 

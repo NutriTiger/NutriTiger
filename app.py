@@ -375,59 +375,53 @@ def add_usda_nutrition():
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
+    if request.method=='GET':
 
-    cursor = dbusers.finduser(netid)
-    entries_info = cursor['daily_rec'] # holds list of recids for each entry
+        cursor = dbusers.finduser(netid)
+        entries_info = cursor['daily_rec'] # holds list of recids for each entry
 
-    # Entry title strings array ("Entry #")
-    ENTRIES = [i + 1 for i in range(len(entries_info))]
+        # Entry title strings array ("Entry #")
+        ENTRIES = [i + 1 for i in range(len(entries_info))]
 
-    # List of lists of foods, should match up with ENTRIES array
-    foods_lists = []
-    for entry in entries_info:
+        # List of lists of foods, should match up with ENTRIES array
+        foods_lists = []
+        for entry in entries_info:
 
-        entry_recipeids = entry[:]
-    
-        # Get nutrition info for entries
-        entry_nutrition = dbnutrition.find_many_nutrition(entry_recipeids)
-
-        # Check for None values in entry_nutrition (maybe ask Oyu to catch these in dbnutrition?)
-        if entry_nutrition is None:
-            foods_lists.append([])
+            entry_recipeids = entry[:]
         
-        # If "mealname" for this recipeid, then add it to the list for current entry
-        else:
-            mealnames = []
-            for meal in entry_nutrition:
-                if isinstance(meal, dict) and "mealname" in meal:
-                    mealnames.append(meal["mealname"])
-            foods_lists.append(mealnames)
+            # Get nutrition info for entries
+            entry_nutrition = dbnutrition.find_many_nutrition(entry_recipeids)
 
-    # Create dict to pass in: match up ENTRIES list with foods_lists list
-    entries_food_dict = {}
-    for i in range(len(ENTRIES)):
-        entry = ENTRIES[i]
-        foods = foods_lists[i]
-        entries_food_dict[entry] = foods
-    print(entries_food_dict)
-    if request.method == 'POST':
-            # Unpack AJAX call 
-            data = request.get_json()
-            entriesToDel = data.get("deletedEntries", [])
-            foodsToDel = data.get("deletedFoods", [])
-            print(entriesToDel)
-            '''
-            # delete entries/foods from user DB
-            if len(entriesToDel) > 0:
-                dbusers.deleteManyEntry(entriesToDel)
-                for food in foodsToDel:
-                    dbusers.delFood(food)
-            '''
+            # Check for None values in entry_nutrition (maybe ask Oyu to catch these in dbnutrition?)
+            if entry_nutrition is None:
+                foods_lists.append([])
+            
+            # If "mealname" for this recipeid, then add it to the list for current entry
+            else:
+                mealnames = []
+                for meal in entry_nutrition:
+                    if isinstance(meal, dict) and "mealname" in meal:
+                        mealnames.append(meal["mealname"])
+                foods_lists.append(mealnames)
 
-            return redirect('/homepage')
-    
-    return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
+        # Create dict to pass in: match up ENTRIES list with foods_lists list
+        entries_food_dict = {}
+        for i in range(len(ENTRIES)):
+            entry = ENTRIES[i]
+            foods = foods_lists[i]
+            entries_food_dict[entry] = foods
+        print(entries_food_dict)
+        return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
                            entries_food_dict=entries_food_dict)
+    else:
+        # Unpack AJAX call 
+        data = request.get_json()
+        entriesToDel = data.get("entriesToDelete", [])
+        foodsToDel = data.get("foodsToDelete", [])
+        # delete entries/foods from user DB
+        print(netid, entriesToDel, foodsToDel)
+        print(dbusers.editPlateAll(netid, entriesToDel, foodsToDel, []))
+        return jsonify({"success": True, "redirect": url_for('homepage')})
 
 #--------------------------------------------------------------------
 
