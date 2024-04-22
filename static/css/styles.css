@@ -225,7 +225,6 @@ body {
 }
 
 /* Setting min heights for logfood page cards */
-
 .logfood-card {
     min-height: 500px; /* Set minimum height */
   }
