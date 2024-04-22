@@ -409,20 +409,20 @@ def editing_plate():
         entry = ENTRIES[i]
         foods = foods_lists[i]
         entries_food_dict[entry] = foods
-
+    print(entries_food_dict)
     if request.method == 'POST':
-        
-        if 'save_plate' in request.form:
             # Unpack AJAX call 
             data = request.get_json()
             entriesToDel = data.get("deletedEntries", [])
             foodsToDel = data.get("deletedFoods", [])
-
+            print(entriesToDel)
+            '''
             # delete entries/foods from user DB
             if len(entriesToDel) > 0:
                 dbusers.deleteManyEntry(entriesToDel)
                 for food in foodsToDel:
                     dbusers.delFood(food)
+            '''
 
             return redirect('/homepage')
     

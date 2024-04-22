@@ -18,21 +18,18 @@
                 <div class="col">
                     {% for entry, foods in entries_food_dict.items() %}
                     <div class="row-cols-1 p-2">
-                        <div class="entryCard card border-primary" id="{{ entry }}" style="padding: 10px;">
+                        <div class="entryCard card border-primary" id="entry-{{ entry }}" style="padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
                                     <h5 class="card-title py-1">Entry {{ entry }}</h5>
-                                    <form action="/editingplate" method="post">
-                                        <input type="hidden" name="card_id" value="{{ entry }}">
-                                        <button id="{{ entry }}" type="submit" data-entryId="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
-                                    </form>
+                                    <button type="submit" data-entrynum="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
                                 </div>
 
                                 <!--Create a bordered element for each food in the entry-->
                                 <ul class="list-group">
                                     {% for food in foods %}
                                     <!--Border with close buttons for each food-->
-                                    <div class="foodCard card border-primary p-2 mb-3" id="{{ loop.index }}">
+                                    <div class="foodCard card border-primary p-2 mb-3" id="{{ entry }}-{{ loop.index }}">
                                         <div class="row">
                                             <div class="col">
                                                 <!-- Food name label-->
@@ -40,16 +37,15 @@
                                             </div>
                                             <div class="col-auto d-flex align-items-center">
                                                 <!-- Serving Lineedit Column and Close button -->
-                                                <div id="new_entry" class="d-flex align-items-center">
+                                                <div data-foodnum="{{ loop.index }}" data-entrynum="{{ entry }}" class="d-flex align-items-center">
                                                     <!-- Serving Lineedit -->
-                                                    <input type="number" min="0" class="form-control small-input mr-2" data-cals="{{ cals }}"
-                                                    data-recid="{{ recid }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
+                                                    <input type="number" min="0" class="form-control small-input mr-2"
                                                     placeholder="Servings" oninput="handleServingChange()" required
                                                     onkeypress="return isValid(event)">
                                     
                                                     <!-- Close button -->
-                                                    <button type="button" id="close-{{ uniqueid }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close"
-                                                    data-checkid="{{ checkid }}" data-myplateid="myplate-{{ uniqueid }}" data-foodId="{{ loop.index0 }}"></button>
+                                                    <button type="button" data-foodnum="{{ loop.index }}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -92,15 +88,11 @@
             deletedEntries.push(entryIndex);
         }
 
-        function appendFoodtoDelete(entryId, foodId) {
-
+        function appendFoodtoDelete(entryIndex, foodIndex) {
             // make entryId an index (0-indexed already)
-            var entryIndex = parseInt(entryId);
-            var foodIndex = parseInt(foodId);
-            console.log("The food index to delete:", foodIndex);
-
+            console.log("will delete food " + foodIndex + " from entry " + entryIndex);
             // append to deleted foods list at the index that corresponds to its entry
-            deletedFoods.push({index: entryIndex, foods: [foodId]});
+            deletedFoods.push({index: entryIndex, foods: [foodIndex]});
         }
 
         // once an entry has been appended to be deleted, hide it from view
@@ -135,9 +127,7 @@
 
         // select all Entry cards and add close button event listeners for each
         var entryCards = document.querySelectorAll('.entryCard');
-
         entryCards.forEach(function(card) {
-
             //add event listener to each food close button
             var foodCloseButtons = card.querySelectorAll('.foodCloseBtn');
             foodCloseButtons.forEach(function(button) {
@@ -145,19 +135,14 @@
                     event.preventDefault();
                     console.log("delete food button clicked");
 
-                    var foodId = parseInt(button.dataset.foodId);
-                    var entryId = card.id;
-                    
-                    // get id of the food card "parent"
-                    var foodCard = button.closest('.foodCard'); // Find the closest food card element
-                    var foodCardId = foodCard.id;
-                    var foodCardIndex = foodCard.id - 1; // Get the ID of the food card
+                    var foodnum = button.dataset.foodnum;
+                    var entrynum = button.dataset.entrynum;
 
-                    console.log("foodcard id is ", foodCardIndex);
+                    console.log("foodnum is ", foodnum);
 
                     // append 0-indexed indices for deleted food
-                    appendFoodtoDelete(entryId, foodCardIndex);
-                    hideFood(foodCardId);
+                    appendFoodtoDelete(parseInt(entrynum)-1, parseInt(foodnum) - 1);
+                    hideFood(entrynum + "-" + foodnum);
                 })
             });
 
@@ -168,11 +153,11 @@
                     event.preventDefault();
                     console.log("Del entry button clicked");
 
-                    var entryId = parseInt(button.dataset.entryId) - 1;
+                    var entrynum = button.dataset.entrynum
+                    var entryId = "entry-" + entrynum
                     // append to list and hide from view
                     console.log("Printing entryid", entryId)
-                    appendEntrytoDelete(entryId);
-                    console.log("The deleted entry index is:", entryId);
+                    appendEntrytoDelete(parseInt(entrynum) - 1);
                     hideEntry(entryId); 
                 });
             });
@@ -183,18 +168,30 @@
 	    
 	        console.log("save plate button clicked");
             console.log(deletedEntries)
-            // Send AJAX request with everything to delete
+            var dataToSend = {
+                entriesToDelete: deletedEntries,
+                foodsToDelete: deletedFoods
+            };
+            var jsonData = JSON.stringify(dataToSend);
+            // showLoadingAnimation();
             $.ajax({
-                url: '/editingplate',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ "deletedEntries": deletedEntries, "deletedFoods": deletedFoods }),
-                success: function(response) {
-                    console.log('Data sent successfully:', response);
+                type: "POST",
+                url: "/editingplate",
+                contentType: "application/json",
+                data: jsonData,
+                success: function (response) {
+                    console.log("Data sent successfully:", response);
+                    // Check if the server response includes the redirect URL
+                    if (response.success && response.redirect) {
+                        // Hide the loading animation before redirection
+
+                        window.location.href = response.redirect;
+                        // Delay the redirection slightly to ensure the loading animation is hidden
+                    }
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error sending data:', error);
-                }
+                error: function (xhr, status, error) {
+                    console.error("Error in data submission:", xhr.status, xhr.responseText);
+                },
             });
         });
     </script>
