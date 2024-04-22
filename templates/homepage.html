@@ -4,11 +4,12 @@
 {% block content %}
 
 <!--Page Headers-->
-<h1 class="text-center m-3">Today's Nutritional Breakdown</h1>
-<h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}. Today is {{ date }}th.</h3>
+<h1 id="homepage-title" class="text-center m-3">Today's Nutritional Breakdown</h1>
+<h3 id="homepage-subtitle" class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}. Today is {{ date }}th.</h3>
 
 <!--Placeholder Message (when no entries exist)-->
 <div id="placeholder" class="text-center">
+	<h1 class="text-center m-3">Good {{ampm}}, {{netid}}. Today is {{ date }}th.</h1>
 	<h4>Looks like you haven't logged any food for today.</h4>
 	<h4 class="pt-2">Want to add a meal?</h4>
 	<!--"Click to add an entry" Button-->
@@ -159,18 +160,22 @@
 	function showPlaceholder() {
 		console.log("showing placeholder")
 		// Show the placeholder message/buttons
-		document.getElementById("placeholder").style.display = "block"
-		// Hide the homepage cards
+		document.getElementById("placeholder").style.display = "block";
+		// Hide the homepage cards and header
+		document.getElementById("homepage-title").style.display = "none";
+		document.getElementById("homepage-subtitle").style.display = "none";
 		document.getElementById("leftCard").style.display = "none";
-		document.getElementById("rightCard").style.display = "none"
+		document.getElementById("rightCard").style.display = "none";
 	}
 
-	// if (entries exist) {
-		// showHomepageCards();
-	// } else {
-		// showPlaceholder();
-	//}
 	window.onload = function() {
+		
+		// if (entries exist) {
+			// showHomepageCards();
+		// } else {
+			// showPlaceholder();
+		//}
+		//ShowPlaceholder()
 		showHomepageCards();
 	}
 

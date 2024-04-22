@@ -8,13 +8,13 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
                     <h1 class="py-3 text-center">{{ netid }}'s Profile Settings</h1>
-                    {% include 'caloriecalculator.html' %}
                     <div class="text-center p-4">
                         <div class="row">
                             <h5>Join Date: {{ join_date }}</h5>
                             <h5>Current Calorie Goal: {{ current_cal_goal }}</h5>
                             <br><br><br>
                             <h4>Calorie Goal:</h4>
+                            {% include 'caloriecalculator.html' %}
                             <form action="/settings" method="post">
                                 <input type="number" class="form-control form-calgoal container" name='line' placeholder="Enter the number here." min="0" required
                                     onkeypress="return isValid(event)">
