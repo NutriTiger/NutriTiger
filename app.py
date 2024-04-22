@@ -377,15 +377,10 @@ def editing_plate():
     netid = auth.authenticate()
 
     cursor = dbusers.finduser(netid)
-    entries_info = cursor['daily_rec']
-
-    # Testing filling the entries
-    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
-    # A list of lists: holds recipeids for each entry
-    entries_info = cursor['daily_rec']
+    entries_info = cursor['daily_rec'] # holds list of recids for each entry
 
     # Entry title strings array ("Entry #")
-    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
+    ENTRIES = [i + 1 for i in range(len(entries_info))]
 
     # List of lists of foods, should match up with ENTRIES array
     foods_lists = []
@@ -416,39 +411,7 @@ def editing_plate():
         entries_food_dict[entry] = foods
 
     if request.method == 'POST':
-        '''
-        if 'card_id' in request.form:
-            # Retreive entry ID (which should be the direct entry name)
-            card_id = request.form.get('card_id')
-
-            # Close button
-            for entry in ENTRIES:
-                if entry == card_id:
-                    #ENTRIES.remove(entry)
-                    entrynum = int(entry[5:]) - 1
-                    dbusers.deleteEntry(netid, entrynum)
-                    
-                    # REFILL ENTRIES?
-                    cursor = dbusers.finduser(netid)
-                    entries_info = cursor['daily_rec']
-                    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
-                    foods_lists = [entry[:] for entry in entries_info]
-
-                    entries_food_dict = {}
-                    for i in range(len(ENTRIES)):
-                        entry = ENTRIES[i]
-                        foods = foods_lists[i]
-                        entries_food_dict[entry] = foods
-                    break
-
-            return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
-                    curr_caltotal=curr_caltotal, cal_goal=cal_goal,
-                    entries_food_dict=entries_food_dict)
-
-        elif 'save_plate' in request.form:
-            # Save button action (update database)
-            return redirect('/homepage')
-        '''
+        
         if 'save_plate' in request.form:
             # Unpack AJAX call 
             data = request.get_json()
