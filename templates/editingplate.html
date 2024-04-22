@@ -86,10 +86,10 @@
         function appendEntrytoDelete(entryId) {
             
             // Get index of entry from entry index
-            var entryIndex = parseInt(entryId) - 1;
-            console.log(entryIndex);
+            var entryIndex = parseInt(entryId);
+            console.log("The entry index appended is:", entryIndex);
             // append to deletedEntriesList
-            deletedEntries.push(entryIndex - 1);
+            deletedEntries.push(entryIndex);
         }
 
         function appendFoodtoDelete(entryId, foodId) {
@@ -147,7 +147,6 @@
 
                     var foodId = parseInt(button.dataset.foodId);
                     var entryId = card.id;
-                    var entryIndex = card.id - 1;
                     
                     // get id of the food card "parent"
                     var foodCard = button.closest('.foodCard'); // Find the closest food card element
@@ -169,11 +168,11 @@
                     event.preventDefault();
                     console.log("Del entry button clicked");
 
-                    var entryId = button.dataset.entryId;
+                    var entryId = parseInt(button.dataset.entryId) - 1;
                     // append to list and hide from view
                     console.log("Printing entryid", entryId)
                     appendEntrytoDelete(entryId);
-                    console.log(entryId)
+                    console.log("The deleted entry index is:", entryId);
                     hideEntry(entryId); 
                 });
             });
