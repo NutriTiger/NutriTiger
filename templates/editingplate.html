@@ -2,6 +2,11 @@
 {% set current_page = 'editingplate' %}
 {% block title %}My Homepage{% endblock %}
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--Give header white background -->
+<div id="loading-animation" class="loading-animation" style="display:none;">
+    <div class="loading-spinner"></div>
+</div>
     <h1 class="text-center m-3">Editing My Plate</h1> 
     <h3 class="text-center m-3 text-muted">Good {{ampm}}, {{netid}}.</h3>
 
@@ -16,36 +21,43 @@
 
                 <!--Create a card for each entry-->
                 <div class="col">
-                    {% for entry, foods in entries_food_dict.items() %}
+                    {% for entry, foods in entry_info.items() %}
                     <div class="row-cols-1 p-2">
                         <div class="entryCard card border-primary" id="entry-{{ entry }}" style="padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
-                                    <h5 class="card-title py-1">Entry {{ entry }}</h5>
+                                    <h5 class="card-title py-1"><b>Entry {{ entry +1}}</b></h5>
                                     <button type="submit" data-entrynum="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
                                 </div>
 
                                 <!--Create a bordered element for each food in the entry-->
                                 <ul class="list-group">
-                                    {% for food in foods %}
+                                    {% for food_dict, serving in foods %}
                                     <!--Border with close buttons for each food-->
-                                    <div class="foodCard card border-primary p-2 mb-3" id="{{ entry }}-{{ loop.index }}">
+                                    <div class="foodCard card border-primary p-2 mb-3" id="{{ entry }}-{{ loop.index - 1}}">
                                         <div class="row">
                                             <div class="col">
                                                 <!-- Food name label-->
-                                                <span>{{ food }}</span>
+                                                <span><b>{{ food_dict.mealname }}</b></span>
+                                                <p class="nutrition-container">
+                                                    <span class="nutrition-fact">Serving Size: {{ food_dict.servingsize }}</span>
+                                                    <span class="nutrition-fact">Calories: {{ food_dict.calories }}</span>
+                                                    <span class="nutrition-fact">Proteins: {{ food_dict.proteins }}g</span>
+                                                    <span class="nutrition-fact">Carbs: {{ food_dict.carbs }}g</span>
+                                                    <span class="nutrition-fact">Fats: {{ food_dict.fats }}g</span>
+                                                </p>
                                             </div>
                                             <div class="col-auto d-flex align-items-center">
                                                 <!-- Serving Lineedit Column and Close button -->
-                                                <div data-foodnum="{{ loop.index }}" data-entrynum="{{ entry }}" class="d-flex align-items-center">
+                                                <div data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="d-flex align-items-center">
                                                     <!-- Serving Lineedit -->
                                                     <input type="number" min="0" class="form-control small-input mr-2"
-                                                    placeholder="Servings" oninput="handleServingChange(this)" required
-                                                    data-foodnum="{{ loop.index }}" data-entrynum="{{ entry }}"
+                                                    value="{{ serving }}" oninput="handleServingChange(this)" required
+                                                    data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}"
                                                     onkeypress="return isValid(event)">
                                     
                                                     <!-- Close button -->
-                                                    <button type="button" data-foodnum="{{ loop.index }}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
+                                                    <button type="button" data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
                                                     </button>
                                                 </div>
                                             </div>
@@ -120,11 +132,18 @@
             return true;
         }
         function handleServingChange(input) {
+            input.setCustomValidity('');
+            customCheckValidity(input)
             let serving = parseFloat(input.value);
             let entry_food_num = input.dataset.entrynum + "-" + input.dataset.foodnum
             console.log(entry_food_num, serving)
             servingsChanged[entry_food_num] = serving
         };
+
+        function showLoadingAnimation() {
+            // Show the loading animation covering the entire screen
+            $("#loading-animation").show();
+        }
 
 
         // select all Entry cards and add close button event listeners for each
@@ -143,7 +162,7 @@
                     console.log("foodnum is ", foodnum);
 
                     // append 0-indexed indices for deleted food
-                    appendFoodtoDelete(parseInt(entrynum)-1, parseInt(foodnum) - 1);
+                    appendFoodtoDelete(parseInt(entrynum), parseInt(foodnum));
                     hideFood(entrynum + "-" + foodnum);
                 })
             });
@@ -159,16 +178,45 @@
                     var entryId = "entry-" + entrynum
                     // append to list and hide from view
                     console.log("Printing entryid", entryId)
-                    appendEntrytoDelete(parseInt(entrynum) - 1);
+                    appendEntrytoDelete(parseInt(entrynum));
                     hideEntry(entryId); 
                 });
             });
         });
+
+        function customCheckValidity(input) {
+            let isValid = true;
+
+            // Check if the input is empty
+            if (!input.value || input.value==0) {
+                input.setCustomValidity("Please fill out a non-zero serving size"); // Set custom message
+                input.reportValidity(); // Show the error message
+                isValid = false;
+            } else {
+                input.setCustomValidity(""); // Clear any previous custom validity messages
+            }
+
+            return isValid;
+        }
+
+        function validateInputs() {
+            const inputs = document.querySelectorAll(".small-input");
+            valid = true;
+            inputs.forEach((input) => {
+                if (!customCheckValidity(input)) {
+                    valid=false
+                }
+            });
+            return valid
+        }
         
         // once submit button is clicked, send everything to be deleted as an AJAX call
         document.getElementById('savePlate').addEventListener('click', function(event) {
             event.preventDefault();
 	        console.log("save plate button clicked");
+            if (!validateInputs()) {
+                return
+            }
             console.log(deletedEntries)
             var dataToSend = {
                 entriesToDelete: deletedEntries,
@@ -176,7 +224,7 @@
                 servingsToChange: servingsChanged
             };
             var jsonData = JSON.stringify(dataToSend);
-            // showLoadingAnimation();
+            showLoadingAnimation();
             $.ajax({
                 type: "POST",
                 url: "/editingplate",
