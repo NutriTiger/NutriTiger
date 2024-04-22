@@ -14,34 +14,32 @@
 <div class="text-center p-3">
     <h1 class="my-2">Log Food</h1>
     <p class="px-5">
-        Select your dining hall from the drop down below or search for the recipe name in the search bar. Once you select your dish(es), estimate the number of servings you consumed in the “My Plate” window below.
+        Select your dining hall from the drop down below. <br>
+        Once you select your dish(es), estimate the number of servings you consumed in the “My Plate” window below.
     </p>
     <button class="btn btn-primary" id="startTutorial">Click to see a tutorial.</button>
 </div>
 <div class="container-fluid">
-    <div class="row p-2">
-        <div class="col-md-8 p-3">
-            <select class="select-dropdown btn btn-secondary dropdown-toggle form-select custom-dropdown" id="diningHallSelect" aria-label="select_dhall" style="display: block;">
-                <option value="Select Food Source" selected>Select Food Source</option>
-                <option value="Center for Jewish Life">Center for Jewish Life</option>
-                <option value="Forbes College">Forbes College</option>
-                <option value="Graduate College">Graduate College</option>
-                <option value="Yeh & New West Colleges">Yeh & New West Colleges</option>
-                <option value="Rockefeller & Mathey Colleges">Rockefeller & Mathey Colleges</option>
-                <option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
-                <option value="Personal Food Items">Personal Food Items</option>
-                <option value="USDA FoodData Central">USDA FoodData Central</option>
-            </select>
-        </div>
-        <span class="col-10 col-sm-6 p-3" >
-            <input id="searchBar" style="display: none;" type="text" class="form-control" placeholder="Search..." />
-        </span>
-    </div>
+    
     <!--Two cards: one for the dining hall food display, and one for My Plate-->
     <div class="row px-2">
         <div class="col-md-12 col-lg-6 p-3">
             <!--Putting entire food selection menu in one background card-->
             <div class="logfood-card card">
+                <div class="col-md-8 p-3">
+                    <select class="select-dropdown btn btn-secondary dropdown-toggle form-select custom-dropdown" id="diningHallSelect" aria-label="select_dhall" style="display: block;">
+                        <option value="Select Food Source" selected>Select Food Source</option>
+                        <option value="Center for Jewish Life">Center for Jewish Life</option>
+                        <option value="Forbes College">Forbes College</option>
+                        <option value="Graduate College">Graduate College</option>
+                        <option value="Yeh & New West Colleges">Yeh & New West Colleges</option>
+                        <option value="Rockefeller & Mathey Colleges">Rockefeller & Mathey Colleges</option>
+                        <option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
+                        <option value="Personal Food Items">Personal Food Items</option>
+                        <option value="USDA FoodData Central">USDA FoodData Central</option>
+                    </select>
+                </div>
+            
                 <div class="card-body">
                     <!-- Mealtime Tab Navs -->
                     <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
@@ -61,7 +59,7 @@
                             <a class="nav-link" id="Dinner-tab" data-toggle="tab" href="#dinner" role="tab" aria-controls="dinner" aria-selected="false">Dinner</a>
                         </li>
                     </ul>
-                    <div class="card">
+                    <div class="card" style="min-height: 300px;">
                         <div class="card-body" id="usda-search-results"></div>
                         <div class="card-body" id="menu-items">
                             {% include 'logfood_update.html' %}

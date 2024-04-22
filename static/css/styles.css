@@ -227,7 +227,7 @@ body {
 /* Setting min heights for logfood page cards */
 
 .logfood-card {
-    min-height: 400px; /* Set minimum height */
+    min-height: 500px; /* Set minimum height */
   }
 
 .loading-animation {
