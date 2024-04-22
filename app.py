@@ -419,8 +419,8 @@ def editing_plate():
         entriesToDel = data.get("entriesToDelete", [])
         foodsToDel = data.get("foodsToDelete", [])
         # delete entries/foods from user DB
-        print(netid, entriesToDel, foodsToDel)
-        #print(dbusers.editPlateAll(netid, entriesToDel, foodsToDel, []))
+        #print(netid, entriesToDel, foodsToDel)
+        print(dbusers.editPlateAll(netid, entriesToDel, foodsToDel, []))
         return jsonify({"success": True, "redirect": url_for('homepage')})
 
 #--------------------------------------------------------------------
