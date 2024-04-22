@@ -304,7 +304,7 @@ One function for all edit plate possibilities. Takes 3 arguments:
     netid
     entriesToDelete: an array of entry numbers (0 indexed) to be deleted
     foodsToDelete: an array of dictionaries [{index: entrynum, foods:[foodnums]}]
-    servingsToEdit: an array of dictionaries [{index: entrynum, foods:[foodnums], servings: [newservings]}]
+    servingsToEdit: a dictionary {entrynum-foodnum: new_serving}
 '''
 
 def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
@@ -313,9 +313,9 @@ def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
         return None
     
     # edit all of the servings first
-    for dictionary in servingsToEdit:
-        for foodnum, serving in zip(dictionary["foods"], dictionary["servings"]):
-            editFood(this_user, dictionary["index"], foodnum, serving)
+    for key, value in servingsToEdit.items():
+        entrynum, foodnum = key.split('-')
+        editFood(this_user, int(entrynum) - 1, int(foodnum) - 1, value)
     
     # delete foods
     for dictionary in foodsToDelete:

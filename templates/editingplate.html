@@ -40,7 +40,8 @@
                                                 <div data-foodnum="{{ loop.index }}" data-entrynum="{{ entry }}" class="d-flex align-items-center">
                                                     <!-- Serving Lineedit -->
                                                     <input type="number" min="0" class="form-control small-input mr-2"
-                                                    placeholder="Servings" oninput="handleServingChange()" required
+                                                    placeholder="Servings" oninput="handleServingChange(this)" required
+                                                    data-foodnum="{{ loop.index }}" data-entrynum="{{ entry }}"
                                                     onkeypress="return isValid(event)">
                                     
                                                     <!-- Close button -->
@@ -77,6 +78,7 @@
         let deletedEntries = [];
         // List of lists of deleted foods & their entries
         let deletedFoods = [];
+        let servingsChanged = {};
 
         function appendEntrytoDelete(entryIndex) {
             console.log("entry " + entryIndex + " will be deleted")
@@ -117,6 +119,13 @@
         
             return true;
         }
+        function handleServingChange(input) {
+            let serving = parseFloat(input.value);
+            let entry_food_num = input.dataset.entrynum + "-" + input.dataset.foodnum
+            console.log(entry_food_num, serving)
+            servingsChanged[entry_food_num] = serving
+        };
+
 
         // select all Entry cards and add close button event listeners for each
         var entryCards = document.querySelectorAll('.entryCard');
@@ -163,7 +172,8 @@
             console.log(deletedEntries)
             var dataToSend = {
                 entriesToDelete: deletedEntries,
-                foodsToDelete: deletedFoods
+                foodsToDelete: deletedFoods,
+                servingsToChange: servingsChanged
             };
             var jsonData = JSON.stringify(dataToSend);
             // showLoadingAnimation();
