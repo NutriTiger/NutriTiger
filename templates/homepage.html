@@ -91,7 +91,7 @@
 					{% set nutrition_totals = data.nutrition_totals %}
 					{% set servings = data.servings %}
 					<div class="row-cols-1 p-2">
-						<div class="card" style="background-color: lightgray;">
+						<div class="card entryCard" style="background-color: lightgray;">
 							<div class="card-body">
 								<h5 class="card-title">{{entry}}</h5>
 		
@@ -170,13 +170,13 @@
 
 	window.onload = function() {
 		
-		// if (entries exist) {
-			// showHomepageCards();
-		// } else {
-			// showPlaceholder();
-		//}
-		//ShowPlaceholder()
-		showHomepageCards();
+		// if there are no entries, show the placeholder
+		if (document.getElementsByClassName("entryCard").length == 0) {
+			showPlaceholder();
+
+		} else {
+			showHomepageCards();
+		}
 	}
 
 </script>
