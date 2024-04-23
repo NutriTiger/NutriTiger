@@ -105,8 +105,7 @@
 		
 								<ul>
 									{% for food in foods %}
-									<li>{{food}}</li>
-									<span class="text-muted">Servings: {{ servings[loop.index - 1] }}</span>
+									<li>{{food}} - <span class="text-muted">Servings: {{ servings[loop.index - 1] }}</span></li>
 									{% endfor %}
 								</ul>
 								
