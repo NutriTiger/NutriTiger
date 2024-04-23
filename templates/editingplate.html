@@ -198,9 +198,15 @@
 
         function customCheckValidity(input) {
             let isValid = true;
+            inputValue = parseFloat(input.value)
             // Check if the input is empty
+            console.log("checking input")
             if (!input.value || input.value==0) {
-                input.setCustomValidity("Please fill out a non-zero serving size"); // Set custom message
+                input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
+                isValid = false;
+            }
+            else if (inputValue > 100) {
+                input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
                 isValid = false;
             } else {
                 input.setCustomValidity(""); // Clear any previous custom validity messages
