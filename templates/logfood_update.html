@@ -35,13 +35,13 @@
 </div>
 
 
-<div class="card-body" id="personal-food-items">
+<div class="card-body" id="personal-food-items" style="display: none;">
     <script>console.log('Starting to process personal food items');</script>
     {% set ns = namespace(c = 0) %}
     {% for item in personal_data %}
         <script>console.log('{{ item.mealname }}');</script>
 
-        <div class = "personal-items-content" style="display: none;" id="personal-list">
+        <div class = "personal-items-content">
             <div class="form-check">
                 {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
                 <script>console.log('{{ checkbox_id }}');</script>
