@@ -421,9 +421,12 @@ def log_food():
         # print(data)
         recipeids = utils.gather_recipes(data)
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
+    
+        personal_data = dbnutrition.find_all_personal_nutrition(netid)
+        print(personal_data)
         print("about to render template for logfood")
 
-        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info, calc_mealtime = calc_mealtime)
+        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, personal_data = personal_data)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])
@@ -543,7 +546,7 @@ def personal_food():
 
 # Flashes an issue with the submission and returns the previously
 # typed elements back into the input areas
-def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc):
+def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc):
     flash(message)
     # Store form data and message in session
     session['form_data'] = {
@@ -552,6 +555,7 @@ def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, de
         'carbs': carbs,
         'proteins': protein,
         'fats': fats,
+        'servingsize': servingsize,
         'description': desc,
     }
     return redirect(url_for('personal_food'))
@@ -567,6 +571,7 @@ def add_personalfood():
     protein = request.form.get('proteins', type = int)
     carbs = request.form.get('carbs', type = int)
     fats = request.form.get('fats', type = int)
+    servingsize = request.form.get('servingsize', type = str)
     desc = request.form.get('description', type = str)
     file = request.files['image']
 
@@ -580,11 +585,9 @@ def add_personalfood():
         cal = 0
     # checking for number checks
     adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
-    print(adds_up)
     if not adds_up:
-        print("here")
         message = "Please input valid nutrition information"
-        return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+        return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
     # image checks
     image_data = None
@@ -593,18 +596,19 @@ def add_personalfood():
         correct_type, file_ext = photos.allowed_file(file.filename)
         if not correct_type:
             message = "Invalid file type :("
-            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
         
         image_data = photos.edit_photo_width(file, file_ext)
         if image_data == 'n/a':
             message = "Yikes, we couldn't resize this image. Can you try another photo?"
-            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
     nutrition_dict = {
                     "calories": cal,
                     "proteins": protein,
                     "carbs": carbs,
                     "fats": fats,
+                    "servingsize": servingsize,
                     "description": desc,
                     "image": image_data,
                     "filetype": file_ext
@@ -618,7 +622,7 @@ def add_personalfood():
         return redirect(url_for('personal_nutrition'))
     
     message = "A personal food item with this name already exists, please put a new name!"
-    return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+    return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
     
     
     
