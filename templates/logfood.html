@@ -312,16 +312,16 @@
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
-            $("#personal-food-items").show();
+            $("#personal-list").show();
         } else if (selectedHall === "USDA FoodData Central") {
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
             $("#usda-search-results").show();
-            $("#personal-food-items").hide();
+            $("#personal-list").hide();
         } else {
             $("#searchBarSpan").hide();
             $("#usda-search-results").hide();
-            $("#personal-food-items").hide();
+            $("#personal-list").hide();
             $("#mealTimeTab").show();
             let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
             dhallCode = selectedHall.substring(0, 2);
@@ -422,7 +422,7 @@
             intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
         }, {
             title: 'Generic Food Search',
-            element: document.querySelector('#tutorialSearchBar'),
+            element: document.querySelector('#searchBarSpan'),
             intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
         }, {
             title: 'Generic Food Selection',
@@ -455,7 +455,7 @@
             servingInput.value = 1;
             handleServingChange();
         }
-        if (targetElement.id == 'tutorialSearchBar') {
+        if (targetElement.id == 'searchBarSpan') {
             document.querySelector('.select-dropdown').value = 'USDA FoodData Central';
             document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
             var searchBar = document.getElementById("searchBar");
