@@ -201,11 +201,11 @@
             // Check if the input is empty
             if (!input.value || input.value==0) {
                 input.setCustomValidity("Please fill out a non-zero serving size"); // Set custom message
-                input.reportValidity(); // Show the error message
                 isValid = false;
             } else {
                 input.setCustomValidity(""); // Clear any previous custom validity messages
             }
+            input.reportValidity();
             return isValid;
         }
 
