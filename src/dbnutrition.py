@@ -75,7 +75,7 @@ def add_personal_food(name, netid, nutrition):
     
     with connectmongo() as client:
         db = client.db
-        nutrition_col = db.personal_nutrition
+        nutrition_col = db.nutrition
         items_to_find = {"access": netid}
 
 
@@ -162,7 +162,7 @@ def find_many_nutrition(recipeids, personal=False):
 def find_all_personal_nutrition(netid):
     with connectmongo() as client:
         db = client.db
-        nutrition_col = db.personal_nutrition
+        nutrition_col = db.nutrition
 
         documents_to_find = {"access": netid}
         try:
@@ -184,7 +184,7 @@ def find_all_personal_nutrition(netid):
 def find_one_personal_nutrition(netid, mealname):
     with connectmongo() as client:
         db = client.db
-        nutrition_col = db.personal_nutrition
+        nutrition_col = db.nutrition
 
         documents_to_find = {"access": netid, "mealname": mealname}
         try:
