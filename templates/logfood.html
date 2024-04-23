@@ -88,7 +88,7 @@
             <!--Upload plate button-->
             <div class="container p-5">
                 <h5>Done adding food to your plate?</h5>
-                <form action="/logfood" method="post" class="p-3" onsubmit="return checkLineeditsFilled();">
+                <form action="/logfood" method="post" class="p-3">
                     <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
                 </form>
             </div>
@@ -342,6 +342,8 @@
         let totalFats = 0;
         let totalProts = 0;
         inputs.forEach((input) => {
+            input.setCustomValidity('');
+            customCheckValidity(input)
             let serving = input.value;
             totalCals += serving * input.dataset.cals;
             totalCarbs += serving * input.dataset.carbs;
@@ -357,18 +359,34 @@
         plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
     }
 
-    // CHECKS THAT ALL SERVING SIZE LINEEDITS HAVE BEEN FILLED OUT
-    function checkLineeditsFilled() {
-        const inputs = document.querySelectorAll(".small-input");
-
-        for (let i = 0; i < inputs.length; i++) {
-            if (inputs[i].value === "") {
-                alert("Please enter a serving value for each food in your plate.");
-                return false;
-            }
+    function customCheckValidity(input) {
+        let isValid = true;
+        inputValue = parseFloat(input.value)
+        // Check if the input is empty
+        console.log("checking input")
+        if (!input.value || input.value==0) {
+            input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
+            isValid = false;
         }
+        else if (inputValue > 100) {
+            input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
+            isValid = false;
+        } else {
+            input.setCustomValidity(""); // Clear any previous custom validity messages
+        }
+        input.reportValidity();
+        return isValid;
+    }
 
-        return true;
+    function validateInputs() {
+        const inputs = document.querySelectorAll(".small-input");
+        valid = true;
+        inputs.forEach((input) => {
+            if (!customCheckValidity(input)) {
+                valid=false
+            }
+        });
+        return valid
     }
 
     function startTutorial() {
@@ -491,9 +509,9 @@
             addUSDANutritionData();
             console.log("submit");
 
-            // VALIDATE THAT ALL LINEEDITS ARE FILLED, prevent return to homepage
-            if (!checkLineeditsFilled()) {
-                return;
+            // validation
+            if (!validateInputs()) {
+                return
             }
 
             var recids = [];

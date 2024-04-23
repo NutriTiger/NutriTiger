@@ -82,8 +82,20 @@ function modifyDate(daysToAddOrSubtract) {
     // Calculate the difference
     const difference = (currentDate.getDate() + daysToAddOrSubtract) - todaysDate.getDate();
 
+    var element = document.getElementById('no-data-available');
+    if (element) {
+        var isDisplayNone = window.getComputedStyle(element).getPropertyValue('display') === 'none';
+    }
+    else {
+        isDisplayNone = true;
+    }
+
+
+
     // Don't let the user go back more than one week
-    if (difference >= 8 || difference <= -8) {
+    if (!isDisplayNone && difference < 0 && daysToAddOrSubtract==-1) {
+        return false;
+    } else if (!isDisplayNone && difference > 0 && daysToAddOrSubtract==+1) {
         return false;
     }
 
