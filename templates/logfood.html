@@ -89,7 +89,7 @@
             <div class="container p-5">
                 <h5>Done adding food to your plate?</h5>
                 <form action="/logfood" method="post" class="p-3">
-                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
+                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate" onclick="closeForm()">Upload Plate and Return</button>
                 </form>
             </div>
         </div>
@@ -422,7 +422,7 @@
             intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
         }, {
             title: 'Generic Food Search',
-            element: document.querySelector('#tutorialSearchBar'),
+            element: document.querySelector('#searchBarSpan'),
             intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
         }, {
             title: 'Generic Food Selection',
@@ -455,7 +455,7 @@
             servingInput.value = 1;
             handleServingChange();
         }
-        if (targetElement.id == 'tutorialSearchBar') {
+        if (targetElement.id == 'searchBarSpan') {
             document.querySelector('.select-dropdown').value = 'USDA FoodData Central';
             document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
             var searchBar = document.getElementById("searchBar");
@@ -485,6 +485,31 @@
         searchBar.value = "";
     }).start();
 }
+
+     // When the user submits the form and all fields are valid, lock it
+     function closeForm() {
+        // Obtain form elements
+        const inputs = document.querySelectorAll(".small-input");
+        var validFormElements = document.querySelectorAll(".small-input:valid")
+        var logFoodButton = document.getElementById("submitButton")
+
+        if (validFormElements.length == inputs.length) {
+            logFoodButton.style.pointerEvents = "none"
+            logFoodButton.textContent = "Submitting..."
+            logFoodButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+        }
+    }
+
+    // If the user hits the back button reset the form
+    window.onunload = function() {
+        hideLoadingAnimation()
+        var logFoodButton = document.getElementById("submitButton")
+
+        calorieInput.readOnly = false
+        logFoodButton.style.pointerEvents = "auto"
+        logFoodButton.textContent = "Upload Plate and Return"
+        logFoodButton.style.opacity = "none"
+    }
 
     // set up event listeners for dhall select and mealtime tab
     function setup() {
