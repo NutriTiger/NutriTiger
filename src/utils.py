@@ -102,7 +102,7 @@ def trim_data(data):
 def check_nutrition_info(cal, protein, carbs, fats):
     total = 4*protein + 4*carbs + 9*fats
     print(total < cal)
-    return total < cal
+    return (total < cal) | (total == cal) 
 
 def main():
     # Unit testing checks of functions

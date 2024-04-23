@@ -570,6 +570,14 @@ def add_personalfood():
     desc = request.form.get('description', type = str)
     file = request.files['image']
 
+    if not protein:
+        protein = 0
+    if not carbs:
+        carbs = 0
+    if not fats:
+        fats = 0
+    if not cal:
+        cal = 0
     # checking for number checks
     adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
     print(adds_up)
