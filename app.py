@@ -570,19 +570,27 @@ def add_personalfood():
     desc = request.form.get('description', type = str)
     file = request.files['image']
 
+    # checking for number checks
+    adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
+    print(adds_up)
+    if not adds_up:
+        print("here")
+        message = "Please input valid nutrition information"
+        return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+
+    # image checks
     image_data = None
     file_ext = None
     if file:
         correct_type, file_ext = photos.allowed_file(file.filename)
-    
         if not correct_type:
             message = "Invalid file type :("
-            add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
         
         image_data = photos.edit_photo_width(file, file_ext)
         if image_data == 'n/a':
             message = "Yikes, we couldn't resize this image. Can you try another photo?"
-            add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
 
     nutrition_dict = {
                     "calories": cal,
@@ -602,7 +610,8 @@ def add_personalfood():
         return redirect(url_for('personal_nutrition'))
     
     message = "A personal food item with this name already exists, please put a new name!"
-    add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+    return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+    
     
     
 #--------------------------------------------------------------------
