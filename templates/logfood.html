@@ -64,9 +64,8 @@
                     </ul>
                     <div class="card" style="min-height: 300px;">
                         <div class="card-body" id="usda-search-results"></div>
-                        <div class="card-body" id="menu-items">
-                            {% include 'logfood_update.html' %}
-                        </div>
+                        {% include 'logfood_update.html' %}
+                        
                     </div>
                 </div>
             </div>
@@ -215,7 +214,7 @@
 
     function appendDataToDOM(data) {
         const resultsContainer = document.getElementById("usda-search-results");
-        resultsContainer.innerHTML = ""; // Clear previous results - BUG, need to figure out how to get rid of without deleting important info
+        resultsContainer.innerHTML = ""; // Clear previous results - base saving on plate info
 
         if (data.foods && data.foods.length > 0) {
             data.foods.forEach((food, index) => {
@@ -309,23 +308,28 @@
         console.log(selectedHall);
 
         if (selectedHall === "Personal Food Items") {
+            console.log("selected hall is personal")
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
+            $("#personal-food-items").show();
         } else if (selectedHall === "USDA FoodData Central") {
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
             $("#usda-search-results").show();
+            $("#personal-food-items").hide();
         } else {
             $("#searchBarSpan").hide();
             $("#usda-search-results").hide();
+            $("#personal-food-items").hide();
             $("#mealTimeTab").show();
             let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
             dhallCode = selectedHall.substring(0, 2);
             let divToShow = dhallCode + "-" + mealtime;
             if ($("#" + divToShow).length > 0) {
                 $("#" + divToShow).show();
-            } else {
+            } 
+            else {
                 $("#noDataMessage").show();
             }
         }
