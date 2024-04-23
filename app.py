@@ -514,7 +514,8 @@ def log_food_data():
 def logfood_usdadata():
     netid = auth.authenticate()
     query = request.args.get('query', default="", type=str)
-    api_key = 'XBwD6rxHxWX1wTdECT9q778IWkDtNcxwkxOJECw9'  # API key
+    dotenv.load_dotenv()
+    api_key = os.getenv('usda_api_key')  # API key
     limit = 25
 
     # Construct the USDA API URL
