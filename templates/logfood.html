@@ -89,7 +89,7 @@
             <!--Upload plate button-->
             <div class="container p-5">
                 <h5>Done adding food to your plate?</h5>
-                <form action="/logfood" method="post" class="p-3">
+                <form action="/logfood" method="post" class="p-3" onsubmit="return checkLineeditsFilled();">
                     <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
                 </form>
             </div>
@@ -354,16 +354,19 @@
     }
 
     // CHECKS THAT ALL SERVING SIZE LINEEDITS HAVE BEEN FILLED OUT
-    function submitForm(inputField) {
-        var servingValue = inputField.value.trim();
+    function checkLineeditsFilled() {
+        const inputs = document.querySelectorAll(".small-input");
 
-        if (servingValue === "" || servingValue.toLowerCase() === "none") {
-            alert("Please enter a serving value for each food in your plate.");
-            return false;
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].value === "") {
+                alert("Please enter a serving value for each food in your plate.");
+                return false;
+            }
         }
 
-        return true; // allows form submission
+        return true;
     }
+
     function startTutorial() {
     introJs().setOptions({
         disableInteraction: true,
@@ -483,11 +486,16 @@
             event.preventDefault();
             addUSDANutritionData();
             console.log("submit");
+
+            // VALIDATE THAT ALL LINEEDITS ARE FILLED, prevent return to homepage
+            if (!checkLineeditsFilled()) {
+                return;
+            }
+
             var recids = [];
             var servings = [];
             const inputs = document.querySelectorAll(".small-input");
             inputs.forEach((input) => {
-                submitForm(input); // CHECK THIS VALIDATION
                 let recid = input.dataset.recid;
                 let serving = parseFloat(input.value);
                 recids.push(recid);
