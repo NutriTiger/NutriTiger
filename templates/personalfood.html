@@ -17,21 +17,19 @@
                     <label for="inputImage" class="form-label">Upload Image</label>
                     <input type="file" class="form-control" id="inputImage" name="image" accept="image/png, image/jpeg, image/heic">
                 </div>
-                {% if name != "i.e. overnight oats" %}
+                <!-- {% if name != "i.e. overnight oats" %}
                     <div class="form-group">
                         <label for="inputRecipeName">Recipe Name</label>
                         <input type="text" class="form-control" id="inputRecipeName" name = "name" aria-describedby="nameHelp" value="{{name}}" required>
                         <small id="nameHelp" class="form-text text-muted">We will not share this with other users</small>
                     </div>
-                {% endif %}
+                {% endif %} -->
 
-                {% if name == "i.e. overnight oats" %}
-                    <div class="form-group">
-                        <label for="inputRecipeName">Recipe Name</label>
-                        <input type="text" class="form-control" id="inputRecipeName" maxlength="30" name = "name" aria-describedby="nameHelp" placeholder="{{name}}" required>
-                        <small id="nameHelp" class="form-text text-muted">We will not share this with other users</small>
-                    </div>
-                {% endif %}
+                <div class="form-group">
+                    <label for="inputRecipeName">Recipe Name</label>
+                    <input type="text" class="form-control" id="inputRecipeName" maxlength="30" name = "name" aria-describedby="nameHelp" placeholder="{{name}}" required>
+                    <small id="nameHelp" class="form-text text-muted">We will not share this with other users</small>
+                </div>
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
@@ -48,6 +46,10 @@
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
                     <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder={{fats}}>
+                </div>
+                <div class="form-group">
+                    <label for="inputServingSize">Serving size</label>
+                    <input type="text" class="form-control" id="inputServingSize" maxlength="20" name = "servingsize" placeholder="{{servingsize}}" required>
                 </div>
                 <div class="form-group">
                     <label for="inputDesc">Description</label>

@@ -25,6 +25,7 @@
                     <li class="list-group-item"><img src="{{ url_for('serve_image', image_id=item['_id']) }}" alt="Meal Image" class = "fitted-image"></li>
                 {% endif %}
                 {% if item['description'] != '' %}<li class="list-group-item"><strong>Description: </strong>{{ item['description']}}</li>{% endif %}
+                <li class="list-group-item"><strong>Serving size:</strong> {{ item['servingsize']}}</li>
                 <li class="list-group-item"><strong>Calories:</strong> {{ item['calories']}}</li>
                 <li class="list-group-item"><strong>Proteins:</strong> {{ item['proteins']}}g</li>
                 <li class="list-group-item"><strong>Carbs:</strong> {{ item['carbs'] }}g</li>

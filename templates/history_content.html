@@ -1,0 +1,37 @@
+<!--Four cards (for each average)-->
+<div class="row p-sm-5 card-group">
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-cals h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Calories/Day</h5>
+                <p>{{ avg_cals }}cal</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-prots h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Protein</h5>
+                <p>{{ avg_pro }}g</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-carbs h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Carbs</h5>
+                <p>{{ avg_carbs }}g</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-sm-3 py-2">
+        <div class="card avg-fats h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Avg. Fat</h5>
+                <p>{{ avg_fat }}g</p>
+            </div>
+        </div>
+    </div>
+</div>
+    {% include 'historygraph.html' %}
+</div>
