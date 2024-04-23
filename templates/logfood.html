@@ -39,8 +39,8 @@
                         <option value="USDA FoodData Central">USDA FoodData Central</option>
                     </select>
                 </div>
-                <span class="col-10 col-sm-6 p-3" id = "searchBarSpan">
-                    <input id="searchBar" style="display: none;" type="text" class="form-control" placeholder="Search..." />
+                <span class="col-10 col-sm-6 p-3" id = "searchBarSpan"  style="display: none;">
+                    <input id="searchBar" type="text" class="form-control" placeholder="Search..." />
                 </span>
             
                 <div class="card-body">
@@ -309,15 +309,15 @@
         console.log(selectedHall);
 
         if (selectedHall === "Personal Food Items") {
-            $("#searchBar").hide();
+            $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
         } else if (selectedHall === "USDA FoodData Central") {
             $("#mealTimeTab").hide();
-            $("#searchBar").show();
+            $("#searchBarSpan").show();
             $("#usda-search-results").show();
         } else {
-            $("#searchBar").hide();
+            $("#searchBarSpan").hide();
             $("#usda-search-results").hide();
             $("#mealTimeTab").show();
             let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
