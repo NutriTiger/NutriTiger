@@ -24,8 +24,14 @@ from src import utils
 from src import auth
 from src import photos
 import requests
+import json
 from bson.objectid import ObjectId
+from PIL import Image
 from bson.binary import Binary
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 
 #--------------------------------------------------------------------
 
@@ -57,13 +63,6 @@ def get_ampm():
         return 'afternoon'
     return 'evening'
 
-def get_date():
-
-    eastern = pytz.timezone('US/Eastern')
-    today = datetime.datetime.now(eastern)
-
-    formatted_date = today.strftime("%A, %B, %d")
-    return formatted_date
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
@@ -338,18 +337,30 @@ def history():
 
 #--------------------------------------------------------------------
 
+# Get image
 @app.route('/image/<image_id>')
-def serve_image(image_id):
-    client = dbfunctions.connectmongo()
-    db = client['db']
-    collection = db['personal_nutrition']
+def serve_image(photo_id):
+    netid = auth.authenticate()
+    
+    # Load environment variables where your Cloudinary config is stored
+    dotenv.load_dotenv()
+    ccloud_name = os.getenv('cloud_name')
+    capi_key = os.getenv("api_key")
+    c_secret = os.getenv("api_secret")
 
-    document = collection.find_one({'_id': ObjectId(image_id)})
+    # Configure Cloudinary
+    cloudinary.config( 
+        cloud_name = ccloud_name, 
+        api_key = capi_key, 
+        api_secret = c_secret 
+    )
 
-    if document and 'image' in document:
-        return Response(document['image'], mimetype=document['filetype'])  
-    else:
-        return "Image not found", 404
+    # Generate the URL of the image
+    image_url, options = cloudinary.utils.cloudinary_url(photo_id)
+
+    if not image_url:
+        return jsonify({"error": "Image not found"}), 404
+
 
 #--------------------------------------------------------------------
 
@@ -624,6 +635,7 @@ def add_personalfood():
     # image checks
     image_data = None
     file_ext = None
+    # If there is a file, upload image
     if file:
         correct_type, file_ext = photos.allowed_file(file.filename)
         if not correct_type:
@@ -634,6 +646,27 @@ def add_personalfood():
         if image_data == 'n/a':
             message = "Yikes, we couldn't resize this image. Can you try another photo?"
             return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
+        photo_id = netid
+        photo_id += '-'
+        photo_id += recipename
+
+        dotenv.load_dotenv()
+        ccloud_name = os.getenv('cloud_name')
+        capi_key = os.getenv("api_key")
+        c_secret = os.getenv("api_secret")
+
+        print(ccloud_name)
+        print(capi_key)
+        print(c_secret)
+
+        cloudinary.config( 
+            cloud_name = ccloud_name, 
+            api_key = capi_key, 
+            api_secret = c_secret 
+        )
+
+        cloudinary.uploader.upload(file, 
+            public_id = photo_id)
 
     nutrition_dict = {
                     "calories": cal,
@@ -642,7 +675,7 @@ def add_personalfood():
                     "fats": fats,
                     "servingsize": servingsize,
                     "description": desc,
-                    "image": image_data,
+                    "image": photo_id,
                     "filetype": file_ext
                     }
 
