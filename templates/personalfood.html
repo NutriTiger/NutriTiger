@@ -17,45 +17,85 @@
                     <label for="inputImage" class="form-label">Upload Image</label>
                     <input type="file" class="form-control" id="inputImage" name="image" accept="image/png, image/jpeg, image/heic">
                 </div>
-                {% if name != "i.e. overnight oats" %}
+                <!-- {% if name != "i.e. overnight oats" %}
                     <div class="form-group">
                         <label for="inputRecipeName">Recipe Name</label>
                         <input type="text" class="form-control" id="inputRecipeName" name = "name" aria-describedby="nameHelp" value="{{name}}" required>
                         <small id="nameHelp" class="form-text text-muted">We will not share this with other users</small>
                     </div>
-                {% endif %}
+                {% endif %} -->
 
-                {% if name == "i.e. overnight oats" %}
-                    <div class="form-group">
-                        <label for="inputRecipeName">Recipe Name</label>
-                        <input type="text" class="form-control" id="inputRecipeName" name = "name" aria-describedby="nameHelp" placeholder="{{name}}" required>
-                        <small id="nameHelp" class="form-text text-muted">We will not share this with other users</small>
-                    </div>
-                {% endif %}
+                <div class="form-group">
+                    <label for="inputRecipeName">Recipe Name</label>
+                    <input type="text" class="form-control" id="inputRecipeName" maxlength="30" name = "name" aria-describedby="nameHelp" placeholder="{{name}}" required>
+                    <small id="nameHelp" class="form-text text-muted">We will not share this with other users</small>
+                </div>
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
-                <input type="number" min="0" class="form-control" id="inputCalories" name = "calories" value={{calories}}>
+                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories" placeholder={{calories}}>
                 </div>
                 <div class="form-group">
                     <label for="inputProtein">Protein (g)</label>
-                    <input type="number" min="0" class="form-control" id="inputProtein" name = "proteins" value={{proteins}}>
+                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" placeholder={{proteins}}>
                 </div>
                 <div class="form-group">
                     <label for="inputCarbs">Carbohydrates (g)</label>
-                    <input type="number" min="0" class="form-control" id="inputCarbs" name = "carbs" value={{carbs}}>
+                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs" placeholder={{carbs}}>
                 </div>
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
-                    <input type="number" min="0"class="form-control" id="inputFats" name = "fats" value={{fats}}>
+                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder={{fats}}>
+                </div>
+                <div class="form-group">
+                    <label for="inputServingSize">Serving size</label>
+                    <input type="text" class="form-control" id="inputServingSize" maxlength="20" name = "servingsize" placeholder="{{servingsize}}" required>
                 </div>
                 <div class="form-group">
                     <label for="inputDesc">Description</label>
-                    <input type="text" class="form-control" id="inputDesc" name = "description" value={{desc}}>
+                    <textarea class="form-control autosize" id="inputDesc" maxlength = "180" name="description" oninput="autoResizeField(this)">{{desc}}</textarea>
                 </div>
                 <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
+    <script>
+        function autoResizeField(field) {
+        field.style.height = 'inherit'; // Reset the height
+        const computed = window.getComputedStyle(field);
+        // Calculate the height
+        const height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+                     + parseInt(computed.getPropertyValue('padding-top'), 10)
+                     + field.scrollHeight
+                     + parseInt(computed.getPropertyValue('padding-bottom'), 10)
+                     + parseInt(computed.getPropertyValue('border-bottom-width'), 10);
+
+        field.style.height = `${height}px`;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const input1 = document.getElementById("inputCalories");
+            const input2 = document.getElementById("inputProtein");
+            const input3 = document.getElementById("inputCarbs");
+            const input4 = document.getElementById("inputFats");
+            const array = [input1, input2, input3, input4]
+            array.forEach((evt) => {
+                evt.addEventListener("keydown", function(evt) {
+                    // Allow: backspace, delete, tab, escape, and enter
+                    if ([8, 46, 9, 27, 13].indexOf(evt.keyCode) !== -1 ||
+                        // Allow: Ctrl/cmd+A, Ctrl/cmd+C, Ctrl/cmd+V, Ctrl/cmd+X
+                        (evt.keyCode == 65 || evt.keyCode == 67 || evt.keyCode == 86 || evt.keyCode == 88) && (evt.ctrlKey === true || evt.metaKey === true) ||
+                        // Allow: home, end, left, right
+                        (evt.keyCode >= 35 && evt.keyCode <= 39)) {
+                            return; // let it happen, don't do anything
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((evt.keyCode < 48 || evt.keyCode > 57) && (evt.keyCode < 96 || evt.keyCode > 105)) {
+                        evt.preventDefault();
+                    }
+                });
+            });
+            
+        });
+    </script>
 {% endblock %}

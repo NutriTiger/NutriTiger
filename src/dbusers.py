@@ -315,7 +315,7 @@ def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
     # edit all of the servings first
     for key, value in servingsToEdit.items():
         entrynum, foodnum = key.split('-')
-        editFood(this_user, int(entrynum) - 1, int(foodnum) - 1, value)
+        editFood(this_user, int(entrynum), int(foodnum), value)
     
     # delete foods
     for dictionary in foodsToDelete:

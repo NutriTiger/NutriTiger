@@ -1,34 +1,68 @@
 <!--==============================================================-->
 <!-- logfood_update.html                                          -->
 <!--==============================================================-->
-{% set ns = namespace(c = 0) %}
-{% for item in data %}
-    {% set ooo_loop = loop %}
-    <div class = "menu-items-content" style="display: none;" id="{{ item.dhall[:2] }}-{{ item.mealtime }}">
-    {% for category, foods in item.data.items() %}
-        {% set oo_loop = loop %}
-            {% for food, code in foods.items() %}
-                <div class="form-check">
-                    {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
-                    <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
-                        data-usda="false"
-                        data-recid="{{ code }}" data-location="{{ item.dhall }}" data-mealtime="{{ item.mealtime }}"
-                        data-mealname="{{ food }}"
-                        data-servingsize="{{ nutrition_info[ns.c]['servingsize'] }}"
-                        data-cals="{{ nutrition_info[ns.c]['calories'] }}"
-                        data-carbs="{{ nutrition_info[ns.c]['carbs'] }}"
-                        data-prots="{{ nutrition_info[ns.c]['proteins'] }}"
-                        data-fats="{{ nutrition_info[ns.c]['fats'] }}"
-                        onchange="handleCheckboxChange(this)"
-                        onkeypress="changeCheckbox(this)">
-                    <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
-                    <p id="nf-{{ checkbox_id }}">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }} Calories: {{ nutrition_info[ns.c]['calories'] }} Proteins: {{ nutrition_info[ns.c]['proteins'] }}g Carbs: {{ nutrition_info[ns.c]['carbs'] }}g Fats: {{ nutrition_info[ns.c]['fats'] }}g</p>
-                </div>
-                {% set ns.c = ns.c + 1 %}
-            {% endfor %}
+<div class="card-body" id="menu-items">
+    {% set ns = namespace(c = 0) %}
+    {% for item in data %}
+        {% set ooo_loop = loop %}
+        <div class = "menu-items-content" style="display: none;" id="{{ item.dhall[:2] }}-{{ item.mealtime }}">
+        {% for category, foods in item.data.items() %}
+            {% set oo_loop = loop %}
+                {% for food, code in foods.items() %}
+                    <div class="form-check">
+                        {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
+                        <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
+                            data-usda="false"
+                            data-recid="{{ code }}" data-location="{{ item.dhall }}" data-mealtime="{{ item.mealtime }}"
+                            data-mealname="{{ food }}"
+                            data-servingsize="{{ nutrition_info[ns.c]['servingsize'] }}"
+                            data-cals="{{ nutrition_info[ns.c]['calories'] }}"
+                            data-carbs="{{ nutrition_info[ns.c]['carbs'] }}"
+                            data-prots="{{ nutrition_info[ns.c]['proteins'] }}"
+                            data-fats="{{ nutrition_info[ns.c]['fats'] }}"
+                            onchange="handleCheckboxChange(this)"
+                            onkeypress="changeCheckbox(this)">
+                        <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
+                        <p id="nf-{{ checkbox_id }}">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }} Calories: {{ nutrition_info[ns.c]['calories'] }} Proteins: {{ nutrition_info[ns.c]['proteins'] }}g Carbs: {{ nutrition_info[ns.c]['carbs'] }}g Fats: {{ nutrition_info[ns.c]['fats'] }}g</p>
+                    </div>
+                    {% set ns.c = ns.c + 1 %}
+                {% endfor %}
+        {% endfor %}
+        </div>
     {% endfor %}
-    </div>
-{% endfor %}
-<p id="select" class="text-center">Please select a dining hall from the dropdown menu.</p>
-<p id="noDataMessage" class="text-center" style="display: none;">No data available for this source.</p>
+    <p id="select" class="text-center">Please select a dining hall from the dropdown menu.</p>
+    <p id="noDataMessage" class="text-center" style="display: none;">No data available for this source.</p>
+</div>
 
+
+<div class="card-body" id="personal-food-items">
+    <script>console.log('Starting to process personal food items');</script>
+    {% set ns = namespace(c = 0) %}
+    {% for item in personal_data %}
+        <script>console.log('{{ item.mealname }}');</script>
+
+        <div class = "personal-items-content" style="display: none;" id="personal-list">
+            <div class="form-check">
+                {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
+                <script>console.log('{{ checkbox_id }}');</script>
+                <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
+                    data-usda="false"
+                    data-recid="{{ item.recipeid }}" data-location="Personal Food" data-mealtime="N/A"
+                    data-mealname="{{ item.mealname }}"
+                    data-servingsize="{{ item.servingsize }}"
+                    data-cals="{{ item.calories }}"
+                    data-carbs="{{ item.carbs }}"
+                    data-prots="{{ item.proteins }}"
+                    data-fats="{{ item.fats }}"
+                    onchange="handleCheckboxChange(this)"
+                    onkeypress="changeCheckbox(this)">
+                <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ item.mealname }}</label>
+                <p id="nf-{{ checkbox_id }}">Serving Size: {{ item.servingsize }} Calories: {{ item.calories }} Proteins: {{ item.proteins }}g Carbs: {{ item.carbs }}g Fats: {{ item.fats }}g</p>
+            </div>
+            <script>console.log('{{ item.carbs }}');</script>
+            <script>console.log('{{ item.fats }}');</script>
+
+        </div>
+        {% set ns.c = ns.c + 1 %}
+    {% endfor %}
+</div>

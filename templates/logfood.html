@@ -39,6 +39,9 @@
                         <option value="USDA FoodData Central">USDA FoodData Central</option>
                     </select>
                 </div>
+                <span class="col-10 col-sm-6 p-3" id = "searchBarSpan"  style="display: none;">
+                    <input id="searchBar" type="text" class="form-control" placeholder="Search..." />
+                </span>
             
                 <div class="card-body">
                     <!-- Mealtime Tab Navs -->
@@ -61,9 +64,8 @@
                     </ul>
                     <div class="card" style="min-height: 300px;">
                         <div class="card-body" id="usda-search-results"></div>
-                        <div class="card-body" id="menu-items">
-                            {% include 'logfood_update.html' %}
-                        </div>
+                        {% include 'logfood_update.html' %}
+                        
                     </div>
                 </div>
             </div>
@@ -212,7 +214,7 @@
 
     function appendDataToDOM(data) {
         const resultsContainer = document.getElementById("usda-search-results");
-        resultsContainer.innerHTML = ""; // Clear previous results - BUG, need to figure out how to get rid of without deleting important info
+        resultsContainer.innerHTML = ""; // Clear previous results - base saving on plate info
 
         if (data.foods && data.foods.length > 0) {
             data.foods.forEach((food, index) => {
@@ -306,23 +308,28 @@
         console.log(selectedHall);
 
         if (selectedHall === "Personal Food Items") {
-            $("#searchBar").hide();
+            console.log("selected hall is personal")
+            $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
+            $("#personal-food-items").show();
         } else if (selectedHall === "USDA FoodData Central") {
             $("#mealTimeTab").hide();
-            $("#searchBar").show();
+            $("#searchBarSpan").show();
             $("#usda-search-results").show();
+            $("#personal-food-items").hide();
         } else {
-            $("#searchBar").hide();
+            $("#searchBarSpan").hide();
             $("#usda-search-results").hide();
+            $("#personal-food-items").hide();
             $("#mealTimeTab").show();
             let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
             dhallCode = selectedHall.substring(0, 2);
             let divToShow = dhallCode + "-" + mealtime;
             if ($("#" + divToShow).length > 0) {
                 $("#" + divToShow).show();
-            } else {
+            } 
+            else {
                 $("#noDataMessage").show();
             }
         }
@@ -335,6 +342,8 @@
         let totalFats = 0;
         let totalProts = 0;
         inputs.forEach((input) => {
+            input.setCustomValidity('');
+            customCheckValidity(input)
             let serving = input.value;
             totalCals += serving * input.dataset.cals;
             totalCarbs += serving * input.dataset.carbs;
@@ -350,88 +359,132 @@
         plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
     }
 
-    // CHECKS THAT ALL SERVING SIZE LINEEDITS HAVE BEEN FILLED OUT
-    function submitForm(inputField) {
-        var servingValue = inputField.value.trim();
-
-        if (servingValue === "" || servingValue.toLowerCase() === "none") {
-            alert("Please enter a serving value for each food in your plate.");
-            return false;
+    function customCheckValidity(input) {
+        let isValid = true;
+        inputValue = parseFloat(input.value)
+        // Check if the input is empty
+        console.log("checking input")
+        if (!input.value || input.value==0) {
+            input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
+            isValid = false;
         }
-
-        return true; // allows form submission
+        else if (inputValue > 100) {
+            input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
+            isValid = false;
+        } else {
+            input.setCustomValidity(""); // Clear any previous custom validity messages
+        }
+        input.reportValidity();
+        return isValid;
     }
 
-	function startTutorial(){
-		introJs().setOptions({
-			disableInteraction: true,
-			showBullets: false,
-			steps: [{
-				title: 'Welcome',
-				intro: 'Welcome to the tutorial to learn how to log your food for the day!'
-			},
-			{
-				title: 'Select a source',
-				element: document.querySelector('.select-dropdown'),
-				intro: "First, you will select the source of your food here. This can be from Princeton's dining halls, your custom recipes, or from a generic USDA database if you can't find it. We have picked a dining hall for you for this demonstration."
-			},
-			{
-				title: 'Select Mealtime',
-				element: document.querySelector('#mealTimeTab'),
-				intro: 'Here you can select your mealtime!'
-			},
-			{
-				title: 'Select Foods',
-				element: document.querySelector('#menu-items'),
-				intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
-			},
-			{
-				title: 'Select Item',
-				element: document.querySelector('#checkbox-5-1-1'),
-				intro: "Let's select an item as an example."
-			},
-			{
-				title: 'Edit Servings',
-				element: document.querySelector('#tutorial-my-plate'),
-				intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. Let's put one serving for now."
-			},
-			{
-				title: 'Plate Totals',
-				element: document.querySelector('.card-footer'),
-				intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
-			},
-			{
-				title: 'Upload plate',
-				element: document.querySelector('#submitButton'),
-				intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage."
-			},
-		]
-		}).onchange(function(targetElement) {
-			// Check if we are on the step where we want to auto-select an option from the dropdown
-			if (targetElement.classList.contains('select-dropdown')) {
-				// Simulate selecting an option by triggering a change event
-				document.querySelector('.select-dropdown').value = 'Whitman & Butler Colleges'; 
-				document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
-			}
-			if (targetElement.id == 'checkbox-5-1-1') {
-				var checkbox = document.querySelector('#checkbox-5-1-1');
-				checkbox.checked = true;
-				handleCheckboxChange(checkbox);
-			}
-			if (targetElement.id == 'tutorial-my-plate') {
-				var servingInput = document.querySelector('#new_entry input[type="number"]');
+    function validateInputs() {
+        const inputs = document.querySelectorAll(".small-input");
+        valid = true;
+        inputs.forEach((input) => {
+            if (!customCheckValidity(input)) {
+                valid=false
+            }
+        });
+        return valid
+    }
 
-				// Set the value of the input field to 1
-				servingInput.value = 1;
-				handleServingChange();
-			}
-		}).onexit(function() {
-			console.log('tour completed');
-			document.querySelector('.select-dropdown').value = 'Select Food Source'; 
-			document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
-			document.getElementById('close--5-1-1').click();
-    	}).start();
-	}
+    function startTutorial() {
+    introJs().setOptions({
+        disableInteraction: true,
+        showBullets: false,
+        steps: [{
+            title: 'Welcome',
+            intro: 'Welcome to the tutorial to learn how to log your food for the day!'
+        }, {
+            title: 'Select a source',
+            element: document.querySelector('.select-dropdown'),
+            intro: "First, you will select the source of your food here. This can be from Princeton's dining halls, your custom recipes, or from a generic USDA database if you can't find it. We have picked a dining hall for you for this demonstration."
+        }, {
+            title: 'Select Mealtime',
+            element: document.querySelector('#mealTimeTab'),
+            intro: 'Here you can select your mealtime!'
+        }, {
+            title: 'Select Foods',
+            element: document.querySelector('#menu-items'),
+            intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
+        }, {
+            title: 'Select Item',
+            element: document.querySelector('#checkbox-5-1-1'),
+            intro: "Let's select an item as an example."
+        }, {
+            title: 'Edit My Plate',
+            element: document.querySelector('#tutorial-my-plate'),
+            intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. Let's put one serving for now."
+        }, {
+            title: 'Plate Totals',
+            element: document.querySelector('.card-footer'),
+            intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
+        }, {
+            title: 'Generic Food Search',
+            element: document.querySelector('#tutorialSearchBar'),
+            intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
+        }, {
+            title: 'Generic Food Selection',
+            element: document.querySelector('#usda-checkbox-2012128'),
+            intro: "Let's check another thing off again."
+        }, {
+            title: 'Edit My Plate',
+            element: document.querySelector('#tutorial-my-plate'),
+            intro: "Notice how it appeared in my plate. Let's put serving count to 1. Again, notice how plate totals have also been updated to reflect the new foods in your plate."
+        }, {
+            title: 'Upload plate',
+            element: document.querySelector('#submitButton'),
+            intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where it will appear."
+        }, ]
+    }).onchange(function(targetElement) {
+        // Check if we are on the step where we want to auto-select an option from the dropdown
+        if (targetElement.classList.contains('select-dropdown')) {
+            // Simulate selecting an option by triggering a change event
+            document.querySelector('.select-dropdown').value = 'Whitman & Butler Colleges';
+            document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+        }
+        if (targetElement.id == 'checkbox-5-1-1') {
+            var checkbox = document.querySelector('#checkbox-5-1-1');
+            checkbox.checked = true;
+            handleCheckboxChange(checkbox);
+        }
+        if (targetElement.id == 'tutorial-my-plate') {
+            var servingInput = document.querySelector('#new_entry input[type="number"]');
+            // Set the value of the input field to 1
+            servingInput.value = 1;
+            handleServingChange();
+        }
+        if (targetElement.id == 'tutorialSearchBar') {
+            document.querySelector('.select-dropdown').value = 'USDA FoodData Central';
+            document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+            var searchBar = document.getElementById("searchBar");
+            searchBar.value = "banana";
+            searchUSDAFood();
+            // Listen for the insertion of the checkbox element
+            document.getElementById('usda-checkbox-2012128').addEventListener('DOMNodeInserted', function() {
+                var checkbox = document.getElementById("usda-checkbox-2012128");
+                checkbox.checked = true;
+                handleCheckboxChange(checkbox);
+            }, {
+                once: true
+            }); // Remove the event listener after it's triggered once
+        }
+        if (targetElement.id == 'usda-checkbox-2012128') {
+            var checkbox = document.getElementById("usda-checkbox-2012128");
+            checkbox.checked = true;
+            handleCheckboxChange(checkbox);
+        }
+    }).onexit(function() {
+        console.log('tour completed');
+        document.querySelector('.select-dropdown').value = 'Select Food Source';
+        document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+        document.getElementById('close--5-1-1').click();
+        document.getElementById('close-ckbox-2012128').click();
+        var searchBar = document.getElementById("searchBar");
+        searchBar.value = "";
+    }).start();
+}
 
      // When the user submits the form and all fields are valid, lock it
      function closeForm() {
@@ -480,11 +533,16 @@
             event.preventDefault();
             addUSDANutritionData();
             console.log("submit");
+
+            // validation
+            if (!validateInputs()) {
+                return
+            }
+
             var recids = [];
             var servings = [];
             const inputs = document.querySelectorAll(".small-input");
             inputs.forEach((input) => {
-                submitForm(input); // CHECK THIS VALIDATION
                 let recid = input.dataset.recid;
                 let serving = parseFloat(input.value);
                 recids.push(recid);

@@ -14,7 +14,7 @@
                 <input type="number" min="0" class="form-control small-input mr-2" data-usda="{{ usda }}"
                 data-cals="{{ cals }}"
                 data-recid="{{ recid }}" data-mealname="{{ mealname }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
-                placeholder="Servings" oninput="handleServingChange()" required
+                placeholder="Servings" oninput="handleServingChange(this)" required
                 onkeypress="return isValid(event)">
 
 

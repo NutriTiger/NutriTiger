@@ -97,6 +97,13 @@ def trim_data(data):
 
     return list(new_data.values())
 
+# ensures that the number of grams of proteins / carbs / fats
+# is less than the calorie count
+def check_nutrition_info(cal, protein, carbs, fats):
+    total = 4*protein + 4*carbs + 9*fats
+    print(total < cal)
+    return (total < cal) | (total == cal) 
+
 def main():
     # Unit testing checks of functions
     date = datetime.datetime(2024, 3, 25)
