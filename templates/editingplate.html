@@ -53,7 +53,7 @@
                                                     <!-- Serving Lineedit -->
                                                     <input type="number" min="0" class="form-control small-input mr-2"
                                                     value="{{ serving }}" oninput="handleServingChange(this)" required
-                                                    data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}"
+                                                    data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}" step="0.01"
                                                     onkeypress="return isValid(event)">
                                     
                                                     <!-- Close button -->
@@ -131,6 +131,18 @@
         
             return true;
         }
+
+        function debouncedHandleInput() {
+            console.log("in debounce")
+            let debounceTimer;
+            return function(input) {
+                console.log("in inner function")
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => handleServingChange(input), 500); // Adjust the delay as needed
+            };
+        }
+        const debouncedInputHandler = debouncedHandleInput();
+
         function handleServingChange(input) {
             input.setCustomValidity('');
             customCheckValidity(input)
@@ -186,7 +198,6 @@
 
         function customCheckValidity(input) {
             let isValid = true;
-
             // Check if the input is empty
             if (!input.value || input.value==0) {
                 input.setCustomValidity("Please fill out a non-zero serving size"); // Set custom message
@@ -195,7 +206,6 @@
             } else {
                 input.setCustomValidity(""); // Clear any previous custom validity messages
             }
-
             return isValid;
         }
 

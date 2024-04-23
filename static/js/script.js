@@ -76,6 +76,17 @@ function modifyDate(daysToAddOrSubtract) {
     // Parse the date string to a Date object
     const currentDate = new Date(currentDateStr);
 
+    // Obtain today's date
+    const todaysDate = new Date();
+
+    // Calculate the difference
+    const difference = (currentDate.getDate() + daysToAddOrSubtract) - todaysDate.getDate();
+
+    // Don't let the user go back more than one week
+    if (difference >= 8 || difference <= -8) {
+        return false;
+    }
+
     // Modify the date by adding or subtracting days
     currentDate.setDate(currentDate.getDate() + daysToAddOrSubtract);
 
@@ -100,16 +111,50 @@ function modifyDate(daysToAddOrSubtract) {
 
     // Perform the AJAX request with the modified date
     getResults();
+
+    return true;
 }
 
 function handleLeftArrowClick() {
     // Subtract a day from the current date
-    modifyDate(-1);
+    const ok = modifyDate(-1);
+
+    if (!ok) {
+        showAlert("You can only go back 7 days! This message will disappear in 5 seconds.")
+    }
 }
 
 function handleRightArrowClick() {
     // Add a day to the current date
-    modifyDate(1);
+    const ok = modifyDate(1);
+
+    if (!ok) {
+        showAlert("You can only go forward 7 days! This message will disappear in 5 seconds.")
+    }
+}
+
+// Creates an alert message
+function showAlert(message) {
+    var alertDiv = document.createElement("div")
+    alertDiv.classList.add("alert", "alert-warning", "alert-dismissible", "fade", "show", "text-center")
+    alertDiv.style.zIndex = 1
+    alertDiv.style.position = "fixed"
+    alertDiv.style.bottom = 0
+
+    var errorMessage = document.createElement("p")
+    errorMessage.innerHTML = message
+    alertDiv.appendChild(errorMessage)
+
+    console.log(alertDiv)
+
+    var alert = document.getElementById("alert-message")
+    alert.appendChild(alertDiv)
+
+    // Closes the alert in 5 seconds
+    function removeAlert() {
+        alertDiv.remove();
+    }
+    setTimeout(removeAlert, 5000 );
 }
 
 $(document).ready(function() {
