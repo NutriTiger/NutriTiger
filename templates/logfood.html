@@ -361,77 +361,102 @@
 
         return true; // allows form submission
     }
-
-	function startTutorial(){
-		introJs().setOptions({
-			disableInteraction: true,
-			showBullets: false,
-			steps: [{
-				title: 'Welcome',
-				intro: 'Welcome to the tutorial to learn how to log your food for the day!'
-			},
-			{
-				title: 'Select a source',
-				element: document.querySelector('.select-dropdown'),
-				intro: "First, you will select the source of your food here. This can be from Princeton's dining halls, your custom recipes, or from a generic USDA database if you can't find it. We have picked a dining hall for you for this demonstration."
-			},
-			{
-				title: 'Select Mealtime',
-				element: document.querySelector('#mealTimeTab'),
-				intro: 'Here you can select your mealtime!'
-			},
-			{
-				title: 'Select Foods',
-				element: document.querySelector('#menu-items'),
-				intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
-			},
-			{
-				title: 'Select Item',
-				element: document.querySelector('#checkbox-5-1-1'),
-				intro: "Let's select an item as an example."
-			},
-			{
-				title: 'Edit Servings',
-				element: document.querySelector('#tutorial-my-plate'),
-				intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. Let's put one serving for now."
-			},
-			{
-				title: 'Plate Totals',
-				element: document.querySelector('.card-footer'),
-				intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
-			},
-			{
-				title: 'Upload plate',
-				element: document.querySelector('#submitButton'),
-				intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage."
-			},
-		]
-		}).onchange(function(targetElement) {
-			// Check if we are on the step where we want to auto-select an option from the dropdown
-			if (targetElement.classList.contains('select-dropdown')) {
-				// Simulate selecting an option by triggering a change event
-				document.querySelector('.select-dropdown').value = 'Whitman & Butler Colleges'; 
-				document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
-			}
-			if (targetElement.id == 'checkbox-5-1-1') {
-				var checkbox = document.querySelector('#checkbox-5-1-1');
-				checkbox.checked = true;
-				handleCheckboxChange(checkbox);
-			}
-			if (targetElement.id == 'tutorial-my-plate') {
-				var servingInput = document.querySelector('#new_entry input[type="number"]');
-
-				// Set the value of the input field to 1
-				servingInput.value = 1;
-				handleServingChange();
-			}
-		}).onexit(function() {
-			console.log('tour completed');
-			document.querySelector('.select-dropdown').value = 'Select Food Source'; 
-			document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
-			document.getElementById('close--5-1-1').click();
-    	}).start();
-	}
+    function startTutorial() {
+    introJs().setOptions({
+        disableInteraction: true,
+        showBullets: false,
+        steps: [{
+            title: 'Welcome',
+            intro: 'Welcome to the tutorial to learn how to log your food for the day!'
+        }, {
+            title: 'Select a source',
+            element: document.querySelector('.select-dropdown'),
+            intro: "First, you will select the source of your food here. This can be from Princeton's dining halls, your custom recipes, or from a generic USDA database if you can't find it. We have picked a dining hall for you for this demonstration."
+        }, {
+            title: 'Select Mealtime',
+            element: document.querySelector('#mealTimeTab'),
+            intro: 'Here you can select your mealtime!'
+        }, {
+            title: 'Select Foods',
+            element: document.querySelector('#menu-items'),
+            intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
+        }, {
+            title: 'Select Item',
+            element: document.querySelector('#checkbox-5-1-1'),
+            intro: "Let's select an item as an example."
+        }, {
+            title: 'Edit My Plate',
+            element: document.querySelector('#tutorial-my-plate'),
+            intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. Let's put one serving for now."
+        }, {
+            title: 'Plate Totals',
+            element: document.querySelector('.card-footer'),
+            intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
+        }, {
+            title: 'Generic Food Search',
+            element: document.querySelector('#tutorialSearchBar'),
+            intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
+        }, {
+            title: 'Generic Food Selection',
+            element: document.querySelector('#usda-checkbox-2012128'),
+            intro: "Let's check another thing off again."
+        }, {
+            title: 'Edit My Plate',
+            element: document.querySelector('#tutorial-my-plate'),
+            intro: "Notice how it appeared in my plate. Let's put serving count to 1. Again, notice how plate totals have also been updated to reflect the new foods in your plate."
+        }, {
+            title: 'Upload plate',
+            element: document.querySelector('#submitButton'),
+            intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where it will appear."
+        }, ]
+    }).onchange(function(targetElement) {
+        // Check if we are on the step where we want to auto-select an option from the dropdown
+        if (targetElement.classList.contains('select-dropdown')) {
+            // Simulate selecting an option by triggering a change event
+            document.querySelector('.select-dropdown').value = 'Whitman & Butler Colleges';
+            document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+        }
+        if (targetElement.id == 'checkbox-5-1-1') {
+            var checkbox = document.querySelector('#checkbox-5-1-1');
+            checkbox.checked = true;
+            handleCheckboxChange(checkbox);
+        }
+        if (targetElement.id == 'tutorial-my-plate') {
+            var servingInput = document.querySelector('#new_entry input[type="number"]');
+            // Set the value of the input field to 1
+            servingInput.value = 1;
+            handleServingChange();
+        }
+        if (targetElement.id == 'tutorialSearchBar') {
+            document.querySelector('.select-dropdown').value = 'USDA FoodData Central';
+            document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+            var searchBar = document.getElementById("searchBar");
+            searchBar.value = "banana";
+            searchUSDAFood();
+            // Listen for the insertion of the checkbox element
+            document.getElementById('usda-checkbox-2012128').addEventListener('DOMNodeInserted', function() {
+                var checkbox = document.getElementById("usda-checkbox-2012128");
+                checkbox.checked = true;
+                handleCheckboxChange(checkbox);
+            }, {
+                once: true
+            }); // Remove the event listener after it's triggered once
+        }
+        if (targetElement.id == 'usda-checkbox-2012128') {
+            var checkbox = document.getElementById("usda-checkbox-2012128");
+            checkbox.checked = true;
+            handleCheckboxChange(checkbox);
+        }
+    }).onexit(function() {
+        console.log('tour completed');
+        document.querySelector('.select-dropdown').value = 'Select Food Source';
+        document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+        document.getElementById('close--5-1-1').click();
+        document.getElementById('close-ckbox-2012128').click();
+        var searchBar = document.getElementById("searchBar");
+        searchBar.value = "";
+    }).start();
+}
 
     // set up event listeners for dhall select and mealtime tab
     function setup() {
