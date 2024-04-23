@@ -275,34 +275,66 @@ def history():
         selected_range = int(data.get("selectedRange"))
         his_range = selected_range
         print("his_range:", his_range)
+        cal_his = cals[:his_range]
+        carb_his = carbs[:his_range]
+        fat_his = fats[:his_range]
+        prot_his = prots[:his_range]
+        dates = dates[:his_range]
 
-    cal_his = cals[:his_range]
-    carb_his = carbs[:his_range]
-    fat_his = fats[:his_range]
-    prot_his = prots[:his_range]
-    dates = dates[:his_range]
+        avg_cals = utils.get_average(cal_his, his_range)
+        avg_carbs = utils.get_average(carb_his, his_range)
+        avg_pro = utils.get_average(prot_his, his_range)
+        avg_fat = utils.get_average(fat_his, his_range)
+        dates.reverse()
+        cal_his.reverse()
+        carb_his.reverse()
+        prot_his.reverse()
+        fat_his.reverse()
+        print(dates)
 
-    avg_cals = utils.get_average(cal_his, his_range)
-    avg_carbs = utils.get_average(carb_his, his_range)
-    avg_pro = utils.get_average(prot_his, his_range)
-    avg_fat = utils.get_average(fat_his, his_range)
-    dates.reverse()
-    cal_his.reverse()
-    carb_his.reverse()
-    prot_his.reverse()
-    fat_his.reverse()
+        html_code = render_template('history_content.html', 
+                                avg_cals=round(avg_cals, 2), 
+                                avg_pro=round(avg_pro, 2), 
+                                avg_carbs=round(avg_carbs, 2), 
+                                avg_fat=round(avg_fat,2),
+                                dates = dates,
+                                cals = cal_his,
+                                prots = prot_his,
+                                carbs = carb_his,
+                                fats = fat_his
+                                )
+        return make_response(html_code)
+    
+    else:
 
-    return render_template('history.html', 
-                            avg_cals=round(avg_cals, 2), 
-                            avg_pro=round(avg_pro, 2), 
-                            avg_carbs=round(avg_carbs, 2), 
-                            avg_fat=round(avg_fat,2),
-                            dates = dates,
-                            cals = cal_his,
-                            prots = prot_his,
-                            carbs = carb_his,
-                            fats = fat_his
-                            )
+        cal_his = cals[:his_range]
+        carb_his = carbs[:his_range]
+        fat_his = fats[:his_range]
+        prot_his = prots[:his_range]
+        dates = dates[:his_range]
+
+        avg_cals = utils.get_average(cal_his, his_range)
+        avg_carbs = utils.get_average(carb_his, his_range)
+        avg_pro = utils.get_average(prot_his, his_range)
+        avg_fat = utils.get_average(fat_his, his_range)
+        dates.reverse()
+        cal_his.reverse()
+        carb_his.reverse()
+        prot_his.reverse()
+        fat_his.reverse()
+        print(dates)
+
+        return render_template('history.html', 
+                                avg_cals=round(avg_cals, 2), 
+                                avg_pro=round(avg_pro, 2), 
+                                avg_carbs=round(avg_carbs, 2), 
+                                avg_fat=round(avg_fat,2),
+                                dates = dates,
+                                cals = cal_his,
+                                prots = prot_his,
+                                carbs = carb_his,
+                                fats = fat_his
+                                )
 
 #--------------------------------------------------------------------
 
