@@ -134,6 +134,15 @@
         handleServingChange();
     }
 
+	function changeCheckbox(element) {
+		if (element.checked) {
+			element.checked = false
+		} else {
+			element.checked = true
+		}
+		handleCheckboxChange(element)
+	}
+
     // Function to handle checkbox change event: gets label text, macro data, makes URL, and
     // sends AJAX GET request to server
     function handleCheckboxChange(element) {
