@@ -8,14 +8,20 @@ from bson.objectid import ObjectId
 from PIL import Image
 import io
 from bson.binary import Binary
+import os
 
 
-def allowed_file(filename):
+def allowed_file(file):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
-    format = filename.rsplit('.', 1)[1].lower()
+    filename = file.filename
+    new_filename = filename
+    format = new_filename.rsplit('.', 1)[1].lower()
     if format == 'jpg':
         format = 'jpeg'
-    return '.' in filename and format in ALLOWED_EXTENSIONS, format.upper()
+    if format == 'heic':
+        new_filename.replace(".heic", '.jpg')
+        format = 'jpeg'
+    return '.' in filename and format in ALLOWED_EXTENSIONS, format.upper(), file
 
 
 def edit_photo_width(file, format):

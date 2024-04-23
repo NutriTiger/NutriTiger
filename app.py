@@ -28,6 +28,9 @@ from bson.objectid import ObjectId
 from PIL import Image
 import io
 from bson.binary import Binary
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 #--------------------------------------------------------------------
 
@@ -301,19 +304,29 @@ def history():
 
 #--------------------------------------------------------------------
 
+# Get image
 @app.route('/image/<image_id>')
-def serve_image(image_id):
-    client = dbfunctions.connectmongo()
-    db = client['db']
-    collection = db['personal_nutrition']
+def serve_image(photo_id):
+    netid = auth.authenticate()
+    
+    # Load environment variables where your Cloudinary config is stored
+    dotenv.load_dotenv()
+    ccloud_name = os.getenv('cloud_name')
+    capi_key = os.getenv("api_key")
+    c_secret = os.getenv("api_secret")
 
-    document = collection.find_one({'_id': ObjectId(image_id)})
+    # Configure Cloudinary
+    cloudinary.config( 
+        cloud_name = ccloud_name, 
+        api_key = capi_key, 
+        api_secret = c_secret 
+    )
 
-    if document and 'image' in document:
-        return Response(document['image'], mimetype=document['filetype'])  
-    else:
-        return "Image not found", 404
+    # Generate the URL of the image
+    image_url, options = cloudinary.utils.cloudinary_url(photo_id)
 
+    if not image_url:
+        return jsonify({"error": "Image not found"}), 404
 #--------------------------------------------------------------------
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -644,6 +657,27 @@ def add_personalfood():
         if image_data == 'n/a':
             message = "Yikes, we couldn't resize this image. Can you try another photo?"
             add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, desc)
+        photo_id = netid
+        photo_id += '-'
+        photo_id += recipename
+
+        dotenv.load_dotenv()
+        ccloud_name = os.getenv('cloud_name')
+        capi_key = os.getenv("api_key")
+        c_secret = os.getenv("api_secret")
+
+        print(ccloud_name)
+        print(capi_key)
+        print(c_secret)
+
+        cloudinary.config( 
+            cloud_name = ccloud_name, 
+            api_key = capi_key, 
+            api_secret = c_secret 
+        )
+
+        cloudinary.uploader.upload(file, 
+            public_id = photo_id)
 
     nutrition_dict = {
                     "calories": cal,
