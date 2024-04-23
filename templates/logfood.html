@@ -312,16 +312,16 @@
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
-            $("#personal-food-items").show();
+            $("#personal-list").show();
         } else if (selectedHall === "USDA FoodData Central") {
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
             $("#usda-search-results").show();
-            $("#personal-food-items").hide();
+            $("#personal-list").hide();
         } else {
             $("#searchBarSpan").hide();
             $("#usda-search-results").hide();
-            $("#personal-food-items").hide();
+            $("#personal-list").hide();
             $("#mealTimeTab").show();
             let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
             dhallCode = selectedHall.substring(0, 2);
