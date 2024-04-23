@@ -20,16 +20,22 @@
    </head>
 
    <body class="text-center">
-      <div style="margin-top: 7%;">
-         <!--<img src="logo.jpg" alt="NutriTiger Logo">-->
-         <h1>NutriTiger</h1> 
-      </div>
-      <h4 style="margin-top: 5%;">Your go-to for easy access to nutritional information for Princeton's dining halls.</h4>
-      <h6>Streamline your health journey with simple tracking and informed choices.</h6>
+      <div>
+         <div style="margin-top: 7%;">
+            <!--<img src="logo.jpg" alt="NutriTiger Logo">-->
+            <h1 style="font-weight: 700;">NutriTiger</h1> 
+         </div>
 
-      <button style="margin-top: 17%;" class="btn btn-primary btn-lg btn-block" onclick="window.location.href = '/welcome';">
-            Login with NetID
-      </button>
+         <center>
+            <hr style="border: 3px solid black; width: 50%; margin-top: 3%;"/>
+         </center>
+
+         <h3 style="margin-top: 3%;">Your go-to for easy access to nutritional information for Princeton's dining halls.</h4>
+         <h5>Streamline your health journey with simple tracking and informed choices.</h6>
+         <button id="loginButton" style="margin-top: 13%;" class="btn btn-primary btn-lg btn-block" onclick="validateLogin()">
+               Login with NetID
+         </button>
+      </div>
    </body>
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
@@ -50,5 +56,26 @@
         zoom: 1,
         color: 0xc99c6e
       })
+      </script>
+      <script>
+         function validateLogin() {
+            var loginButton = document.getElementById("loginButton")
+
+            // Disable the button but have it process the login
+            loginButton.style.pointerEvents = "none"
+            loginButton.textContent = "Redirecting..."
+            loginButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+
+            window.location.href = '/welcome';
+         }
+
+         // If the user hits the back button reset the form
+         window.onunload = function() {
+            var loginButton = document.getElementById("loginButton")
+
+            loginButton.style.pointerEvents = "auto"
+            loginButton.textContent = "Login with NetID"
+            loginButton.style.opacity = "none"
+         }
       </script>
 </html>
