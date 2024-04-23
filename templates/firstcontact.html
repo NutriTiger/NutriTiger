@@ -17,10 +17,12 @@
                             <div class="row">
                                 <h4>Calorie Goal:</h4>
                                 <form action="/welcome" method="post">
-                                    <input type="number" class="form-control form-calgoal container" name='line' placeholder="Enter the number here." min="1" max="100000" required
-                                    onkeypress="return isValid(event)">
+                                    <input id="firstCalorieInput" type="number" class="form-control form-calgoal container"
+                                    name='line' placeholder="Enter the number here." min="1" max="100000"
+                                    onkeypress="return isValid(event)" required autofocus>
                                     <div class="p-3">
-                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Save</button>
+                                        <button id="firstCalorieButton" class="btn btn-primary btn-lg btn-block"
+                                        type="submit" onclick="closeForm()">Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -48,6 +50,38 @@
             return false;
 
         return true;
+    }
+
+    // When the user submits the form and all fields are valid, lock it
+    function closeForm() {
+        // Obtain form elements
+        var validFormElements = document.querySelector(":valid")
+        var calorieInput = validFormElements.querySelector("input")
+        var settingsButton = validFormElements.querySelector("button")
+
+        // Check if the input was validated
+        if (calorieInput != null) {
+            // Remove any leading zeros
+            var currentNumber = calorieInput.value
+            calorieInput.value = currentNumber.replace(/^0+/, '')
+
+            // Disable the button but have it submit the form
+            calorieInput.readOnly = true
+            settingsButton.style.pointerEvents = "none"
+            settingsButton.textContent = "Submitting..."
+            settingsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+        }
+    }
+
+    // If the user hits the back button reset the form
+    window.onunload = function() {
+        var calorieInput = document.getElementById("firstCalorieInput")
+        var settingsButton = document.getElementById("firstCalorieButton")
+
+        calorieInput.readOnly = false
+        settingsButton.style.pointerEvents = "auto"
+        settingsButton.textContent = "Save"
+        settingsButton.style.opacity = "none"
     }
 </script>
 {% endblock %}
