@@ -129,11 +129,16 @@
     function showLoadingAnimation() {
         // Show the loading animation covering the entire screen
         $("#loading-animation").show();
+        $('input').keydown(function(e) {
+            e.preventDefault();
+            return false;
+        });
     }
 
     function hideLoadingAnimation() {
         // Hide the loading animation
         $("#loading-animation").hide();
+        $('input').off('keydown');
     }
 
     // function to handle removing a food-item from myplate
