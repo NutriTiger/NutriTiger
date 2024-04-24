@@ -254,7 +254,7 @@
         document.querySelectorAll(".small-input").forEach((input) => {
             if (input.dataset.usda === "true") {
                 let foodData = {
-                    recipeid: "usda-"+input.dataset.recid,
+                    recipeid: input.dataset.recid,
                     mealname: input.dataset.mealname,
                     servingsize: input.dataset.servingsize,
                     calories: parseFloat(input.dataset.cals),
