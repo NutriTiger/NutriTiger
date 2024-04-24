@@ -228,7 +228,8 @@
 
                 const foodElement = document.createElement("div");
                 foodElement.className = "form-check";
-
+                console.log("this is the id right now");
+                console.log(food.fdcIc);
                 foodElement.innerHTML = `
 	        <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-usda="true" data-recid="${food.fdcId}"
 	               data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime={{ calc_mealtime }} data-servingsize="${servingSizeInfo}" data-cals="${calories}"
