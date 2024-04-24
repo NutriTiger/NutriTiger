@@ -69,6 +69,20 @@ def find_one_nutrition(recipeid):
             sys.exit(1)
 
 
+# Deletes personal food item
+# Recipeid has netid and unique number
+# Returns true if successful, false is unsuccessful
+def del_personal_food(recipeid):
+    with connectmongo() as client:
+        db = client.db
+        nutrition_col = db.nutrition
+        try:
+            document_to_delete = {'recipeid': recipeid}
+            nutrition_col.delete_one(document_to_delete)
+            return True
+        except Exception as e:
+            print(f"Error: {e}")
+            return False
 
 # Create new food item -- should already include the net id field of user
 # Nutrition is dictionary
