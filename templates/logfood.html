@@ -135,6 +135,11 @@
             e.preventDefault();
             return false;
         });
+
+        $('.introjs-nextbutton').keydown(function(e) {
+            e.preventDefault();
+            return false;
+    });
     }
 
     function hideLoadingAnimation() {
@@ -432,6 +437,9 @@
     }
 
     function startTutorial() {
+        var element = document.getElementById("navbar");
+        element.style.zIndex = "0";
+
     introJs().setOptions({
         disableInteraction: true,
         showBullets: false,
@@ -506,12 +514,15 @@
         }
     }).onexit(function() {
         console.log('tour completed');
+        var navbar = document.getElementById("navbar");
+        navbar.style.zIndex = "1030";
         document.querySelector('.select-dropdown').value = 'Select Food Source';
         document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
         document.getElementById('close--tutorial-1').click();
         document.getElementById('close-ckbox-2012128').click();
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";
+       
     }).start();
 }
 
