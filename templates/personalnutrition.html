@@ -37,7 +37,7 @@
                 <div class="header-container"> <!-- Utilizing flex layout -->
                     <h5 class="card-title text-center"></h5><b>{{ item['mealname'] }}</b></h5>
                     <button type="button" class="btn btn-close btn-sm" aria-label="Close" style="display: none;"
-                            onclick="deleteCustomFood(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recid'] }}">
+                            onclick="deleteCustomFood(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
                     </button>
                 </div>
             </div>
@@ -84,12 +84,11 @@ function deleteCustomFood(item) {
     });
     deletedFoods.push(recid)
 }
-function saveedits() {
+function save_edits() {
     var dataToSend = {
         deletedFoods: deletedFoods
     };
     var jsonData = JSON.stringify(dataToSend);
-    showLoadingAnimation();
     $.ajax({
         type: "POST",
         url: "/personalnutrition",

@@ -353,9 +353,37 @@ def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
     deleteManyEntry(this_user, entriesToDelete)
 
     # update profile
+    for index, entry in enumerate(this_user["daily_rec"]):
+        if len(entry)==0:
+            this_user["daily_rec"].pop(index)
+            this_user["daily_serv"].pop(index)
+            this_user["daily_nut"].pop(index)
     return __setuser__(netid, this_user)
     
 
+#-----------------------------------------------------------------------
+'''
+Handles deleting the recipes in deletedFoods array, deleting them from
+user profile
+'''
+def handleDeletePersonalNutrition(netid, deletedFoods):
+    this_user = finduser(netid)
+    daily_recids = this_user["daily_rec"]
+    for entrynum, recids in enumerate(daily_recids):
+        for foodnum, recid in enumerate(recids):
+            foods_to_del = []
+            if recid in deletedFoods:
+                foods_to_del.append(foodnum)
+        foods_to_del = sorted(foods_to_del, reverse=True)
+        for food in foods_to_del:
+            delFood(this_user, entrynum, food)
+
+    for index, entry in enumerate(this_user["daily_rec"]):
+        if len(entry)==0:
+            this_user["daily_rec"].pop(index)
+            this_user["daily_serv"].pop(index)
+            this_user["daily_nut"].pop(index)
+    return __setuser__(netid, this_user)
 #-----------------------------------------------------------------------
 
 '''

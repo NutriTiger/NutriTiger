@@ -1,7 +1,7 @@
 <!--==============================================================-->
 <!-- logfood_update.html                                          -->
 <!--==============================================================-->
-<div class="card-body" id="menu-items">
+<div class="card-body" id="menu-items" style="display: none;">
     {% set ns = namespace(c = 0) %}
     {% for item in data %}
         {% set ooo_loop = loop %}
@@ -71,4 +71,24 @@
         <p id="noDataPersonalMessage" class="text-center">No data available for this source.</p>
     {% endif %}
 
+</div>
+
+<div class="card-body" id="tutorial-food-items" style="display: none;">
+    <div class = "tutorial-items-content">
+        <div class="form-check">
+            <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-tutorial-1" 
+                data-usda="false"
+                data-recid="tutorial-1" data-location="Personal Food" data-mealtime="N/A"
+                data-mealname="Example Food"
+                data-servingsize="1"
+                data-cals="630"
+                data-carbs="20"
+                data-prots="31"
+                data-fats="18"
+                onchange="handleCheckboxChange(this)"
+                onkeypress="changeCheckbox(this)">
+            <label class="form-check-label" for="checkbox-tutorial-1">Example Food</label>
+            <p id="nf-tutorial-1">Serving Size: 1 Calories: 630 Proteins: 31g Carbs: 20g Fats: 18g</p>
+        </div>
+    </div>
 </div>

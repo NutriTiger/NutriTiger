@@ -49,6 +49,8 @@
                         <option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
                         <option value="Personal Food Items">Personal Food Items</option>
                         <option value="USDA FoodData Central">USDA FoodData Central</option>
+                        <option hidden value="Example Dining Hall">Example Dining Hall</option>
+
                     </select>
                 </div>
                 <span class="col-10 col-sm-6 p-3" id = "searchBarSpan"  style="display: none;">
@@ -129,11 +131,16 @@
     function showLoadingAnimation() {
         // Show the loading animation covering the entire screen
         $("#loading-animation").show();
+        $('input').keydown(function(e) {
+            e.preventDefault();
+            return false;
+        });
     }
 
     function hideLoadingAnimation() {
         // Hide the loading animation
         $("#loading-animation").hide();
+        $('input').off('keydown');
     }
 
     // function to handle removing a food-item from myplate
@@ -318,6 +325,7 @@
     // fetch menu items based on selected dhall and mealtime + correct display
     function getResults() {
         $(".menu-items-content").hide();
+        $("#menu-items").show();
         $("#select").hide();
         $("#noDataMessage").hide();
         let selectedHall = $("#diningHallSelect").val();
@@ -329,15 +337,33 @@
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
             $("#personal-food-items").show();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+
         } else if (selectedHall === "USDA FoodData Central") {
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
             $("#usda-search-results").show();
             $("#personal-food-items").hide();
-        } else {
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+
+        } 
+        else if (selectedHall === "Example Dining Hall") {
+            $("#usda-search-results").hide();
+            $("#personal-food-items").hide();
+            $("#tutorial-food-items").show();
+            $("#menu-items").hide();
+
+        } 
+        else {
             $("#searchBarSpan").hide();
             $("#usda-search-results").hide();
             $("#personal-food-items").hide();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").show();
+
+
             $("#mealTimeTab").show();
             let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
             dhallCode = selectedHall.substring(0, 2);
@@ -422,7 +448,7 @@
             intro: 'Here you can select your mealtime!'
         }, {
             title: 'Select Foods',
-            element: document.querySelector('#menu-items'),
+            element: document.querySelector('#tutorial-food-items'),
             intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
         }, {
             title: 'Select Item',
@@ -457,7 +483,7 @@
         // Check if we are on the step where we want to auto-select an option from the dropdown
         if (targetElement.classList.contains('select-dropdown')) {
             // Simulate selecting an option by triggering a change event
-            document.querySelector('.select-dropdown').value = 'Whitman & Butler Colleges';
+            document.querySelector('.select-dropdown').value = 'Example Dining Hall';
             document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
         }
         if (targetElement.id == 'checkbox-5-1-1') {
@@ -529,6 +555,7 @@
 
     // set up event listeners for dhall select and mealtime tab
     function setup() {
+        $("#menu-items").show();
         hideLoadingAnimation();
 
         document.getElementById("startTutorial").addEventListener("click", function () {
