@@ -460,13 +460,16 @@ def log_food():
     if request.method == 'POST':
         # retrieve json object
         data = request.get_json()
+        print(data)
+        if not data or 'entry_recids' not in data or 'entry_servings' not in data:
+            return jsonify({"success": False, "message": "Missing data"}), 400
         entry_recids = data.get('entry_recids')
+        print(entry_recids)
         entry_servings = data.get('entry_servings')
         entry_nutrition = data.get('entry_nutrition')
         dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings, "nutrition": entry_nutrition})
         return jsonify({"success": True, "redirect": url_for('homepage')})
     else :
-        current_date = datetime.datetime.now(timezone('US/Eastern'))
         current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
         is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
     
@@ -486,7 +489,7 @@ def log_food():
 def log_food_myplate():
     checkid = request.args.get('checkid', type = str)
     mealname = request.args.get('mealname', type = str)
-    recid = request.args.get('recid', type = int)
+    recid = request.args.get('recid', type = str)
     location = request.args.get('location', type = str)
     mealtime = request.args.get('mealtime', type = str)
     servingsize = request.args.get('servingsize', type = str)
@@ -646,6 +649,7 @@ def add_personalfood():
     # image checks
     image_data = None
     file_ext = None
+    photo_id = None
     # If there is a file, upload image
     if file:
         correct_type, file_ext = photos.allowed_file(file.filename)

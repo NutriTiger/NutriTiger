@@ -94,7 +94,7 @@ def add_personal_food(name, netid, nutrition):
         try:
             num_current = get_maxid(netid)
             print(num_current)
-            recipeid = netid + (num_current + 1)
+            recipeid = netid + '-'+ str(num_current + 1)
             print(recipeid)
 
             date_obj = datetime.now(pytz.timezone('US/Eastern')).date()
