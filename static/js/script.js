@@ -132,7 +132,7 @@ function handleLeftArrowClick() {
     const ok = modifyDate(-1);
 
     if (!ok) {
-        showAlert("You can only go back 7 days! This message will disappear in 5 seconds.")
+        showAlert("You can't go back any more as there is no data available! This message will disappear in 5 seconds.")
     }
 }
 
@@ -141,7 +141,7 @@ function handleRightArrowClick() {
     const ok = modifyDate(1);
 
     if (!ok) {
-        showAlert("You can only go forward 7 days! This message will disappear in 5 seconds.")
+        showAlert("You can't go forward any more as there is no data available! This message will disappear in 5 seconds.")
     }
 }
 
