@@ -16,47 +16,34 @@
             height: 100%;
             overflow: hidden;
          }
+
+         body {
+            background-color: antiquewhite;
+            background-image: url('../nutritiger_splash.svg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+         }
       </style>
    </head>
 
    <body class="text-center">
-      <div>
-         <div style="margin-top: 7%;">
+
+      <div class="mx-auto" style="padding: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+         <div class="m-3 p-3">
             <!--<img src="logo.jpg" alt="NutriTiger Logo">-->
             <h1 style="font-weight: 700;">NutriTiger</h1> 
          </div>
 
-         <center>
-            <hr style="border: 3px solid black; width: 50%; margin-top: 3%;"/>
-         </center>
-
          <h3 style="margin-top: 3%;">Your go-to for easy access to nutritional information for Princeton's dining halls.</h4>
-         <h5>Streamline your health journey with simple tracking and informed choices.</h6>
-         <button id="loginButton" style="margin-top: 13%;" class="btn btn-primary btn-lg btn-block" onclick="validateLogin()">
+
+         <h5 style="margin-top: 2%;">Streamline your health journey with simple tracking and informed choices.</h6>
+         <button id="loginButton" style="margin-top: 3%;" class="btn btn-primary btn-lg btn-block" onclick="validateLogin()">
                Login with NetID
          </button>
       </div>
    </body>
 
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
-   <script>
-      VANTA.WAVES({
-        el: "#animated-canvas",
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00,
-        shininess: 2.00,
-        waveHeight: 14.50,
-        waveSpeed: 0.95,
-        zoom: 1,
-        color: 0xc99c6e
-      })
-      </script>
       <script>
          function validateLogin() {
             var loginButton = document.getElementById("loginButton")
