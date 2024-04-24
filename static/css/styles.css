@@ -1,5 +1,5 @@
 .nav-tabs .nav-link {
-    color: #FF9040; /* Dark gray color */
+    color: #FF9040; 
 }
 
 .custom-text-wrapper {
@@ -10,7 +10,7 @@
 }
 
 .nt-color-navbar {
-    background-color: #EBC9A6 ; 
+    background-color: #efd3b8 ; 
 }
 
 .nt-color-bg {
@@ -27,7 +27,8 @@
 
 body { 
     padding-top: 60px; 
-    background-color: #f6e3d1 ; 
+    background-color: #f6e3d1 ;
+    font-family: "Montserrat", sans-serif; 
 }
 
 .row-nt {
@@ -45,10 +46,6 @@ body {
 .p-5 {
     padding-top: 1.5rem !important;
 }
-
-/*.card-body-dhall-menus {
-   
-}*/
 
 .nt-color-menu {
     background-color: #FFF4E9;
@@ -89,7 +86,7 @@ body {
 .btn-more-info {
     --bs-btn-border-width:1 !important;
     --bs-btn-color: #000000 !important;
-    background-color: #FFB672 !important;
+    background-color: #fca555 !important;
 }
 
 .dynamic-progress-bar {
@@ -162,21 +159,30 @@ body {
     height: auto;
 }
 .avg-cals {
-    border-Color: rgb(66, 142, 223); 
-    background-Color: rgba(66, 142, 223, 0.5);
+    border-Color: rgb(7, 127, 255); 
+    border-width: 2px;
+    background-Color: rgb(152, 188, 227);
+    font-size: large;
 }
 .avg-prots {
-    border-Color: rgba(255, 182, 193, 1); 
-    background-Color: rgba(255, 182, 193, 0.3);
+    border-Color: rgb(255, 141, 158); 
+    border-width: 2px;
+    background-Color: rgb(248, 183, 193);
+    font-size: large;
 }
 .avg-carbs {
     border-Color: rgb(67, 182, 107); 
+    border-width: 2px;
     background-Color: rgb(67, 182, 107, 0.3);
+    font-size: large;
 }
 .avg-fats {
     border-Color: rgba(255, 205, 86); 
+    border-width: 2px;
     background-Color: rgba(255, 205, 86, 0.5);
+    font-size: large;
 }
+
 @media (max-width: 768px) {
     .histChart-container {
         flex-direction: column;
@@ -191,7 +197,7 @@ body {
 
 /* For My Plate footer (Log Food)*/
 .card-footer {
-    background-color: orange;
+    background-color: #ffaf63;
     color: black;
 }
 
@@ -269,9 +275,19 @@ body {
 }
 
 .select-dropdown {
-    background-color: #FFB672;
-    color: black;
     justify-content: center;
+    background-color: #ffaf63; 
+    border-color: #ffaf63; 
+    color: #000000; 
+}
+
+.select-dropdown-orange:focus,
+.select-dropdown-orange:active {
+    background-color: #ffaf63; /* Set the same background color as normal state */
+    border-color: #ffaf63; /* Set the same border color as normal state */
+    color: #000000; /* Set the same text color as normal state */
+    box-shadow: none; /* Remove any box shadow applied */
+    outline: none; /* Remove the outline when button is focused */
 }
 
 /* for individual food item nutrition facts ***********************/

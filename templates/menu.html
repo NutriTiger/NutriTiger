@@ -12,10 +12,10 @@
             <a class="nav-link {% if current_page == 'homepage' %}active{% endif %}" href="/homepage">Homepage</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'menus' %}active{% endif %}" href="{{ url_for('dhall_menus')}}">Menu of the Day</a>
+            <a class="nav-link {% if current_page == 'menus' %}active{% endif %}" href="{{ url_for('dhall_menus')}}">Dining Hall Menus</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'editingplate' %}active{% endif %}" href="{{ url_for('log_food')}}">Log Food</a>
+            <a class="nav-link {% if current_page == 'editingplate' %}active{% endif %}" href="{{ url_for('log_food')}}">Log Meals</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {% if current_page == 'history' %}active{% endif %}" href="{{ url_for('history')}}">My History</a>
@@ -29,6 +29,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link {% if current_page == 'about' %}active{% endif %}" href="{{ url_for('about')}}">About</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logoutcas')}}">Logout</a>
         </li>
         
         </ul>
