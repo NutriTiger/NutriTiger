@@ -105,7 +105,8 @@ def newuser(netid, cal):
                     "prot_his" : [0],
                     "daily_rec" : [],
                     "daily_serv" : [],
-                    "daily_nut" : []
+                    "daily_nut" : [],
+                    "max_id": 0
                     }
 
     # connect to database and add user
@@ -122,7 +123,32 @@ def newuser(netid, cal):
         except pymongo.errors.ServerSelectionTimeoutError:
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
-
+#-----------------------------------------------------------------------
+'''
+Returns the max_id for a user.
+'''
+def get_maxid(netid):
+    this_user = finduser(netid)
+    return this_user["max_id"]
+#-----------------------------------------------------------------------
+'''
+Updates the max_id for a user.
+'''
+def update_maxid(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        who = {"netid": netid}
+        try:
+            result = users_collection.update_one(who, {"$inc": {"max_id": 1}})
+            if result.matched_count == 0:
+                print(f"No document found with netid: {netid}")
+            elif result.modified_count == 0:
+                print(f"Document with netid: {netid} was not updated.")
+        except pymongo.errors.OperationFailure as e:
+            print(f"An authentication error occurred: {e}")
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            print(f"The server timed out: {e}")
 #-----------------------------------------------------------------------
 '''
 If this is first contact of the day for user with netid: netid, updates fields

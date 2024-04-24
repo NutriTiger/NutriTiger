@@ -1,5 +1,6 @@
 import pymongo
 from dbfunctions import connectmongo
+from dbusers import get_maxid, update_maxid
 import sys
 from datetime import datetime, time
 import pytz
@@ -72,35 +73,30 @@ def find_one_nutrition(recipeid):
 # Create new food item -- should already include the net id field of user
 # Nutrition is dictionary
 def add_personal_food(name, netid, nutrition):
-    
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
-        items_to_find = {"access": netid}
-
 
         try:
-            find_prev_personal = nutrition_col.find(items_to_find)
-            prev_personal = list(find_prev_personal)
-            num_current = len(prev_personal)
+            num_current = get_maxid(netid)
             print(num_current)
-            recipeid = (num_current + 1)
+            recipeid = netid + (num_current + 1)
+            print(recipeid)
 
             date_obj = datetime.now(pytz.timezone('US/Eastern')).date()
             today = datetime.combine(date_obj, time.min)
-            formatted_date = today.strftime("%B %d, %Y")
 
             try:
                 document_to_add = {"mealname" : name, 
                     "access": netid,
                     "recipeid" : recipeid,
                     "date": today,
-                    "date_formatted": formatted_date,
                     **nutrition
                     }
                 result = nutrition_col.insert_one(document_to_add)
                 document_id = result.inserted_id
                 print(f"_id of inserted document: {document_id}")
+                update_maxid(netid)
                 return
             except:
                 print("Issue with insert for personal doc")
@@ -113,7 +109,7 @@ def add_personal_food(name, netid, nutrition):
 
 # Retrieve nutritional information of multiple food items based on recipeids
 # Return list of bson objects with nutrition information (entries are None if recipeid does not exist)
-def find_many_nutrition(recipeids, personal=False):
+def find_many_nutrition(recipeids):
     if not recipeids:
         print("empty recipeid list")
         return []
