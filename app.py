@@ -65,6 +65,16 @@ def get_ampm():
 
 #--------------------------------------------------------------------
 
+def get_date():
+
+    eastern = pytz.timezone('US/Eastern')
+    today = datetime.datetime.now(eastern)
+
+    formatted_date = today.strftime("%A, %B, %d")
+    return formatted_date
+
+#--------------------------------------------------------------------
+
 @app.route('/', methods=['GET'])
 def index():
     #netid = auth.authenticate()
