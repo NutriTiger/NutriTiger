@@ -336,4 +336,8 @@ body {
 .divider {
     border-left: 1px solid #000000;
 }
+
+.introjs-prevbutton {
+    display: none !important;
+}
 /*******************************************************************/
