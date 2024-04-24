@@ -3,6 +3,9 @@
 {% block title %}Personal Nutrition{% endblock %}
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+<div id="loading-animation" class="loading-animation" style="display: none;">
+    <div class="loading-spinner"></div>
+</div>
 <div class = "p-5">
     <div class = "text-center">
         <h1 class="display-3 pb-2"><strong>My Custom Foods</strong></h1>
@@ -33,10 +36,11 @@
     {% for item in user_nutrition %}
     <div class="col col-md-4 col-xl-3 col-xxl-2">
         <div class="card h-100" id="{{ loop.index }}">
+            <div class="deleted-overlay">Deleted</div>
             <div class="card-body">
                 <div class="header-container"> <!-- Utilizing flex layout -->
                     <h5 class="card-title text-center"></h5><b>{{ item['mealname'] }}</b></h5>
-                    <button type="button" class="btn btn-close btn-sm" aria-label="Close" style="display: none;"
+                    <button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm" aria-label="Close" style="display: none;"
                             onclick="deleteCustomFood(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
                     </button>
                 </div>
@@ -76,19 +80,28 @@ let deletedFoods = []
 function deleteCustomFood(item) {
     var recid = item.dataset.recid;
     var cardid = item.dataset.cardid;
+    var btnid = "btn-" + cardid
     let card = document.getElementById(cardid);
-    // fade out remove, masonry a little iffy because by columns
-    $(card).fadeOut(400, function() {
-        $(this).remove(); 
-        $('#masonry-grid').masonry('layout');
-    });
+    let overlay = card.querySelector('.deleted-overlay');
+    let button = document.getElementById(btnid)
+    $(button).remove()
+    overlay.style.display = 'flex'; 
     deletedFoods.push(recid)
+}
+function showLoadingAnimation() {
+    // Show the loading animation covering the entire screen
+    $("#loading-animation").show();
+}
+function hideLoadingAnimation() {
+    // Show the loading animation covering the entire screen
+    $("#loading-animation").hide();
 }
 function save_edits() {
     var dataToSend = {
         deletedFoods: deletedFoods
     };
     var jsonData = JSON.stringify(dataToSend);
+    showLoadingAnimation()
     $.ajax({
         type: "POST",
         url: "/personalnutrition",
@@ -104,6 +117,7 @@ function save_edits() {
             }
         },
         error: function (xhr, status, error) {
+            hideLoadingAnimation()
             console.error("Error in data submission:", xhr.status, xhr.responseText);
         },
     });
