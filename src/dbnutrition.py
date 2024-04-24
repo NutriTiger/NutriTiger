@@ -83,6 +83,30 @@ def del_personal_food(recipeid):
         except Exception as e:
             print(f"Error: {e}")
             return False
+# Deletes personal food items
+# Recipeids is in array of recipeids
+# Returns true if successful, false is unsuccessful
+def del_many_personal_food(recipeids):
+    print("in del_many_personal_food")
+    print(recipeids)
+    with connectmongo() as client:
+        db = client.db
+        nutrition_col = db.nutrition
+        try:
+            # Create a query to match any of the recipe IDs in the list
+            query = {'recipeid': {'$in': recipeids}}
+            result = nutrition_col.delete_many(query)
+            print(f"Deleted {result.deleted_count} documents.")
+
+            # Check if the number of deleted documents matches the number of IDs provided
+            if result.deleted_count == len(recipeids):
+                return True
+            else:
+                print(f"Expected to delete {len(recipeids)}, but deleted {result.deleted_count}.")
+                return False
+        except Exception as e:
+            print(f"Error during deletion: {e}")
+            return False
 
 # Create new food item -- should already include the net id field of user
 # Nutrition is dictionary
