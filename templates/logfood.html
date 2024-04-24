@@ -452,28 +452,28 @@
             intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
         }, {
             title: 'Select Item',
-            element: document.querySelector('#checkbox-5-1-1'),
+            element: document.querySelector('#checkbox-tutorial-1'),
             intro: "Let's select an item as an example."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
-            intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. Let's put one serving for now."
+            intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. By default, a serving size of 1 is put, but this can easily be changed."
         }, {
             title: 'Plate Totals',
             element: document.querySelector('.card-footer'),
             intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
         }, {
             title: 'Generic Food Search',
-            element: document.querySelector('#tutorialSearchBar'),
+            element: document.querySelector('#searchBarSpan'),
             intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
         }, {
             title: 'Generic Food Selection',
-            element: document.querySelector('#usda-checkbox-2012128'),
-            intro: "Let's check another thing off again."
+            element: document.querySelector('#usda-search-results'),
+            intro: "Here are all the relevant results. Let's check off thing off again."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
-            intro: "Notice how it appeared in my plate. Let's put serving count to 1. Again, notice how plate totals have also been updated to reflect the new foods in your plate."
+            intro: "Notice how it appeared in my plate and the serving size is one by default. Again, notice how plate totals have also been updated to reflect the new foods in your plate."
         }, {
             title: 'Upload plate',
             element: document.querySelector('#submitButton'),
@@ -486,33 +486,20 @@
             document.querySelector('.select-dropdown').value = 'Example Dining Hall';
             document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
         }
-        if (targetElement.id == 'checkbox-5-1-1') {
-            var checkbox = document.querySelector('#checkbox-5-1-1');
+        if (targetElement.id == 'checkbox-tutorial-1') {
+            var checkbox = document.querySelector('#checkbox-tutorial-1');
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
-        if (targetElement.id == 'tutorial-my-plate') {
-            var servingInput = document.querySelector('#new_entry input[type="number"]');
-            // Set the value of the input field to 1
-            servingInput.value = 1;
-            handleServingChange();
-        }
-        if (targetElement.id == 'tutorialSearchBar') {
+        if (targetElement.id == 'searchBarSpan') {
             document.querySelector('.select-dropdown').value = 'USDA FoodData Central';
             document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
             var searchBar = document.getElementById("searchBar");
             searchBar.value = "banana";
             searchUSDAFood();
-            // Listen for the insertion of the checkbox element
-            document.getElementById('usda-checkbox-2012128').addEventListener('DOMNodeInserted', function() {
-                var checkbox = document.getElementById("usda-checkbox-2012128");
-                checkbox.checked = true;
-                handleCheckboxChange(checkbox);
-            }, {
-                once: true
-            }); // Remove the event listener after it's triggered once
+            
         }
-        if (targetElement.id == 'usda-checkbox-2012128') {
+        if (targetElement.id == 'usda-search-results') {
             var checkbox = document.getElementById("usda-checkbox-2012128");
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
@@ -521,7 +508,7 @@
         console.log('tour completed');
         document.querySelector('.select-dropdown').value = 'Select Food Source';
         document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
-        document.getElementById('close--5-1-1').click();
+        document.getElementById('close--tutorial-1').click();
         document.getElementById('close-ckbox-2012128').click();
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";

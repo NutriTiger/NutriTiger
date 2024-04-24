@@ -138,6 +138,7 @@ body {
 
 .fixed-top {
     padding: 0.5rem !important;
+    z-index: 100000000000 !important;
 }
 
 .container {
