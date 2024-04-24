@@ -99,8 +99,14 @@ body {
 
 .header-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Default to centering the title */
     align-items: center;
+    width: 100%;
+}
+
+.header-container > .btn-close:not([style*="display: none"]) {
+    margin-left: auto;  /* Pushes the button to the right when visible */
+    justify-content: space-between; /* Aligns title to the left and button to the right when button is visible */
 }
 
 .icon {
@@ -110,7 +116,9 @@ body {
 }
 
 .btn-close {
-    align-self: flex-start; 
+    align-self: center;  /* This centers the button vertically. Adjust as needed */
+    margin-left: auto; 
+    /* align-self: flex-start; */
 }
 .btn-dhall {
     --bs-btn-active-bg: #FF9040 !important;
