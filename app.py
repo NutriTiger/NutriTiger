@@ -585,11 +585,16 @@ def log_food_data():
 #--------------------------------------------------------------------
 @app.route('/personalnutrition', methods=['GET', 'POST'])
 def personal_nutrition():
+    netid = auth.authenticate()
     if request.method == 'POST':
         data = request.get_json()
         deletedFoods = data.get('deletedFoods')
+        this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFoods)
+        if (dbnutrition.del_many_personal_food(deletedFoods)):
+            print("successful deletion of personal foods")
+            return jsonify({"success": True, "redirect": url_for('personal_nutrition')})
+        # ERROR PAGE HERE IF SOMETHING GOES WRONG
     else:
-        netid = auth.authenticate()
         user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
         return render_template('personalnutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
 #--------------------------------------------------------------------
