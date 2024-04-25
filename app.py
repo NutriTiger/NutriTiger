@@ -692,7 +692,9 @@ def add_personalfood():
     fats = request.form.get('fats', type = int)
     servingsize = request.form.get('servingsize', type = str)
     desc = request.form.get('description', type = str)
-    file = request.files['image']
+    file = ''
+    if 'image' in request.files:
+        file = request.files['image']
 
     # Sanitizing - Empty inputs will be 0
     protein = protein or 0
