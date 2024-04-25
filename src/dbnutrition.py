@@ -112,13 +112,12 @@ def del_many_personal_food(recipeids):
             # Deletes image first
             documents = nutrition_col.find(query)
             public_ids = [doc['public_id'] for doc in documents if 'public_id' in doc] 
-            response = photos.delete_many_photos(public_ids)
-            if response.get('result') == 'ok':
-                print(f"Successfully deleted {response.get('public_id')}")
-            else:
-                print(f"Failed to delete {response.get('public_id')}. Reason: {response.get('result')}")
-                return False
+            # print("should be public_ids")
+            # print(public_ids)
+            success = photos.delete_many_photos(public_ids)
 
+            if not success:
+                return False
 
             result = nutrition_col.delete_many(query)
             print(f"Deleted {result.deleted_count} documents.")

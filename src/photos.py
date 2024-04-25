@@ -13,6 +13,12 @@ import cloudinary.uploader
 import cloudinary.api
 import dotenv
 
+dotenv.load_dotenv()
+cloudinary.config(
+    cloud_name=os.getenv("cloud_name"), 
+    api_key=os.getenv("api_key"), 
+    api_secret=os.getenv("api_secret")
+)
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
@@ -38,12 +44,11 @@ def allowed_size(photo):
     return file_size <= max_size
 
 def delete_one_photo(public_id):
-    # Configuration
     dotenv.load_dotenv()
     cloudinary.config(
-        cloud_name = os.getenv("cloud_name"), 
-        api_key = os.getenv("api_key"), 
-        api_secret = os.getenv("api_secret")
+        cloud_name=os.getenv("cloud_name"), 
+        api_key=os.getenv("api_key"), 
+        api_secret=os.getenv("api_secret")
     )
     try:
         response = cloudinary.uploader.destroy(public_id)
@@ -52,19 +57,26 @@ def delete_one_photo(public_id):
         return {'status': 'error', 'message': str(e)}
 
 def delete_many_photos(public_ids):
-    # Configuration
     dotenv.load_dotenv()
     cloudinary.config(
-        cloud_name = os.getenv("cloud_name"), 
-        api_key = os.getenv("api_key"), 
-        api_secret = os.getenv("api_secret")
+        cloud_name=os.getenv("cloud_name"), 
+        api_key=os.getenv("api_key"), 
+        api_secret=os.getenv("api_secret")
     )
+    print("inside delete_many_photos:")
+    print(public_ids)
     try:
-        response = cloudinary.api.delete_resources(public_ids)
-        return response
+        # Ensure that the 'public_ids' parameter name is used correctly
+        response = cloudinary.api.delete_resources(public_ids=public_ids)
+        print("success in delete_many_photos")
+        return True
     except Exception as e:
+        print("fails in delete_many_photos")
         print(f"An error occurred: {str(e)}")
-        return str(e)
+        # Handle the response in case of an exception
+        # return {"status": "error", "message": str(e)}
+        return False
+
     
 def edit_photo_width(file, format):
     try:
