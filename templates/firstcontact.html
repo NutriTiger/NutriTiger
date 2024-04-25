@@ -20,30 +20,32 @@
 
     {% set current_page = 'firstcontact' %}
         <div class="row p-5">
-            <div class="'col-sm-9">
+            <div class="'col-sm-7">
                 <div class="card">
                     <div class="card-body text-center">
                     
                         <div class="container-fluid mx-auto p-5">
-                            <h1 class="m-5">Nutrition Goals</h1> 
-                            <h3 class="m-3 p-4">Welcome to NutriTiger! Please fill out your daily calorie goal.</h3>
-
+                            <h1 class="m-5"><strong>Nutrition Goals</strong></h1> 
+                            <h3 class="m-3 p-4">Welcome to NutriTiger! Please fill out your daily calorie goal. <br>
+                                This value can be changed at any time.</h3>
+                            
                             {% include 'caloriecalculator.html' %}
                     
-                            <div class="text-center p-4">
-                                <div class="row">
-                                    <h4>Calorie Goal:</h4>
-                                    <form action="/welcome" method="post">
-                                        <input id="firstCalorieInput" type="number" class="form-control form-calgoal container"
-                                        name='line' placeholder="Enter the number here." min="1" max="100000"
-                                        onkeypress="return isValid(event)" required autofocus>
-                                        <div class="p-3">
-                                            <button id="firstCalorieButton" class="btn btn-primary btn-lg btn-block"
-                                            type="submit" onclick="closeForm()">Save</button>
+                            <div class="container">
+                                <div class="text-center p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col d-flex align-items-center">
+                                            <h4 class="m-2"> Daily Calorie Goal:</h4>
+                                            <form action="/welcome" method="post" class="d-flex m-2">
+                                                <input id="firstCalorieInput" type="number" class="form-control form-calgoal mr-2" name='line' placeholder="Enter the number here." min="1" max="100000" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
+                                                <button id="firstCalorieButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
+                                            </form>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            
                     </div>
                     
                 </div>
