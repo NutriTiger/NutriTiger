@@ -11,21 +11,18 @@ from bson.binary import Binary
 import os
 
 
-def allowed_file(file):
+def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
-    filename = file.filename
     new_filename = filename
     format = new_filename.rsplit('.', 1)[1].lower()
-    filename = file.filename
-    new_filename = filename
-    format = new_filename.rsplit('.', 1)[1].lower()
+
     if format == 'jpg':
         format = 'jpeg'
     if format == 'heic':
         new_filename.replace(".heic", ".jpg")
         format = 'jpeg'
     # os.rename(file, new_filename)
-    return '.' in filename and format in ALLOWED_EXTENSIONS, format.upper(), file
+    return '.' in filename and format in ALLOWED_EXTENSIONS, format.upper()
 
 
 def edit_photo_width(file, format):
@@ -48,3 +45,7 @@ def edit_photo_width(file, format):
         return image_data
     except IOError:
         return "n/a"
+    
+
+
+
