@@ -9,22 +9,24 @@
         {% for category, foods in item.data.items() %}
             {% set oo_loop = loop %}
                 {% for food, code in foods.items() %}
-                    <div class="form-check">
-                        {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
-                        <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
-                            data-usda="false"
-                            data-recid="{{ code }}" data-location="{{ item.dhall }}" data-mealtime="{{ item.mealtime }}"
-                            data-mealname="{{ food }}"
-                            data-servingsize="{{ nutrition_info[ns.c]['servingsize'] }}"
-                            data-cals="{{ nutrition_info[ns.c]['calories'] }}"
-                            data-carbs="{{ nutrition_info[ns.c]['carbs'] }}"
-                            data-prots="{{ nutrition_info[ns.c]['proteins'] }}"
-                            data-fats="{{ nutrition_info[ns.c]['fats'] }}"
-                            onchange="handleCheckboxChange(this)"
-                            onkeypress="changeCheckbox(this)">
-                        <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
-                        <p id="nf-{{ checkbox_id }}">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }} Calories: {{ nutrition_info[ns.c]['calories'] }} Proteins: {{ nutrition_info[ns.c]['proteins'] }}g Carbs: {{ nutrition_info[ns.c]['carbs'] }}g Fats: {{ nutrition_info[ns.c]['fats'] }}g</p>
-                    </div>
+                    {% if nutrition_info[ns.c]['calories'] != "" %}
+                        <div class="form-check">
+                            {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
+                            <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
+                                data-usda="false"
+                                data-recid="{{ code }}" data-location="{{ item.dhall }}" data-mealtime="{{ item.mealtime }}"
+                                data-mealname="{{ food }}"
+                                data-servingsize="{{ nutrition_info[ns.c]['servingsize'] }}"
+                                data-cals="{{ nutrition_info[ns.c]['calories'] }}"
+                                data-carbs="{{ nutrition_info[ns.c]['carbs'] }}"
+                                data-prots="{{ nutrition_info[ns.c]['proteins'] }}"
+                                data-fats="{{ nutrition_info[ns.c]['fats'] }}"
+                                onchange="handleCheckboxChange(this)"
+                                onkeypress="changeCheckbox(this)">
+                            <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
+                            <p id="nf-{{ checkbox_id }}">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }} Calories: {{ nutrition_info[ns.c]['calories'] }} Proteins: {{ nutrition_info[ns.c]['proteins'] }}g Carbs: {{ nutrition_info[ns.c]['carbs'] }}g Fats: {{ nutrition_info[ns.c]['fats'] }}g</p>
+                        </div>
+                    {% endif %}
                     {% set ns.c = ns.c + 1 %}
                 {% endfor %}
         {% endfor %}

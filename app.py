@@ -348,6 +348,7 @@ def history():
 #--------------------------------------------------------------------
 
 # Get image
+# Get image
 @app.route('/image/<image_id>')
 def serve_image(photo_id):
     netid = auth.authenticate()
@@ -628,6 +629,24 @@ def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, se
 
 #--------------------------------------------------------------------
 
+def check_upload (file):
+    if file and file.filename:
+        file.seek(0, os.SEEK_END)  # Go to the end of file
+        file_size = file.tell()    # Get current position, i.e., size of file
+        file.seek(0)               # Reset pointer to the beginning
+
+        if file_size > 0:
+            # Proceed with your upload
+            correct_type, file_ext = photos.allowed_file(file.filename)
+            if correct_type:
+                return
+            else:
+                return "Invalid file type :("
+        else:
+            return "Uploaded file is empty"
+    
+#--------------------------------------------------------------------
+
 @app.route('/addpersonalfood', methods=['POST'])
 def add_personalfood():
     netid = auth.authenticate()
@@ -641,56 +660,24 @@ def add_personalfood():
     desc = request.form.get('description', type = str)
     file = request.files['image']
 
-    if not protein:
-        protein = 0
-    if not carbs:
-        carbs = 0
-    if not fats:
-        fats = 0
-    if not cal:
-        cal = 0
-    # checking for number checks
+    # Sanitizing - Empty inputs will be 0
+    protein = protein or 0
+    carbs = carbs or 0
+    fats = fats or 0
+    cal = cal or 0
+
+    # Validation - ensure macronutrition + calories make sense
     adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
     if not adds_up:
-        message = "Please input valid nutrition information"
+        message = "The macronutrient counts do not total correctly to your inputted calorie acount. Please enter valid nutrition information."
         return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
-    # image checks
-    image_data = None
-    file_ext = None
-    photo_id = None
-    # If there is a file, upload image
-    if file:
-        correct_type, file_ext = photos.allowed_file(file.filename)
-        if not correct_type:
-            message = "Invalid file type :("
-            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
-        
-        image_data = photos.edit_photo_width(file, file_ext)
-        if image_data == 'n/a':
-            message = "Yikes, we couldn't resize this image. Can you try another photo?"
-            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
-        photo_id = netid
-        photo_id += '-'
-        photo_id += recipename
+    # Validation - no repeat recipe names
+    result = dbnutrition.find_one_personal_nutrition(netid, recipename)
+    if result:
+        message = "A personal food item with this name already exists, please put a new name!"
+        return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
-        dotenv.load_dotenv()
-        ccloud_name = os.getenv('cloud_name')
-        capi_key = os.getenv("api_key")
-        c_secret = os.getenv("api_secret")
-
-        print(ccloud_name)
-        print(capi_key)
-        print(c_secret)
-
-        cloudinary.config( 
-            cloud_name = ccloud_name, 
-            api_key = capi_key, 
-            api_secret = c_secret 
-        )
-
-        cloudinary.uploader.upload(file, 
-            public_id = photo_id)
 
     nutrition_dict = {
                     "calories": cal,
@@ -699,19 +686,44 @@ def add_personalfood():
                     "fats": fats,
                     "servingsize": servingsize,
                     "description": desc,
-                    "image": photo_id,
-                    "filetype": file_ext
                     }
+    # If there is a file, upload image
+    if file:
+        message = check_upload(file)
 
-    result = dbnutrition.find_one_personal_nutrition(netid, recipename)
-    if not result:
-        if file:
-            print("there is an image")
-        dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
-        return redirect(url_for('personal_nutrition'))
-    
-    message = "A personal food item with this name already exists, please put a new name!"
-    return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
+        # Validation - photo
+        if message:
+            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
+
+        # Continue uploading
+        dotenv.load_dotenv()
+        ccloud_name = os.getenv('cloud_name')
+        capi_key = os.getenv("api_key")
+        c_secret = os.getenv("api_secret")
+
+        cloudinary.config( 
+            cloud_name = ccloud_name, 
+            api_key = capi_key, 
+            api_secret = c_secret 
+        )
+
+        response = cloudinary.uploader.upload(file, folder='NutriTiger_personal_photos' )
+        url = response.get('url')
+
+        nutrition_dict = {
+                        "calories": cal,
+                        "proteins": protein,
+                        "carbs": carbs,
+                        "fats": fats,
+                        "servingsize": servingsize,
+                        "description": desc,
+                        "image_url": url,
+                        }
+
+
+
+    dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
+    return redirect(url_for('personal_nutrition'))
     
     
     
