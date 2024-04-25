@@ -101,6 +101,7 @@ function save_edits() {
         deletedFoods: deletedFoods
     };
     var jsonData = JSON.stringify(dataToSend);
+    
     showLoadingAnimation()
     $.ajax({
         type: "POST",

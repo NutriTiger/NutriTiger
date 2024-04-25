@@ -38,6 +38,12 @@ import cloudinary.api
 app = Flask(__name__)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
+# Configuration
+cloudinary.config(
+    cloud_name = "cloud_name", 
+    api_key = "api_key", 
+    api_secret = "api_secret"
+)
 '''
 # Takes the user to a general error page if an error occurs
 """
@@ -96,12 +102,13 @@ def index():
 def homepage():
     netid = auth.authenticate()
     
-    date = get_date()
-
-    # will need to call whenever an existing user logs in
     cursor = dbusers.userlogin(netid)
     if cursor is None:
         return redirect('/welcome')
+    
+    date = get_date()
+
+    
     curr_prots = round(float(cursor['prot_his'][0]), 1)
     curr_carbs = round(float(cursor['carb_his'][0]), 1)
     curr_fats = round(float(cursor['fat_his'][0]), 1)
@@ -267,6 +274,9 @@ def first_contact():
 @app.route('/history', methods=['GET', 'POST'])
 def history():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     # find current user
     profile = dbusers.finduser(netid)
     cals, carbs, prots, fats, dates = utils.get_corresponding_arrays(profile['cal_his'], 
@@ -378,6 +388,9 @@ def serve_image(photo_id):
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     if request.method == 'POST':
         #netid = 'jm0278'
         new_user_goal = request.form['line']
@@ -426,6 +439,9 @@ def add_usda_nutrition():
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     if request.method=='GET':
         cursor = dbusers.finduser(netid)
         daily_rec = cursor['daily_rec']
@@ -453,6 +469,9 @@ def editing_plate():
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
 
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     calc_mealtime = utils.time_of_day(current_date.date(), current_date.time())
@@ -584,17 +603,29 @@ def log_food_data():
     return make_response(html_code)
 '''
 #--------------------------------------------------------------------
+
 @app.route('/personalnutrition', methods=['GET', 'POST'])
 def personal_nutrition():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     if request.method == 'POST':
         data = request.get_json()
         deletedFoods = data.get('deletedFoods')
         this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFoods)
-        if (dbnutrition.del_many_personal_food(deletedFoods)):
+        result = dbnutrition.del_many_personal_food(deletedFoods)
+        print("inside /personalnutrition")
+        print("this is result:")
+        print(result)
+        if result:
             print("successful deletion of personal foods")
             return jsonify({"success": True, "redirect": url_for('personal_nutrition')})
         # ERROR PAGE HERE IF SOMETHING GOES WRONG
+        print("supposed to reset")
+        flash("Failed to delete custom food item(s).")
+        return redirect(url_for('personal_nutrition'))
+
     else:
         user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
         return render_template('personalnutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
@@ -638,10 +669,13 @@ def check_upload (file):
         if file_size > 0:
             # Proceed with your upload
             correct_type, file_ext = photos.allowed_file(file.filename)
-            if correct_type:
-                return
-            else:
+            correct_size = photos.allowed_size(file)
+            if not correct_type:
                 return "Invalid file type :("
+            if not correct_size:
+                return "Uploaded file exceeds 10 MB"
+            else:
+                return
         else:
             return "Uploaded file is empty"
     
@@ -658,7 +692,9 @@ def add_personalfood():
     fats = request.form.get('fats', type = int)
     servingsize = request.form.get('servingsize', type = str)
     desc = request.form.get('description', type = str)
-    file = request.files['image']
+    file = ''
+    if 'image' in request.files:
+        file = request.files['image']
 
     # Sanitizing - Empty inputs will be 0
     protein = protein or 0
@@ -709,6 +745,7 @@ def add_personalfood():
 
         response = cloudinary.uploader.upload(file, folder='NutriTiger_personal_photos' )
         url = response.get('url')
+        public_id = response.get('public_id')
 
         nutrition_dict = {
                         "calories": cal,
@@ -718,6 +755,7 @@ def add_personalfood():
                         "servingsize": servingsize,
                         "description": desc,
                         "image_url": url,
+                        "public_id": public_id
                         }
 
 
