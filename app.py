@@ -638,10 +638,13 @@ def check_upload (file):
         if file_size > 0:
             # Proceed with your upload
             correct_type, file_ext = photos.allowed_file(file.filename)
-            if correct_type:
-                return
-            else:
+            correct_size = photos.allowed_size(file)
+            if not correct_type:
                 return "Invalid file type :("
+            if not correct_size:
+                return "Uploaded file exceeds 10 MB"
+            else:
+                return
         else:
             return "Uploaded file is empty"
     

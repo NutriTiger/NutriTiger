@@ -24,6 +24,16 @@ def allowed_file(filename):
     # os.rename(file, new_filename)
     return '.' in filename and format in ALLOWED_EXTENSIONS, format.upper()
 
+def allowed_size(photo):
+    max_size = 10 * 1024 * 1024  # 10 MB in bytes
+
+    # Check the size of the photo
+    photo.seek(0, 2)  # Move the read cursor to the end of the file
+    file_size = photo.tell()  # Get the position of the cursor—this is the file's size in bytes
+    photo.seek(0)  # Reset the cursor to the start of the file
+
+    return file_size <= max_size
+
 
 def edit_photo_width(file, format):
     try:
