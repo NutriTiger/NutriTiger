@@ -234,13 +234,17 @@
         console.log(query);
         // resultsContainer.children().hide(); // hide results if query is empty
         showLoadingAnimation();
-        fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("append the response");
-                appendDataToDOM(data);
-            })
-            .catch((error) => console.error("Error fetching USDA data:", error));
+        if (query != "") {
+            fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("append the response");
+                    appendDataToDOM(data);
+                })
+                .catch((error) => console.error("Error fetching USDA data:", error));
+        } else {
+            appendDataToDOM({});
+        }
     }
 
     function appendDataToDOM(data) {
@@ -526,6 +530,8 @@
         document.getElementById('close-ckbox-2012128').click();
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";
+        var usdaSearchResults = document.getElementById('usda-search-results');
+        usdaSearchResults.innerHTML = '';
        
     }).start();
 }
