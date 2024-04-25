@@ -7,6 +7,7 @@ import pytz
 from PIL import Image
 import io
 from bson.binary import Binary
+import photos
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
@@ -78,6 +79,17 @@ def del_personal_food(recipeid):
         nutrition_col = db.nutrition
         try:
             document_to_delete = {'recipeid': recipeid}
+
+            # Deletes image first
+            document = nutrition_col.find_one(document_to_delete)
+            public_id = document['public_id']
+            response = photos.delete_one_photo(public_id)
+            if response.get('result') == 'ok':
+                print(f"Successfully deleted {response.get('public_id')}")
+            else:
+                print(f"Failed to delete {response.get('public_id')}. Reason: {response.get('result')}")
+                return False
+            
             nutrition_col.delete_one(document_to_delete)
             return True
         except Exception as e:
@@ -89,12 +101,24 @@ def del_personal_food(recipeid):
 def del_many_personal_food(recipeids):
     print("in del_many_personal_food")
     print(recipeids)
+
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
         try:
             # Create a query to match any of the recipe IDs in the list
             query = {'recipeid': {'$in': recipeids}}
+
+            # Deletes images first
+            documents = nutrition_col.find(query)
+            public_ids = [doc['public_id'] for doc in documents if 'public_id' in doc] 
+
+            # Deletes photos if they exist, otherwise continue w nutrition deletion
+            if len(public_ids) > 0:
+                success = photos.delete_many_photos(public_ids)
+                if not success:
+                    return False
+
             result = nutrition_col.delete_many(query)
             print(f"Deleted {result.deleted_count} documents.")
 
@@ -105,6 +129,7 @@ def del_many_personal_food(recipeids):
                 print(f"Expected to delete {len(recipeids)}, but deleted {result.deleted_count}.")
                 return False
         except Exception as e:
+            print("Exception within del_many_personal")
             print(f"Error during deletion: {e}")
             return False
 
