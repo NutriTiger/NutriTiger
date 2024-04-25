@@ -88,6 +88,7 @@
         </div>
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
+            <form action="/logfood" method="post" class="p-3">
             <div class="logfood-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Plate</h5>
@@ -104,10 +105,11 @@
             <!--Upload plate button-->
             <div class="container p-5">
                 <h5>Done adding food to your plate?</h5>
-                <form action="/logfood" method="post" class="p-3">
-                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate" onclick="closeForm()">Upload Plate and Return</button>
-                </form>
+                
+                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate" onclick="closeForm(event)">Upload Plate and Return</button>
+                
             </div>
+        </form>
         </div>
     </div>
 </div>
@@ -529,9 +531,14 @@
 }
 
     // When the user submits the form and all fields are valid, lock it
-    function closeForm() {
+    function closeForm(e) {
         // Obtain form elements
         const inputs = document.querySelectorAll(".small-input");
+
+        inputs.forEach((input) => {
+            input.value = parseFloat(input.value).toFixed(2)
+        });
+
         var validFormElements = document.querySelectorAll(".small-input:valid")
         var logFoodButton = document.getElementById("submitButton")
 
@@ -544,13 +551,17 @@
 
     // If the user hits the back button reset the form
     window.onunload = function() {
-        hideLoadingAnimation()
-        var logFoodButton = document.getElementById("submitButton")
+        hideLoadingAnimation();
+        var logFoodButton = document.getElementById("submitButton");
+        var dropdown = document.querySelector('.select-dropdown');
 
-        calorieInput.readOnly = false
-        logFoodButton.style.pointerEvents = "auto"
-        logFoodButton.textContent = "Upload Plate and Return"
-        logFoodButton.style.opacity = "none"
+        calorieInput.readOnly = false;
+        logFoodButton.style.pointerEvents = "auto";
+        logFoodButton.textContent = "Upload Plate and Return";
+        logFoodButton.style.opacity = "none";
+        dropdown.value = "Select Food Source";
+        //dropdown.selectedIndex = 0
+        dropdown.dispatchEvent(new Event('change'));
     }
 
     // set up event listeners for dhall select and mealtime tab
