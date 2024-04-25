@@ -80,7 +80,20 @@ function modifyDate(daysToAddOrSubtract) {
     const todaysDate = new Date();
 
     // Calculate the difference
-    const difference = (currentDate.getDate() + daysToAddOrSubtract) - todaysDate.getDate();
+    // Assuming currentDate and todaysDate are Date objects, and daysToAddOrSubtract is a number
+
+    // Convert both dates to timestamps
+    const currentDateTimestamp = currentDate.getTime();
+    const todaysDateTimestamp = todaysDate.getTime();
+
+    // Calculate the difference in milliseconds
+    const differenceInMilliseconds = currentDateTimestamp - todaysDateTimestamp;
+
+    // Convert the difference back to days
+    const difference = differenceInMilliseconds / (1000 * 3600 * 24);
+
+    // Now you have the difference in days
+
 
     var element = document.getElementById('no-data-available');
     if (element) {
@@ -93,6 +106,9 @@ function modifyDate(daysToAddOrSubtract) {
 
 
     // Don't let the user go back more than one week
+    console.log(!isDisplayNone);
+    console.log(difference)
+    console.log(daysToAddOrSubtract)
     if (!isDisplayNone && difference < 0 && daysToAddOrSubtract==-1) {
         return false;
     } else if (!isDisplayNone && difference > 0 && daysToAddOrSubtract==+1) {
