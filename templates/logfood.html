@@ -262,7 +262,7 @@
                 console.log(food.fdcIc);
                 foodElement.innerHTML = `
                 <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-usda="true" data-recid="usda-${food.fdcId}"
-                    data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime={{ calc_mealtime }} data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+                    data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
                     data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
                     onchange="handleCheckboxChange(this)">
                 <label class="form-check-label" for="usda-checkbox-${food.fdcId}">${food.description}</label>
