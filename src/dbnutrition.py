@@ -109,15 +109,15 @@ def del_many_personal_food(recipeids):
             # Create a query to match any of the recipe IDs in the list
             query = {'recipeid': {'$in': recipeids}}
 
-            # Deletes image first
+            # Deletes images first
             documents = nutrition_col.find(query)
             public_ids = [doc['public_id'] for doc in documents if 'public_id' in doc] 
-            # print("should be public_ids")
-            # print(public_ids)
-            success = photos.delete_many_photos(public_ids)
 
-            if not success:
-                return False
+            # Deletes photos if they exist, otherwise continue w nutrition deletion
+            if len(public_ids) > 0:
+                success = photos.delete_many_photos(public_ids)
+                if not success:
+                    return False
 
             result = nutrition_col.delete_many(query)
             print(f"Deleted {result.deleted_count} documents.")
