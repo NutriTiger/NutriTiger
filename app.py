@@ -102,12 +102,13 @@ def index():
 def homepage():
     netid = auth.authenticate()
     
-    date = get_date()
-
-    # will need to call whenever an existing user logs in
     cursor = dbusers.userlogin(netid)
     if cursor is None:
         return redirect('/welcome')
+    
+    date = get_date()
+
+    
     curr_prots = round(float(cursor['prot_his'][0]), 1)
     curr_carbs = round(float(cursor['carb_his'][0]), 1)
     curr_fats = round(float(cursor['fat_his'][0]), 1)
@@ -273,6 +274,9 @@ def first_contact():
 @app.route('/history', methods=['GET', 'POST'])
 def history():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     # find current user
     profile = dbusers.finduser(netid)
     cals, carbs, prots, fats, dates = utils.get_corresponding_arrays(profile['cal_his'], 
@@ -384,6 +388,9 @@ def serve_image(photo_id):
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     if request.method == 'POST':
         #netid = 'jm0278'
         new_user_goal = request.form['line']
@@ -432,6 +439,9 @@ def add_usda_nutrition():
 @app.route('/editingplate', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     if request.method=='GET':
         cursor = dbusers.finduser(netid)
         daily_rec = cursor['daily_rec']
@@ -459,6 +469,9 @@ def editing_plate():
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
 
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     calc_mealtime = utils.time_of_day(current_date.date(), current_date.time())
@@ -593,6 +606,9 @@ def log_food_data():
 @app.route('/personalnutrition', methods=['GET', 'POST'])
 def personal_nutrition():
     netid = auth.authenticate()
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     if request.method == 'POST':
         data = request.get_json()
         deletedFoods = data.get('deletedFoods')
