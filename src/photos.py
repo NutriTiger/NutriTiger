@@ -11,13 +11,8 @@ from bson.binary import Binary
 import os
 import cloudinary.uploader
 import cloudinary.api
+import dotenv
 
-# Configuration
-cloudinary.config(
-    cloud_name = "cloud_name", 
-    api_key = "api_key", 
-    api_secret = "api_secret"
-)
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
@@ -43,6 +38,13 @@ def allowed_size(photo):
     return file_size <= max_size
 
 def delete_one_photo(public_id):
+    # Configuration
+    dotenv.load_dotenv()
+    cloudinary.config(
+        cloud_name = os.getenv("cloud_name"), 
+        api_key = os.getenv("api_key"), 
+        api_secret = os.getenv("api_secret")
+    )
     try:
         response = cloudinary.uploader.destroy(public_id)
         return response  # This will return the result of the delete operation
@@ -50,6 +52,13 @@ def delete_one_photo(public_id):
         return {'status': 'error', 'message': str(e)}
 
 def delete_many_photos(public_ids):
+    # Configuration
+    dotenv.load_dotenv()
+    cloudinary.config(
+        cloud_name = os.getenv("cloud_name"), 
+        api_key = os.getenv("api_key"), 
+        api_secret = os.getenv("api_secret")
+    )
     try:
         response = cloudinary.api.delete_resources(public_ids)
         return response
