@@ -12,7 +12,11 @@ import os
 
 
 def allowed_file(file):
+def allowed_file(file):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
+    filename = file.filename
+    new_filename = filename
+    format = new_filename.rsplit('.', 1)[1].lower()
     filename = file.filename
     new_filename = filename
     format = new_filename.rsplit('.', 1)[1].lower()

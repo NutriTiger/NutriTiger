@@ -348,6 +348,7 @@ def history():
 #--------------------------------------------------------------------
 
 # Get image
+# Get image
 @app.route('/image/<image_id>')
 def serve_image(photo_id):
     netid = auth.authenticate()
