@@ -603,6 +603,7 @@ def log_food_data():
     return make_response(html_code)
 '''
 #--------------------------------------------------------------------
+
 @app.route('/personalnutrition', methods=['GET', 'POST'])
 def personal_nutrition():
     netid = auth.authenticate()
@@ -613,10 +614,15 @@ def personal_nutrition():
         data = request.get_json()
         deletedFoods = data.get('deletedFoods')
         this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFoods)
-        if (dbnutrition.del_many_personal_food(deletedFoods)):
+        result = dbnutrition.del_many_personal_food(deletedFoods)
+        print("inside /personalnutrition")
+        print("this is result:")
+        print(result)
+        if result:
             print("successful deletion of personal foods")
             return jsonify({"success": True, "redirect": url_for('personal_nutrition')})
         # ERROR PAGE HERE IF SOMETHING GOES WRONG
+        print("supposed to reset")
         flash("Failed to delete custom food item(s).")
         return redirect(url_for('personal_nutrition'))
 
