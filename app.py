@@ -652,7 +652,7 @@ def add_personalfood():
     # checking for number checks
     adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
     if not adds_up:
-        message = "Please input valid nutrition information"
+        message = "The macronutrient counts do not total correctly to your inputted calorie acount. Please enter valid nutrition information."
         return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
     # image checks
