@@ -38,6 +38,12 @@ import cloudinary.api
 app = Flask(__name__)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
+# Configuration
+cloudinary.config(
+    cloud_name = "cloud_name", 
+    api_key = "api_key", 
+    api_secret = "api_secret"
+)
 '''
 # Takes the user to a general error page if an error occurs
 """
@@ -595,6 +601,9 @@ def personal_nutrition():
             print("successful deletion of personal foods")
             return jsonify({"success": True, "redirect": url_for('personal_nutrition')})
         # ERROR PAGE HERE IF SOMETHING GOES WRONG
+        flash("Failed to delete custom food item(s).")
+        return redirect(url_for('personal_nutrition'))
+
     else:
         user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
         return render_template('personalnutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
@@ -712,6 +721,7 @@ def add_personalfood():
 
         response = cloudinary.uploader.upload(file, folder='NutriTiger_personal_photos' )
         url = response.get('url')
+        public_id = response.get('public_id')
 
         nutrition_dict = {
                         "calories": cal,
@@ -721,6 +731,7 @@ def add_personalfood():
                         "servingsize": servingsize,
                         "description": desc,
                         "image_url": url,
+                        "public_id": public_id
                         }
 
 

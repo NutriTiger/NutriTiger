@@ -9,7 +9,15 @@ from PIL import Image
 import io
 from bson.binary import Binary
 import os
+import cloudinary.uploader
+import cloudinary.api
 
+# Configuration
+cloudinary.config(
+    cloud_name = "cloud_name", 
+    api_key = "api_key", 
+    api_secret = "api_secret"
+)
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic'}
@@ -34,7 +42,21 @@ def allowed_size(photo):
 
     return file_size <= max_size
 
+def delete_one_photo(public_id):
+    try:
+        response = cloudinary.uploader.destroy(public_id)
+        return response  # This will return the result of the delete operation
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}
 
+def delete_many_photos(public_ids):
+    try:
+        response = cloudinary.api.delete_resources(public_ids)
+        return response
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return str(e)
+    
 def edit_photo_width(file, format):
     try:
         im = Image.open(file.stream)
