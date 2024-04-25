@@ -44,9 +44,9 @@ cloudinary.config(
     api_key = "api_key", 
     api_secret = "api_secret"
 )
-'''
+
 # Takes the user to a general error page if an error occurs
-"""
+
 @app.errorhandler(Exception)
 def not_found(e):
   return redirect("/error")
@@ -55,7 +55,7 @@ def not_found(e):
 def display_error():
     netid = auth.authenticate()
     return render_template("error.html")
-'''
+
 #--------------------------------------------------------------------
 
 # Code used from PennyFlaskJinja/penny.py from Lecture 10
