@@ -337,7 +337,18 @@ body {
     border-left: 1px solid #000000;
 }
 
+/* Intro js css */
+
 .introjs-prevbutton {
     display: none !important;
+}
+
+.customTooltip * {
+    color: #4a4a4a;
+    font-size: 18px
+}
+  
+  .customTooltip .introjs-tooltip-title {
+    color: #0a41c9;
 }
 /*******************************************************************/

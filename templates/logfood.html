@@ -88,7 +88,7 @@
         </div>
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
-            <form action="/logfood" method="post" class="p-3">
+            <form action="/logfood" method="post">
             <div class="logfood-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Plate</h5>
@@ -451,6 +451,8 @@
     introJs().setOptions({
         disableInteraction: true,
         showBullets: false,
+        showProgress: true,
+        tooltipClass: 'customTooltip',
         steps: [{
             title: 'Welcome',
             intro: 'Welcome to the tutorial to learn how to log your food for the day!'
@@ -495,7 +497,12 @@
             element: document.querySelector('#submitButton'),
             intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where it will appear."
         }, ]
+    }).onafterchange(function(targetElement) {
+        var nextButton = document.getElementsByClassName("introjs-nextbutton")
+
+        nextButton.style.pointerEvents = "none"
     }).onchange(function(targetElement) {
+        
         // Check if we are on the step where we want to auto-select an option from the dropdown
         if (targetElement.classList.contains('select-dropdown')) {
             // Simulate selecting an option by triggering a change event
