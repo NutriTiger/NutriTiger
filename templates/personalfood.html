@@ -11,7 +11,7 @@
 {% endwith %}
     <h1 class="text-center m-3">Add Custom Food</h1> 
     <div class="container">
-        <form action="/addpersonalfood" method="post" enctype="multipart/form-data">
+        <form action="/addpersonalfood" method="post" enctype="multipart/form-data" >
             <div class="col-12">
                 <div class="form-group">
                     <label for="inputImage" class="form-label">Upload Image</label>
@@ -54,6 +54,15 @@
         </form>
     </div>
     <script>
+        function disableForm(form) {
+            setTimeout(() => {
+                // Disable all input elements slightly after the form is submitted
+                Array.from(form.elements).forEach(element => {
+                    element.disabled = true;
+                });
+            }, 10);  // delay might need to be adjusted based on actual performance
+        }
+
         function autoResizeField(field) {
         field.style.height = 'inherit'; // Reset the height
         const computed = window.getComputedStyle(field);
@@ -71,6 +80,7 @@
             const input2 = document.getElementById("inputProtein");
             const input3 = document.getElementById("inputCarbs");
             const input4 = document.getElementById("inputFats");
+            const form = document.querySelector('form');
             const array = [input1, input2, input3, input4]
             array.forEach((evt) => {
                 evt.addEventListener("keydown", function(evt) {
@@ -88,7 +98,9 @@
                     }
                 });
             });
-            
+            form.addEventListener('submit', function(event) {
+                disableForm(this);  // Disable the form elements
+            });
         });
     </script>
 {% endblock %}
