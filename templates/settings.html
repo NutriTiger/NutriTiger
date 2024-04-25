@@ -7,23 +7,28 @@
         <div class="card-body">
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
-                    <h1 class="py-3 text-center">{{ netid }}'s Profile Settings</h1>
+                    <h1 class="py-3 text-center">Edit My Calorie Goal</h1>
                     <div class="text-center p-4">
                         <div class="row">
                             <h5>Join Date: {{ join_date }}</h5>
                             <h5>Current Calorie Goal: {{ current_cal_goal }}</h5>
                             <br><br><br>
-                            <h4>Calorie Goal:</h4>
+
                             {% include 'caloriecalculator.html' %}
-                            <form action="/settings" method="post">
-                                <input id="settingsCalorieInput" type="number" class="form-control form-calgoal container"
-                                    name='line' placeholder="Enter the number here." min="1" max="100000"
-                                    onkeypress="return isValid(event)" required autofocus>
-                                <div class="p-3">
-                                    <button id="caloriesSettingsButton" class="btn btn-primary btn-lg btn-block"
-                                    type="submit" onclick="closeForm()">Save</button>
+
+                            <div class="container">
+                                <div class="text-center p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col d-flex align-items-center">
+                                            <h4 class="m-2"> Daily Calorie Goal:</h4>
+                                            <form action="/settings" method="post" class="d-flex m-2">
+                                                <input id="settingsCalorieInput" type="number" class="form-control form-calgoal mr-2" name='line' placeholder="Enter the number here." min="1" max="100000" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
+                                                <button id="caloriesSettingsButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
