@@ -609,7 +609,7 @@ def log_food_data():
 '''
 #--------------------------------------------------------------------
 
-@app.route('/personalnutrition', methods=['GET', 'POST'])
+@app.route('/customfoods', methods=['GET', 'POST'])
 def personal_nutrition():
     netid = auth.authenticate()
     cursor = dbusers.userlogin(netid)
@@ -620,7 +620,7 @@ def personal_nutrition():
         deletedFoods = data.get('deletedFoods')
         this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFoods)
         result = dbnutrition.del_many_personal_food(deletedFoods)
-        print("inside /personalnutrition")
+        print("inside /customfoods")
         print("this is result:")
         print(result)
         if result:
@@ -636,7 +636,7 @@ def personal_nutrition():
         return render_template('personalnutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
 #--------------------------------------------------------------------
 
-@app.route('/addpersonalfood', methods=['GET'])
+@app.route('/addcustomfood', methods=['GET'])
 def personal_food():
     netid = auth.authenticate()
 
@@ -686,7 +686,7 @@ def check_upload (file):
     
 #--------------------------------------------------------------------
 
-@app.route('/addpersonalfood', methods=['POST'])
+@app.route('/addcustomfood', methods=['POST'])
 def add_personalfood():
     netid = auth.authenticate()
 
