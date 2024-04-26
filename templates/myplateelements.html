@@ -11,7 +11,7 @@
             <!-- Serving Lineedit Column and Close button -->
             <div id="new_entry" class="d-flex align-items-center">
                 <!-- Serving Lineedit -->
-                <input type="number" min="1" step="0.01" max="100" class="form-control small-input mr-2" data-usda="{{ usda }}"
+                <input type="number" min="1" step="any" max="100" class="form-control small-input mr-2" data-usda="{{ usda }}"
                 data-cals="{{ cals }}"
                 data-recid="{{ recid }}" data-mealname="{{ mealname }}" data-carbs="{{ carbs }}" data-fats="{{ fats }}" data-prots="{{ prots }}"
                 placeholder="Servings" value="1" oninput="handleServingChange(this)" required
@@ -41,7 +41,10 @@
         // If the key contains nonvalid chars 
         if ((input.charCode < 48 || input.charCode > 57) && input.charCode !== 46)
             return false;
-
+        
+        // Limit input to 2 decimal places
+        if (value.indexOf('.') !== -1 && value.length - value.indexOf('.') > 2)
+            return false;
         return true;
     }
 
