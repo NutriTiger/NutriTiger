@@ -520,10 +520,15 @@ def log_food_myplate():
     usda = request.args.get('usda', type = str)
     uniqueid = checkid[8:]
     print(mealname, cals, prots, carbs, fats)
+    if mealtime == "N/A":
+        details = location
+    else:
+        details = location + ", " + mealtime
+    
 
     html_code = render_template('myplateelements.html', checkid=checkid, uniqueid=uniqueid, mealname=mealname, 
                                 recid=recid, location=location, mealtime=mealtime, servingsize=servingsize, 
-                                cals=cals, prots=prots, carbs=carbs, fats=fats, usda = usda)
+                                cals=cals, prots=prots, carbs=carbs, fats=fats, usda = usda, details=details)
     return make_response(html_code)
 
 @app.route('/logfood/data', methods=['GET'])
