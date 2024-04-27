@@ -95,7 +95,7 @@ def parse_nutritional_info(api_response):
         # Add the meal name to the set
         meal_names.add(meal_name)
         
-        formatted_serving_size = "100g" if None in (food.get('servingSize'), food.get('servingSizeUnit')) else f"{food.get('servingSize')} {food.get('servingSizeUnit')}"
+        formatted_serving_size = "100g" if None in (round(int(food.get('servingSize'))), food.get('servingSizeUnit')) else f"{food.get('servingSize')} {food.get('servingSizeUnit')}"
 
         # Initialize a dictionary to store the information for each food item
         food_info = {
@@ -118,7 +118,7 @@ def parse_nutritional_info(api_response):
             nutrient_name = nutrient.get("nutrientName")
             if nutrient_name in nutrients_map:
                 # Map the nutrient value to the corresponding key in food_info
-                food_info[nutrients_map[nutrient_name]] = round(nutrient.get("value"))
+                food_info[nutrients_map[nutrient_name]] = round(int(nutrient.get("value")))
         
         # Append the parsed food item to the list
         foods.append(food_info)
