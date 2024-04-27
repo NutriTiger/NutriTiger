@@ -35,6 +35,7 @@ function getResults() {
     showLoadingAnimation();
 
     let mealtime = $("input[name='mealtime_btnradio']:checked").val();
+    console.log(mealtime);
     const currentDate = $('#currentDateDiv').text();
     let encoded_mealtime = encodeURIComponent(mealtime);
     let encoded_date = encodeURIComponent(currentDate)
