@@ -48,8 +48,13 @@
                     <label for="inputDesc">Description</label>
                     <textarea class="form-control autosize" id="inputDesc" maxlength = "180" name="description" oninput="autoResizeField(this)">{{desc}}</textarea>
                 </div>
-                <br>
-                <button type="button" class="btn btn-primary" onclick="validateNums(this);">Submit</button>
+                <div class="form-row mt-3">
+                    <div class="col d-flex justify-content-end">
+                        <!-- Add a margin to the right of the Cancel button -->
+                        <button type="button" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
+                        <button type="submit" class="btn btn-primary" onclick="validateNums(this)">Submit</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

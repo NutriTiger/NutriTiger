@@ -6,10 +6,10 @@
         <input type="radio" value="Lunch" class="btn-check" name="mealtime_btnradio" id="btnradio2" autocomplete="off" {% if mealtime == 'Lunch' %} checked {% endif %}>
         <label class="nt-btn btn btn-dhall btn-primary" for="btnradio2">Lunch</label>
         {% elif is_weekend_var %}
-        <input type="radio" value="Lunch" class="btn-check" name="mealtime_btnradio" id="btnradio3" autocomplete="off" {% if mealtime == 'Lunch' %} checked {% endif %}>
+        <input type="radio" value="Lunch" class="btn-check" name="mealtime_btnradio" id="btnradio2" autocomplete="off" {% if mealtime == 'Lunch' %} checked {% endif %}>
         <label class="nt-btn btn btn-dhall btn-primary" for="btnradio2">Brunch</label>
         {% endif %}
-        <input type="radio" value="Dinner" class="btn-check" name="mealtime_btnradio" id="btnradio4" autocomplete="off" {% if mealtime == 'Dinner' %} checked {% endif %}>
+        <input type="radio" value="Dinner" class="btn-check" name="mealtime_btnradio" id="btnradio3" autocomplete="off" {% if mealtime == 'Dinner' %} checked {% endif %}>
         <label class="nt-btn btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
     </div>
     <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
@@ -22,10 +22,10 @@
     <div class="col meal {{ item.mealtime }}" {% if item.mealtime != mealtime %} style = "display: none;" {% endif %}>
         <div class="card h-100 card-body-dhall-menus ">
             <div class="card-body"  >
-                <h3 class="card-title text-center">{{ item.dhall }}</h3>
+                <h2 class="card-title text-center">{{ item.dhall }}</h2>
                 {% set outer_outer_loop = loop %}
                 {% for category, foods in item.data.items() %}
-                <strong><h6>{{ category }}</h6></strong>
+                <strong><h5>{{ category }}</h5></strong>
                 {% set outer_loop = loop %}
                 {% for food, code in foods.items() %}
                 <a tabindex="0" class="nt-btn btn nt-food-text" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-container="body" data-content-id="popover-{{ outer_outer_loop.index }}-{{ outer_loop.index }}-{{ loop.index }}">{{ food }}</a>

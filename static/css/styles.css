@@ -344,11 +344,15 @@ body {
 }
 
 .customTooltip * {
-    color: #4a4a4a;
+    color: #090909;
     font-size: 18px
 }
   
-  .customTooltip .introjs-tooltip-title {
-    color: #0a41c9;
+.customTooltip .introjs-tooltip-title {
+    color: #c9800a;
+}
+
+.introjs-progressbar {
+    background-color: #f2b34e !important;
 }
 /*******************************************************************/
