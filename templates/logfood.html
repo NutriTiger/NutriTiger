@@ -297,7 +297,7 @@
                 <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" data-usda="true" data-recid="${food.recipeid}"
                     data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
                     data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
-                    onchange="handleCheckboxChange(this)">
+                    onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
                 <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
                 <p id="nf-${food.recipeid}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
                 `;  
@@ -571,6 +571,12 @@
        
     }).start();
 }
+    // Prevents users from copy and pasting in number of servings
+    function disableCopyPaste(event) {
+        event.preventDefault();
+        console.log("Copy and paste actions are disabled on this field.");
+    }
+
 
     // When the user submits the form and all fields are valid, lock it
     function closeForm(e) {

@@ -26,19 +26,19 @@
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
-                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories" placeholder=0 value={{calories}}>
+                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories" placeholder=0 value={{calories}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputProtein">Protein (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" placeholder=0 value={{proteins}}>
+                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" placeholder=0 value={{proteins}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputCarbs">Carbohydrates (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs" placeholder=0 value={{carbs}}>
+                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs" placeholder=0 value={{carbs}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
-                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder=0 value={{fats}}>
+                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder=0 value={{fats}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputServingSize">Serving size</label>
@@ -55,6 +55,10 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function disableCopyPaste(event) {
+            event.preventDefault();
+            console.log("Copy and paste actions are disabled on this field.");
+        }
         function validateNums(item) {
             const form = document.getElementById('customFoodForm');
             const calories = parseInt(document.getElementById('inputCalories').value) || 0;

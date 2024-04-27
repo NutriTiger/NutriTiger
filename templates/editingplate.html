@@ -54,7 +54,9 @@
                                                     <input type="number" min="0" class="form-control small-input mr-2"
                                                     value="{{ serving }}" oninput="handleServingChange(this)" required
                                                     data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}" step="0.01"
-                                                    onkeypress="return isValid(event)">
+                                                    onkeypress="return isValid(event)" oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
+                                                </div>
+                                                <div class="form-group">
                                     
                                                     <!-- Close button -->
                                                     <button type="button" data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
@@ -91,6 +93,11 @@
         // List of lists of deleted foods & their entries
         let deletedFoods = [];
         let servingsChanged = {};
+
+        function disableCopyPaste(event) {
+            event.preventDefault();
+            console.log("Copy and paste actions are disabled on this field.");
+        }
 
         function appendEntrytoDelete(entryIndex) {
             console.log("entry " + entryIndex + " will be deleted")
