@@ -91,9 +91,8 @@ def del_personal_food(recipeid):
                 else:
                     print(f"Failed to delete {response.get('public_id')}. Reason: {response.get('result')}")
                     return False
-                nutrition_col.delete_one(document_to_delete)
-                return True
-            return False
+            nutrition_col.delete_one(document_to_delete)
+            return True
         except Exception as e:
             print(f"Error: {e}")
             return False
