@@ -95,7 +95,7 @@ def parse_nutritional_info(api_response):
         # Add the meal name to the set
         meal_names.add(meal_name)
         
-        formatted_serving_size = "100g" if None in (round(int(food.get('servingSize'))), food.get('servingSizeUnit')) else f"{food.get('servingSize')} {food.get('servingSizeUnit')}"
+        formatted_serving_size = "100g" if None in (food.get('servingSize'), food.get('servingSizeUnit')) else f"{round(int(food.get('servingSize')))} {food.get('servingSizeUnit')}"
 
         # Initialize a dictionary to store the information for each food item
         food_info = {
