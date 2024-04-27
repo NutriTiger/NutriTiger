@@ -23,11 +23,6 @@
                 Edit Custom Foods
             </button>
         </div>
-        <div class="d-inline-block">
-            <button type="submit" id="save_edits" class="btn btn-primary" style="display: none;">
-                Save Edits
-            </button>
-        </div>
     </div>
     <br>
 {% if user_nutrition is not none %}
@@ -100,7 +95,7 @@ function confirmDelete(item) {
         deleteCustomFood(item);
         swalWithBootstrapButtons.fire({
         title: "Deleted!",
-        text: "Your custom food has been deleted. Don't forget to save your edits!",
+        text: "Your custom food has been deleted.",
         icon: "success"
         });
     } else if (
@@ -115,7 +110,6 @@ function confirmDelete(item) {
     }
     });
 }
-let deletedFoods = []
 function deleteCustomFood(item) {
     var recid = item.dataset.recid;
     console.log(recid);
@@ -128,7 +122,7 @@ function deleteCustomFood(item) {
     let button = document.getElementById(btnid)
     $(button).remove()
     overlay.style.display = 'flex'; 
-    deletedFoods.push(recid)
+    handleDelete(recid)
 }
 function showLoadingAnimation() {
     // Show the loading animation covering the entire screen
@@ -138,9 +132,9 @@ function hideLoadingAnimation() {
     // Show the loading animation covering the entire screen
     $("#loading-animation").hide();
 }
-function save_edits() {
+function handleDelete(recid) {
     var dataToSend = {
-        deletedFoods: deletedFoods
+        deletedFood: recid
     };
     var jsonData = JSON.stringify(dataToSend);
     
