@@ -516,7 +516,7 @@
         }, {
             title: 'Generic Food Selection',
             element: document.querySelector('#usda-search-results'),
-            intro: "Here are all the relevant results. Let's check off thing off again."
+            intro: "Here are all the relevant results. Let's check another thing off again."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
@@ -552,7 +552,7 @@
             
         }
         if (targetElement.id == 'usda-search-results') {
-            var checkbox = document.getElementById("usda-checkbox-2012128");
+            var checkbox = document.getElementById("usda-checkbox-usda-2012128");
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
@@ -563,7 +563,7 @@
         document.querySelector('.select-dropdown').value = 'Select Food Source';
         document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
         document.getElementById('close--tutorial-1').click();
-        document.getElementById('close-ckbox-2012128').click();
+        document.getElementById('close-ckbox-usda-2012128').click();
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";
         var usdaSearchResults = document.getElementById('usda-search-results');
