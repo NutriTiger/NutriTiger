@@ -31,6 +31,7 @@ from bson.binary import Binary
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from werkzeug.utils import secure_filename
 
 
 #--------------------------------------------------------------------
@@ -648,6 +649,7 @@ def personal_food():
 # typed elements back into the input areas
 def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc):
     flash(message)
+    
     # Store form data and message in session
     session['form_data'] = {
         'name': recipename,
@@ -694,9 +696,15 @@ def add_personalfood():
     fats = request.form.get('fats', type = int)
     servingsize = request.form.get('servingsize', type = str)
     desc = request.form.get('description', type = str)
-    file = ''
-    if 'image' in request.files:
-        file = request.files['image']
+
+    file = request.files.get('image')
+    # if file and photos.allowed_file(file.filename):
+    #     filename = secure_filename(file.filename)
+    #     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    #     file.save(file_path)
+    # else:
+    #     file_path = session.get('image_url', '')  # Use previous or default image URL
+
 
     # Sanitizing - Empty inputs will be 0
     protein = protein or 0
@@ -704,11 +712,11 @@ def add_personalfood():
     fats = fats or 0
     cal = cal or 0
 
-    # Validation - ensure macronutrition + calories make sense
-    adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
-    if not adds_up:
-        message = "The macronutrient counts do not total correctly to your inputted calorie acount. Please enter valid nutrition information."
-        return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
+    # Validation - ensure macronutrition + calories make sense --> THIS IS NOW DONE CLIENT SIDE
+    # adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
+    # if not adds_up:
+    #     message = "The macronutrient counts do not total correctly to your inputted calorie acount. Please enter valid nutrition information."
+    #     return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
     # Validation - no repeat recipe names
     result = dbnutrition.find_one_personal_nutrition(netid, recipename)
