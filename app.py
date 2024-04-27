@@ -565,13 +565,10 @@ def logfood_usdadata():
         data = response.json()  # Convert response to JSON
         # print("API response:", json.dumps(data, indent=4))  # Log the full API response to understand its structure
 
-        if 'foods' in data:
-            food_items = data['foods']
-            unique_items = utils.trim_data(food_items)
-            data['foods'] = unique_items
-            return jsonify(data)  # Send JSON response back to client
-        else:
-            return jsonify({"error": "No foods found"}), 404
+        # Packs everything correctly
+        parsed_data = utils.parse_nutritional_info(data)
+
+        return jsonify(parsed_data)
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
 '''
