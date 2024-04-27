@@ -41,7 +41,7 @@
                 <div class="header-container"> <!-- Utilizing flex layout -->
                     <h5 class="card-title text-center"></h5><b>{{ item['mealname'] }}</b></h5>
                     <button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm" aria-label="Close" style="display: none;"
-                            onclick="deleteCustomFood(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
+                            onclick="confirmDelete(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
                     </button>
                 </div>
             </div>
@@ -74,13 +74,55 @@
 {% endblock %}
 
 {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 <script>
+// Function to show SweetAlert confirmation dialog
+function confirmDelete(item) {
+    const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+    },
+    buttonsStyling: false
+    });
+    swalWithBootstrapButtons.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "No, cancel!",
+    reverseButtons: true
+    }).then((result) => {
+    if (result.isConfirmed) {
+        deleteCustomFood(item);
+        swalWithBootstrapButtons.fire({
+        title: "Deleted!",
+        text: "Your custom food has been deleted.",
+        icon: "success"
+        });
+    } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+    ) {
+        swalWithBootstrapButtons.fire({
+        title: "Cancelled",
+        text: "Your custom food is safe :)",
+        icon: "error"
+        });
+    }
+    });
+}
 let deletedFoods = []
 function deleteCustomFood(item) {
     var recid = item.dataset.recid;
+    console.log(recid);
     var cardid = item.dataset.cardid;
+    console.log(cardid);
     var btnid = "btn-" + cardid
+    console.log(btnid);
     let card = document.getElementById(cardid);
     let overlay = card.querySelector('.deleted-overlay');
     let button = document.getElementById(btnid)
@@ -105,11 +147,12 @@ function save_edits() {
     showLoadingAnimation()
     $.ajax({
         type: "POST",
-        url: "/personalnutrition",
+        url: "/customfoods",
         contentType: "application/json",
         data: jsonData,
         success: function (response) {
             console.log("Data sent successfully:", response);
+            hideLoadingAnimation()
             // Check if the server response includes the redirect URL
             if (response.success && response.redirect) {
                 // Hide the loading animation before redirection
