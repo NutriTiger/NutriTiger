@@ -11,8 +11,26 @@
 <div id="loading-animation" class="loading-animation">
     <div class="loading-spinner"></div>
 </div>
+
+
+<style> 
+    .icons .fa { 
+        width: 50px; 
+        height: 50px; 
+        font-size: 50px; 
+    } 
+      
+</style> 
+
 <div class="text-center p-3">
-    <h1 class="my-2">Log a Meal</h1>
+    <h1 class="my-2">Log a Meal 
+        <!--i button for instruction steps-->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+        </svg>
+    </h1>
+
     <p class="px-5">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-1-circle" viewBox="0 0 16 16">
             <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z"/>
@@ -33,6 +51,15 @@
     </p>
     <button class="btn btn-primary" id="startTutorial">Click to see a tutorial.</button>
 </div>
+
+<script> 
+    $(document).ready(function () { 
+        $('[data-toggle="tooltip"]').tooltip({ 
+            placement: 'bottom' 
+        }); 
+    }); 
+</script> 
+
 <div class="container-fluid">
     
     <!--Two cards: one for the dining hall food display, and one for My Plate-->
@@ -88,7 +115,7 @@
         </div>
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
-            <form action="/logfood" method="post" class="p-3">
+            <form action="/logfood" method="post">
             <div class="logfood-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Plate</h5>
@@ -251,26 +278,28 @@
         const resultsContainer = document.getElementById("usda-search-results");
         resultsContainer.innerHTML = ""; // Clear previous results - base saving on plate info
 
-        if (data.foods && data.foods.length > 0) {
-            data.foods.forEach((food, index) => {
-                const calories = food.foodNutrients.find((n) => n.nutrientName === "Energy")?.value || 0;
-                const proteins = food.foodNutrients.find((n) => n.nutrientName === "Protein")?.value || 0;
-                const carbs = food.foodNutrients.find((n) => n.nutrientName === "Carbohydrate, by difference")?.value || 0;
-                const fats = food.foodNutrients.find((n) => n.nutrientName === "Total lipid (fat)")?.value || 0;
+        if (data && data.length > 0) {
+            data.forEach((food, index) => {
+                const calories = food.calories || 0;
+                const proteins = food.proteins || 0;
+                const carbs = food.carbs || 0;
+                const fats = food.fats || 0;
 
+                console.log("serving size:")
+                console.log(food.servingSize)
                 // Check if food portions are available and extract the first one
-                const servingSizeInfo = food.foodPortions && food.foodPortions.length > 0 ? food.foodPortions[0].portionDescription : "100g";
+                const servingSizeInfo = food.servingSize;
 
                 const foodElement = document.createElement("div");
                 foodElement.className = "form-check";
                 console.log(food.fdcIc);
                 foodElement.innerHTML = `
-                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-usda="true" data-recid="usda-${food.fdcId}"
-                    data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" data-usda="true" data-recid="${food.recipeid}"
+                    data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
                     data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
-                    onchange="handleCheckboxChange(this)">
-                <label class="form-check-label" for="usda-checkbox-${food.fdcId}">${food.description}</label>
-                <p id="nf-usda-${food.fdcId}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+                    onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
+                <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
+                <p id="nf-${food.recipeid}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
                 `;  
                 resultsContainer.appendChild(foodElement);
             });
@@ -451,6 +480,8 @@
     introJs().setOptions({
         disableInteraction: true,
         showBullets: false,
+        showProgress: true,
+        tooltipClass: 'customTooltip',
         steps: [{
             title: 'Welcome',
             intro: 'Welcome to the tutorial to learn how to log your food for the day!'
@@ -485,7 +516,7 @@
         }, {
             title: 'Generic Food Selection',
             element: document.querySelector('#usda-search-results'),
-            intro: "Here are all the relevant results. Let's check off thing off again."
+            intro: "Here are all the relevant results. Let's check another thing off again."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
@@ -495,7 +526,12 @@
             element: document.querySelector('#submitButton'),
             intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where it will appear."
         }, ]
+    }).onafterchange(function(targetElement) {
+        var nextButton = document.getElementsByClassName("introjs-nextbutton")
+
+        nextButton.style.pointerEvents = "none"
     }).onchange(function(targetElement) {
+        
         // Check if we are on the step where we want to auto-select an option from the dropdown
         if (targetElement.classList.contains('select-dropdown')) {
             // Simulate selecting an option by triggering a change event
@@ -516,7 +552,7 @@
             
         }
         if (targetElement.id == 'usda-search-results') {
-            var checkbox = document.getElementById("usda-checkbox-2012128");
+            var checkbox = document.getElementById("usda-checkbox-usda-2012128");
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
@@ -527,7 +563,7 @@
         document.querySelector('.select-dropdown').value = 'Select Food Source';
         document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
         document.getElementById('close--tutorial-1').click();
-        document.getElementById('close-ckbox-2012128').click();
+        document.getElementById('close-ckbox-usda-2012128').click();
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";
         var usdaSearchResults = document.getElementById('usda-search-results');
@@ -535,6 +571,12 @@
        
     }).start();
 }
+    // Prevents users from copy and pasting in number of servings
+    function disableCopyPaste(event) {
+        event.preventDefault();
+        console.log("Copy and paste actions are disabled on this field.");
+    }
+
 
     // When the user submits the form and all fields are valid, lock it
     function closeForm(e) {

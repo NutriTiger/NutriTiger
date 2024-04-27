@@ -79,6 +79,53 @@ def gather_recipes(data):
                 recipe_ids.append(recipe_id)
     return recipe_ids
 
+# Organizes data --> less info to send + figure out serving size
+def parse_nutritional_info(api_response):
+    # Initialize an empty list to store the parsed food data
+    foods = []
+    meal_names = set()  # Set to track existing meal names to avoid duplicates
+    
+    # Loop through each food item in the response
+    for food in api_response["foods"]:
+        meal_name = food.get("description")
+        # Check if mealName is already processed
+        if meal_name in meal_names:
+            continue  # Skip parsing this food item if mealName is a duplicate
+        
+        # Add the meal name to the set
+        meal_names.add(meal_name)
+        
+        formatted_serving_size = "100g" if None in (food.get('servingSize'), food.get('servingSizeUnit')) else f"{round(int(food.get('servingSize')))} {food.get('servingSizeUnit')}"
+
+        # Initialize a dictionary to store the information for each food item
+        food_info = {
+            "recipeid": 'usda-' + str(food.get("fdcId")),
+            "mealname": meal_name,  # Use the description as meal name
+            "servingSize": formatted_serving_size,  # Format the serving size
+            "ingredients": food.get("ingredients", "No ingredients listed")  # Get ingredients if available
+        }
+        
+        # Map nutrient names from the API to the desired keys
+        nutrients_map = {
+            "Energy": "calories",
+            "Protein": "proteins",
+            "Carbohydrate, by difference": "carbs",
+            "Total lipid (fat)": "fats"
+        }
+        
+        # Extract nutrient information
+        for nutrient in food.get("foodNutrients", []):
+            nutrient_name = nutrient.get("nutrientName")
+            if nutrient_name in nutrients_map:
+                # Map the nutrient value to the corresponding key in food_info
+                food_info[nutrients_map[nutrient_name]] = round(int(nutrient.get("value")))
+        
+        # Append the parsed food item to the list
+        foods.append(food_info)
+    
+    # Return the list of parsed food items
+    return foods
+
 def trim_data(data):
     new_data = {}
     

@@ -51,10 +51,12 @@
                                                 <!-- Serving Lineedit Column and Close button -->
                                                 <div data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="d-flex align-items-center">
                                                     <!-- Serving Lineedit -->
-                                                    <input type="number" min="0" class="form-control small-input mr-2"
+                                                    <input type="number" step="any" onpaste="return false;" class="form-control small-input mr-2"
                                                     value="{{ serving }}" oninput="handleServingChange(this)" required
                                                     data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}" step="0.01"
                                                     onkeypress="return isValid(event)">
+                                                </div>
+                                                <div class="form-group">
                                     
                                                     <!-- Close button -->
                                                     <button type="button" data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
