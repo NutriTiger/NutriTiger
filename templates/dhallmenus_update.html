@@ -3,10 +3,13 @@
         {% if not is_weekend_var: %}
         <input type="radio" value="Breakfast" class="btn-check" name="mealtime_btnradio" id="btnradio1" autocomplete="off" {% if mealtime == "Breakfast" %} checked {% endif %}>
         <label class="nt-btn btn btn-dhall btn-primary" for="btnradio1">Breakfast</label>
-        {% endif %}
         <input type="radio" value="Lunch" class="btn-check" name="mealtime_btnradio" id="btnradio2" autocomplete="off" {% if mealtime == 'Lunch' %} checked {% endif %}>
-        <label class="nt-btn btn btn-dhall btn-primary" for="btnradio2">Lunch</label>   
-        <input type="radio" value="Dinner" class="btn-check" name="mealtime_btnradio" id="btnradio3" autocomplete="off" {% if mealtime == 'Dinner' %} checked {% endif %}>
+        <label class="nt-btn btn btn-dhall btn-primary" for="btnradio2">Lunch</label>
+        {% elif is_weekend_var %}
+        <input type="radio" value="Lunch" class="btn-check" name="mealtime_btnradio" id="btnradio3" autocomplete="off" {% if mealtime == 'Lunch' %} checked {% endif %}>
+        <label class="nt-btn btn btn-dhall btn-primary" for="btnradio2">Brunch</label>
+        {% endif %}
+        <input type="radio" value="Dinner" class="btn-check" name="mealtime_btnradio" id="btnradio4" autocomplete="off" {% if mealtime == 'Dinner' %} checked {% endif %}>
         <label class="nt-btn btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
     </div>
     <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
