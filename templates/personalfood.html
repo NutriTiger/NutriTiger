@@ -51,8 +51,8 @@
                 <div class="form-row mt-3">
                     <div class="col d-flex justify-content-end">
                         <!-- Add a margin to the right of the Cancel button -->
-                        <button type="button" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
-                        <button type="submit" class="btn btn-primary" onclick="validateNums(this)">Submit</button>
+                        <button type="button" class="btn btn-secondary me-2" onclick="location.href='/personalnutrition'">Cancel</button>
+                        <button type="submit" class="btn btn-primary" onclick="disableForm(event)">Submit</button>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
             event.preventDefault();
             console.log("Copy and paste actions are disabled on this field.");
         }
-        function validateNums(item) {
+        function validateNums(event) {
             const form = document.getElementById('customFoodForm');
             const calories = parseInt(document.getElementById('inputCalories').value) || 0;
             const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
@@ -77,7 +77,7 @@
                 form.submit();  // Submit if everything is okay
             }
         }
-        function confirmSubmission(form) {
+        function confirmSubmission(event, form) {
             Swal.fire({
             title: "Are you sure?",
             text: "Your macronutrient counts are not consistent with your calorie count. Want to take another look?",
@@ -88,7 +88,6 @@
             confirmButtonText: "Proceed"
             }).then((result) => {
             if (result.isConfirmed) {
-                disableForm(form);
                 form.submit();
                 Swal.fire({
                 title: "Hmmmm.... okay!",
@@ -96,18 +95,28 @@
                 icon: "success"
                 });
             }
+            else {
+                enableForm(event, form)
+            }
             });
         }
-        // function enableForm(form) {
-        //     Array.from(form.elements).forEach(element => {
-        //             element.disabled = false;
-        //         });
-        // }
-        function disableForm(form) {
+
+        function disableForm(event) {
+            event.preventDefault()
+            const form = event.target.form;
             setTimeout(() => {
                 // Disable all input elements slightly after the form is submitted
                 Array.from(form.elements).forEach(element => {
                     element.disabled = true;
+                });
+            }, 10);  // delay might need to be adjusted based on actual performance
+            validateNums(event, form);
+        }
+        function enableForm(event, form) {
+            setTimeout(() => {
+                // enable all input elements slightly after the form is submitted
+                Array.from(form.elements).forEach(element => {
+                    element.disabled = false;
                 });
             }, 10);  // delay might need to be adjusted based on actual performance
         }

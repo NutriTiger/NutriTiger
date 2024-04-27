@@ -615,9 +615,9 @@ def personal_nutrition():
         return redirect('/welcome')
     if request.method == 'POST':
         data = request.get_json()
-        deletedFoods = data.get('deletedFoods')
-        this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFoods)
-        result = dbnutrition.del_many_personal_food(deletedFoods)
+        deletedFood = data.get('deletedFood')
+        this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFood)
+        result = dbnutrition.del_personal_food(deletedFood)
         print("inside /customfoods")
         print("this is result:")
         print(result)

@@ -75,6 +75,7 @@ def find_one_nutrition(recipeid):
 # Returns true if successful, false is unsuccessful
 def del_personal_food(recipeid):
     with connectmongo() as client:
+        print(recipeid)
         db = client.db
         nutrition_col = db.nutrition
         try:
@@ -82,14 +83,14 @@ def del_personal_food(recipeid):
 
             # Deletes image first
             document = nutrition_col.find_one(document_to_delete)
-            public_id = document['public_id']
-            response = photos.delete_one_photo(public_id)
-            if response.get('result') == 'ok':
-                print(f"Successfully deleted {response.get('public_id')}")
-            else:
-                print(f"Failed to delete {response.get('public_id')}. Reason: {response.get('result')}")
-                return False
-            
+            if 'public_id' in document:
+                public_id = document['public_id']
+                response = photos.delete_one_photo(public_id)
+                if response.get('result') == 'ok':
+                    print(f"Successfully deleted {response.get('public_id')}")
+                else:
+                    print(f"Failed to delete {response.get('public_id')}. Reason: {response.get('result')}")
+                    return False
             nutrition_col.delete_one(document_to_delete)
             return True
         except Exception as e:
