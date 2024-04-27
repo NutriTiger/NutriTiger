@@ -22,7 +22,7 @@
                                         <div class="col d-flex align-items-center">
                                             <h4 class="m-2"> Daily Calorie Goal:</h4>
                                             <form action="/settings" method="post" class="d-flex m-2">
-                                                <input id="settingsCalorieInput" type="number" class="form-control form-calgoal mr-2" name='line' placeholder="Enter the number here." min="1" max="100000" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
+                                                <input id="settingsCalorieInput" type="number" class="form-control form-calgoal mr-2" name='line' onpaste="return false;" placeholder="Enter the number here." min="1" max="100000" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
                                                 <button id="caloriesSettingsButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
                                             </form>
                                         </div>
