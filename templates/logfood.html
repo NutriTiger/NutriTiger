@@ -278,26 +278,28 @@
         const resultsContainer = document.getElementById("usda-search-results");
         resultsContainer.innerHTML = ""; // Clear previous results - base saving on plate info
 
-        if (data.foods && data.foods.length > 0) {
-            data.foods.forEach((food, index) => {
-                const calories = food.foodNutrients.find((n) => n.nutrientName === "Energy")?.value || 0;
-                const proteins = food.foodNutrients.find((n) => n.nutrientName === "Protein")?.value || 0;
-                const carbs = food.foodNutrients.find((n) => n.nutrientName === "Carbohydrate, by difference")?.value || 0;
-                const fats = food.foodNutrients.find((n) => n.nutrientName === "Total lipid (fat)")?.value || 0;
+        if (data && data.length > 0) {
+            data.forEach((food, index) => {
+                const calories = food.calories || 0;
+                const proteins = food.proteins || 0;
+                const carbs = food.carbs || 0;
+                const fats = food.fats || 0;
 
+                console.log("serving size:")
+                console.log(food.servingSize)
                 // Check if food portions are available and extract the first one
-                const servingSizeInfo = food.foodPortions && food.foodPortions.length > 0 ? food.foodPortions[0].portionDescription : "100g";
+                const servingSizeInfo = food.servingSize;
 
                 const foodElement = document.createElement("div");
                 foodElement.className = "form-check";
                 console.log(food.fdcIc);
                 foodElement.innerHTML = `
-                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.fdcId}" data-usda="true" data-recid="usda-${food.fdcId}"
-                    data-mealname="${food.description}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" data-usda="true" data-recid="${food.recipeid}"
+                    data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
                     data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
-                    onchange="handleCheckboxChange(this)">
-                <label class="form-check-label" for="usda-checkbox-${food.fdcId}">${food.description}</label>
-                <p id="nf-usda-${food.fdcId}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+                    onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
+                <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
+                <p id="nf-${food.recipeid}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
                 `;  
                 resultsContainer.appendChild(foodElement);
             });
@@ -514,7 +516,7 @@
         }, {
             title: 'Generic Food Selection',
             element: document.querySelector('#usda-search-results'),
-            intro: "Here are all the relevant results. Let's check off thing off again."
+            intro: "Here are all the relevant results. Let's check another thing off again."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
@@ -550,7 +552,7 @@
             
         }
         if (targetElement.id == 'usda-search-results') {
-            var checkbox = document.getElementById("usda-checkbox-2012128");
+            var checkbox = document.getElementById("usda-checkbox-usda-2012128");
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
@@ -561,7 +563,7 @@
         document.querySelector('.select-dropdown').value = 'Select Food Source';
         document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
         document.getElementById('close--tutorial-1').click();
-        document.getElementById('close-ckbox-2012128').click();
+        document.getElementById('close-ckbox-usda-2012128').click();
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";
         var usdaSearchResults = document.getElementById('usda-search-results');
@@ -569,6 +571,12 @@
        
     }).start();
 }
+    // Prevents users from copy and pasting in number of servings
+    function disableCopyPaste(event) {
+        event.preventDefault();
+        console.log("Copy and paste actions are disabled on this field.");
+    }
+
 
     // When the user submits the form and all fields are valid, lock it
     function closeForm(e) {

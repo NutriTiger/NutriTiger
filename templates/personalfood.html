@@ -11,7 +11,7 @@
 {% endwith %}
     <h1 class="text-center m-3">Add Custom Food</h1> 
     <div class="container">
-        <form action="/addcustomfood" method="post" enctype="multipart/form-data" >
+        <form id="customFoodForm" action="/addcustomfood" method="post" enctype="multipart/form-data" >
             <div class="col-12">
                 <div class="form-group">
                     <label for="inputImage" class="form-label">Upload Image</label>
@@ -26,19 +26,19 @@
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
-                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories" placeholder=0 value={{calories}}>
+                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories" placeholder=0 value={{calories}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputProtein">Protein (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" placeholder=0 value={{proteins}}>
+                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" placeholder=0 value={{proteins}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputCarbs">Carbohydrates (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs" placeholder=0 value={{carbs}}>
+                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs" placeholder=0 value={{carbs}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
-                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder=0 value={{fats}}>
+                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder=0 value={{fats}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
                 </div>
                 <div class="form-group">
                     <label for="inputServingSize">Serving size</label>
@@ -49,11 +49,55 @@
                     <textarea class="form-control autosize" id="inputDesc" maxlength = "180" name="description" oninput="autoResizeField(this)">{{desc}}</textarea>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary" onclick="validateNums(this);">Submit</button>
             </div>
         </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function disableCopyPaste(event) {
+            event.preventDefault();
+            console.log("Copy and paste actions are disabled on this field.");
+        }
+        function validateNums(item) {
+            const form = document.getElementById('customFoodForm');
+            const calories = parseInt(document.getElementById('inputCalories').value) || 0;
+            const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
+            const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
+            const fats = parseInt(document.getElementById('inputFats').value) || 0;
+
+            if ((4*proteins + 4*carbs + 9*fats) > calories) {
+                confirmSubmission(form);  // Show confirmation if numbers don't add up
+            } else {
+                form.submit();  // Submit if everything is okay
+            }
+        }
+        function confirmSubmission(form) {
+            Swal.fire({
+            title: "Are you sure?",
+            text: "Your macronutrient counts are not consistent with your calorie count. Want to take another look?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Proceed"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                disableForm(form);
+                form.submit();
+                Swal.fire({
+                title: "Hmmmm.... okay!",
+                text: "Your custom food has been created. You can always delete this entry later on!",
+                icon: "success"
+                });
+            }
+            });
+        }
+        // function enableForm(form) {
+        //     Array.from(form.elements).forEach(element => {
+        //             element.disabled = false;
+        //         });
+        // }
         function disableForm(form) {
             setTimeout(() => {
                 // Disable all input elements slightly after the form is submitted
@@ -98,9 +142,12 @@
                     }
                 });
             });
-            form.addEventListener('submit', function(event) {
-                disableForm(this);  // Disable the form elements
-            });
+            // form.addEventListener('submit', function(event) {
+            //     disableForm(this);  // Disable the form elements
+            //     validateNums(array);
+            //     confirmBox();
+            // });
+
         });
     </script>
 {% endblock %}
