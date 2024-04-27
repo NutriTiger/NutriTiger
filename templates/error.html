@@ -2,16 +2,22 @@
 {% set current_page = 'error' %}
 {% block title %}Error{% endblock %}
 {% block content %}
-    <div class="container-fluid h-100">
-        <div class="row justify-content-center align-items-center h-100">
-            <div class="col-md-8">
-                <h1 class="text-center">How Did You Land On This Page?</h1>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <div class="mx-auto" style="width: 70%; padding: 10px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+		<div class="container-fluid h-100">
+            <div class="row justify-content-center align-items-center h-100">
+                <div class="col-md-8">
+                    <h1 class="text-center">How Did You Land On This Page?</h1>
+                </div>
             </div>
         </div>
-    </div>
+    
+        <!--Include a link to a Google Form on "here"-->
+        <h4 class="text-center">
+            Report the issue you experienced <a href="https://forms.gle/DMg2sZUJPXNDfwqM6" target="_blank">here <i class="fa-solid fa-arrow-up-right-from-square"></i></a>.
+        </h4>
+	</div>
 
-    <!--Include a link to a Google Form on "here"-->
-    <p class="text-center">
-        Report the issue you experienced <strong>here</strong>.
-    </p>
 {% endblock %}

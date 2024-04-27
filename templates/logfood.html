@@ -623,7 +623,7 @@
         });
 
         $("#diningHallSelect").change(getResults); // Toggle search bar on selection change
-        $("#searchBar").on("input", debounce(searchUSDAFood, 500)); // Debounce the search input
+        $("#searchBar").on("input", debounce(searchUSDAFood, 1000)); // Debounce the search input
         const diningHallSelect = document.getElementById("diningHallSelect");
 
         // Event listener for the dropdown selection change

@@ -155,6 +155,19 @@
 {% endif %}
 
 <script>
+
+	// Get ampm function for time of day
+	function getAmPm() {
+		let hours = new Date().getHours();
+		if (hours < 12) {
+			return 'morning';
+		} else if (hours < 18) {
+			return 'afternoon';
+		} else {
+			return 'evening';
+		}
+	}
+	
 	function showHomepageCards() {
 		// Hide the placeholder message/buttons
 		document.getElementById("placeholder").style.display = "none";
