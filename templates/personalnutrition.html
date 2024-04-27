@@ -23,6 +23,9 @@
                 Edit Custom Foods
             </button>
         </div>
+        <div class="d-inline-block">
+            <a href="{{ url_for('personal_nutrition') }}" id="stop_editing" class="btn btn-primary"  style="display: none;">Stop Editing</a>
+        </div>
     </div>
     <br>
 {% if user_nutrition is not none %}
@@ -164,18 +167,10 @@ $(document).ready(function(){
     $('#edit_custom_foods').click(function() {
         console.log("edit clicked")
         $('#edit_custom_foods').css('display', 'none')
-        $('#save_edits').css('display', 'block')
+        $('#stop_editing').css('display', 'block')
         $('.btn-close').each(function() {
             $(this).css('display', 'block');
         });
-    });
-    $('#save_edits').click(function() {
-        $('#save_edits').css('display', 'none')
-        $('#edit_custom_foods').css('display', 'block')
-        $('.btn-close').each(function() {
-            $(this).css('display', 'none');
-        });
-        save_edits();
     });
     // Initialize Masonry after all images have loaded
     $('#masonry-grid').imagesLoaded(function(){
