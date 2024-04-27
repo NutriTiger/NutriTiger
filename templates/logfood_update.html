@@ -38,16 +38,13 @@
 
 
 <div class="card-body" id="personal-food-items" style="display: none;">
-    <script>console.log('Starting to process personal food items');</script>
     {% if personal_data %}
         {% set ns = namespace(c = 0) %}
         {% for item in personal_data %}
-            <script>console.log('{{ item.mealname }}');</script>
 
             <div class = "personal-items-content">
                 <div class="form-check">
                     {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
-                    <script>console.log('{{ checkbox_id }}');</script>
                     <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
                         data-usda="false"
                         data-recid="{{ item.recipeid }}" data-location="Personal Food" data-mealtime="N/A"
@@ -62,8 +59,6 @@
                     <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ item.mealname }}</label>
                     <p id="nf-{{ checkbox_id }}">Serving Size: {{ item.servingsize }} Calories: {{ item.calories }} Proteins: {{ item.proteins }}g Carbs: {{ item.carbs }}g Fats: {{ item.fats }}g</p>
                 </div>
-                <script>console.log('{{ item.carbs }}');</script>
-                <script>console.log('{{ item.fats }}');</script>
 
             </div>
             {% set ns.c = ns.c + 1 %}

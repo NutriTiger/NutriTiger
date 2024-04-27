@@ -95,12 +95,10 @@
         let servingsChanged = {};
 
         function appendEntrytoDelete(entryIndex) {
-            console.log("entry " + entryIndex + " will be deleted")
             deletedEntries.push(entryIndex);
         }
 
         function appendFoodtoDelete(entryIndex, foodIndex) {
-            console.log("will delete food " + foodIndex + " from entry " + entryIndex);
             // Find the entry in the deletedFoods array
             let entryFound = false;
             for (let entry of deletedFoods) {
@@ -151,10 +149,8 @@
         }
 
         function debouncedHandleInput() {
-            console.log("in debounce")
             let debounceTimer;
             return function(input) {
-                console.log("in inner function")
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => handleServingChange(input), 500); // Adjust the delay as needed
             };
@@ -166,7 +162,6 @@
             customCheckValidity(input)
             let serving = parseFloat(input.value);
             let entry_food_num = input.dataset.entrynum + "-" + input.dataset.foodnum
-            console.log(entry_food_num, serving)
             servingsChanged[entry_food_num] = serving
         };
 
@@ -184,12 +179,9 @@
             foodCloseButtons.forEach(function(button) {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    console.log("delete food button clicked");
 
                     var foodnum = button.dataset.foodnum;
                     var entrynum = button.dataset.entrynum;
-
-                    console.log("foodnum is ", foodnum);
 
                     // append 0-indexed indices for deleted food
                     appendFoodtoDelete(parseInt(entrynum), parseInt(foodnum));
@@ -202,12 +194,11 @@
             entryCloseButtons.forEach(function(button) {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    console.log("Del entry button clicked");
 
                     var entrynum = button.dataset.entrynum
                     var entryId = "entry-" + entrynum
+
                     // append to list and hide from view
-                    console.log("Printing entryid", entryId)
                     appendEntrytoDelete(parseInt(entrynum));
                     hideEntry(entryId); 
                 });
@@ -218,16 +209,15 @@
             let isValid = true;
             inputValue = parseFloat(input.value)
             // Check if the input is empty
-            console.log("checking input")
             if (!input.value || input.value==0) {
-                input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
+                input.setCustomValidity("Please fill out a non-zero serving size."); 
                 isValid = false;
             }
             else if (inputValue > 100) {
-                input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
+                input.setCustomValidity("Serving size must be less than or equal to 100."); 
                 isValid = false;
             } else {
-                input.setCustomValidity(""); // Clear any previous custom validity messages
+                input.setCustomValidity("");
             }
             input.reportValidity();
             return isValid;
@@ -247,11 +237,9 @@
         // once submit button is clicked, send everything to be deleted as an AJAX call
         document.getElementById('savePlate').addEventListener('click', function(event) {
             event.preventDefault();
-	        console.log("save plate button clicked");
             if (!validateInputs()) {
                 return
             }
-            console.log(deletedEntries)
             var dataToSend = {
                 entriesToDelete: deletedEntries,
                 foodsToDelete: deletedFoods,
@@ -265,7 +253,6 @@
                 contentType: "application/json",
                 data: jsonData,
                 success: function (response) {
-                    console.log("Data sent successfully:", response);
                     // Check if the server response includes the redirect URL
                     if (response.success && response.redirect) {
                         // Hide the loading animation before redirection

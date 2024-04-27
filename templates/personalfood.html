@@ -60,10 +60,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function disableCopyPaste(event) {
-            event.preventDefault();
-            console.log("Copy and paste actions are disabled on this field.");
-        }
+        
         function validateNums(event) {
             const form = document.getElementById('customFoodForm');
             const calories = parseInt(document.getElementById('inputCalories').value) || 0;
