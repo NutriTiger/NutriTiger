@@ -118,7 +118,7 @@ def parse_nutritional_info(api_response):
             nutrient_name = nutrient.get("nutrientName")
             if nutrient_name in nutrients_map:
                 # Map the nutrient value to the corresponding key in food_info
-                food_info[nutrients_map[nutrient_name]] = nutrient.get("value")
+                food_info[nutrients_map[nutrient_name]] = round(nutrient.get("value"))
         
         # Append the parsed food item to the list
         foods.append(food_info)
