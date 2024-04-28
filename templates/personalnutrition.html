@@ -23,8 +23,10 @@
                 Edit Custom Foods
             </button>
         </div>
-        <div class="d-inline-block">
-            <a href="{{ url_for('personal_nutrition') }}" id="stop_editing" class="btn btn-primary"  style="display: none;">Stop Editing</a>
+        <div class="d-inline-block p-2">
+            <button type="submit" id="stop_editing" class="btn btn-primary" style="display: none;">
+                Stop Editing
+            </button>
         </div>
     </div>
     <br>
@@ -36,7 +38,7 @@
         <div class="card h-100" id="{{ loop.index }}">
             <div class="deleted-overlay">Deleted</div>
             <div class="card-body">
-                <div class="header-container"> <!-- Utilizing flex layout -->
+                <div class="header-container">
                     <h5 class="card-title text-center"></h5><b>{{ item['mealname'] }}</b></h5>
                     <button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm" aria-label="Close" style="display: none;"
                             onclick="confirmDelete(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
@@ -87,7 +89,7 @@ function confirmDelete(item) {
     });
     swalWithBootstrapButtons.fire({
     title: "Are you sure?",
-    text: "You won't be able to revert this!",
+    text: "If you've logged this food today, it will also be deleted from any entries it is part of. You won't be able to revert this!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Yes, delete it!",
@@ -95,12 +97,16 @@ function confirmDelete(item) {
     reverseButtons: true
     }).then((result) => {
     if (result.isConfirmed) {
-        deleteCustomFood(item);
-        swalWithBootstrapButtons.fire({
-        title: "Deleted!",
-        text: "Your custom food has been deleted.",
-        icon: "success"
+        Swal.fire({
+            title: 'Deleting...',
+            html: 'Please wait while we are deleting your custom food.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
         });
+        deleteCustomFood(item);
     } else if (
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
@@ -127,14 +133,6 @@ function deleteCustomFood(item) {
     overlay.style.display = 'flex'; 
     handleDelete(recid)
 }
-function showLoadingAnimation() {
-    // Show the loading animation covering the entire screen
-    $("#loading-animation").show();
-}
-function hideLoadingAnimation() {
-    // Show the loading animation covering the entire screen
-    $("#loading-animation").hide();
-}
 function handleDelete(recid) {
     var dataToSend = {
         deletedFood: recid
@@ -147,15 +145,18 @@ function handleDelete(recid) {
         contentType: "application/json",
         data: jsonData,
         success: function (response) {
-            console.log("Data sent successfully:", response);
-            // Check if the server response includes the redirect URL
             if (response.success && response.redirect) {
-                // Hide the loading animation before redirection
+                Swal.close();
                 window.location.href = response.redirect;
-                // Delay the redirection slightly to ensure the loading animation is hidden
             }
         },
         error: function (xhr, status, error) {
+            Swal.close();
+            swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: "There was a problem deleting your custom food. Please try again later.",
+                icon: "error"
+            });
             console.error("Error in data submission:", xhr.status, xhr.responseText);
         },
     });
@@ -167,6 +168,13 @@ $(document).ready(function(){
         $('#stop_editing').css('display', 'block')
         $('.btn-close').each(function() {
             $(this).css('display', 'block');
+        });
+    });
+    $('#stop_editing').click(function() {
+        $('#stop_editing').css('display', 'none')
+        $('#edit_custom_foods').css('display', 'block')
+        $('.btn-close').each(function() {
+            $(this).css('display', 'none');
         });
     });
     // Initialize Masonry after all images have loaded
