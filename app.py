@@ -179,6 +179,9 @@ def homepage():
         if 'add_entry' in request.form:
             return redirect('/logfood')
         
+        if 'historyBtn' in request.form:
+            return redirect('/history')
+        
         return redirect('/editingplate')
 
     return render_template('homepage.html', 

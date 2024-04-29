@@ -6,7 +6,10 @@
 <nav class="nt-color-navbar navbar fixed-top" id = "navbar">
 	{% include 'menu.html' %}
 	<div class="nt-navbar-center order-0 justify-content-center">
-		<a class="navbar-brand" href="/homepage">NutriTiger</a>
+		<a class="navbar-brand" href="/homepage">
+			<img src="{{ url_for('static', filename='media/favicon.ico') }}" alt="NutriTiger Logo" class="logo" style="width: 30px; height: auto;">
+			NutriTiger
+		</a>
 	</div>
 	<div class="order-3 d-none d-md-block">
 		<a class="navbar-brand" href="{{ url_for('homepage')}}">Homepage</a>
