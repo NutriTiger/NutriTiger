@@ -133,7 +133,7 @@
             <div class="container p-5">
                 <h5>Done adding food to your plate?</h5>
                 
-                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate" onclick="closeForm(event)">Upload Plate and Return</button>
+                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
                 
             </div>
         </form>
@@ -628,6 +628,9 @@
                 event.preventDefault()
                 return false;
             }
+
+            // gray out and disable submit button
+            closeForm(event);
 
             var recids = [];
             var servings = [];
