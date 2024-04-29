@@ -450,9 +450,17 @@
         return isValid;
     }
 
-    function validateInputs() {
+    function validateInputs(event) {
         const inputs = document.querySelectorAll(".small-input");
         valid = true;
+
+        // Check if there are 0 food items selected
+        if (inputs.length == 0) {
+            alert('Please add foods to your plate before submitting.')
+            event.preventDefault()
+            return false;
+        }
+
         inputs.forEach((input) => {
             if (!customCheckValidity(input)) {
                 valid=false
@@ -616,8 +624,9 @@
             addUSDANutritionData();
 
             // validation
-            if (!validateInputs()) {
-                return
+            if (!validateInputs(event)) {
+                event.preventDefault()
+                return false;
             }
 
             var recids = [];
