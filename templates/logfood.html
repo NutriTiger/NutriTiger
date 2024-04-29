@@ -627,32 +627,33 @@
                 recids.push(recid);
                 servings.push(serving);
             });
+            if (recids.length > 0) {
+                var dataToSend = {
+                    entry_recids: recids,
+                    entry_servings: servings,
+                    entry_nutrition: entry_nutrition,
+                };
+                var jsonData = JSON.stringify(dataToSend);
+                showLoadingAnimation();
+                $.ajax({
+                    type: "POST",
+                    url: "/logfood",
+                    contentType: "application/json",
+                    data: jsonData,
+                    success: function (response) {
+                        // Check if the server response includes the redirect URL
+                        if (response.success && response.redirect) {
+                            // Hide the loading animation before redirection
 
-            var dataToSend = {
-                entry_recids: recids,
-                entry_servings: servings,
-                entry_nutrition: entry_nutrition,
-            };
-            var jsonData = JSON.stringify(dataToSend);
-            showLoadingAnimation();
-            $.ajax({
-                type: "POST",
-                url: "/logfood",
-                contentType: "application/json",
-                data: jsonData,
-                success: function (response) {
-                    // Check if the server response includes the redirect URL
-                    if (response.success && response.redirect) {
-                        // Hide the loading animation before redirection
-
-                        window.location.href = response.redirect;
-                        // Delay the redirection slightly to ensure the loading animation is hidden
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error in data submission:", xhr.status, xhr.responseText);
-                },
-            });
+                            window.location.href = response.redirect;
+                            // Delay the redirection slightly to ensure the loading animation is hidden
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error in data submission:", xhr.status, xhr.responseText);
+                    },
+                });
+            }
         });
     }
 

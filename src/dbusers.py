@@ -247,7 +247,7 @@ Returns the updated user profile
 Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th indexed)
 '''
 def deleteManyEntry(this_user, array_of_entry_nums):
-    sorted_entry_nums = sorted(array_of_entry_nums)
+    sorted_entry_nums = sorted(array_of_entry_nums, reverse = True)
 
     totalNut = {"calories": 0, 
                 "carbs": 0, 
