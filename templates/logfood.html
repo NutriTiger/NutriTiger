@@ -151,9 +151,6 @@
 
     // function to insert food-items into myplate from ajax call
     function handleMyPlate(data) {
-        console.log("inside handlemyplate")
-        console.log(data);
-        console.log(data.recid)
         $("#my-plate").append(data);
         hideLoadingAnimation();
         handleServingChange();
@@ -236,7 +233,6 @@
             if (myplatebox) {
                 myplatebox.remove();
             }
-            console.log("unchecked");
         }
         handleServingChange();
     }
@@ -249,7 +245,6 @@
 
     // function to insert food-items into the menu container
     function handleResponse(data) {
-        console.log(data);
         $("#menu-items").html(data);
         hideLoadingAnimation();
     }
@@ -257,8 +252,6 @@
     // Function to handle USDA data search
     function searchUSDAFood() {
         const query = $("#searchBar").val().trim();
-        console.log("within search");
-        console.log(query);
         // resultsContainer.children().hide(); // hide results if query is empty
         showLoadingAnimation();
         if (query != "") {
@@ -285,8 +278,6 @@
                 const carbs = food.carbs || 0;
                 const fats = food.fats || 0;
 
-                console.log("serving size:")
-                console.log(food.servingSize)
                 // Check if food portions are available and extract the first one
                 const servingSizeInfo = food.servingSize;
 
@@ -326,7 +317,6 @@
                     source: "usda",
                 };
                 nutritionData.push(foodData);
-                console.log("usda-"+input.dataset.recid)
             }
         });
 
@@ -371,7 +361,6 @@
         $("#select").hide();
         $("#noDataMessage").hide();
         let selectedHall = $("#diningHallSelect").val();
-        console.log(selectedHall);
 
         if (selectedHall === "Personal Food Items") {
             console.log("selected hall is personal")
@@ -447,7 +436,6 @@
         let isValid = true;
         inputValue = parseFloat(input.value)
         // Check if the input is empty
-        console.log("checking input")
         if (!input.value || input.value==0) {
             input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
             isValid = false;
@@ -557,7 +545,6 @@
             handleCheckboxChange(checkbox);
         }
     }).onexit(function() {
-        console.log('tour completed');
         var navbar = document.getElementById("navbar");
         navbar.style.zIndex = "1030";
         document.querySelector('.select-dropdown').value = 'Select Food Source';
@@ -571,12 +558,6 @@
        
     }).start();
 }
-    // Prevents users from copy and pasting in number of servings
-    function disableCopyPaste(event) {
-        event.preventDefault();
-        console.log("Copy and paste actions are disabled on this field.");
-    }
-
 
     // When the user submits the form and all fields are valid, lock it
     function closeForm(e) {
@@ -618,7 +599,6 @@
         hideLoadingAnimation();
 
         document.getElementById("startTutorial").addEventListener("click", function () {
-			console.log("here.");
             startTutorial();
         });
 
@@ -634,7 +614,6 @@
         document.getElementById("submitButton").addEventListener("click", function (event) {
             event.preventDefault();
             addUSDANutritionData();
-            console.log("submit");
 
             // validation
             if (!validateInputs()) {
@@ -664,7 +643,6 @@
                 contentType: "application/json",
                 data: jsonData,
                 success: function (response) {
-                    console.log("Data sent successfully:", response);
                     // Check if the server response includes the redirect URL
                     if (response.success && response.redirect) {
                         // Hide the loading animation before redirection

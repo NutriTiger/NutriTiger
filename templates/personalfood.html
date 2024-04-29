@@ -51,7 +51,7 @@
                 <div class="form-row mt-3">
                     <div class="col d-flex justify-content-end">
                         <!-- Add a margin to the right of the Cancel button -->
-                        <button type="button" class="btn btn-secondary me-2" onclick="location.href='/personalnutrition'">Cancel</button>
+                        <button type="button" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
                         <button type="submit" class="btn btn-primary" onclick="disableForm(event)">Submit</button>
                     </div>
                 </div>
@@ -60,10 +60,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function disableCopyPaste(event) {
-            event.preventDefault();
-            console.log("Copy and paste actions are disabled on this field.");
-        }
+        
         function validateNums(event) {
             const form = document.getElementById('customFoodForm');
             const calories = parseInt(document.getElementById('inputCalories').value) || 0;

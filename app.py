@@ -162,7 +162,6 @@ def homepage():
         servings = []
         for serv in entry_servings:
             servings.append(serv)
-            print(serv)
        
         servs_lists.append(servings)
 
@@ -206,14 +205,11 @@ def dhall_menus():
     netid = auth.authenticate()
     # Fetch menu data from database
     current_date = datetime.datetime.now(timezone('US/Eastern'))
-    #current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
-    # print(current_date.now(timezone('US/Eastern')))
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
     is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
     
    
     todays_date = utils.custom_strftime(current_date)
-    #print(todays_date)
 
     return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
 
@@ -240,10 +236,6 @@ def update_menus_mealtime():
     
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
-
-    #print(nutrition_info)
-
-    #print(todays_date)
 
     return render_template('dhallmenus_update.html', todays_date=todays_date, data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
@@ -294,7 +286,6 @@ def history():
         data = request.get_json()
         selected_range = int(data.get("selectedRange"))
         his_range = selected_range
-        print("his_range:", his_range)
         cal_his = cals[:his_range]
         carb_his = carbs[:his_range]
         fat_his = fats[:his_range]
@@ -310,7 +301,6 @@ def history():
         carb_his.reverse()
         prot_his.reverse()
         fat_his.reverse()
-        print(dates)
 
         html_code = render_template('history_content.html', 
                                 avg_cals=round(avg_cals, 2), 
@@ -342,7 +332,6 @@ def history():
         carb_his.reverse()
         prot_his.reverse()
         fat_his.reverse()
-        print(dates)
 
         return render_template('history.html', 
                                 avg_cals=round(avg_cals, 2), 
@@ -400,9 +389,7 @@ def settings():
     user_settings = dbusers.findsettings(netid)
     current_cal_goal = user_settings['caloricgoal']
     join_date = utils.custom_strftime(user_settings['join_date'])
-    user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
-    #print(user_nutrition)
-    
+    user_nutrition = dbnutrition.find_all_personal_nutrition(netid)    
 
     return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date, user_nutrition=user_nutrition)
 
@@ -416,10 +403,8 @@ def add_usda_nutrition():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            print("Received data:", data)
 
             new_data = data.get("nutritionData")
-            print("new data:", new_data)
             
             if not new_data:
                 return jsonify({'error': 'No data provided'}), 400
@@ -459,10 +444,7 @@ def editing_plate():
         entriesToDel = data.get("entriesToDelete", [])
         foodsToDel = data.get("foodsToDelete", [])
         servingsToChange = data.get("servingsToChange", {})
-        print(servingsToChange)
         # delete entries/foods from user DB
-        print(netid, entriesToDel, foodsToDel, servingsToChange)
-        print(dbusers.editPlateAll(netid, entriesToDel, foodsToDel, servingsToChange))
         return jsonify({"success": True, "redirect": url_for('homepage')})
 
 #--------------------------------------------------------------------
@@ -481,11 +463,9 @@ def log_food():
     if request.method == 'POST':
         # retrieve json object
         data = request.get_json()
-        print(data)
         if not data or 'entry_recids' not in data or 'entry_servings' not in data:
             return jsonify({"success": False, "message": "Missing data"}), 400
         entry_recids = data.get('entry_recids')
-        print(entry_recids)
         entry_servings = data.get('entry_servings')
         entry_nutrition = data.get('entry_nutrition')
         dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings, "nutrition": entry_nutrition})
@@ -495,13 +475,10 @@ def log_food():
         is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
     
         data = dbmenus.query_menu_display(current_date_zeros)
-        # print(data)
         recipeids = utils.gather_recipes(data)
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
     
         personal_data = dbnutrition.find_all_personal_nutrition(netid)
-        print(personal_data)
-        print("about to render template for logfood")
 
         return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, personal_data = personal_data)
 
@@ -520,7 +497,6 @@ def log_food_myplate():
     fats = request.args.get('fats', type = float)
     usda = request.args.get('usda', type = str)
     uniqueid = checkid[8:]
-    print(mealname, cals, prots, carbs, fats)
     if mealtime == "N/A":
         details = location
     else:
@@ -537,7 +513,6 @@ def log_food_data():
     netid = auth.authenticate()
 
     current_date = datetime.datetime.now(timezone('US/Eastern'))
-    print(current_date)
     current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
     is_weekend_var = utils.is_weekend(current_date.date())
 
@@ -564,7 +539,6 @@ def logfood_usdadata():
         response = requests.get(url)
         response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
         data = response.json()  # Convert response to JSON
-        # print("API response:", json.dumps(data, indent=4))  # Log the full API response to understand its structure
 
         # Packs everything correctly
         parsed_data = utils.parse_nutritional_info(data)
@@ -572,39 +546,7 @@ def logfood_usdadata():
         return jsonify(parsed_data)
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
-'''
-@app.route('/logfood/data', methods=['GET'])
-def log_food_data():
-    dhall = request.args.get('dhall', type = str)
-    mealtime = request.args.get('mealtime', type = str)
-    print("we are inside logfood/data")
-    print(f"dhall: {dhall}, mealtime: {mealtime}")
 
-    # query menu documents
-    current_date = datetime.datetime.today()
-    current_date_zeros = datetime.datetime(current_date.year, current_date.month, current_date.day)
-    menu = dbmenus.query_menu_display(current_date_zeros, mealtime, dhall)
-
-    print(menu)
-    if not menu:
-        # return jsonify({"error": "No data found"}), 404
-        data_found=False
-        nut={}
-    else:
-        data_found=True
-        result = menu[0]
-        recids = []
-        # Extend the food_items list with the keys from each dictionary
-        for category in result['data'].values():
-            for recid in category.values():
-                recids.append(recid)
-        nut = dbnutrition.find_many_nutrition(recids)
-        print("FOOD ITEMS")
-        print(nut)
-
-    html_code = render_template('logfood_items.html', data_found=data_found, foods=nut)
-    return make_response(html_code)
-'''
 #--------------------------------------------------------------------
 
 @app.route('/customfoods', methods=['GET', 'POST'])
@@ -618,14 +560,9 @@ def personal_nutrition():
         deletedFood = data.get('deletedFood')
         this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFood)
         result = dbnutrition.del_personal_food(deletedFood)
-        print("inside /customfoods")
-        print("this is result:")
-        print(result)
         if result:
-            print("successful deletion of personal foods")
             return jsonify({"success": True, "redirect": url_for('personal_nutrition')})
         # ERROR PAGE HERE IF SOMETHING GOES WRONG
-        print("supposed to reset")
         flash("Failed to delete custom food item(s).")
         return redirect(url_for('personal_nutrition'))
 
