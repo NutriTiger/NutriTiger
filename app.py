@@ -539,8 +539,8 @@ def personal_nutrition():
         result = dbnutrition.del_personal_food(deletedFood)
         if result:
             return jsonify({"success": True, "redirect": url_for('personal_nutrition')})
-        # ERROR PAGE HERE IF SOMETHING GOES WRONG
-        flash("Failed to delete custom food item(s).")
+        # IF THERE IS AN ERROR WITH THE DELETION: let's see if any issues come up
+        # flash("Failed to delete custom food item(s).")
         return redirect(url_for('personal_nutrition'))
 
     else:
