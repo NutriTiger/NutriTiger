@@ -59,29 +59,6 @@ def display_error():
 '''
 #--------------------------------------------------------------------
 
-# Code used from PennyFlaskJinja/penny.py from Lecture 10
-def get_ampm():
-    current_hr = int(time.strftime('%I'))
-    am_pm = time.strftime('%p')
-
-    if am_pm == "AM":
-        return 'morning'
-    elif am_pm == "PM" and current_hr < 6:
-        return 'afternoon'
-    return 'evening'
-
-#--------------------------------------------------------------------
-
-def get_date():
-
-    eastern = pytz.timezone('US/Eastern')
-    today = datetime.datetime.now(eastern)
-
-    formatted_date = today.strftime("%A, %B %d")
-    return formatted_date
-
-#--------------------------------------------------------------------
-
 @app.route('/', methods=['GET'])
 def index():
     #netid = auth.authenticate()
@@ -106,9 +83,6 @@ def homepage():
     cursor = dbusers.userlogin(netid)
     if cursor is None:
         return redirect('/welcome')
-    
-    date = get_date()
-
     
     curr_prots = round(float(cursor['prot_his'][0]), 1)
     curr_carbs = round(float(cursor['carb_his'][0]), 1)
@@ -185,8 +159,7 @@ def homepage():
         return redirect('/editingplate')
 
     return render_template('homepage.html', 
-                            ampm=get_ampm(), 
-                            netid=netid, date=date,
+                            netid=netid,
                             prots=curr_prots,
                             carbs=curr_carbs,
                             fats=curr_fats,
@@ -439,7 +412,7 @@ def editing_plate():
         for entrynum, recids in enumerate(daily_rec):
             nutrition_info = dbnutrition.find_many_nutrition(recids)
             entry_info[entrynum] = zip(nutrition_info, daily_serv[entrynum])
-        return render_template('editingplate.html', ampm=get_ampm(), netid=netid,
+        return render_template('editingplate.html',
                            entry_info = entry_info)
     else:
         # Unpack AJAX call 
