@@ -281,13 +281,14 @@ body {
     color: #000000; 
 }
 
-.select-dropdown-orange:focus,
-.select-dropdown-orange:active {
-    background-color: #ffaf63; /* Set the same background color as normal state */
-    border-color: #ffaf63; /* Set the same border color as normal state */
-    color: #000000; /* Set the same text color as normal state */
-    box-shadow: none; /* Remove any box shadow applied */
-    outline: none; /* Remove the outline when button is focused */
+.select-dropdown:focus,
+.select-dropdown:hover,
+.select-dropdown:active {
+    background-color: #ffaf63 !important;
+    border-color: #ffaf63  !important;
+    color: #000000  !important;
+    box-shadow: none; 
+    outline: none; 
 }
 
 /* for individual food item nutrition facts ***********************/
