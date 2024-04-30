@@ -47,7 +47,7 @@ cloudinary.config(
 )
 
 # Takes the user to a general error page if an error occurs
-
+'''
 @app.errorhandler(Exception)
 def not_found(e):
   return redirect("/error")
@@ -56,7 +56,7 @@ def not_found(e):
 def display_error():
     netid = auth.authenticate()
     return render_template("error.html")
-
+'''
 #--------------------------------------------------------------------
 
 # Code used from PennyFlaskJinja/penny.py from Lecture 10
@@ -718,7 +718,11 @@ def add_personalfood():
     
 #--------------------------------------------------------------------
 
-@app.route('/logout', methods=['GET'])
+@app.route('/logoutapp', methods=['GET'])
+def logoutapp():
+    return auth.logoutapp()
+
+@app.route('/logoutcas', methods=['GET'])
 def logoutcas():
     return auth.logoutcas()
 
