@@ -14,8 +14,8 @@
 <div id="placeholder" class="text-center mx-auto" style="display:none;">
 	<div class="mx-auto" style="padding: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
 		<div class="m-3 p-3">
-			<h1>Good <span id="greetingTime"></span>, {{netid}}. </h1>
-			<h1 class="pt-3">Today is <span id='greetingDate'></span>th.</h1>
+			<h1>Good <span id="PgreetingTime"></span>, {{netid}}. </h1>
+			<h1 class="pt-3">Today is <span id='PgreetingDate'></span>th.</h1>
 		</div>
 
 		<h3>Looks like you haven't logged any food for today yet.</h3>
@@ -214,6 +214,8 @@
 		// Get the greeting and date message strings and display
 		document.getElementById('greetingTime').innerHTML = getAmPm();
 		document.getElementById('greetingDate').innerHTML = getDate();
+		document.getElementById('PgreetingTime').innerHTML = getAmPm();
+		document.getElementById('PgreetingDate').innerHTML = getDate();
 
 		// if there are no entries, show the placeholder
 		if (document.getElementsByClassName("entryCard").length == 0) {
