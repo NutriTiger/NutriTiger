@@ -28,7 +28,7 @@
     <p class="px-5">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-1-circle" viewBox="0 0 16 16">
             <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z"/>
-          </svg> <strong>Choose</strong> a dining hall from the drop down below. <br>
+          </svg> <strong>Choose</strong> a food source from the 3 buttons below. <br>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-2-circle" viewBox="0 0 16 16">
             <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.646 6.24v.07H5.375v-.064c0-1.213.879-2.402 2.637-2.402 1.582 0 2.613.949 2.613 2.215 0 1.002-.6 1.667-1.287 2.43l-.096.107-1.974 2.22v.077h3.498V12H5.422v-.832l2.97-3.293c.434-.475.903-1.008.903-1.705 0-.744-.557-1.236-1.313-1.236-.843 0-1.336.615-1.336 1.306"/>
           </svg> <strong>Select</strong> your dish(es). <br>
@@ -53,21 +53,34 @@
         <div class="col-md-12 col-lg-6 p-3">
             <!--Putting entire food selection menu in one background card-->
             <div class="logfood-card card">
-                <div class="col-md-8 p-3">
+
+                <!--Radio buttons-->
+                <div class="p-3">
+                    <div class="container justify-content-center" style="display: flex; flex-direction: row; align-items: center;">
+                        <label class="radio-inline pl-2" style="margin-right: 20px;">
+                            <input type="radio" name="foodSource" id="radio-dhall" checked>Dining Halls  
+                        </label>
+                        <label class="radio-inline pl-2" style="margin-right: 20px;">
+                            <input type="radio" name="foodSource" id="radio-custom">My Custom Foods  
+                        </label>
+                        <label class="radio-inline pl-2" style="margin-right: 20px;">
+                            <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
+                        </label>
+                    </div>
+                </div>              
+
+                <div id="foodsource-dropdown" class="col-md-8 p-3">
                     <select class="select-dropdown btn btn-secondary dropdown-toggle form-select custom-dropdown" id="diningHallSelect" aria-label="select_dhall" style="display: block;">
-                        <option value="Select Food Source" selected>Select Food Source</option>
+                        <option value="Select Food Source" selected>Select Dining Hall</option>
                         <option value="Center for Jewish Life">Center for Jewish Life</option>
                         <option value="Forbes College">Forbes College</option>
                         <option value="Graduate College">Graduate College</option>
                         <option value="Yeh & New West Colleges">Yeh & New West Colleges</option>
                         <option value="Rockefeller & Mathey Colleges">Rockefeller & Mathey Colleges</option>
                         <option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
-                        <option value="Personal Food Items">My Custom Foods</option>
-                        <option value="USDA FoodData Central">Search for other foods</option>
-                        <option hidden value="Example Dining Hall">Example Dining Hall</option>
-
                     </select>
                 </div>
+
                 <span class="col-10 col-sm-6 p-3" id = "searchBarSpan"  style="display: none;">
                     <input id="searchBar" type="text" class="form-control" placeholder='ex. "Green Apple..."' />
                 </span>
@@ -348,32 +361,6 @@
         $("#noDataMessage").hide();
         let selectedHall = $("#diningHallSelect").val();
 
-        if (selectedHall === "Personal Food Items") {
-            console.log("selected hall is personal")
-            $("#searchBarSpan").hide();
-            $("#mealTimeTab").hide();
-            $("#usda-search-results").hide();
-            $("#personal-food-items").show();
-            $("#tutorial-food-items").hide();
-            $("#menu-items").hide();
-
-        } else if (selectedHall === "USDA FoodData Central") {
-            $("#mealTimeTab").hide();
-            $("#searchBarSpan").show();
-            $("#usda-search-results").show();
-            $("#personal-food-items").hide();
-            $("#tutorial-food-items").hide();
-            $("#menu-items").hide();
-
-        } 
-        else if (selectedHall === "Example Dining Hall") {
-            $("#usda-search-results").hide();
-            $("#personal-food-items").hide();
-            $("#tutorial-food-items").show();
-            $("#menu-items").hide();
-
-        } 
-        else {
             $("#searchBarSpan").hide();
             $("#usda-search-results").hide();
             $("#personal-food-items").hide();
@@ -391,7 +378,6 @@
             else {
                 $("#noDataMessage").show();
             }
-        }
     }
 
     function handleServingChange() {
@@ -572,6 +558,43 @@
         }
     }
 
+    // Radio button updates
+    function updateCardVisibility(radioBtnId) {
+
+        if (radioBtnId === 'radio-dhall') {
+            $("#usda-search-results").hide();
+            $("#personal-food-items").hide();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+            $("#mealTimeTab").show();
+            $("#foodsource-dropdown").show();
+            $("#searchBarSpan").hide();
+            $("#usda-search-results").hide();
+
+
+        } else if (radioBtnId === 'radio-custom') {
+            $("#searchBarSpan").hide();
+            $("#mealTimeTab").hide();
+            $("#usda-search-results").hide();
+            $("#personal-food-items").show();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+            $("#foodsource-dropdown").hide();
+
+
+        } else if (radioBtnId === 'radio-usda') {
+            $("#mealTimeTab").hide();
+            $("#searchBarSpan").show();
+            $("#usda-search-results").show();
+            $("#personal-food-items").hide();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+            $("#foodsource-dropdown").hide();
+        }
+    
+    }
+
+
     // If the user hits the back button reset the form
     window.onunload = function() {
         hideLoadingAnimation();
@@ -595,6 +618,14 @@
         document.getElementById("startTutorial").addEventListener("click", function () {
             startTutorial();
         });
+
+        // Event listeners for the radio buttons
+        document.querySelectorAll('input[name="foodSource"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                updateCardVisibility(this.id); // Call updateCard function passing the id of the selected radio button
+            });
+        });
+
 
         $("#diningHallSelect").change(getResults); // Toggle search bar on selection change
         $("#searchBar").on("input", debounce(searchUSDAFood, 1000)); // Debounce the search input
