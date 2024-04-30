@@ -572,7 +572,7 @@ def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, se
         'proteins': protein,
         'fats': fats,
         'servingsize': servingsize,
-        'description': desc,
+        'desc': desc,
     }
     return redirect(url_for('personal_food'))
 
@@ -603,7 +603,9 @@ def check_upload (file):
 def add_personalfood():
     netid = auth.authenticate()
 
-    recipename = request.form.get('name', type = str)
+    temp_name = request.form.get('name', type = str)
+    recipename = utils.normalize_space(temp_name)
+    query_name = recipename.lower()
     cal = request.form.get('calories', type = int)
     protein = request.form.get('proteins', type = int)
     carbs = request.form.get('carbs', type = int)
@@ -626,14 +628,8 @@ def add_personalfood():
     fats = fats or 0
     cal = cal or 0
 
-    # Validation - ensure macronutrition + calories make sense --> THIS IS NOW DONE CLIENT SIDE
-    # adds_up = utils.check_nutrition_info(cal, protein, carbs, fats) 
-    # if not adds_up:
-    #     message = "The macronutrient counts do not total correctly to your inputted calorie acount. Please enter valid nutrition information."
-    #     return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
-
     # Validation - no repeat recipe names
-    result = dbnutrition.find_one_personal_nutrition(netid, recipename)
+    result = dbnutrition.find_one_personal_nutrition(netid, query_name)
     if result:
         message = "A personal food item with this name already exists, please put a new name!"
         return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
@@ -646,6 +642,7 @@ def add_personalfood():
                     "fats": fats,
                     "servingsize": servingsize,
                     "description": desc,
+                    "check": query_name
                     }
     # If there is a file, upload image
     if file:

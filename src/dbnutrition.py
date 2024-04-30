@@ -241,12 +241,12 @@ def find_all_personal_nutrition(netid):
             sys.exit(1)
 
 # Find one personal nutrition info with user's netid and recipeid
-def find_one_personal_nutrition(netid, mealname):
+def find_one_personal_nutrition(netid, lowercase_name):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
 
-        documents_to_find = {"access": netid, "mealname": mealname}
+        documents_to_find = {"access": netid, "check": lowercase_name}
         try:
             result = nutrition_col.find_one(documents_to_find)
             print(f"found documents: {result}")

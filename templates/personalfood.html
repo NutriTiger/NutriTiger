@@ -26,19 +26,19 @@
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
-                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories" placeholder=0 value={{calories}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
+                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories" placeholder=0 value={{calories}} oncopy=false onpaste=false oncut=false>
                 </div>
                 <div class="form-group">
                     <label for="inputProtein">Protein (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" placeholder=0 value={{proteins}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
+                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" placeholder=0 value={{proteins}} oncopy=false onpaste=false oncut=false>
                 </div>
                 <div class="form-group">
                     <label for="inputCarbs">Carbohydrates (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs" placeholder=0 value={{carbs}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
+                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs" placeholder=0 value={{carbs}} oncopy=false onpaste=false oncut=false>
                 </div>
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
-                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder=0 value={{fats}} oncopy="disableCopyPaste(event)" onpaste="disableCopyPaste(event)" oncut="disableCopyPaste(event)">
+                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats" placeholder=0 value={{fats}} oncopy=false onpaste=false oncut=false>
                 </div>
                 <div class="form-group">
                     <label for="inputServingSize">Serving size</label>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label for="inputDesc">Description</label>
-                    <textarea class="form-control autosize" id="inputDesc" maxlength = "180" name="description" oninput="autoResizeField(this)">{{desc}}</textarea>
+                    <textarea class="form-control autosize" id="inputDesc" maxlength = "180" name= "description" oninput="autoResizeField(this)" placeholder = "i.e. my fav order from Coffee Club!">{{desc}}</textarea>
                 </div>
                 <div class="form-row mt-3">
                     <div class="col d-flex justify-content-end">
@@ -69,11 +69,12 @@
             const fats = parseInt(document.getElementById('inputFats').value) || 0;
 
             if ((4*proteins + 4*carbs + 9*fats) > calories) {
-                confirmSubmission(form);  // Show confirmation if numbers don't add up
+                confirmSubmission(event, form);  // Show confirmation if numbers don't add up
             } else {
                 form.submit();  // Submit if everything is okay
             }
         }
+
         function confirmSubmission(event, form) {
             Swal.fire({
             title: "Are you sure?",
@@ -85,6 +86,14 @@
             confirmButtonText: "Proceed"
             }).then((result) => {
             if (result.isConfirmed) {
+                const calories = parseInt(document.getElementById('inputCalories').value) || 0;
+                const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
+                const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
+                const fats = parseInt(document.getElementById('inputFats').value) || 0;
+                console.log(calories);
+                console.log(proteins);
+                console.log(carbs);
+                console.log(fats);
                 form.submit();
                 Swal.fire({
                 title: "Hmmmm.... okay!",
@@ -98,24 +107,45 @@
             });
         }
 
+        // Disabled inputs cannot be submitted --> make elements read only and only submit disabled
         function disableForm(event) {
-            event.preventDefault()
             const form = event.target.form;
-            setTimeout(() => {
-                // Disable all input elements slightly after the form is submitted
-                Array.from(form.elements).forEach(element => {
+            Array.from(form.elements).forEach(element => {
+                if (element.type !== 'submit' && element.type !== 'button') {
+                    element.readOnly = true;  // Apply readonly where applicable
+                    element.style.pointerEvents = 'none';  // Disable pointer events
+                    element.style.backgroundColor = '#e9ecef';  // Apply disabled color
+                }
+                if (element.type == 'submit') {
                     element.disabled = true;
-                });
-            }, 10);  // delay might need to be adjusted based on actual performance
+                }
+            });
+
             validateNums(event, form);
         }
+        // function disableForm(event) {
+        //     const form = event.target.form;
+        //     validateNums(event, form);
+        //     // Moved disabling into validateNums or confirmSubmission after checks
+        // }
+
+        // function disableInputs(form) {
+        //     Array.from(form.elements).forEach(element => {
+        //         element.disabled = true;
+        //     });
+        // }
+        
         function enableForm(event, form) {
-            setTimeout(() => {
-                // enable all input elements slightly after the form is submitted
-                Array.from(form.elements).forEach(element => {
+            Array.from(form.elements).forEach(element => {
+                if (element.type !== 'submit' && element.type !== 'button') {
+                    element.readOnly = false;  
+                    element.style.pointerEvents = '';  
+                    element.style.backgroundColor = ''; 
+                }
+                if (element.type == 'submit') {
                     element.disabled = false;
-                });
-            }, 10);  // delay might need to be adjusted based on actual performance
+                }
+            });
         }
 
         function autoResizeField(field) {

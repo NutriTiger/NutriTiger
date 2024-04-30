@@ -6,6 +6,7 @@
 import datetime
 # from datetime import datetime, timedelta
 import pytz
+import re
 
 
 def time_of_day(date, time):
@@ -150,6 +151,11 @@ def check_nutrition_info(cal, protein, carbs, fats):
     total = 4*protein + 4*carbs + 9*fats
     print(total < cal)
     return (total < cal) | (total == cal) 
+
+
+# Removes extra spaces and spaces at the front/back of the string
+def normalize_space(input_string):
+    return re.sub(r'\s+', ' ', input_string).strip()
 
 def main():
     # Unit testing checks of functions
