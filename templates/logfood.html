@@ -657,12 +657,6 @@
 
     // set up event listeners for dhall select and mealtime tab
     function setup() {
-        $("#menu-items").show();
-        hideLoadingAnimation();
-
-        document.getElementById("startTutorial").addEventListener("click", function () {
-            startTutorial();
-        });
 
         // Event listeners for the radio buttons
         document.querySelectorAll('input[name="foodSource"]').forEach(function(radio) {
@@ -671,6 +665,12 @@
             });
         });
 
+        $("#menu-items").show();
+        hideLoadingAnimation();
+
+        document.getElementById("startTutorial").addEventListener("click", function () {
+            startTutorial();
+        });
 
         $("#diningHallSelect").change(getResults); // Toggle search bar on selection change
         $("#searchBar").on("input", debounce(searchUSDAFood, 1000)); // Debounce the search input
@@ -708,6 +708,11 @@
 
             // gray out and disable submit button
             closeForm(event);
+            
+            // Reset the radio buttons to have dhall checked
+            document.getElementById('radio-dhall').checked = true;
+            document.getElementById('radio-custom').checked = false;
+            document.getElementById('radio-usda').checked = false;
 
             var recids = [];
             var servings = [];
@@ -749,5 +754,6 @@
     }
 
     $("document").ready(setup);
+
 </script>
 {% endblock %}
