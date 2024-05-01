@@ -56,7 +56,7 @@
 
                 <!--Radio buttons-->
                 <div class="p-3">
-                    <div class="container justify-content-center" style="display: flex; flex-direction: row; align-items: center;">
+                    <div id="radio-buttons" class="container justify-content-center" style="display: flex; flex-direction: row; align-items: center;">
                         <label class="radio-inline pl-2" style="margin-right: 20px;">
                             <input type="radio" name="foodSource" id="radio-dhall" checked>Dining Halls  
                         </label>
@@ -496,34 +496,42 @@
         tooltipClass: 'customTooltip',
         steps: [{
             title: 'Welcome',
-            intro: 'Welcome to the tutorial to learn how to log your food for the day!'
+            intro: 'Welcome to the tutorial to learn how to log the foods you ate in a meal!'
         }, {
             title: 'Select a source',
+            element: document.querySelector('#radio-buttons'),
+            intro: "First, select your food source: Princeton dining halls, your custom recipes, or search for any food in a generic USDA database. We've chosen a dining hall for this demo."
+        }, {
+            title: 'Select a dining hall',
             element: document.querySelector('.select-dropdown'),
-            intro: "First, you will select the source of your food here. This can be from Princeton's dining halls, your custom recipes, or from a generic USDA database if you can't find it. We have picked a dining hall for you for this demonstration."
+            intro: "Select a dining hall from the dropdown to see the foods offered at that dining hall today."
         }, {
             title: 'Select Mealtime',
             element: document.querySelector('#mealTimeTab'),
-            intro: 'Here you can select your mealtime!'
+            intro: 'Navigate between the tabs to see the foods offered during each mealtime.'
         }, {
             title: 'Select Foods',
             element: document.querySelector('#tutorial-food-items'),
-            intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
+            intro: 'Select the foods you want to log from the list that appears here.'
         }, {
             title: 'Select Item',
             element: document.querySelector('#checkbox-tutorial-1'),
-            intro: "Let's select an item as an example."
+            intro: "Let's select an example food item."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
-            intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. By default, a serving size of 1 is put, but this can easily be changed."
+            intro: "Once you select an item, it appears here where you can edit the servings. If you accidentally added it, you can also remove it. Each food is given a serving size of 1 by default, but you can edit this value."
         }, {
             title: 'Plate Totals',
             element: document.querySelector('.card-footer'),
-            intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
+            intro: "You can also see a running totals of calories, proteins, carbs, and fats for the foods you add to your plate."
         }, {
-            title: 'Generic Food Search',
-            element: document.querySelector('#searchBarSpan'),
+            title: 'Generic Food Search', // make sure this action checks the "radio-usda" radio button
+            element: document.querySelector('#radio-buttons'),
+            intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana."
+        }, {
+            title: 'Search for a food',
+            element: document.querySelector('#radio-buttons'),
             intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
         }, {
             title: 'Generic Food Selection',
