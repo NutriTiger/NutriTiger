@@ -611,7 +611,7 @@ def add_personalfood():
     # Validation - no repeat recipe names
     result = dbnutrition.find_one_personal_nutrition(netid, query_name)
     if result:
-        message = "A personal food item with this name already exists, please put a new name!"
+        message = "Oh no! A custom food item with this name already exists, please put a new name."
         return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
 

@@ -52,7 +52,7 @@
                     <div class="col d-flex justify-content-end">
                         <!-- Add a margin to the right of the Cancel button -->
                         <button type="button" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
-                        <button type="submit" class="btn btn-primary" onclick="disableForm(event)">Submit</button>
+                        <button type="button" class="btn btn-primary" onclick="validateNums(event)">Submit</button>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        
         function validateNums(event) {
             const form = document.getElementById('customFoodForm');
             const calories = parseInt(document.getElementById('inputCalories').value) || 0;
@@ -68,17 +67,26 @@
             const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
             const fats = parseInt(document.getElementById('inputFats').value) || 0;
 
-            if ((4*proteins + 4*carbs + 9*fats) > calories) {
-                confirmSubmission(event, form);  // Show confirmation if numbers don't add up
+            // HTML validation re-implemented
+            if (form.checkValidity()) {
+                // Numbers do not add up
+                if ((4*proteins + 4*carbs + 9*fats) > calories) {
+                    confirmSubmission(event, form); 
+                }
+                else {
+                    disableForm(event, form);
+                }
             } else {
-                form.submit();  // Submit if everything is okay
+                form.reportValidity(); // This will display any HTML5 validation messages
             }
+           
+        
         }
 
         function confirmSubmission(event, form) {
             Swal.fire({
             title: "Are you sure?",
-            text: "Your macronutrient counts are not consistent with your calorie count. Recall: 1 gram of protein = 1 gram of fat = 4 calories; 1 gram of fat = 9 calories. Want to take another look?",
+            text: "Your macronutrient counts are not consistent with your calorie count. \nRecall: 1 gram of protein = 1 gram of fat = 4 calories; 1 gram of fat = 9 calories. \nWant to take another look?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -86,18 +94,18 @@
             confirmButtonText: "Proceed"
             }).then((result) => {
             if (result.isConfirmed) {
-                const calories = parseInt(document.getElementById('inputCalories').value) || 0;
-                const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
-                const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
-                const fats = parseInt(document.getElementById('inputFats').value) || 0;
-                console.log(calories);
-                console.log(proteins);
-                console.log(carbs);
-                console.log(fats);
-                form.submit();
+                // const calories = parseInt(document.getElementById('inputCalories').value) || 0;
+                // const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
+                // const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
+                // const fats = parseInt(document.getElementById('inputFats').value) || 0;
+                // console.log(calories);
+                // console.log(proteins);
+                // console.log(carbs);
+                // console.log(fats);
+                disableForm(event, form);
                 Swal.fire({
                 title: "Hmmmm.... okay!",
-                text: "Your custom food has been created. You can always delete this entry later on!",
+                text: "Let's proceed, then! You can always delete this entry later on.",
                 icon: "success"
                 });
             }
@@ -108,8 +116,7 @@
         }
 
         // Disabled inputs cannot be submitted --> make elements read only and only submit disabled
-        function disableForm(event) {
-            const form = event.target.form;
+        function disableForm(event, form) {
             Array.from(form.elements).forEach(element => {
                 if (element.type !== 'submit' && element.type !== 'button') {
                     element.readOnly = true;  // Apply readonly where applicable
@@ -120,8 +127,8 @@
                     element.disabled = true;
                 }
             });
+            form.submit()
 
-            validateNums(event, form);
         }
         // function disableForm(event) {
         //     const form = event.target.form;
@@ -146,6 +153,7 @@
                     element.disabled = false;
                 }
             });
+
         }
 
         function autoResizeField(field) {
