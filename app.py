@@ -428,14 +428,16 @@ def editing_plate():
 
 @app.route('/logfood', methods=['GET', 'POST'])
 def log_food():
+    ENTRY_LIMIT = 50
+    FOOD_LIMIT = 50
     netid = auth.authenticate()
     cursor = dbusers.userlogin(netid)
     if cursor is None:
         return redirect('/welcome')
-
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     calc_mealtime = utils.time_of_day(current_date.date(), current_date.time())
-
+    num_entries = len(cursor['daily_rec'])
+    over_limit = num_entries >= ENTRY_LIMIT
     # Handle upload plate and return button
     if request.method == 'POST':
         # retrieve json object
@@ -457,7 +459,9 @@ def log_food():
     
         personal_data = dbnutrition.find_all_personal_nutrition(netid)
 
-        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, personal_data = personal_data)
+        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, 
+                                nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, 
+                                personal_data = personal_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT)
 
 #--------------------------------------------------------------------
 @app.route('/logfood/myplate', methods=['GET'])

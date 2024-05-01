@@ -139,6 +139,9 @@
             </div>
         </form>
         </div>
+        <div class="hidden" id="over_limit" data-value="{{ over_limit }}"></div>
+        <div class="hidden" id="entry_limit" data-value="{{ entry_limit }}"></div>
+        <div class="hidden" id="food_limit" data-value="{{ food_limit }}"></div>
     </div>
 </div>
 {% endblock %} {% block script %}
@@ -146,6 +149,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // global variable for entry nutrition
     let entry_nutrition = { calories: 0, carbs: 0, fats: 0, proteins: 0 };
@@ -205,7 +209,17 @@
     // sends AJAX GET request to server
     function handleCheckboxChange(element) {
         if (element.checked) {
-            console.log("checked: ", element.dataset.mealname);
+            const num_foods = document.querySelectorAll(".small-input").length;
+            const food_limit = $("#food_limit").data('value');
+            if (num_foods >= food_limit) {
+                var limitwarning = 'You have reached the food limit of ' + food_limit + ' food items per entry and will not be able to upload this entry. You may delete food items in order to save this entry, and log additional food items in a separate entry.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Food Limit Reached',
+                    text: limitwarning,
+                    confirmButtonText: 'OK'
+                });
+            }
             let url =
                 `/logfood/myplate?checkid=${encodeURIComponent(element.id)}` +
                 `&mealname=${encodeURIComponent(element.dataset.mealname)}` +
@@ -430,7 +444,12 @@
 
         // Check if there are 0 food items selected
         if (inputs.length == 0) {
-            alert('Please add foods to your plate before submitting.')
+            Swal.fire({
+                icon: 'error',
+                title: 'Empty Plate',
+                text: 'Please add foods to your plate before submitting.',
+                confirmButtonText: 'OK'
+            });
             event.preventDefault()
             return false;
         }
@@ -642,11 +661,40 @@
             event.preventDefault();
             addUSDANutritionData();
 
+            // checks entry limit 
+            const over_limit = $("#over_limit").data('value');
+            const entry_limit = $("#entry_limit").data('value');
+            if (over_limit) {
+                var limitwarning = 'You are not able to upload plate because you have reached the entry log limit of ' + entry_limit + ' entries for the day. You may delete entries in order to add new ones.'
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Entry Limit Reached',
+                    text: limitwarning,
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            // check food limit
+            const num_foods = document.querySelectorAll(".small-input").length;
+            const food_limit = $("#food_limit").data('value');
+            if (num_foods > food_limit) {
+                var limitwarning = 'You have reached the food limit of ' + food_limit + ' food items per entry and will not be able to upload this entry. You may delete food items in order to save this entry, and log additional food items in a separate entry.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Food Limit Reached',
+                    text: limitwarning,
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
             // validation
             if (!validateInputs(event)) {
                 event.preventDefault()
                 return false;
             }
+
 
             // gray out and disable submit button
             closeForm(event);

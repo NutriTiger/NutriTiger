@@ -106,6 +106,10 @@ body {
     justify-content: space-between; /* Aligns title to the left and button to the right when button is visible */
 }
 
+.hidden {
+    display: none;
+}
+
 .icon {
     width: 2em;
     height: 2em;
