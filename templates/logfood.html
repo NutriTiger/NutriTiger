@@ -119,7 +119,7 @@
         </div>
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
-            <form action="/logfood" method="post">
+            <form action="/logmeals" method="post">
             <div class="logfood-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Meal</h5>
@@ -951,7 +951,7 @@
                 showLoadingAnimation();
                 $.ajax({
                     type: "POST",
-                    url: "/logfood",
+                    url: "/logmeals",
                     contentType: "application/json",
                     data: jsonData,
                     success: function (response) {
