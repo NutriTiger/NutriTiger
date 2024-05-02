@@ -458,10 +458,12 @@ def log_food():
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
     
         personal_data = dbnutrition.find_all_personal_nutrition(netid)
+        items_per_page = 7
+        total_pages = (int)(len(personal_data) / items_per_page)
 
         return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, 
                                 nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, 
-                                personal_data = personal_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT)
+                                personal_data = personal_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT, total_pages = total_pages)
 
 #--------------------------------------------------------------------
 

@@ -156,7 +156,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 // INTENSE START
-    let currentPage = 1;
+    let currentUSDAPage = 1;
+    let currentCustomPage = 1;
     let totalItems = 25; // Total number of checkboxes you want to manage
     let itemsPerPage = 7;
     let totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -180,8 +181,26 @@
         createPagination();
     }
 
+    function renderCustomPage(startIndex, endIndex, data) {
+        const resultsContainer = document.getElementById("usda-search-results");
+        resultsContainer.innerHTML = ""; // Clear previous results
+
+        data.slice(startIndex, endIndex).forEach(food => {
+            const { calories = 0, proteins = 0, carbs = 0, fats = 0, recipeid, mealname, servingSize = 'Not specified' } = food;
+            const foodElement = document.createElement("div");
+            foodElement.className = "form-check";
+            foodElement.innerHTML = `
+                <input type="checkbox" class="form-check-input" id="usda-checkbox-${recipeid}">
+                <label class="form-check-label" for="usda-checkbox-${recipeid}">${mealname}</label>
+                <p>Serving Size: ${servingSize}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+            `;
+            resultsContainer.appendChild(foodElement);
+        });
+        createPagination();
+    }
+
     function populateResults(pageNum, data) {
-        currentPage = pageNum;
+        currentUSDAPage = pageNum;
         const startIndex = (pageNum - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         renderPage(startIndex, endIndex, data);
@@ -197,7 +216,7 @@
 
         // Create pages
         for (let i = 1; i <= totalPages; i++) {
-            const pageItem = createPageItem(i, i, currentPage === i);
+            const pageItem = createPageItem(i, i, currentUSDAPage === i);
             ul.appendChild(pageItem);
         }
 
@@ -226,6 +245,15 @@
         if (pageNumber) {
             populateResults(pageNumber, data);
         }
+    }
+
+    function handleCustomPageChange(page) {
+        currentCustomPage = page;
+        $('.personal-items-content').hide(); // Hide all items
+        $(`div[data-page="${page}"]`).show(); // Show items for the current page
+
+        $('.pagination .page-item').removeClass('active'); // Remove 'active' class from all pagination buttons
+        $(`.pagination .page-item:nth-child(${page})`).addClass('active'); // Add 'active' class to current page button
     }
 
 
@@ -376,7 +404,7 @@
             fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
-                    currentPage = 1;
+                    currentUSDAPage = 1;
                     console.log("Data received:", data);
                     totalItems = data.length;
                     totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -471,7 +499,7 @@
         // Page numbers - always active
         for (let i = 1; i <= totalPages; i++) {
             const pageItem = createPageItem(i, i, false, "pageButton" + i);
-            if (i === currentPage) {
+            if (i === currentUSDAPage) {
                 pageItem.classList.add('active'); // Mark the current page as active
             }
             ul.appendChild(pageItem);
@@ -482,7 +510,7 @@
 
 
     function switchPage(pageNum) {
-        currentPage = pageNum; // Update the current page
+        currentUSDAPage = pageNum; // Update the current page
 
         const pages = document.querySelectorAll('.page-content');
         pages.forEach(page => {
@@ -885,6 +913,7 @@
 
     // set up event listeners for dhall select and mealtime tab
     function setup() {
+        handleCustomPageChange(1)
 
         // Event listeners for the radio buttons
         document.querySelectorAll('input[name="foodSource"]').forEach(function(radio) {
