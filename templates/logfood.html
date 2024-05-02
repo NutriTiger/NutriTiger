@@ -194,16 +194,12 @@
         const ul = document.createElement("ul");
         ul.className = "pagination";
 
-        // Creating Previous Button
-        ul.appendChild(createPageItem("Previous", currentPage > 1 ? currentPage - 1 : 1));
-
+        // Create pages
         for (let i = 1; i <= totalPages; i++) {
             const pageItem = createPageItem(i, i, currentPage === i);
             ul.appendChild(pageItem);
         }
 
-        // Creating Next Button
-        ul.appendChild(createPageItem("Next", currentPage < totalPages ? currentPage + 1 : totalPages));
 
         pagination.appendChild(ul);
     }
@@ -379,6 +375,7 @@
             fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
+                    currentPage = 1;
                     console.log("Data received:", data);
                     totalItems = data.length;
                     totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -399,6 +396,8 @@
     function prepareAllPages(data) {
         const resultsContainer = document.getElementById("usda-search-results");
         resultsContainer.innerHTML = ""; // Clear previous results
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
 
         if (data && data.length > 0) {
             for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
@@ -819,6 +818,8 @@
     function updateCardVisibility(radioBtnId) {
 
         if (radioBtnId === 'radio-dhall') {
+            $("#pagination").hide();
+
             $("#usda-search-results").hide();
             $("#personal-food-items").hide();
             $("#tutorial-food-items").hide();
@@ -831,6 +832,8 @@
 
 
         } else if (radioBtnId === 'radio-custom') {
+            $("#pagination").hide();
+
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
@@ -841,6 +844,8 @@
 
 
         } else if (radioBtnId === 'radio-usda') {
+            $("#pagination").show();
+
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
             $("#usda-search-results").show();
