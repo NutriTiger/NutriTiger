@@ -68,4 +68,17 @@
         </div>
     </div>
     {% endfor %}
+
+    {% for item in missingdata %}
+    <div class="col meal {{ item.mealtime }}" {% if item.mealtime != mealtime %} style = "display: none;" {% endif %}>
+        <div class="card h-100 card-body-dhall-menus ">
+            <div class="card-body"  >
+                <h2 class="card-title text-center">{{ item.dhall }}</h2>
+                <center>
+                    <h5>No data is available</h5>
+                </center>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
