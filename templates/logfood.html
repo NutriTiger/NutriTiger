@@ -684,8 +684,9 @@
     function startTutorial() {
         var element = document.getElementById("navbar");
         element.style.zIndex = "0";
+        var introguide = introJs();
 
-    introJs().setOptions({
+    introguide.setOptions({
         disableInteraction: true,
         showBullets: false,
         showProgress: true,
@@ -742,10 +743,6 @@
             element: document.querySelector('#submitButton'),
             intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where your new entry will appear."
         }, ]
-    }).onafterchange(function(targetElement) {
-        var nextButton = document.getElementsByClassName("introjs-nextbutton")
-
-        nextButton.style.pointerEvents = "none"
     }).onchange(function(targetElement) {
         if (targetElement.id == 'radio-buttons') {
             document.getElementById('radio-dhall').checked = true;
@@ -780,8 +777,12 @@
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
-    }).onexit(function() {
+    }).onafterchange(function(targetElement) {
+        var nextButton = document.getElementsByClassName("introjs-nextbutton")
 
+        nextButton.style.pointerEvents = "none";
+    }).onexit(function() {
+        try {
         // reset radio buttons to have dhall button checked
         document.getElementById('radio-dhall').checked = true;
         document.getElementById('radio-usda').checked = false;
@@ -811,6 +812,10 @@
         var bananaCheckbox = document.getElementById("usda-checkbox-usda-2012128");
         bananaCheckbox.checked = false;
         handleCheckboxChange(bananaCheckbox);
+        } catch {
+            console.log("Tutorial exited early.");
+        }
+        return true;
 
     }).start();
 }

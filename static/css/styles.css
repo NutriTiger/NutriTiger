@@ -372,4 +372,9 @@ body {
     justify-content: center; /* This centers the child horizontally in the container */
     width: 100%; /* Takes full width of its parent */
 }
+
+.popover-body {
+    height: 300px;
+    overflow-y: auto;
+}
 /*******************************************************************/
