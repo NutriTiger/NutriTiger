@@ -213,7 +213,31 @@ def update_menus_mealtime():
     recipeids = utils.gather_recipes(data)
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
-    return render_template('dhallmenus_update.html', todays_date=todays_date, data=data,
+    DHALLS = ["Rockefeller & Mathey Colleges",
+                        "Forbes College", "Graduate College",
+                        "Center for Jewish Life",
+                        "Yeh & New West Colleges",
+                        "Whitman & Butler Colleges"]
+    MEALTIMES = []
+    if is_weekend_var:
+        MEALTIMES = ["Lunch", "Dinner"]
+    else:
+        MEALTIMES = ["Breakfast", "Lunch", "Dinner"]
+
+    # Credit: https://stackoverflow.com/questions/403421/how-do-i-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
+    data.sort(key=lambda item: item['dhall'])
+
+    missingdata = []
+    for dhall in DHALLS:
+        for meal in MEALTIMES:
+            # Credit: https://stackoverflow.com/questions/52226293/jinja2-check-if-value-exists-in-list-of-dictionaries
+            contains = [item['dhall'] == dhall and meal in item['mealtime'] for item in data]
+            if True in contains:
+                continue
+            else:
+                missingdata.append({'dhall': dhall, 'mealtime': meal})
+
+    return render_template('dhallmenus_update.html', todays_date=todays_date, data=data, missingdata=missingdata,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 #--------------------------------------------------------------------
