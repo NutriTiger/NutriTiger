@@ -175,8 +175,7 @@ def add_personal_food(name, netid, nutrition):
             recipeid = netid + '-'+ str(num_current + 1)
             print(recipeid)
 
-            date_obj = datetime.now(pytz.timezone('US/Eastern')).date()
-            today = datetime.combine(date_obj, time.min)
+            today = datetime.now(pytz.timezone('US/Eastern'))
 
             try:
                 document_to_add = {"mealname" : name, 
@@ -246,21 +245,21 @@ def find_many_nutrition(recipeids):
             return []
 
 
-# Retrieve nutritional information of a user
+# Retrieve nutritional information of a user and sorts by recently created
 def find_all_personal_nutrition(netid):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
 
-        documents_to_find = {"access": netid}
+        documents_to_find = {"access": netid}# Define the sort order - descending by 'created_at' field
         try:
-            result = nutrition_col.find(documents_to_find)
+            # Execute find operation with sorting
+            result = list(nutrition_col.find(documents_to_find).sort("date", pymongo.DESCENDING))
             print(f"found documents: {result}")
-            list_result = list(result)
-            if len(list_result) == 0:
+            if len(result) == 0:
                 print("No personal nutrition documents found")
                 return
-            return list_result
+            return result
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
             sys.exit(1)
