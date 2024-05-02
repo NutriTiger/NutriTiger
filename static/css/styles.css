@@ -1,3 +1,14 @@
+:root {
+    --pink: rgb(251, 107, 129);
+    --pink-transparent: rgba(251, 107, 129, 0.5);
+    --green: rgba(67, 182, 107);
+    --green-transparent: rgba(67, 182, 107, 0.5);
+    --purple: rgb(68, 0, 128);
+    --purple-transparent: rgba(68, 0, 128, 0.5);
+    --blue: rgba(66, 142, 223);
+    --blue-transparent: rgba(66, 142, 223, 0.7);
+}
+
 .nav-tabs .nav-link {
     color: #FF9040; 
 }
@@ -163,27 +174,27 @@ body {
     height: auto;
 }
 .avg-cals {
-    border-Color: rgb(7, 127, 255); 
+    border-Color: var(--blue); 
     border-width: 2px;
-    background-Color: rgb(152, 188, 227);
+    background-Color: var(--blue-transparent);
     font-size: large;
 }
 .avg-prots {
-    border-Color: rgb(255, 141, 158); 
+    border-Color: var(--pink); 
     border-width: 2px;
-    background-Color: rgb(248, 183, 193);
+    background-Color: var(--pink-transparent);
     font-size: large;
 }
 .avg-carbs {
-    border-Color: rgb(67, 182, 107); 
+    border-Color: var(--green); 
     border-width: 2px;
-    background-Color: rgb(67, 182, 107, 0.3);
+    background-Color: var(--green-transparent);
     font-size: large;
 }
 .avg-fats {
-    border-Color: rgba(255, 205, 86); 
+    border-Color: var(--purple); 
     border-width: 2px;
-    background-Color: rgba(255, 205, 86, 0.5);
+    background-Color: var(--purple-transparent);
     font-size: large;
 }
 
