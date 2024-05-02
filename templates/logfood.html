@@ -107,9 +107,12 @@
                         </li>
                     </ul>
                     <div class="card" style="min-height: 300px;">
-                        <div class="card-body" id="usda-search-results"></div>
+                        <div class="card-body" id="usda-search-results">
+                        </div>
                         {% include 'logfood_update.html' %}
-                        
+                        <div class="pagination-container"> 
+                            <div id="pagination"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,6 +154,86 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// INTENSE START
+    let currentPage = 1;
+    let totalItems = 25; // Total number of checkboxes you want to manage
+    let itemsPerPage = 7;
+    let totalPages = Math.ceil(totalItems / itemsPerPage);
+
+
+    function renderPage(startIndex, endIndex, data) {
+        const resultsContainer = document.getElementById("usda-search-results");
+        resultsContainer.innerHTML = ""; // Clear previous results
+
+        data.slice(startIndex, endIndex).forEach(food => {
+            const { calories = 0, proteins = 0, carbs = 0, fats = 0, recipeid, mealname, servingSize = 'Not specified' } = food;
+            const foodElement = document.createElement("div");
+            foodElement.className = "form-check";
+            foodElement.innerHTML = `
+                <input type="checkbox" class="form-check-input" id="usda-checkbox-${recipeid}">
+                <label class="form-check-label" for="usda-checkbox-${recipeid}">${mealname}</label>
+                <p>Serving Size: ${servingSize}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+            `;
+            resultsContainer.appendChild(foodElement);
+        });
+        createPagination();
+    }
+
+    function populateResults(pageNum, data) {
+        currentPage = pageNum;
+        const startIndex = (pageNum - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        renderPage(startIndex, endIndex, data);
+    }
+
+    function createPagination() {
+        const pagination = document.getElementById("pagination");
+        if (!pagination) return; // Ensure pagination container exists
+
+        pagination.innerHTML = ""; // Clear previous pagination links
+        const ul = document.createElement("ul");
+        ul.className = "pagination";
+
+        // Creating Previous Button
+        ul.appendChild(createPageItem("Previous", currentPage > 1 ? currentPage - 1 : 1));
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageItem = createPageItem(i, i, currentPage === i);
+            ul.appendChild(pageItem);
+        }
+
+        // Creating Next Button
+        ul.appendChild(createPageItem("Next", currentPage < totalPages ? currentPage + 1 : totalPages));
+
+        pagination.appendChild(ul);
+    }
+
+    function createPageItem(text, page, isActive = false) {
+        const li = document.createElement("li");
+        li.className = "page-item" + (isActive ? " active" : "");
+        const a = document.createElement("a");
+        a.className = "page-link";
+        a.href = "#";
+        a.textContent = text;
+        a.onclick = function (e) {
+            e.preventDefault();
+            populateResults(page, data);
+        };
+        li.appendChild(a);
+        return li;
+    }
+
+    function handlePageChange(event) {
+        event.preventDefault();
+        const pageNumber = parseInt(event.target.getAttribute("data-page"));
+        if (pageNumber) {
+            populateResults(pageNumber, data);
+        }
+    }
+
+
+// INTENSE STOP
+
     // global variable for entry nutrition
     let entry_nutrition = { calories: 0, carbs: 0, fats: 0, proteins: 0 };
 
@@ -289,54 +372,147 @@
 
     // Function to handle USDA data search
     function searchUSDAFood() {
-        const query = $("#searchBar").val().trim();
-        // resultsContainer.children().hide(); // hide results if query is empty
-        showLoadingAnimation();
-        if (query != "") {
+        const query = document.getElementById("searchBar").value.trim();
+        if (query != '') {
+            showLoadingAnimation();
+            console.log("Searching for:", query);
             fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log("append the response");
-                    appendDataToDOM(data);
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Data received:", data);
+                    totalItems = data.length;
+                    totalPages = Math.ceil(totalItems / itemsPerPage);
+                    prepareAllPages(data);
                 })
-                .catch((error) => console.error("Error fetching USDA data:", error));
-        } else {
-            appendDataToDOM({});
+                .catch(error => console.error("Error fetching USDA data:", error));
+        }
+        else {
+            const resultsContainer = document.getElementById("usda-search-results");
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+            resultsContainer.innerHTML = ""; // Clear previous results
+            resultsContainer.innerHTML =`<div>Enter a food item in the search bar above to display nutrition options.</div>`;
+            
         }
     }
 
-    function appendDataToDOM(data) {
+    function prepareAllPages(data) {
         const resultsContainer = document.getElementById("usda-search-results");
-        resultsContainer.innerHTML = ""; // Clear previous results - base saving on plate info
+        resultsContainer.innerHTML = ""; // Clear previous results
 
         if (data && data.length > 0) {
-            data.forEach((food, index) => {
-                const calories = food.calories || 0;
-                const proteins = food.proteins || 0;
-                const carbs = food.carbs || 0;
-                const fats = food.fats || 0;
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                const pageDiv = document.createElement("div");
+                pageDiv.id = `page-${pageNum}`;
+                pageDiv.className = 'page-content';
+                pageDiv.style.display = pageNum === 1 ? 'block' : 'none'; // Show the first page initially
 
-                // Check if food portions are available and extract the first one
-                const servingSizeInfo = food.servingSize;
+                const startIndex = (pageNum - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const pageData = data.slice(startIndex, endIndex);
 
-                const foodElement = document.createElement("div");
-                foodElement.className = "form-check";
-                console.log(food.fdcIc);
-                foodElement.innerHTML = `
-                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" data-usda="true" data-recid="${food.recipeid}"
-                    data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
-                    data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
-                    onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
-                <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
-                <p id="nf-${food.recipeid}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
-                `;  
-                resultsContainer.appendChild(foodElement);
-            });
-        } else {
+                pageData.forEach((food) => {
+                    const calories = food.calories || 0;
+                    const proteins = food.proteins || 0;
+                    const carbs = food.carbs || 0;
+                    const fats = food.fats || 0;
+
+                    // Check if food portions are available and extract the first one
+                    const servingSizeInfo = food.servingSize;
+
+                    const foodElement = document.createElement("div");
+                    foodElement.className = "form-check";
+                    console.log(food.fdcIc);
+                    foodElement.innerHTML = `
+                    <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" page=${pageNum} data-usda="true" data-recid="${food.recipeid}"
+                        data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+                        data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
+                        onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
+                    <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
+                    <p id="nf-${food.recipeid}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+                    `;  
+                    pageDiv.appendChild(foodElement);
+            
+                });
+
+                resultsContainer.appendChild(pageDiv);
+            }
+            createPagination();
+        }
+        else {
             resultsContainer.innerHTML = "<div>No results found.</div>";
         }
         hideLoadingAnimation();
     }
+    function createPageItem(text, page, isDisabled, id) {
+        const li = document.createElement("li");
+        li.className = "page-item" + (isDisabled ? " disabled" : ""); // Add 'disabled' class if isDisabled is true
+        const a = document.createElement("a");
+        a.className = "page-link";
+        a.href = "#";
+        a.textContent = text;
+        if (!isDisabled) {
+            a.onclick = function (e) {
+                e.preventDefault();
+                switchPage(page);
+            };
+        }
+        a.id = id; // Assign ID here
+        li.appendChild(a);
+        return li;
+    }
+
+    function createPagination() {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+        const ul = document.createElement("ul");
+        ul.className = "pagination";
+
+        // Page numbers - always active
+        for (let i = 1; i <= totalPages; i++) {
+            const pageItem = createPageItem(i, i, false, "pageButton" + i);
+            if (i === currentPage) {
+                pageItem.classList.add('active'); // Mark the current page as active
+            }
+            ul.appendChild(pageItem);
+        }
+
+        pagination.appendChild(ul);
+    }
+
+
+    function switchPage(pageNum) {
+        currentPage = pageNum; // Update the current page
+
+        const pages = document.querySelectorAll('.page-content');
+        pages.forEach(page => {
+            page.style.display = 'none'; // Hide all pages
+        });
+
+        const activePage = document.getElementById(`page-${pageNum}`);
+        activePage.style.display = 'block'; // Show the current page
+
+
+        // Update active state for page numbers
+        document.querySelectorAll('.pagination .page-item').forEach(item => {
+            if (item.firstChild.textContent == currentPage.toString()) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+
+    document.getElementById("pagination").addEventListener("click", function(event) {
+        const target = event.target;
+        if (target.classList.contains("page-link")) {
+            const pageNumber = parseInt(target.textContent);
+            console.log("Handling page change to:", pageNumber); // Debug: Check which page is clicked
+            switchPage(pageNumber);
+        }
+    });
+
 
     function addUSDANutritionData() {
         let nutritionData = [];

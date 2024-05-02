@@ -360,4 +360,11 @@ body {
 .introjs-progressbar {
     background-color: #f2b34e !important;
 }
+
+
+.pagination-container {
+    display: flex;
+    justify-content: center; /* This centers the child horizontally in the container */
+    width: 100%; /* Takes full width of its parent */
+}
 /*******************************************************************/
