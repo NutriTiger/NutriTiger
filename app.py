@@ -151,7 +151,7 @@ def homepage():
     # When Edit Plate button is pressed
     if request.method == 'POST':
         if 'add_entry' in request.form:
-            return redirect('/logfood')
+            return redirect('/logmeals')
         
         if 'historyBtn' in request.form:
             return redirect('/history')
@@ -426,7 +426,7 @@ def editing_plate():
 
 #--------------------------------------------------------------------
 
-@app.route('/logfood', methods=['GET', 'POST'])
+@app.route('/logmeals', methods=['GET', 'POST'])
 def log_food():
     ENTRY_LIMIT = 50
     FOOD_LIMIT = 50
