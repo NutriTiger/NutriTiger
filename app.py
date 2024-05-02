@@ -47,16 +47,20 @@ cloudinary.config(
 )
 
 # Takes the user to a general error page if an error occurs
-'''
 @app.errorhandler(Exception)
 def not_found(e):
+  session["error"] = str(e)
   return redirect("/error")
 
 @app.route('/error', methods=['GET'])
 def display_error():
     netid = auth.authenticate()
-    return render_template("error.html")
-'''
+    error = session.pop("error")
+    error404 = False
+    if "404" in error:
+        error404 = True
+    return render_template("error.html", error=error, error404=error404)
+
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
