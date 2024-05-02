@@ -9,6 +9,9 @@
   {% endfor %}
 {% endif %}
 {% endwith %}
+    <div id="loading-animation" class="loading-animation">
+        <div class="loading-spinner"></div>
+    </div>
     <h1 class="text-center m-3">Add Custom Food</h1> 
     <div class="container">
         <form id="customFoodForm" action="/addcustomfood" method="post" enctype="multipart/form-data" >
@@ -59,8 +62,27 @@
         </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
     <script>
+        function showLoadingAnimation() {
+            // Show the loading animation covering the entire screen
+            $("#loading-animation").show();
+            $('input').keydown(function(e) {
+                e.preventDefault();
+                return false;
+            });
+        }
+
+        function hideLoadingAnimation() {
+            // Hide the loading animation
+            $("#loading-animation").hide();
+            $('input').off('keydown');
+        }
+
         function validateNums(event) {
+            event.preventDefault();
+
             const form = document.getElementById('customFoodForm');
             const calories = parseInt(document.getElementById('inputCalories').value) || 0;
             const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
@@ -94,15 +116,8 @@
             confirmButtonText: "Proceed"
             }).then((result) => {
             if (result.isConfirmed) {
-                // const calories = parseInt(document.getElementById('inputCalories').value) || 0;
-                // const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
-                // const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
-                // const fats = parseInt(document.getElementById('inputFats').value) || 0;
-                // console.log(calories);
-                // console.log(proteins);
-                // console.log(carbs);
-                // console.log(fats);
                 disableForm(event, form);
+                hideLoadingAnimation();
                 Swal.fire({
                 title: "Hmmmm.... okay!",
                 text: "Let's proceed, then! You can always delete this entry later on.",
@@ -117,6 +132,8 @@
 
         // Disabled inputs cannot be submitted --> make elements read only and only submit disabled
         function disableForm(event, form) {
+            showLoadingAnimation()
+
             Array.from(form.elements).forEach(element => {
                 if (element.type !== 'submit' && element.type !== 'button') {
                     element.readOnly = true;  // Apply readonly where applicable
@@ -128,21 +145,12 @@
                 }
             });
             form.submit()
-
         }
-        // function disableForm(event) {
-        //     const form = event.target.form;
-        //     validateNums(event, form);
-        //     // Moved disabling into validateNums or confirmSubmission after checks
-        // }
 
-        // function disableInputs(form) {
-        //     Array.from(form.elements).forEach(element => {
-        //         element.disabled = true;
-        //     });
-        // }
         
         function enableForm(event, form) {
+            hideLoadingAnimation()
+
             Array.from(form.elements).forEach(element => {
                 if (element.type !== 'submit' && element.type !== 'button') {
                     element.readOnly = false;  
@@ -191,12 +199,15 @@
                     }
                 });
             });
-            // form.addEventListener('submit', function(event) {
-            //     disableForm(this);  // Disable the form elements
-            //     validateNums(array);
-            //     confirmBox();
-            // });
+
 
         });
+
+         // hiding spinner
+        function setup() {
+            hideLoadingAnimation()
+        }
+
+        $("document").ready(setup);
     </script>
 {% endblock %}
