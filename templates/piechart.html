@@ -25,7 +25,7 @@
     var fatsCalories = fatsInGrams * 9;
     var proteinsCalories = proteinsInGrams * 4;
     var carbsCalories = carbsInGrams * 4;
-
+    var style = getComputedStyle(document.body);
         var empty = true
         if (fatsInGrams !== 0 || proteinsInGrams !== 0 || carbsInGrams !== 0) {
             empty = false
@@ -42,9 +42,12 @@
                 datasets: [{
                     data: [proteinsCalories.toFixed(2), carbsCalories.toFixed(2), fatsCalories.toFixed(2)], // Proportions based on calories
                     backgroundColor: [
-                        'rgba(255, 182, 193, 1)',
-                        'rgba(67, 182, 107)',
-                        'rgba(255, 205, 86)'
+                        style.getPropertyValue('--pink'),
+                        style.getPropertyValue('--green'),
+                        style.getPropertyValue('--purple-transparent')
+                        // 'rgba(255, 182, 193, 1)',
+                        // 'rgba(67, 182, 107)',
+                        // 'rgba(255, 205, 86)'
                     ]
                 }]
             };
