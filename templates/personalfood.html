@@ -51,8 +51,8 @@
                 <div class="form-row mt-3">
                     <div class="col d-flex justify-content-end">
                         <!-- Add a margin to the right of the Cancel button -->
-                        <button type="button" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
-                        <button type="button" class="btn btn-primary" onclick="validateNums(event)">Submit</button>
+                        <button type="button" id ="cancelButton" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
+                        <button type="button" id ="submitButton" class="btn btn-primary" onclick="validateNums(event)">Submit</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +123,7 @@
                     element.style.pointerEvents = 'none';  // Disable pointer events
                     element.style.backgroundColor = '#e9ecef';  // Apply disabled color
                 }
-                if (element.type == 'submit') {
+                if (element.type == 'button') {
                     element.disabled = true;
                 }
             });
