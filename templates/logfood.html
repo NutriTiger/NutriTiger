@@ -531,24 +531,24 @@
             intro: "You can also see a running totals of calories, proteins, carbs, and fats for the foods you add to your plate."
         }, {
             title: 'Generic Food Search', // make sure this action checks the "radio-usda" radio button
-            element: document.querySelector('#radio-buttons'),
+            element: document.querySelector('#radio-usda'),
             intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana."
         }, {
             title: 'Search for a food',
-            element: document.querySelector('#radio-buttons'),
-            intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
+            element: document.querySelector('#searchBarSpan'),
+            intro: "Type the food name into the search bar."
         }, {
             title: 'Generic Food Selection',
             element: document.querySelector('#usda-search-results'),
-            intro: "Here are all the relevant results. Let's check another thing off again."
+            intro: "Here are all the search results. Let's select a food item from it."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
-            intro: "Notice how it appeared in my plate and the serving size is one by default. Again, notice how plate totals have also been updated to reflect the new foods in your plate."
+            intro: "Again, once selected, the food appears on your plate with a default serving of 1."
         }, {
             title: 'Upload plate',
             element: document.querySelector('#submitButton'),
-            intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where it will appear."
+            intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where your new entry will appear."
         }, ]
     }).onafterchange(function(targetElement) {
         var nextButton = document.getElementsByClassName("introjs-nextbutton")
@@ -567,9 +567,14 @@
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
+        if (targetElement.id == 'radio-usda') {
+            var button = document.querySelector('#radio-usda');
+            document.querySelector('#radio-dhall').checked = false;
+            button.checked = true;
+            updateCardVisibility('radio-usda');
+        }
         if (targetElement.id == 'searchBarSpan') {
-            document.querySelector('.select-dropdown').value = 'USDA FoodData Central';
-            document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+            updateCardVisibility('radio-usda');
             var searchBar = document.getElementById("searchBar");
             searchBar.value = "banana";
             searchUSDAFood();
@@ -581,17 +586,37 @@
             handleCheckboxChange(checkbox);
         }
     }).onexit(function() {
-        var navbar = document.getElementById("navbar");
-        navbar.style.zIndex = "1030";
-        document.querySelector('.select-dropdown').value = 'Select Food Source';
-        document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+
+        // reset radio buttons to have dhall button checked
+        document.getElementById('radio-dhall').checked = true;
+        document.getElementById('radio-usda').checked = false;
+        updateCardVisibility('radio-dhall');
+
+        // reset dropdown value
+        var selectDropdown = document.querySelector('.select-dropdown');
+        selectDropdown.value = 'Select Dining Hall';
+        selectDropdown.dispatchEvent(new Event('change'));
+
         document.getElementById('close--tutorial-1').click();
         document.getElementById('close-ckbox-usda-2012128').click();
+
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";
         var usdaSearchResults = document.getElementById('usda-search-results');
         usdaSearchResults.innerHTML = '';
-       
+
+        var navbar = document.getElementById("navbar");
+        navbar.style.zIndex = "1030";
+
+        // remove example items that were added to My Plate
+        var exampleCheckbox = document.querySelector('#checkbox-tutorial-1');
+        exampleCheckbox.checked = false;
+        handleCheckboxChange(exampleCheckbox);
+    
+        var bananaCheckbox = document.getElementById("usda-checkbox-usda-2012128");
+        bananaCheckbox.checked = false;
+        handleCheckboxChange(bananaCheckbox);
+
     }).start();
 }
 
