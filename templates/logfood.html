@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% set current_page = 'logfood' %}
 
-{% block title %}Log Food{% endblock %} =
+{% block title %}Log Meals{% endblock %} =
 {% block head %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.css" integrity="sha512-4OzqLjfh1aJa7M33b5+h0CSx0Q3i9Qaxlrr1T/Z+Vz+9zs5A7GM3T3MFKXoreghi3iDOSbkPMXiMBhFO7UBW/g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
@@ -23,7 +23,7 @@
 </style> 
 
 <div class="text-center p-3">
-    <h1 class="my-2">Log a Meal</h1>
+    <h1 class="my-2">Log Meals</h1>
 
     <p class="px-5">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-1-circle" viewBox="0 0 16 16">
@@ -122,7 +122,7 @@
             <form action="/logfood" method="post">
             <div class="logfood-card card" id="tutorial-my-plate">
                 <div class="card-body">
-                    <h5 class="card-title text-center">My Plate</h5>
+                    <h5 class="card-title text-center">My Meal</h5>
                     <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
                     <div id="my-plate"></div>
                 </div>
