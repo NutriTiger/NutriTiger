@@ -195,8 +195,16 @@ body {
     .hist-canvas {
         max-width: 100%; /* Charts take full width on smaller screens */
     }
+    #radio-buttons {
+        flex-direction: column; /* This stacks items vertically */
+    }
 }
-
+#radio-buttons {
+    display: flex;
+    flex-direction: row; /* This aligns items horizontally by default */
+    align-items: center;
+    justify-content: center;
+}
 /*************************/
 
 /* For My Plate footer (Log Food)*/
