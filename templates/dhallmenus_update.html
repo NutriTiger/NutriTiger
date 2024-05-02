@@ -12,8 +12,9 @@
         <input type="radio" value="Dinner" class="btn-check" name="mealtime_btnradio" id="btnradio3" autocomplete="off" {% if mealtime == 'Dinner' %} checked {% endif %}>
         <label class="nt-btn btn btn-dhall btn-primary" for="btnradio3">Dinner</label>
     </div>
-    <h4 class = "text-muted">Click on a food to see its nutritional contents</h4>
-    <a href="{{ url_for('log_food') }}" class="btn btn-more-info btn-primary">Log Food</a>
+    <h4 class>Click on a food to see its nutritional contents.</h4>
+    <h4> Ready to record what you ate? </h4>
+    <a href="{{ url_for('log_food') }}" class="btn btn-more-info btn-primary">Click to log today's meal</a>
 </div>
 <div style = "display:none;" id="todaysDateDivUpdate">{{ todays_date }}</div>
 <div class="p-5 row row-nt row-cols-1 row-cols-md-3 g-4">
@@ -63,6 +64,19 @@
                 {% set ns.c = ns.c + 1 %}
                 {% endfor %}
                 {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% for item in missingdata %}
+    <div class="col meal {{ item.mealtime }}" {% if item.mealtime != mealtime %} style = "display: none;" {% endif %}>
+        <div class="card h-100 card-body-dhall-menus ">
+            <div class="card-body"  >
+                <h2 class="card-title text-center">{{ item.dhall }}</h2>
+                <center>
+                    <h5>No data is available</h5>
+                </center>
             </div>
         </div>
     </div>

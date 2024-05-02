@@ -9,15 +9,30 @@
 		<div class="container-fluid h-100">
             <div class="row justify-content-center align-items-center h-100">
                 <div class="col-md-8">
+                    {% if error404 %}
+                    <h1 class="text-center">Page Not Found</h1>
+                    {% else %}
                     <h1 class="text-center">How Did You Land On This Page?</h1>
+                    {% endif %}
                 </div>
             </div>
         </div>
     
         <!--Include a link to a Google Form on "here"-->
+        {% if error404 %}
+        <h4 class="text-center">We were not able to find the page you were looking for. Go back to the homepage <a href="/homepage" target="_blank">here <i class="fa-solid fa-arrow-up-right-from-square"></i></a>.</h4>
+        {% else %}
         <h4 class="text-center">
             Report the issue you experienced <a href="https://forms.gle/DMg2sZUJPXNDfwqM6" target="_blank">here <i class="fa-solid fa-arrow-up-right-from-square"></i></a>.
         </h4>
+
+        <h5 class="text-center" style="margin-top: 8%">
+            You can include this error message in your issue report:
+        </h5>
+        <p class="text-center" style="margin-top: 2%">
+            {{ error }}
+        </p>
+        {% endif %}
 	</div>
 
 {% endblock %}

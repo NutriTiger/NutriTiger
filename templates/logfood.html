@@ -55,19 +55,29 @@
             <div class="logfood-card card">
 
                 <!--Radio buttons-->
+                <center>
                 <div class="p-3">
                     <div id="radio-buttons" class="container justify-content-center">
-                        <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-dhall" checked> Dining Halls  
-                        </label>
-                        <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-custom"> My Custom Foods  
-                        </label>
-                        <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
-                        </label>
+                        <div class="row">
+                            <div class="col-sm">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-dhall" checked> Dining Halls  
+                                </label>
+                            </div>
+                            <div class="col-sm">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-custom"> My Custom Foods  
+                                </label>
+                            </div>
+                            <div class="col-sm">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>              
+                </div>     
+            </center>   
 
                 <center>
                 <div id="foodsource-dropdown" class="col-md-8 p-3">
@@ -120,7 +130,7 @@
         </div>
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
-            <form action="/logfood" method="post">
+            <form action="/logmeals" method="post">
             <div class="logfood-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Meal</h5>
@@ -174,7 +184,13 @@
             foodElement.innerHTML = `
                 <input type="checkbox" class="form-check-input" id="usda-checkbox-${recipeid}">
                 <label class="form-check-label" for="usda-checkbox-${recipeid}">${mealname}</label>
-                <p>Serving Size: ${servingSize}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+                <p class="nutrition-container">
+                    <span class="nutrition-fact">Serving Size: ${servingSize}</span>
+                    <span class="nutrition-fact">Calories: ${calories}</span>
+                    <span class="nutrition-fact">Proteins: ${proteins}g</span>
+                    <span class="nutrition-fact">Carbs: ${carbs}g</span>
+                    <span class="nutrition-fact">Fats: Fats: ${fats}g</span>
+                </p>
             `;
             resultsContainer.appendChild(foodElement);
         });
@@ -339,8 +355,9 @@
                         </div>
                         <div class="col-auto d-flex align-items-center">
                             <div id="new_entry" class="d-flex align-items-center">
+                                <span class="text-muted" style="font-size: small; margin-right: 5px;">Servings: </span>
                                 <input type="number" onpaste="return false;" step="any" min="0.01" max="100" 
-                                class="form-control small-input mr-2" data-usda="${element.dataset.usda}" data-cals="${element.dataset.cals}" 
+                                class="form-control small-input" data-usda="${element.dataset.usda}" data-cals="${element.dataset.cals}" 
                                 data-recid="${element.dataset.recid}" data-mealname="${element.dataset.mealname}" data-carbs="${element.dataset.carbs}" 
                                 data-fats="${element.dataset.fats}" data-prots="${element.dataset.prots}" placeholder="Servings" value="1" 
                                 oninput="handleServingChange(this)" required onkeypress="return isValid(event)">
@@ -457,7 +474,13 @@
                         data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
                         onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
                     <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
-                    <p id="nf-${food.recipeid}">Serving Size: ${servingSizeInfo}, Calories: ${calories}, Proteins: ${proteins}g, Carbs: ${carbs}g, Fats: ${fats}g</p>
+                    <p id="nf-${food.recipeid}" class="nutrition-container">
+                            <span class="nutrition-fact">Serving Size: ${servingSizeInfo}</span>
+                            <span class="nutrition-fact">Calories: ${calories}</span>
+                            <span class="nutrition-fact">Proteins: ${proteins}g</span>
+                            <span class="nutrition-fact">Carbs: ${carbs}g</span>
+                            <span class="nutrition-fact">Fats: Fats: ${fats}g</span>
+                    </p>
                     `;  
                     pageDiv.appendChild(foodElement);
             
@@ -702,8 +725,9 @@
     function startTutorial() {
         var element = document.getElementById("navbar");
         element.style.zIndex = "0";
+        var introguide = introJs();
 
-    introJs().setOptions({
+    introguide.setOptions({
         disableInteraction: true,
         showBullets: false,
         showProgress: true,
@@ -760,10 +784,6 @@
             element: document.querySelector('#submitButton'),
             intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where your new entry will appear."
         }, ]
-    }).onafterchange(function(targetElement) {
-        var nextButton = document.getElementsByClassName("introjs-nextbutton")
-
-        nextButton.style.pointerEvents = "none"
     }).onchange(function(targetElement) {
         if (targetElement.id == 'radio-buttons') {
             document.getElementById('radio-dhall').checked = true;
@@ -798,8 +818,12 @@
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
-    }).onexit(function() {
+    }).onafterchange(function(targetElement) {
+        var nextButton = document.getElementsByClassName("introjs-nextbutton")
 
+        nextButton.style.pointerEvents = "none";
+    }).onexit(function() {
+        try {
         // reset radio buttons to have dhall button checked
         document.getElementById('radio-dhall').checked = true;
         document.getElementById('radio-usda').checked = false;
@@ -829,6 +853,10 @@
         var bananaCheckbox = document.getElementById("usda-checkbox-usda-2012128");
         bananaCheckbox.checked = false;
         handleCheckboxChange(bananaCheckbox);
+        } catch {
+            console.log("Tutorial exited early.");
+        }
+        return true;
 
     }).start();
 }
@@ -990,7 +1018,7 @@
                 showLoadingAnimation();
                 $.ajax({
                     type: "POST",
-                    url: "/logfood",
+                    url: "/logmeals",
                     contentType: "application/json",
                     data: jsonData,
                     success: function (response) {

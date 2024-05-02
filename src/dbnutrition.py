@@ -1,6 +1,6 @@
 import pymongo
 from dbfunctions import connectmongo
-from dbusers import get_maxid, update_maxid
+# from dbusers import get_maxid, update_maxid
 import sys
 from datetime import datetime, time
 import pytz
@@ -13,7 +13,35 @@ import photos
 # Oyu Enkhbold and Jewel Merriman
 #
 #----------------------------------------------------------------------
-
+def get_maxid(netid):
+    try:
+        with connectmongo() as client:
+            db = client.db
+            users_collection = db["users"]
+            this_user = users_collection.find_one({"netid": netid}, {"_id": 0, "max_id": 1})
+            if this_user is None:
+                print(f"No document found with netid: {netid}")
+                return None
+            return this_user.get('max_id', None)
+    except pymongo.errors.OperationFailure:
+        print("Authentication error: check if your DB user is authorized for write operations.")
+    except pymongo.errors.ServerSelectionTimeoutError:
+        print("Server timeout: ensure your IP address is in the Access List on Atlas.")
+def update_maxid(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        who = {"netid": netid}
+        try:
+            result = users_collection.update_one(who, {"$inc": {"max_id": 1}})
+            if result.matched_count == 0:
+                print(f"No document found with netid: {netid}")
+            elif result.modified_count == 0:
+                print(f"Document with netid: {netid} was not updated.")
+        except pymongo.errors.OperationFailure as e:
+            print(f"An authentication error occurred: {e}")
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            print(f"The server timed out: {e}")
 # Inserts nutrition information of the upcoming two weeks of food (as input)
 # call update_menu before to delete nutrition info
 # new_foods is list of bson objects

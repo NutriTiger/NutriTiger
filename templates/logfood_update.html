@@ -24,7 +24,13 @@
                                 onchange="handleCheckboxChange(this)"
                                 onkeypress="changeCheckbox(this)">
                             <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
-                            <p id="nf-{{ checkbox_id }}">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }} Calories: {{ nutrition_info[ns.c]['calories'] }} Proteins: {{ nutrition_info[ns.c]['proteins'] }}g Carbs: {{ nutrition_info[ns.c]['carbs'] }}g Fats: {{ nutrition_info[ns.c]['fats'] }}g</p>
+                            <p id="nf-{{ checkbox_id }}" class="nutrition-container">
+                                <span class="nutrition-fact">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }}</span>
+                                <span class="nutrition-fact">Calories: {{ nutrition_info[ns.c]['calories'] }}</span>
+                                <span class="nutrition-fact">Proteins: {{ nutrition_info[ns.c]['proteins'] }}g</span>
+                                <span class="nutrition-fact">Carbs: {{ nutrition_info[ns.c]['carbs'] }}g</span>
+                                <span class="nutrition-fact">Fats: {{ nutrition_info[ns.c]['fats'] }}g</span>
+                            </p>
                         </div>
                     {% endif %}
                     {% set ns.c = ns.c + 1 %}
@@ -84,7 +90,7 @@
         <div class="form-check">
             <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-tutorial-1" 
                 data-usda="false"
-                data-recid="tutorial-1" data-location="Personal Food" data-mealtime="N/A"
+                data-recid="tutorial-1" data-location="Custom Food" data-mealtime="N/A"
                 data-mealname="Example Food"
                 data-servingsize="1"
                 data-cals="630"
@@ -94,7 +100,13 @@
                 onchange="handleCheckboxChange(this)"
                 onkeypress="changeCheckbox(this)">
             <label class="form-check-label" for="checkbox-tutorial-1">Example Food</label>
-            <p id="nf-tutorial-1">Serving Size: 1 Calories: 630 Proteins: 31g Carbs: 20g Fats: 18g</p>
+            <p id="nf-tutorial-1" class="nutrition-container">
+                <span class="nutrition-fact">Serving Size: 1</span>
+                <span class="nutrition-fact">Calories: 630</span>
+                <span class="nutrition-fact">Proteins: 31g</span>
+                <span class="nutrition-fact">Carbs: 20g</span>
+                <span class="nutrition-fact">Fats: 18g</span>
+            </p>
         </div>
     </div>
 </div>
