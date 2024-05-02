@@ -55,19 +55,29 @@
             <div class="logfood-card card">
 
                 <!--Radio buttons-->
+                <center>
                 <div class="p-3">
                     <div id="radio-buttons" class="container justify-content-center">
-                        <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-dhall" checked> Dining Halls  
-                        </label>
-                        <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-custom"> My Custom Foods  
-                        </label>
-                        <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
-                        </label>
+                        <div class="row">
+                            <div class="col-sm">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-dhall" checked> Dining Halls  
+                                </label>
+                            </div>
+                            <div class="col-sm">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-custom"> My Custom Foods  
+                                </label>
+                            </div>
+                            <div class="col-sm">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>              
+                </div>     
+            </center>   
 
                 <center>
                 <div id="foodsource-dropdown" class="col-md-8 p-3">
@@ -79,6 +89,7 @@
                         <option value="Yeh & New West Colleges">Yeh & New West Colleges</option>
                         <option value="Rockefeller & Mathey Colleges">Rockefeller & Mathey Colleges</option>
                         <option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
+                        <option hidden value="Example Dining Hall">Example Dining Hall</option>
                     </select>
                 </div>
             </center>
@@ -588,6 +599,12 @@
             $("#select").show()
             return
         }
+        else if (selectedHall === "Example Dining Hall") {
+            $("#usda-search-results").hide();
+            $("#personal-food-items").hide();
+            $("#tutorial-food-items").show();
+            $("#menu-items").hide();
+        } 
         dhallCode = selectedHall.substring(0, 2);
         let divToShow = dhallCode + "-" + mealtime;
         if ($("#" + divToShow).length > 0) {
@@ -730,7 +747,10 @@
 
         nextButton.style.pointerEvents = "none"
     }).onchange(function(targetElement) {
-        
+        if (targetElement.id == 'radio-buttons') {
+            document.getElementById('radio-dhall').checked = true;
+            updateCardVisibility('radio-dhall');
+        }
         // Check if we are on the step where we want to auto-select an option from the dropdown
         if (targetElement.classList.contains('select-dropdown')) {
             // Simulate selecting an option by triggering a change event
