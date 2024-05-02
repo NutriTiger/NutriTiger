@@ -56,7 +56,7 @@
 
                 <!--Radio buttons-->
                 <div class="p-3">
-                    <div class="container justify-content-center" style="display: flex; flex-direction: row; align-items: center;">
+                    <div id="radio-buttons" class="container justify-content-center" style="display: flex; flex-direction: row; align-items: center;">
                         <label class="radio-inline pl-2" style="margin-right: 20px;">
                             <input type="radio" name="foodSource" id="radio-dhall" checked>Dining Halls  
                         </label>
@@ -72,7 +72,7 @@
                 <center>
                 <div id="foodsource-dropdown" class="col-md-8 p-3">
                     <select class="select-dropdown btn btn-secondary dropdown-toggle form-select custom-dropdown" id="diningHallSelect" aria-label="select_dhall" style="display: block;">
-                        <option value="Select Food Source" selected>Select Dining Hall</option>
+                        <option value="Select Dining Hall" selected>Select Dining Hall</option>
                         <option value="Center for Jewish Life">Center for Jewish Life</option>
                         <option value="Forbes College">Forbes College</option>
                         <option value="Graduate College">Graduate College</option>
@@ -574,25 +574,29 @@
         $("#menu-items").show();
         $("#select").hide();
         $("#noDataMessage").hide();
+
+        $("#searchBarSpan").hide();
+        $("#usda-search-results").hide();
+        $("#personal-food-items").hide();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").show();
+
+
+        $("#mealTimeTab").show();
+        let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
         let selectedHall = $("#diningHallSelect").val();
-
-            $("#searchBarSpan").hide();
-            $("#usda-search-results").hide();
-            $("#personal-food-items").hide();
-            $("#tutorial-food-items").hide();
-            $("#menu-items").show();
-
-
-            $("#mealTimeTab").show();
-            let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
-            dhallCode = selectedHall.substring(0, 2);
-            let divToShow = dhallCode + "-" + mealtime;
-            if ($("#" + divToShow).length > 0) {
-                $("#" + divToShow).show();
-            } 
-            else {
-                $("#noDataMessage").show();
-            }
+        if (selectedHall == "Select Dining Hall") {
+            $("#select").show()
+            return
+        }
+        dhallCode = selectedHall.substring(0, 2);
+        let divToShow = dhallCode + "-" + mealtime;
+        if ($("#" + divToShow).length > 0) {
+            $("#" + divToShow).show();
+        } 
+        else {
+            $("#noDataMessage").show();
+        }
     }
 
     function handleServingChange() {
@@ -672,47 +676,55 @@
         tooltipClass: 'customTooltip',
         steps: [{
             title: 'Welcome',
-            intro: 'Welcome to the tutorial to learn how to log your food for the day!'
+            intro: 'Welcome to the tutorial to learn how to log the foods you ate in a meal!'
         }, {
             title: 'Select a source',
+            element: document.querySelector('#radio-buttons'),
+            intro: "First, select your food source: Princeton dining halls, your custom recipes, or search for any food in a generic USDA database. We've chosen a dining hall for this demo."
+        }, {
+            title: 'Select a dining hall',
             element: document.querySelector('.select-dropdown'),
-            intro: "First, you will select the source of your food here. This can be from Princeton's dining halls, your custom recipes, or from a generic USDA database if you can't find it. We have picked a dining hall for you for this demonstration."
+            intro: "Select a dining hall from the dropdown to see the foods offered at that dining hall today."
         }, {
             title: 'Select Mealtime',
             element: document.querySelector('#mealTimeTab'),
-            intro: 'Here you can select your mealtime!'
+            intro: 'Navigate between the tabs to see the foods offered during each mealtime.'
         }, {
             title: 'Select Foods',
             element: document.querySelector('#tutorial-food-items'),
-            intro: 'And here you can select the foods based on the pre-selected dining hall and mealtime.'
+            intro: 'Select the foods you want to log from the list that appears here.'
         }, {
             title: 'Select Item',
             element: document.querySelector('#checkbox-tutorial-1'),
-            intro: "Let's select an item as an example."
+            intro: "Let's select an example food item."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
-            intro: "Once you select an item, it appears here where you can edit the servings, or delete it if you accidentally added it. By default, a serving size of 1 is put, but this can easily be changed."
+            intro: "Once you select an item, it appears here where you can edit the servings. If you accidentally added it, you can also remove it. Each food is given a serving size of 1 by default, but you can edit this value."
         }, {
             title: 'Plate Totals',
             element: document.querySelector('.card-footer'),
-            intro: "You can also see running totals of calories, proteins, carbs, and fats that update with each food you add to your plate."
+            intro: "You can also see a running totals of calories, proteins, carbs, and fats for the foods you add to your plate."
         }, {
-            title: 'Generic Food Search',
+            title: 'Generic Food Search', // make sure this action checks the "radio-usda" radio button
+            element: document.querySelector('#radio-usda'),
+            intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana."
+        }, {
+            title: 'Search for a food',
             element: document.querySelector('#searchBarSpan'),
-            intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana. While it processes your request, a loading animation is shown."
+            intro: "Type the food name into the search bar."
         }, {
             title: 'Generic Food Selection',
             element: document.querySelector('#usda-search-results'),
-            intro: "Here are all the relevant results. Let's check another thing off again."
+            intro: "Here are all the search results. Let's select a food item from it."
         }, {
             title: 'Edit My Plate',
             element: document.querySelector('#tutorial-my-plate'),
-            intro: "Notice how it appeared in my plate and the serving size is one by default. Again, notice how plate totals have also been updated to reflect the new foods in your plate."
+            intro: "Again, once selected, the food appears on your plate with a default serving of 1."
         }, {
             title: 'Upload plate',
             element: document.querySelector('#submitButton'),
-            intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where it will appear."
+            intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where your new entry will appear."
         }, ]
     }).onafterchange(function(targetElement) {
         var nextButton = document.getElementsByClassName("introjs-nextbutton")
@@ -731,9 +743,14 @@
             checkbox.checked = true;
             handleCheckboxChange(checkbox);
         }
+        if (targetElement.id == 'radio-usda') {
+            var button = document.querySelector('#radio-usda');
+            document.querySelector('#radio-dhall').checked = false;
+            button.checked = true;
+            updateCardVisibility('radio-usda');
+        }
         if (targetElement.id == 'searchBarSpan') {
-            document.querySelector('.select-dropdown').value = 'USDA FoodData Central';
-            document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+            updateCardVisibility('radio-usda');
             var searchBar = document.getElementById("searchBar");
             searchBar.value = "banana";
             searchUSDAFood();
@@ -745,17 +762,37 @@
             handleCheckboxChange(checkbox);
         }
     }).onexit(function() {
-        var navbar = document.getElementById("navbar");
-        navbar.style.zIndex = "1030";
-        document.querySelector('.select-dropdown').value = 'Select Food Source';
-        document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+
+        // reset radio buttons to have dhall button checked
+        document.getElementById('radio-dhall').checked = true;
+        document.getElementById('radio-usda').checked = false;
+        updateCardVisibility('radio-dhall');
+
+        // reset dropdown value
+        var selectDropdown = document.querySelector('.select-dropdown');
+        selectDropdown.value = 'Select Dining Hall';
+        selectDropdown.dispatchEvent(new Event('change'));
+
         document.getElementById('close--tutorial-1').click();
         document.getElementById('close-ckbox-usda-2012128').click();
+
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "";
         var usdaSearchResults = document.getElementById('usda-search-results');
         usdaSearchResults.innerHTML = '';
-       
+
+        var navbar = document.getElementById("navbar");
+        navbar.style.zIndex = "1030";
+
+        // remove example items that were added to My Plate
+        var exampleCheckbox = document.querySelector('#checkbox-tutorial-1');
+        exampleCheckbox.checked = false;
+        handleCheckboxChange(exampleCheckbox);
+    
+        var bananaCheckbox = document.getElementById("usda-checkbox-usda-2012128");
+        bananaCheckbox.checked = false;
+        handleCheckboxChange(bananaCheckbox);
+
     }).start();
 }
 
