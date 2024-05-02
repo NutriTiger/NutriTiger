@@ -56,12 +56,12 @@
 
                 <!--Radio buttons-->
                 <div class="p-3">
-                    <div id="radio-buttons" class="container justify-content-center" style="display: flex; flex-direction: row; align-items: center;">
+                    <div id="radio-buttons" class="container justify-content-center">
                         <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-dhall" checked>Dining Halls  
+                            <input type="radio" name="foodSource" id="radio-dhall" checked> Dining Halls  
                         </label>
                         <label class="radio-inline pl-2" style="margin-right: 20px;">
-                            <input type="radio" name="foodSource" id="radio-custom">My Custom Foods  
+                            <input type="radio" name="foodSource" id="radio-custom"> My Custom Foods  
                         </label>
                         <label class="radio-inline pl-2" style="margin-right: 20px;">
                             <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
@@ -300,10 +300,10 @@
             }
             const uniqueid = element.id.substring(8);
             let details;
-            if (element.dataset.mealname === "N/A") {
+            if (element.dataset.mealtime === "N/A") {
                 details = element.dataset.location;
             } else {
-                details = element.dataset.location + ", " + element.dataset.mealname;
+                details = element.dataset.location + ", " + element.dataset.mealtime;
             }
             const myPlateFoodHTML = `
                 <div class="card border-primary p-2 mb-3" id="myplate-${uniqueid}">
