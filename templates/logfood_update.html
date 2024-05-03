@@ -44,39 +44,42 @@
 
 
 <div class="card-body" id="personal-food-items" style="display: none;">
+    
     {% if personal_data %}
-        {% set ns = namespace(c = 0) %}
-        {% for item in personal_data %}
-
-            <div class = "personal-items-content">
-                <div class="form-check">
-                    {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
-                    <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}" 
-                        data-usda="false"
-                        data-recid="{{ item.recipeid }}" data-location="Custom Food" data-mealtime="N/A"
-                        data-mealname="{{ item.mealname }}"
-                        data-servingsize="{{ item.servingsize }}"
-                        data-cals="{{ item.calories }}"
-                        data-carbs="{{ item.carbs }}"
-                        data-prots="{{ item.proteins }}"
-                        data-fats="{{ item.fats }}"
-                        onchange="handleCheckboxChange(this)"
-                        onkeypress="changeCheckbox(this)">
-                    <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ item.mealname }}</label>
-                    <p id="nf-{{ checkbox_id }}" class="nutrition-container">
-                        <span class="nutrition-fact">Serving Size: {{ item.servingsize }}</span>
-                        <span class="nutrition-fact">Calories: {{ item.calories }}</span>
-                        <span class="nutrition-fact">Proteins: {{ item.proteins }}g</span>
-                        <span class="nutrition-fact">Carbs: {{ item.carbs }}g</span>
-                        <span class="nutrition-fact">Fats: {{ item.fats }}g</span>
-                    </p>
-                </div>
-
+        <div class="card-body" id="personal-food-items">
+            <div class="row">
+                {% for item in personal_data %}
+                    <div class="col-md-12 personal-items-content" data-page="{{ loop.index0 // 7 + 1 }}">
+                        <div class="form-check">
+                            {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
+                            <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}"
+                                data-usda="false" data-recid="{{ item.recipeid }}" data-location="Personal Food" data-mealtime="N/A"
+                                data-mealname="{{ item.mealname }}" data-servingsize="{{ item.servingsize }}"
+                                data-cals="{{ item.calories }}" data-carbs="{{ item.carbs }}"
+                                data-prots="{{ item.proteins }}" data-fats="{{ item.fats }}"
+                                onchange="handleCheckboxChange(this)" onkeypress="changeCheckbox(this)">
+                            <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ item.mealname }}</label>
+                            <p id="nf-{{ checkbox_id }}">
+                                Serving Size: {{ item.servingsize }} Calories: {{ item.calories }} Proteins: {{ item.proteins }}g Carbs: {{ item.carbs }}g Fats: {{ item.fats }}g
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            {% set ns.c = ns.c + 1 %}
-        {% endfor %}
-    {% endif %}
-    {% if not personal_data %}
+
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    
+                    {% for i in range(1, total_pages + 1) %}
+                        <li class="page-item {% if i == 1 %}active{% endif %}" onclick="handleCustomPageChange({{ i }})">
+                            <a class="page-link" href="javascript:void(0);">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    {% else %}
         <p id="noDataPersonalMessage" class="text-center">You have not added any Custom Foods yet.</p>
     {% endif %}
 
