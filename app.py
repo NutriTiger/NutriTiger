@@ -228,9 +228,6 @@ def update_menus_mealtime():
     else:
         MEALTIMES = ["Breakfast", "Lunch", "Dinner"]
 
-    # Credit: https://stackoverflow.com/questions/403421/how-do-i-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
-    data.sort(key=lambda item: item['dhall'])
-
     missingdata = []
     for dhall in DHALLS:
         for meal in MEALTIMES:
