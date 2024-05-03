@@ -396,10 +396,10 @@ body {
     max-height: 200px; /* Restrict the image height to keep the layout uniform */
     object-fit: cover; /* Ensure the image covers the area without distorting */
 }
-.card {
+.card-pop {
     transition: transform 0.3s ease-in-out; /* Smooth transformation for hover effect */
 }
-.card:hover {
+.card-pop:hover {
     transform: scale(1.03); /* Slight scale on hover to add interaction feedback */
 }
 /*******************************************************************/
