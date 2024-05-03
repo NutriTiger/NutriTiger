@@ -1,13 +1,26 @@
+#-----------------------------------------------------------------------
+# INSTRUCTIONS
+# run with the command: python gradingscript.py netid
+# where netid is the netid of the user you want to load history and 
+# custom foods for, loads 100 days of history and 12 custom foods
+#-----------------------------------------------------------------------
 import dbusers
+import dbnutrition
 import dbfunctions
 import random
+import sys
 #-----------------------------------------------------------------------
 TEMPLATE_USER = "jm0278"
 NUM_LOGGED_DAYS = 100
 #-----------------------------------------------------------------------
 def load_custom_foods(netid):
-    print("here")
-    # custom_foods = dbusers.find_all_personal_nutrition(TEMPLATE_USER)
+    custom_foods = dbnutrition.find_all_personal_nutrition(TEMPLATE_USER)
+    print(custom_foods)
+    keys_to_exclude = ["mealname", "access", "recipeid", "date", "_id"]
+    for document in custom_foods:
+        mealname = document["mealname"]
+        nutrition = {key: value for key, value in document.items() if key not in keys_to_exclude}
+        dbnutrition.add_personal_food(mealname, netid, nutrition)
 #-----------------------------------------------------------------------
 def load_history(netid):
     this_user = dbusers.finduser(netid)
@@ -36,7 +49,12 @@ def load_history(netid):
     dbusers.__setuser__(netid, this_user)
 #-----------------------------------------------------------------------
 def main():
-    load_history("jm0278")
+    arguments = sys.argv
+    if len(arguments) > 1:
+        netid = arguments[1]
+        print(netid)
+        load_history(netid)
+        load_custom_foods(netid)
 #-----------------------------------------------------------------------
 if __name__ == '__main__':
     main()
