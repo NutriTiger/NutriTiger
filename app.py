@@ -151,7 +151,7 @@ def homepage():
 
     # When Edit Plate button is pressed
     if request.method == 'POST':
-        if 'add_entry' in request.form:
+        if 'add_meal' in request.form:
             return redirect('/logmeals')
         
         if 'historyBtn' in request.form:
