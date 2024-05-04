@@ -1,4 +1,4 @@
-<div id="loading-animation" class="loading-animation">
+<div id="loading-animation" class="loading-animation" style="display:none;">
     <div class="loading-spinner"></div>
 </div>
 
@@ -21,5 +21,10 @@ function hideLoadingAnimation() {
     // Hide the loading animation
     $("#loading-animation").hide();
     $('input').off('keydown');
+}
+
+// If the user hits the back button reset the form
+window.onunload = function() {
+    hideLoadingAnimation();
 }
 </script>

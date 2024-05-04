@@ -4,13 +4,11 @@
 {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!--Give header white background -->
-<div id="loading-animation" class="loading-animation" style="display:none;">
-    <div class="loading-spinner"></div>
-</div>
+{% include 'loading.html' %}
     <h1 class="text-center m-3">Editing My Meals</h1> 
     <h3 class="text-center m-3 text-muted">Edit servings, delete foods, or delete entries.</h3>
     <!--Layout for the two main cards-->
-    <div class="row p-5">
+    <div class="row p-3 p-md-5">
         <div class="col-sm-9 mx-auto">
           <div class="card">
             <div class="card-body">
@@ -70,7 +68,7 @@
                 <!--Save Meals button-->
                 <div class="py-3">
                     <form>
-                        <button id="savePlate" type="submit" class="btn btn-secondary btn-lg btn-block">Save Meals</button>
+                        <button id="savePlate" type="button" class="btn btn-secondary btn-lg btn-block">Save Meals</button>
                     </form>
                 </div>
             </div>
@@ -126,11 +124,6 @@
         return isValid;
     }
 
-
-    function showLoadingAnimation() {
-        // Show the loading animation covering the entire screen
-        $("#loading-animation").show();
-    }
 
     function handleEntryClose() {
         const entryNum = $(this).data('entrynum');
