@@ -265,7 +265,7 @@
 
     function handleCustomPageChange(page) {
         currentCustomPage = page;
-        $('.personal-items-content').hide(); // Hide all items
+        $('.custom-items-content').hide(); // Hide all items
         $(`div[data-page="${page}"]`).show(); // Show items for the current page
 
         $('.pagination .page-item').removeClass('active'); // Remove 'active' class from all pagination buttons
@@ -628,7 +628,7 @@
 
         $("#searchBarSpan").hide();
         $("#usda-search-results").hide();
-        $("#personal-food-items").hide();
+        $("#custom-food-items").hide();
         $("#tutorial-food-items").hide();
         $("#menu-items").show();
 
@@ -642,7 +642,7 @@
         }
         else if (selectedHall === "Example Dining Hall") {
             $("#usda-search-results").hide();
-            $("#personal-food-items").hide();
+            $("#custom-food-items").hide();
             $("#tutorial-food-items").show();
             $("#menu-items").hide();
         } 
@@ -887,7 +887,7 @@
             $("#pagination").hide();
 
             $("#usda-search-results").hide();
-            $("#personal-food-items").hide();
+            $("#custom-food-items").hide();
             $("#tutorial-food-items").hide();
             $("#menu-items").hide();
             $("#mealTimeTab").show();
@@ -903,7 +903,7 @@
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
             $("#usda-search-results").hide();
-            $("#personal-food-items").show();
+            $("#custom-food-items").show();
             $("#tutorial-food-items").hide();
             $("#menu-items").hide();
             $("#foodsource-dropdown").hide();
@@ -915,7 +915,7 @@
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
             $("#usda-search-results").show();
-            $("#personal-food-items").hide();
+            $("#custom-food-items").hide();
             $("#tutorial-food-items").hide();
             $("#menu-items").hide();
             $("#foodsource-dropdown").hide();

@@ -98,10 +98,10 @@ def find_one_nutrition(recipeid):
             sys.exit(1)
 
 
-# Deletes personal food item
+# Deletes custom food item
 # Recipeid has netid and unique number
 # Returns true if successful, false is unsuccessful
-def del_personal_food(recipeid):
+def del_custom_food(recipeid):
     with connectmongo() as client:
         print(recipeid)
         db = client.db
@@ -124,11 +124,11 @@ def del_personal_food(recipeid):
         except Exception as e:
             print(f"Error: {e}")
             return False
-# Deletes personal food items
+# Deletes custom food items
 # Recipeids is in array of recipeids
 # Returns true if successful, false is unsuccessful
-def del_many_personal_food(recipeids):
-    print("in del_many_personal_food")
+def del_many_custom_food(recipeids):
+    print("in del_many_custom_food")
     print(recipeids)
 
     with connectmongo() as client:
@@ -158,13 +158,13 @@ def del_many_personal_food(recipeids):
                 print(f"Expected to delete {len(recipeids)}, but deleted {result.deleted_count}.")
                 return False
         except Exception as e:
-            print("Exception within del_many_personal")
+            print("Exception within del_many_custom")
             print(f"Error during deletion: {e}")
             return False
 
 # Create new food item -- should already include the net id field of user
 # Nutrition is dictionary
-def add_personal_food(name, netid, nutrition):
+def add_custom_food(name, netid, nutrition):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
@@ -190,7 +190,7 @@ def add_personal_food(name, netid, nutrition):
                 update_maxid(netid)
                 return
             except:
-                print("Issue with insert for personal doc")
+                print("Issue with insert for custom doc")
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
             sys.exit(1)
@@ -246,7 +246,7 @@ def find_many_nutrition(recipeids):
 
 
 # Retrieve nutritional information of a user and sorts by recently created
-def find_all_personal_nutrition(netid):
+def find_all_custom_nutrition(netid):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
@@ -257,7 +257,7 @@ def find_all_personal_nutrition(netid):
             result = list(nutrition_col.find(documents_to_find).sort("date", pymongo.DESCENDING))
             print(f"found documents: {result}")
             if len(result) == 0:
-                print("No personal nutrition documents found")
+                print("No custom nutrition documents found")
                 return
             return result
         except pymongo.errors.OperationFailure:
@@ -267,8 +267,8 @@ def find_all_personal_nutrition(netid):
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
 
-# Find one personal nutrition info with user's netid and recipeid
-def find_one_personal_nutrition(netid, lowercase_name):
+# Find one custom nutrition info with user's netid and recipeid
+def find_one_custom_nutrition(netid, lowercase_name):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
@@ -278,7 +278,7 @@ def find_one_personal_nutrition(netid, lowercase_name):
             result = nutrition_col.find_one(documents_to_find)
             print(f"found documents: {result}")
             if not result:
-                print("No personal nutrition document found")
+                print("No custom nutrition document found")
                 return
             return result
         except pymongo.errors.OperationFailure:
@@ -330,7 +330,7 @@ def main():
          "ingredients": "Flour, soy, water",
         }
     ]
-    personal = {"calories": 100,
+    custom = {"calories": 100,
          "proteins": 10,
          "carbs": 9,
          "fats": 8,
@@ -354,18 +354,18 @@ def main():
     # result = find_many_nutrition(list)
     # print(result[0]['calories'])
     # link = "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html"
-    # add_personal_food("ANOTHER", "oe7583", personal, link)
-    # list = find_all_personal_nutrition("oe7583")
+    # add_custom_food("ANOTHER", "oe7583", custom, link)
+    # list = find_all_custom_nutrition("oe7583")
     # for item in list:
     #     print(item)
-    # find_one_personal_nutrition("oe7583", 1)
+    # find_one_custom_nutrition("oe7583", 1)
 
     # date_obj = datetime.now(timezone('US/Eastern')).date()
         # today = datetime.combine(date_obj, time.min)
     
     with connectmongo() as client:
         db = client.db
-        col = db.personal_nutrition
+        col = db.custom_nutrition
         documents_to_delete = {"access": "oe7583"}
 
         del_result = col.delete_many(documents_to_delete)

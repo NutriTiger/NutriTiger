@@ -43,13 +43,13 @@
 </div>
 
 
-<div class="card-body" id="personal-food-items" style="display: none;">
+<div class="card-body" id="custom-food-items" style="display: none;">
     
-    {% if personal_data %}
-        <div class="card-body" id="personal-food-items">
+    {% if custom_data %}
+        <div class="card-body" id="custom-food-items">
             <div class="row">
-                {% for item in personal_data %}
-                    <div class="col-md-12 personal-items-content" data-page="{{ loop.index0 // 7 + 1 }}">
+                {% for item in custom_data %}
+                    <div class="col-md-12 custom-items-content" data-page="{{ loop.index0 // 7 + 1 }}">
                         <div class="form-check">
                             {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
                             <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}"

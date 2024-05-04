@@ -391,7 +391,7 @@ def settings():
     user_settings = dbusers.findsettings(netid)
     current_cal_goal = user_settings['caloricgoal']
     join_date = utils.custom_strftime(user_settings['join_date'])
-    user_nutrition = dbnutrition.find_all_personal_nutrition(netid)    
+    user_nutrition = dbnutrition.find_all_custom_nutrition(netid)    
 
     return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date, user_nutrition=user_nutrition)
 
@@ -483,15 +483,15 @@ def log_food():
         recipeids = utils.gather_recipes(data)
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
     
-        personal_data = dbnutrition.find_all_personal_nutrition(netid)
-        if personal_data is None:
-            personal_data = []
+        custom_data = dbnutrition.find_all_custom_nutrition(netid)
+        if custom_data is None:
+            custom_data = []
         items_per_page = 7
-        total_pages = (int)(len(personal_data) / items_per_page)
+        total_pages = (int)(len(custom_data) / items_per_page)
 
         return render_template('logmeals.html', is_weekend_var = is_weekend_var, data=data, 
                                 nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, 
-                                personal_data = personal_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT, total_pages = total_pages)
+                                custom_data = custom_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT, total_pages = total_pages)
 
 #--------------------------------------------------------------------
 
@@ -537,7 +537,7 @@ def logmeals_usdadata():
 #--------------------------------------------------------------------
 
 @app.route('/customfoods', methods=['GET', 'POST'])
-def personal_nutrition():
+def custom_nutrition():
     netid = auth.authenticate()
     cursor = dbusers.userlogin(netid)
     if cursor is None:
@@ -546,32 +546,32 @@ def personal_nutrition():
         data = request.get_json()
         deletedFood = data.get('deletedFood')
         this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFood)
-        result = dbnutrition.del_personal_food(deletedFood)
+        result = dbnutrition.del_custom_food(deletedFood)
         if result:
-            return jsonify({"success": True, "redirect": url_for('personal_nutrition')})
+            return jsonify({"success": True, "redirect": url_for('custom_nutrition')})
         # IF THERE IS AN ERROR WITH THE DELETION: let's see if any issues come up
         # flash("Failed to delete custom food item(s).")
-        return redirect(url_for('personal_nutrition'))
+        return redirect(url_for('custom_nutrition'))
 
     else:
-        user_nutrition = dbnutrition.find_all_personal_nutrition(netid)
-        return render_template('personalnutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
+        user_nutrition = dbnutrition.find_all_custom_nutrition(netid)
+        return render_template('custom_nutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
 #--------------------------------------------------------------------
 
 @app.route('/addcustomfood', methods=['GET'])
-def personal_food():
+def custom_food():
     netid = auth.authenticate()
 
     form_data = session.pop('form_data', None) if 'form_data' in session else {
         'message': "Enter nutrition information for your own food items!"
     }
-    return render_template('personalfood.html', **form_data) 
+    return render_template('custom_food.html', **form_data) 
 
 #--------------------------------------------------------------------
 
 # Flashes an issue with the submission and returns the previously
 # typed elements back into the input areas
-def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc):
+def add_customfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc):
     flash(message)
     
     # Store form data and message in session
@@ -584,7 +584,7 @@ def add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, se
         'servingsize': servingsize,
         'desc': desc,
     }
-    return redirect(url_for('personal_food'))
+    return redirect(url_for('custom_food'))
 
 #--------------------------------------------------------------------
 
@@ -610,7 +610,7 @@ def check_upload (file):
 #--------------------------------------------------------------------
 
 @app.route('/addcustomfood', methods=['POST'])
-def add_personalfood():
+def add_customfood():
     netid = auth.authenticate()
 
     temp_name = request.form.get('name', type = str)
@@ -624,13 +624,6 @@ def add_personalfood():
     desc = request.form.get('description', type = str)
 
     file = request.files.get('image')
-    # if file and photos.allowed_file(file.filename):
-    #     filename = secure_filename(file.filename)
-    #     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    #     file.save(file_path)
-    # else:
-    #     file_path = session.get('image_url', '')  # Use previous or default image URL
-
 
     # Sanitizing - Empty inputs will be 0
     protein = protein or 0
@@ -639,10 +632,10 @@ def add_personalfood():
     cal = cal or 0
 
     # Validation - no repeat recipe names
-    result = dbnutrition.find_one_personal_nutrition(netid, query_name)
+    result = dbnutrition.find_one_custom_nutrition(netid, query_name)
     if result:
         message = "Oh no! A custom food item with this name already exists, please put a new name."
-        return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
+        return add_customfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
 
     nutrition_dict = {
@@ -660,7 +653,7 @@ def add_personalfood():
 
         # Validation - photo
         if message:
-            return add_personalfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
+            return add_customfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc)
 
         # Continue uploading
         dotenv.load_dotenv()
@@ -674,7 +667,7 @@ def add_personalfood():
             api_secret = c_secret 
         )
 
-        response = cloudinary.uploader.upload(file, folder='NutriTiger_personal_photos' )
+        response = cloudinary.uploader.upload(file, folder='NutriTiger_custom_photos' )
         url = response.get('url')
         public_id = response.get('public_id')
 
@@ -691,8 +684,8 @@ def add_personalfood():
 
 
 
-    dbnutrition.add_personal_food(recipename, netid, nutrition_dict)
-    return redirect(url_for('personal_nutrition'))
+    dbnutrition.add_custom_food(recipename, netid, nutrition_dict)
+    return redirect(url_for('custom_nutrition'))
     
     
     

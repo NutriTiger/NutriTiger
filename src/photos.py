@@ -2,7 +2,7 @@
 # Contributors:
 # Oyu Enkhbold
 #
-# To support personal nutrition information
+# To support custom nutrition information
 #----------------------------------------------------------------------
 from bson.objectid import ObjectId
 from PIL import Image

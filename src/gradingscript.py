@@ -14,13 +14,13 @@ TEMPLATE_USER = "jm0278"
 NUM_LOGGED_DAYS = 100
 #-----------------------------------------------------------------------
 def load_custom_foods(netid):
-    custom_foods = dbnutrition.find_all_personal_nutrition(TEMPLATE_USER)
+    custom_foods = dbnutrition.find_all_custom_nutrition(TEMPLATE_USER)
     print(custom_foods)
     keys_to_exclude = ["mealname", "access", "recipeid", "date", "_id"]
     for document in custom_foods:
         mealname = document["mealname"]
         nutrition = {key: value for key, value in document.items() if key not in keys_to_exclude}
-        dbnutrition.add_personal_food(mealname, netid, nutrition)
+        dbnutrition.add_custom_food(mealname, netid, nutrition)
 #-----------------------------------------------------------------------
 def load_history(netid):
     this_user = dbusers.finduser(netid)
