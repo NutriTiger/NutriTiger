@@ -9,9 +9,7 @@
   {% endfor %}
 {% endif %}
 {% endwith %}
-    <div id="loading-animation" class="loading-animation">
-        <div class="loading-spinner"></div>
-    </div>
+{% include 'loading.html' %}
     <h1 class="text-center m-3">Add Custom Food</h1> 
     <div class="container">
         <form id="customFoodForm" action="/addcustomfood" method="post" enctype="multipart/form-data" >
@@ -66,20 +64,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <script>
-        function showLoadingAnimation() {
-            // Show the loading animation covering the entire screen
-            $("#loading-animation").show();
-            $('input').keydown(function(e) {
-                e.preventDefault();
-                return false;
-            });
-        }
-
-        function hideLoadingAnimation() {
-            // Hide the loading animation
-            $("#loading-animation").hide();
-            $('input').off('keydown');
-        }
 
         function validateNums(event) {
             event.preventDefault();
