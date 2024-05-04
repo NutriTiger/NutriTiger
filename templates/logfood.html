@@ -121,6 +121,8 @@
                         <div class="card-body" id="usda-search-results">
                         </div>
                         {% include 'logfood_update.html' %}
+                        <a class="btn btn-primary" href="/addcustomfood" role="button" id="customFoodButton">Click here to add a custom food item!</a>
+
                         <div class="pagination-container"> 
                             <div id="pagination-usda"></div>
                         </div>
@@ -891,6 +893,7 @@
         if (radioBtnId === 'radio-dhall') {
             $("#pagination-usda").hide();
             $("#pagination-custom").hide();
+            $("#customFoodButton").hide();
 
             $("#usda-search-results").hide();
             $("#personal-food-items").hide();
@@ -906,6 +909,8 @@
         } else if (radioBtnId === 'radio-custom') {
             $("#pagination-usda").hide();
             $("#pagination-custom").show();
+            $("#customFoodButton").show();
+
 
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
@@ -919,6 +924,8 @@
         } else if (radioBtnId === 'radio-usda') {
             $("#pagination-usda").show();
             $("#pagination-custom").hide();
+            $("#customFoodButton").hide();
+
 
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
@@ -949,7 +956,9 @@
 
     // set up event listeners for dhall select and mealtime tab
     function setup() {
-        handleCustomPageChange(1)
+        handleCustomPageChange(1);
+        $("#customFoodButton").hide();
+
 
         // Event listeners for the radio buttons
         document.querySelectorAll('input[name="foodSource"]').forEach(function(radio) {
