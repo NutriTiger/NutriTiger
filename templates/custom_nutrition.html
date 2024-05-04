@@ -41,7 +41,7 @@
             <div class="deleted-overlay">Deleted</div>
             <div class="card-body">
                 <div class="header-container">
-                    <h5 class="card-title text-center"></h5><b>{{ item['mealname'] }}</b></h5>
+                    <h5 class="card-title text-center"></h5><b style="overflow-y: auto;">{{ item['mealname'] }}</b></h5>
                     <button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm x-custom-food" aria-label="Close" style="display: none;"
                             onclick="confirmDelete(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
                     </button>
