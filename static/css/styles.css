@@ -58,10 +58,6 @@ body {
     padding-top: 1.5rem !important;
 }
 
-.nt-color-menu {
-    background-color: #FFF4E9;
-}
-
 .nt-food-text {
     transition: color 0.3s; /* Smooth transition for color change */
     cursor: default; /* Default cursor */
@@ -396,4 +392,19 @@ body {
 .card-pop:hover {
     transform: scale(1.03); /* Slight scale on hover to add interaction feedback */
 }
+
+/* for hmenu.html */
+.nt-activated {
+    color:#000000;
+    font-weight:500;
+}
+.nt-color-menu {
+    background-color: #FFF4E9;
+}
+
+.nt-color-menu a:hover {
+    color:#ce6203;
+    text-decoration: underline;
+}
+
 /*******************************************************************/

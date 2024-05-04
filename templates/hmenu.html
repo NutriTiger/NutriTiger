@@ -9,26 +9,26 @@
      <div class="offcanvas-body nt-color-menu">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
          <li class="nav-item">
-            <a class="nav-link {% if current_page == 'homepage' %}active{% endif %}" href="/homepage">Homepage</a>
+            <a class="nav-link {% if current_page == 'home' %}active nt-activated{% endif %}" href="/homepage">Homepage</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'menus' %}active{% endif %}" href="{{ url_for('dhall_menus')}}">Dining Hall Menus</a>
+            <a class="nav-link {% if current_page == 'menus' %}active nt-activated{% endif %}" href="{{ url_for('dhall_menus')}}">Dining Hall Menus</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'editingplate' %}active{% endif %}" href="{{ url_for('log_food')}}">Log Meals</a>
+            <a class="nav-link {% if current_page == 'logmeals' %}active nt-activated{% endif %}" href="{{ url_for('log_food')}}">Log Meals</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'history' %}active{% endif %}" href="{{ url_for('history')}}">My History</a>
+            <a class="nav-link {% if current_page == 'history' %}active nt-activated{% endif %}" href="{{ url_for('history')}}">My History</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'customfood' %}active{% endif %}" href="{{ url_for('custom_nutrition')}}">My Custom Foods</a>
+            <a class="nav-link {% if current_page == 'customfood' %}active nt-activated{% endif %}" href="{{ url_for('custom_nutrition')}}">My Custom Foods</a>
         </li>
         
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'settings' %}active{% endif %}" href="{{ url_for('settings')}}">Edit My Calorie Goal</a>
+            <a class="nav-link {% if current_page == 'settings' %}active nt-activated{% endif %}" href="{{ url_for('settings')}}">Edit My Calorie Goal</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if current_page == 'about' %}active{% endif %}" href="{{ url_for('about')}}">About</a>
+            <a class="nav-link {% if current_page == 'about' %}active nt-activated{% endif %}" href="{{ url_for('about')}}">About</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url_for('logoutcas')}}">Logout  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
