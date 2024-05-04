@@ -9,6 +9,7 @@ from sys import path
 path.append('src')
 path.append('src/db')
 from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for, flash, send_file, Response
+from flask_wtf.csrf import CSRFProtect
 import time
 import datetime
 import os
@@ -37,6 +38,7 @@ from werkzeug.utils import secure_filename
 #--------------------------------------------------------------------
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
 # Configuration
