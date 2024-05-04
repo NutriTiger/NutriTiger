@@ -20,16 +20,6 @@ function handleError() {
     hideLoadingAnimation();
 }
 
-function showLoadingAnimation() {
-    // Show the loading animation covering the entire screen
-    $('#loading-animation').show();
-}
-
-function hideLoadingAnimation() {
-    // Hide the loading animation
-    $('#loading-animation').hide();
-}
-
 function getResults() {
     // Show loading animation before making the AJAX request
     showLoadingAnimation();
