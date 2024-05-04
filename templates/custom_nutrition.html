@@ -42,7 +42,7 @@
             <div class="card-body">
                 <div class="header-container">
                     <h5 class="card-title text-center"></h5><b>{{ item['mealname'] }}</b></h5>
-                    <button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm" aria-label="Close" style="display: none;"
+                    <button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm x-custom-food" aria-label="Close" style="display: none;"
                             onclick="confirmDelete(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
                     </button>
                 </div>
@@ -172,7 +172,7 @@ $(document).ready(function(){
         $('#edit_custom_foods').css('display', 'none')
         $('#add_food_btn').css('display', 'none');
         $('#stop_editing').css('display', 'block')
-        $('.btn-close').each(function() {
+        $('.x-custom-food').each(function() {
             $(this).css('display', 'block');
         });
     });
@@ -180,7 +180,7 @@ $(document).ready(function(){
         $('#stop_editing').css('display', 'none')
         $('#add_food_btn').css('display', 'block');
         $('#edit_custom_foods').css('display', 'block')
-        $('.btn-close').each(function() {
+        $('.x-custom-food').each(function() {
             $(this).css('display', 'none');
         });
     });
