@@ -4,21 +4,16 @@
 {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!--Give header white background -->
-<div id="loading-animation" class="loading-animation" style="display:none;">
-    <div class="loading-spinner"></div>
-</div>
+{% include 'loading.html' %}
     <h1 class="text-center m-3">Editing My Meals</h1> 
     <h3 class="text-center m-3 text-muted">Edit servings, delete foods, or delete entries.</h3>
-
     <!--Layout for the two main cards-->
-    <div class="row p-5">
+    <div class="row p-3 p-md-5">
         <div class="col-sm-9 mx-auto">
           <div class="card">
             <div class="card-body">
-
                 <!--My Plate (right card)-->
                 <h4 class="text-center py-3">Today's Logged Meals</h4>
-
                 <!--Create a card for each entry-->
                 <div class="col">
                     {% for entry, foods in entry_info.items() %}
@@ -29,7 +24,6 @@
                                     <h5 class="card-title py-1"><b>Entry {{ entry +1}}</b></h5>
                                     <button type="submit" data-entrynum="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
                                 </div>
-
                                 <!--Create a bordered element for each food in the entry-->
                                 <ul class="list-group">
                                     {% for food_dict, serving in foods %}
@@ -57,7 +51,6 @@
                                                     onkeypress="return isValid(event)">
                                                 </div>
                                                 <div class="form-group">
-                                    
                                                     <!-- Close button -->
                                                     <button type="button" data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
                                                     </button>
@@ -67,186 +60,125 @@
                                     </div>
                                     {% endfor %}
                                 </ul>
-
                             </div>                             
                         </div>
                     </div>
-
-                {% endfor %}
-
+                    {% endfor %}
+                </div>
                 <!--Save Meals button-->
                 <div class="py-3">
                     <form>
-                        <button id="savePlate" type="submit" class="btn btn-secondary btn-lg btn-block">Save Meals</button>
+                        <button id="savePlate" type="button" class="btn btn-secondary btn-lg btn-block">Save Meals</button>
                     </form>
                 </div>
-                
-            </td>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // List of deleted entries' indices
+    let deletedEntries = [];
+    // List of lists of deleted foods & their entries
+    let deletedFoods = [];
+    let servingsChanged = {};
 
-        </tr>
-    </table>
-
-    <script>
-
-        // List of deleted entries' indices
-        let deletedEntries = [];
-        // List of lists of deleted foods & their entries
-        let deletedFoods = [];
-        let servingsChanged = {};
-
-        function appendEntrytoDelete(entryIndex) {
-            deletedEntries.push(entryIndex);
-        }
-
-        function appendFoodtoDelete(entryIndex, foodIndex) {
-            // Find the entry in the deletedFoods array
-            let entryFound = false;
-            for (let entry of deletedFoods) {
-                if (entry.index === entryIndex) {
-                    // If the entryIndex is found, add the foodIndex to the foods array
-                    if (!entry.foods.includes(foodIndex)) {
-                        entry.foods.push(foodIndex);
-                    }
-                    entryFound = true;
-                    break;
+    function appendFoodToDelete(entryIndex, foodIndex) {
+        let entryFound = false;
+        for (let entry of deletedFoods) {
+            if (entry.index === entryIndex) {
+                if (!entry.foods.includes(foodIndex)) {
+                    entry.foods.push(foodIndex);
                 }
-            }
-
-            // If the entryIndex is not found, add a new entry to the deletedFoods
-            if (!entryFound) {
-                deletedFoods.push({index: entryIndex, foods: [foodIndex]});
+                entryFound = true;
+                break;
             }
         }
-
-        // once an entry has been appended to be deleted, hide it from view
-        function hideEntry(entryId) {
-            document.getElementById(entryId).style.display = "none";
+        if (!entryFound) {
+            deletedFoods.push({index: entryIndex, foods: [foodIndex]});
         }
+    }
 
-        // once an entry has been appended to be deleted, hide it from view
-        function hideFood(foodCardId) {
-            document.getElementById(foodCardId).style.display = "none";
+    function handleServingChange(input) {
+        input.setCustomValidity('');
+        if (!customCheckValidity(input)) return;
+        let serving = parseFloat(input.value);
+        let entryNum = $(input).data('entrynum');
+        let foodNum = $(input).data('foodnum');
+        let key = `${entryNum}-${foodNum}`;
+        servingsChanged[key] = serving;
+    }
+
+    function customCheckValidity(input) {
+        let isValid = true;
+        const inputValue = parseFloat(input.value);
+        if (!input.value || inputValue === 0) {
+            input.setCustomValidity("Please fill out a non-zero serving size.");
+            isValid = false;
+        } else if (inputValue > 100) {
+            input.setCustomValidity("Serving size must be less than or equal to 100.");
+            isValid = false;
+        } else {
+            input.setCustomValidity("");
         }
-
-        function debouncedHandleInput() {
-            let debounceTimer;
-            return function(input) {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => handleServingChange(input), 500); // Adjust the delay as needed
-            };
-        }
-        const debouncedInputHandler = debouncedHandleInput();
-
-        function handleServingChange(input) {
-            input.setCustomValidity('');
-            customCheckValidity(input)
-            let serving = parseFloat(input.value);
-            let entry_food_num = input.dataset.entrynum + "-" + input.dataset.foodnum
-            servingsChanged[entry_food_num] = serving
-        };
-
-        function showLoadingAnimation() {
-            // Show the loading animation covering the entire screen
-            $("#loading-animation").show();
-        }
+        input.reportValidity();
+        return isValid;
+    }
 
 
-        // select all Entry cards and add close button event listeners for each
-        var entryCards = document.querySelectorAll('.entryCard');
-        entryCards.forEach(function(card) {
-            //add event listener to each food close button
-            var foodCloseButtons = card.querySelectorAll('.foodCloseBtn');
-            foodCloseButtons.forEach(function(button) {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
+    function handleEntryClose() {
+        const entryNum = $(this).data('entrynum');
+        console.log(entryNum)
+        const entryId = `entry-${entryNum}`;
+        deletedEntries.push(entryNum);
+        $(`#${entryId}`).hide();
+    }
 
-                    var foodnum = button.dataset.foodnum;
-                    var entrynum = button.dataset.entrynum;
+    function handleFoodClose() {
+        const entryNum = $(this).data('entrynum');
+        const foodNum = $(this).data('foodnum');
+        const foodId = `${entryNum}-${foodNum}`;
+        appendFoodToDelete(entryNum, foodNum);
+        $(`#${foodId}`).hide();
+    }
 
-                    // append 0-indexed indices for deleted food
-                    appendFoodtoDelete(parseInt(entrynum), parseInt(foodnum));
-                    hideFood(entrynum + "-" + foodnum);
-                })
-            });
+    function validateInputs() {
+        const inputs = $('.small-input').toArray();
+        return inputs.every(customCheckValidity);
+    }
 
-            // add event listener to each entry close button
-            var entryCloseButtons = card.querySelectorAll('.entryCloseBtn');
-            entryCloseButtons.forEach(function(button) {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    var entrynum = button.dataset.entrynum
-                    var entryId = "entry-" + entrynum
-
-                    // append to list and hide from view
-                    appendEntrytoDelete(parseInt(entrynum));
-                    hideEntry(entryId); 
-                });
-            });
-        });
-
-        function customCheckValidity(input) {
-            let isValid = true;
-            inputValue = parseFloat(input.value)
-            // Check if the input is empty
-            if (!input.value || input.value==0) {
-                input.setCustomValidity("Please fill out a non-zero serving size."); 
-                isValid = false;
-            }
-            else if (inputValue > 100) {
-                input.setCustomValidity("Serving size must be less than or equal to 100."); 
-                isValid = false;
-            } else {
-                input.setCustomValidity("");
-            }
-            input.reportValidity();
-            return isValid;
-        }
-
-        function validateInputs() {
-            const inputs = document.querySelectorAll(".small-input");
-            valid = true;
-            inputs.forEach((input) => {
-                if (!customCheckValidity(input)) {
-                    valid=false
-                }
-            });
-            return valid
-        }
-        
-        // once submit button is clicked, send everything to be deleted as an AJAX call
-        document.getElementById('savePlate').addEventListener('click', function(event) {
-            event.preventDefault();
-            if (!validateInputs()) {
-                return
-            }
-            console.log(deletedEntries)
-            var dataToSend = {
+    function handleSave(event) {
+        event.preventDefault();
+        if (!validateInputs()) return;
+        showLoadingAnimation();
+        $.ajax({
+            type: "POST",
+            url: "/editingmeals",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
+            data: JSON.stringify({
                 entriesToDelete: deletedEntries,
                 foodsToDelete: deletedFoods,
                 servingsToChange: servingsChanged
-            };
-            var jsonData = JSON.stringify(dataToSend);
-            showLoadingAnimation();
-            $.ajax({
-                type: "POST",
-                url: "/editingmeals",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token() }}"
-                },
-                data: jsonData,
-                success: function (response) {
-                    // Check if the server response includes the redirect URL
-                    if (response.success && response.redirect) {
-                        // Hide the loading animation before redirection
-                        window.location.href = response.redirect;
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error in data submission:", xhr.status, xhr.responseText);
-                },
-            });
+            }),
+            success: function (response) {
+                if (response.success && response.redirect) {
+                    window.location.href = response.redirect;
+                }
+            },
+            error: function (xhr) {
+                console.error("Error in data submission:", xhr.status, xhr.responseText);
+            }
         });
-    </script>
+    }
+
+    function setup() {
+        // Attach event listeners
+        $('.entryCloseBtn').click(handleEntryClose);
+        $('.foodCloseBtn').click(handleFoodClose);
+        $('#savePlate').click(handleSave);
+    }
+    $(document).ready(setup);
+</script>
 {% endblock %}
