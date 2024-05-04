@@ -102,8 +102,8 @@ def homepage():
     serv_info = cursor['daily_serv'] # List of lists of servings for each entry
 
 
-    # Entry title strings array ("Entry #")
-    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
+    # Entry title strings array ("Meal #")
+    ENTRIES = ["Meal " + str(i + 1) for i in range(len(entries_info))]
 
     # List of lists of foods, should match up with ENTRIES array
     foods_lists = []
