@@ -262,7 +262,7 @@ def first_contact():
             dbusers.updategoal(netid, user_goal)
         return redirect('/homepage')
 
-    return render_template('firstcontact.html')
+    return render_template('welcome.html')
 
 #--------------------------------------------------------------------
 
