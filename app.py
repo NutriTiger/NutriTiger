@@ -98,7 +98,7 @@ def homepage():
 
 
     # Entry title strings array ("Entry #")
-    ENTRIES = ["Entry " + str(i + 1) for i in range(len(entries_info))]
+    ENTRIES = ["Meal " + str(i + 1) for i in range(len(entries_info))]
 
     # List of lists of foods, should match up with ENTRIES array
     foods_lists = []
