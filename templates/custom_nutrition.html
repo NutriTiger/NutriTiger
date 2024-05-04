@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% set current_page = 'personalfood' %}
+{% set current_page = 'customfood' %}
 {% block title %}Personal Nutrition{% endblock %}
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
@@ -13,7 +13,7 @@
     </div>
     <div class="text-center p-3">
         <div class="d-inline-block">
-            <a href="{{ url_for('personal_food') }}" class="btn btn-primary">+ Add a custom food</a>
+            <button id="add_food_btn" onclick="window.location.href='{{ url_for('custom_food') }}'" class="btn btn-primary">+ Add a custom food</button>
         </div>
         <div class="d-inline-block p-2">
             <button type="submit" id="edit_custom_foods" class="btn btn-primary" style="display: none;">
@@ -57,7 +57,7 @@
                 <li class="list-group-item"><strong>Fats:</strong> {{ item['fats'] }}g</li>
               </ul>
             <div class="card-footer">
-                <small class="text-body-secondary">Created on {{ custom_strftime(item['date']) }}</small>
+                <small class="text-body-secondary">Created on {{ custom_strftime_est(item['date']) }}</small>
             </div>
         </div>
     </div>
@@ -165,6 +165,7 @@ $(document).ready(function(){
     $('#edit_custom_foods').click(function() {
         console.log("edit clicked")
         $('#edit_custom_foods').css('display', 'none')
+        $('#add_food_btn').css('display', 'none');
         $('#stop_editing').css('display', 'block')
         $('.btn-close').each(function() {
             $(this).css('display', 'block');
@@ -172,6 +173,7 @@ $(document).ready(function(){
     });
     $('#stop_editing').click(function() {
         $('#stop_editing').css('display', 'none')
+        $('#add_food_btn').css('display', 'block');
         $('#edit_custom_foods').css('display', 'block')
         $('.btn-close').each(function() {
             $(this).css('display', 'none');

@@ -26,7 +26,7 @@ def update_menu(menu_list):
             query_documents = menu_col.find(documents_to_delete)
             recipeid_to_delete = []
 
-            # deletes all nutrition documents that are not personal
+            # deletes all nutrition documents that are not custom
             nutri_doc_to_delete = {"access": {"$exists": False}}
             delete_recipeid_result = nutri_col.delete_many(nutri_doc_to_delete)
 

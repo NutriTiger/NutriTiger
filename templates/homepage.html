@@ -11,28 +11,30 @@
 <!--Placeholder Message (when no entries exist)-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<div id="placeholder" class="text-center mx-auto" style="display:none;">
-	<div class="mx-auto" style="padding: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-		<div class="m-3 p-3">
-			<h1>Good <span id="PgreetingTime"></span>, {{netid}}. </h1>
-			<h1 class="pt-3">Today is <span id='PgreetingDate'></span>.</h1>
-		</div>
+<div id="placeholder" class="d-flex justify-content-center align-items-center" style="display:none!important; height: 100vh;">
+    <div class="text-center">
+        <div class="m-3 p-3">
+            <h1>Good <span id="PgreetingTime"></span>, {{netid}}.</h1>
+            <h1 class="pt-3">Today is <span id='PgreetingDate'></span>.</h1>
+        </div>
 
-		<h3>Looks like you haven't logged any food for today yet.</h3>
-		<!--"Click to add an entry" Button-->
-		<div class="p-3">
-			<form action="/homepage" method="post">
-				<center>
-					<button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a meal</button>
-				</center>
-			</form>
-		</div>
-		<h4 class="p-3">Or, see what's on the <a href="/menus"> dining hall menus. </a></h4>
-	</div>
+        <div class="p-3">
+            <h3>Looks like you haven't logged any food for today yet.</h3>
+            <!-- "Click to add an entry" Button -->
+            <form action="/homepage" method="post">
+                <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a meal</button>
+            </form>
+        </div>
+        
+        <div class="p-3">
+            <h4>Or, see what's on the <a href="/menus">dining hall menus</a>.</h4>
+        </div>
+    </div>
 </div>
 
+
+
 <!--CHECK IF ENTRIES ARE EMPTY, SHOW PLACEHOLDER IF SO-->
-<!--This must be updated with ajax implementation!!-->
 {% if entries_food_dict.items()|length == 0 %}
 	<!-- Show placeholder function -->
 	<script>
@@ -54,10 +56,10 @@
 				<h4 class="text-center py-3">My Macros</h4>
 				<h5 class="text-center">Current Calorie Progress: <strong>{{curr_caltotal}} cal / {{cal_goal}} cal</strong></h5>
 				<div class="prog-container my-2" style="display: flex; justify-content: center;">
-					<div class="progress" style="height: 50px; width: 300px;">
+					<div class="progress" style="height: 50px; width: 300px; background-color: lightgray;">
 						<div class="progress-bar dynamic-progress-bar" 
 							role="progressbar" 
-							style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223);" 
+							style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223); overflow: visible;" 
 							aria-valuenow="{{curr_caltotal}}" 
 							aria-valuemin="0" 
 							aria-valuemax="{{cal_goal}}">{{ curr_caltotal }} cal
@@ -144,7 +146,7 @@
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
 								<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
 							</svg>
-							Edit Plate
+							Edit my Meals
 						</button>
 					</form>
 				</div>
@@ -153,7 +155,7 @@
                 <div class="p-3">
                     <form action="/homepage" method="post">
                         <center>
-                            <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to add a meal</button>
+                            <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to add a Meal</button>
                         </center>
                     </form>
                 </div>
@@ -168,7 +170,7 @@
 <script>
 	function showHomepageCards() {
 		// Hide the placeholder message/buttons
-		document.getElementById("placeholder").style.display = "none";
+		document.getElementById("placeholder").style.display = "none!important";
 
 		// Show the homepage cards 
 		document.getElementById("homepage").style.display = "block";

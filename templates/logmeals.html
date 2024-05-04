@@ -32,7 +32,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-3-circle" viewBox="0 0 16 16">
             <path d="M7.918 8.414h-.879V7.342h.838c.78 0 1.348-.522 1.342-1.237 0-.709-.563-1.195-1.348-1.195-.79 0-1.312.498-1.348 1.055H5.275c.036-1.137.95-2.115 2.625-2.121 1.594-.012 2.608.885 2.637 2.062.023 1.137-.885 1.776-1.482 1.875v.07c.703.07 1.71.64 1.734 1.917.024 1.459-1.277 2.396-2.93 2.396-1.705 0-2.707-.967-2.754-2.144H6.33c.059.597.68 1.06 1.541 1.066.973.006 1.6-.563 1.588-1.354-.006-.779-.621-1.318-1.541-1.318"/>
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8"/>
-          </svg> <strong>Enter</strong> the number of servings you consumed in the “My Meal" window. <br>
+          </svg> <strong>Enter</strong> the number of servings you consumed in the “My Meal” window. <br>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-4-circle" viewBox="0 0 16 16">
             <path d="M7.519 5.057q.33-.527.657-1.055h1.933v5.332h1.008v1.107H10.11V12H8.85v-1.559H4.978V9.322c.77-1.427 1.656-2.847 2.542-4.265ZM6.225 9.281v.053H8.85V5.063h-.065c-.867 1.33-1.787 2.806-2.56 4.218"/>
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8"/>
@@ -140,8 +140,10 @@
             </div>
             <!--Upload plate button-->
             <div class="container p-5">
-                <h5>Done adding food to your plate?</h5>
-                <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Plate and Return</button>
+                <h5>Done adding food for your meal?</h5>
+                
+                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Meal and Return</button>
+                
             </div>
         </form>
     </div>
@@ -225,10 +227,10 @@ function createPageItem(text, page, isActive = false) {
     return li;
 }
 
-function handleCustomPageChange(page) {
-    currentCustomPage = page;
-    $('.personal-items-content').hide();
-    $(`div[data-page="${page}"]`).show();
+    function handleCustomPageChange(page) {
+        currentCustomPage = page;
+        $('.custom-items-content').hide(); // Hide all items
+        $(`div[data-page="${page}"]`).show(); // Show items for the current page
 
     $('.pagination .page-item').removeClass('active');
     $(`.pagination .page-item:nth-child(${page})`).addClass('active');
@@ -568,35 +570,35 @@ function getResults() {
     $("#select").hide();
     $("#noDataMessage").hide();
 
-    $("#searchBarSpan").hide();
-    $("#usda-search-results").hide();
-    $("#personal-food-items").hide();
-    $("#tutorial-food-items").hide();
-    $("#menu-items").show();
-
-
-    $("#mealTimeTab").show();
-    let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
-    let selectedHall = $("#diningHallSelect").val();
-    if (selectedHall == "Select Dining Hall") {
-        $("#select").show()
-        return
-    }
-    else if (selectedHall === "Example Dining Hall") {
+        $("#searchBarSpan").hide();
         $("#usda-search-results").hide();
-        $("#personal-food-items").hide();
-        $("#tutorial-food-items").show();
-        $("#menu-items").hide();
-    } 
-    dhallCode = selectedHall.substring(0, 2);
-    let divToShow = dhallCode + "-" + mealtime;
-    if ($("#" + divToShow).length > 0) {
-        $("#" + divToShow).show();
-    } 
-    else {
-        $("#noDataMessage").show();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").show();
+
+
+        $("#mealTimeTab").show();
+        let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
+        let selectedHall = $("#diningHallSelect").val();
+        if (selectedHall == "Select Dining Hall") {
+            $("#select").show()
+            return
+        }
+        else if (selectedHall === "Example Dining Hall") {
+            $("#usda-search-results").hide();
+            $("#custom-food-items").hide();
+            $("#tutorial-food-items").show();
+            $("#menu-items").hide();
+        } 
+        dhallCode = selectedHall.substring(0, 2);
+        let divToShow = dhallCode + "-" + mealtime;
+        if ($("#" + divToShow).length > 0) {
+            $("#" + divToShow).show();
+        } 
+        else {
+            $("#noDataMessage").show();
+        }
     }
-}
 
 function handleServingChange() {
     const inputs = document.querySelectorAll(".small-input");
@@ -828,42 +830,42 @@ function updateCardVisibility(radioBtnId) {
     if (radioBtnId === 'radio-dhall') {
         $("#pagination").hide();
 
-        $("#usda-search-results").hide();
-        $("#personal-food-items").hide();
-        $("#tutorial-food-items").hide();
-        $("#menu-items").hide();
-        $("#mealTimeTab").show();
-        $("#foodsource-dropdown").show();
-        $("#searchBarSpan").hide();
-        $("#usda-search-results").hide();
-        getResults();
+            $("#usda-search-results").hide();
+            $("#custom-food-items").hide();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+            $("#mealTimeTab").show();
+            $("#foodsource-dropdown").show();
+            $("#searchBarSpan").hide();
+            $("#usda-search-results").hide();
+            getResults();
 
 
     } else if (radioBtnId === 'radio-custom') {
         $("#pagination").hide();
 
-        $("#searchBarSpan").hide();
-        $("#mealTimeTab").hide();
-        $("#usda-search-results").hide();
-        $("#personal-food-items").show();
-        $("#tutorial-food-items").hide();
-        $("#menu-items").hide();
-        $("#foodsource-dropdown").hide();
+            $("#searchBarSpan").hide();
+            $("#mealTimeTab").hide();
+            $("#usda-search-results").hide();
+            $("#custom-food-items").show();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+            $("#foodsource-dropdown").hide();
 
 
     } else if (radioBtnId === 'radio-usda') {
         $("#pagination").show();
 
-        $("#mealTimeTab").hide();
-        $("#searchBarSpan").show();
-        $("#usda-search-results").show();
-        $("#personal-food-items").hide();
-        $("#tutorial-food-items").hide();
-        $("#menu-items").hide();
-        $("#foodsource-dropdown").hide();
+            $("#mealTimeTab").hide();
+            $("#searchBarSpan").show();
+            $("#usda-search-results").show();
+            $("#custom-food-items").hide();
+            $("#tutorial-food-items").hide();
+            $("#menu-items").hide();
+            $("#foodsource-dropdown").hide();
+        }
+    
     }
-
-}
 
 
 // If the user hits the back button reset the form
