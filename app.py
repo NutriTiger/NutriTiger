@@ -3,8 +3,6 @@
 # app.py
 #
 # ----------------------------------------------------------------------
-
-# Based on https://github.com/shannon-heh/TigerSnatch/blob/main/app.py#L75
 from sys import path
 path.append('src')
 path.append('src/db')
@@ -68,15 +66,11 @@ def display_error():
 
 @app.route('/', methods=['GET'])
 def index():
-    #netid = auth.authenticate()
     # Check if it is a user's first visit
     visited_before = session.get('username')
 
     if visited_before is None:
         # Indicate first contact
-        # Set cookie to mark user as visited now
-        #response = make_response(redirect('/welcome'))
-        #response.set_cookie('visited_before', 'True')
         return render_template('index.html')
     
     return redirect('/homepage')
