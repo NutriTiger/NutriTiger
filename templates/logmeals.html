@@ -236,6 +236,100 @@ function handleCustomPageChange(page) {
     $(`#pagination-custom .page-item:nth-child(${page})`).addClass('active');
 }
 
+function prepareAllPages(data) {
+    const resultsContainer = document.getElementById("usda-search-results");
+    resultsContainer.innerHTML = ""; // Clear previous results
+    const pagination = document.getElementById("pagination-usda");
+    pagination.innerHTML = "";
+
+    if (data && data.length > 0) {
+        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+            const pageDiv = document.createElement("div");
+            pageDiv.id = `page-${pageNum}`;
+            pageDiv.className = 'page-content';
+            pageDiv.style.display = pageNum === 1 ? 'block' : 'none'; // Show the first page initially
+
+            const startIndex = (pageNum - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = data.slice(startIndex, endIndex);
+
+            pageData.forEach((food) => {
+                const calories = food.calories || 0;
+                const proteins = food.proteins || 0;
+                const carbs = food.carbs || 0;
+                const fats = food.fats || 0;
+
+                // Check if food portions are available and extract the first one
+                const servingSizeInfo = food.servingSize;
+
+                const foodElement = document.createElement("div");
+                foodElement.className = "form-check";
+                console.log(food.fdcIc);
+                foodElement.innerHTML = `
+                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" page=${pageNum} data-usda="true" data-recid="${food.recipeid}"
+                    data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+                    data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
+                    onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
+                <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
+                <p id="nf-${food.recipeid}" class="nutrition-container">
+                        <span class="nutrition-fact">Serving Size: ${servingSizeInfo}</span>
+                        <span class="nutrition-fact">Calories: ${calories}</span>
+                        <span class="nutrition-fact">Proteins: ${proteins}g</span>
+                        <span class="nutrition-fact">Carbs: ${carbs}g</span>
+                        <span class="nutrition-fact">Fats: Fats: ${fats}g</span>
+                </p>
+                `;  
+                pageDiv.appendChild(foodElement);
+        
+            });
+
+            resultsContainer.appendChild(pageDiv);
+        }
+        createPagination();
+    }
+    else {
+        resultsContainer.innerHTML = "<div>No results found.</div>";
+    }
+    hideLoadingAnimation();
+}
+
+function createPageItem(text, page, isDisabled, id) {
+    const li = document.createElement("li");
+    li.className = "page-item" + (isDisabled ? " disabled" : ""); // Add 'disabled' class if isDisabled is true
+    const a = document.createElement("a");
+    a.className = "page-link";
+    a.href = "#";
+    a.textContent = text;
+    if (!isDisabled) {
+        a.onclick = function (e) {
+            e.preventDefault();
+            handleUSDAPageChange(page);
+        };
+    }
+    a.id = id; // Assign ID here
+    li.appendChild(a);
+    return li;
+}
+
+function createPagination() {
+    const pagination = document.getElementById("pagination-usda");
+    pagination.innerHTML = "";
+    const ul = document.createElement("ul");
+    ul.className = "pagination";
+
+    // Page numbers - always active
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = createPageItem(i, i, false, "pageButton" + i);
+        if (i === currentUSDAPage) {
+            pageItem.classList.add('active'); // Mark the current page as active
+        }
+        ul.appendChild(pageItem);
+    }
+
+    pagination.appendChild(ul);
+}
+
+/* General Functionality *********************************************/
 // global variable for entry nutrition
 let entry_nutrition = { calories: 0, carbs: 0, fats: 0, proteins: 0 };
 
@@ -369,99 +463,6 @@ function searchUSDAFood() {
         resultsContainer.innerHTML =`<div>Enter a food item in the search bar above to display nutrition options.</div>`;
         
     }
-}
-
-function prepareAllPages(data) {
-    const resultsContainer = document.getElementById("usda-search-results");
-    resultsContainer.innerHTML = ""; // Clear previous results
-    const pagination = document.getElementById("pagination-usda");
-    pagination.innerHTML = "";
-
-    if (data && data.length > 0) {
-        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-            const pageDiv = document.createElement("div");
-            pageDiv.id = `page-${pageNum}`;
-            pageDiv.className = 'page-content';
-            pageDiv.style.display = pageNum === 1 ? 'block' : 'none'; // Show the first page initially
-
-            const startIndex = (pageNum - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const pageData = data.slice(startIndex, endIndex);
-
-            pageData.forEach((food) => {
-                const calories = food.calories || 0;
-                const proteins = food.proteins || 0;
-                const carbs = food.carbs || 0;
-                const fats = food.fats || 0;
-
-                // Check if food portions are available and extract the first one
-                const servingSizeInfo = food.servingSize;
-
-                const foodElement = document.createElement("div");
-                foodElement.className = "form-check";
-                console.log(food.fdcIc);
-                foodElement.innerHTML = `
-                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" page=${pageNum} data-usda="true" data-recid="${food.recipeid}"
-                    data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
-                    data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
-                    onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
-                <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
-                <p id="nf-${food.recipeid}" class="nutrition-container">
-                        <span class="nutrition-fact">Serving Size: ${servingSizeInfo}</span>
-                        <span class="nutrition-fact">Calories: ${calories}</span>
-                        <span class="nutrition-fact">Proteins: ${proteins}g</span>
-                        <span class="nutrition-fact">Carbs: ${carbs}g</span>
-                        <span class="nutrition-fact">Fats: Fats: ${fats}g</span>
-                </p>
-                `;  
-                pageDiv.appendChild(foodElement);
-        
-            });
-
-            resultsContainer.appendChild(pageDiv);
-        }
-        createPagination();
-    }
-    else {
-        resultsContainer.innerHTML = "<div>No results found.</div>";
-    }
-    hideLoadingAnimation();
-}
-
-function createPageItem(text, page, isDisabled, id) {
-    const li = document.createElement("li");
-    li.className = "page-item" + (isDisabled ? " disabled" : ""); // Add 'disabled' class if isDisabled is true
-    const a = document.createElement("a");
-    a.className = "page-link";
-    a.href = "#";
-    a.textContent = text;
-    if (!isDisabled) {
-        a.onclick = function (e) {
-            e.preventDefault();
-            handleUSDAPageChange(page);
-        };
-    }
-    a.id = id; // Assign ID here
-    li.appendChild(a);
-    return li;
-}
-
-function createPagination() {
-    const pagination = document.getElementById("pagination-usda");
-    pagination.innerHTML = "";
-    const ul = document.createElement("ul");
-    ul.className = "pagination";
-
-    // Page numbers - always active
-    for (let i = 1; i <= totalPages; i++) {
-        const pageItem = createPageItem(i, i, false, "pageButton" + i);
-        if (i === currentUSDAPage) {
-            pageItem.classList.add('active'); // Mark the current page as active
-        }
-        ul.appendChild(pageItem);
-    }
-
-    pagination.appendChild(ul);
 }
 
 
