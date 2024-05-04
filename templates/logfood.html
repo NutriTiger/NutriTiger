@@ -122,7 +122,7 @@
                         </div>
                         {% include 'logfood_update.html' %}
                         <div class="pagination-container"> 
-                            <div id="pagination"></div>
+                            <div id="pagination-usda"></div>
                         </div>
                     </div>
                 </div>
@@ -223,7 +223,7 @@
     }
 
     function createPagination() {
-        const pagination = document.getElementById("pagination");
+        const pagination = document.getElementById("pagination-usda");
         if (!pagination) return; // Ensure pagination container exists
 
         pagination.innerHTML = ""; // Clear previous pagination links
@@ -264,12 +264,17 @@
     }
 
     function handleCustomPageChange(page) {
-        currentCustomPage = page;
-        $('.personal-items-content').hide(); // Hide all items
-        $(`div[data-page="${page}"]`).show(); // Show items for the current page
+        currentCustomPage = page; // Store the current page globally if needed elsewhere
 
-        $('.pagination .page-item').removeClass('active'); // Remove 'active' class from all pagination buttons
-        $(`.pagination .page-item:nth-child(${page})`).addClass('active'); // Add 'active' class to current page button
+        // Hide all items by targeting a class or an ID that wraps all the personal item contents
+        $('#personal-food-items .personal-items-content').hide();
+
+        // Show only the items for the current page
+        $(`#personal-food-items div[data-page="${page}"]`).show();
+
+        // Update pagination active state. Assuming the container has an ID for specificity and items use classes
+        $('#pagination-custom .page-item').removeClass('active');
+        $('#pagination-custom .page-item:nth-child(' + page + ')').addClass('active');
     }
 
 
@@ -431,7 +436,7 @@
         }
         else {
             const resultsContainer = document.getElementById("usda-search-results");
-            const pagination = document.getElementById("pagination");
+            const pagination = document.getElementById("pagination-usda");
             pagination.innerHTML = "";
             resultsContainer.innerHTML = ""; // Clear previous results
             resultsContainer.innerHTML =`<div>Enter a food item in the search bar above to display nutrition options.</div>`;
@@ -442,7 +447,7 @@
     function prepareAllPages(data) {
         const resultsContainer = document.getElementById("usda-search-results");
         resultsContainer.innerHTML = ""; // Clear previous results
-        const pagination = document.getElementById("pagination");
+        const pagination = document.getElementById("pagination-usda");
         pagination.innerHTML = "";
 
         if (data && data.length > 0) {
@@ -514,7 +519,7 @@
     }
 
     function createPagination() {
-        const pagination = document.getElementById("pagination");
+        const pagination = document.getElementById("pagination-usda");
         pagination.innerHTML = "";
         const ul = document.createElement("ul");
         ul.className = "pagination";
@@ -545,8 +550,8 @@
 
 
         // Update active state for page numbers
-        document.querySelectorAll('.pagination .page-item').forEach(item => {
-            if (item.firstChild.textContent == currentPage.toString()) {
+        document.querySelectorAll('#pagination-usda .page-item').forEach(item => {
+            if (item.firstChild.textContent == currentUSDAPage.toString()) {
                 item.classList.add('active');
             } else {
                 item.classList.remove('active');
@@ -555,7 +560,7 @@
     }
 
 
-    document.getElementById("pagination").addEventListener("click", function(event) {
+    document.getElementById("pagination-usda").addEventListener("click", function(event) {
         const target = event.target;
         if (target.classList.contains("page-link")) {
             const pageNumber = parseInt(target.textContent);
@@ -884,7 +889,8 @@
     function updateCardVisibility(radioBtnId) {
 
         if (radioBtnId === 'radio-dhall') {
-            $("#pagination").hide();
+            $("#pagination-usda").hide();
+            $("#pagination-custom").hide();
 
             $("#usda-search-results").hide();
             $("#personal-food-items").hide();
@@ -898,7 +904,8 @@
 
 
         } else if (radioBtnId === 'radio-custom') {
-            $("#pagination").hide();
+            $("#pagination-usda").hide();
+            $("#pagination-custom").show();
 
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
@@ -910,7 +917,8 @@
 
 
         } else if (radioBtnId === 'radio-usda') {
-            $("#pagination").show();
+            $("#pagination-usda").show();
+            $("#pagination-custom").hide();
 
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
