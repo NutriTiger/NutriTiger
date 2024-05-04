@@ -8,9 +8,7 @@
 {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<div id="loading-animation" class="loading-animation">
-    <div class="loading-spinner"></div>
-</div>
+{% include 'loading.html' %}
 
 <style> 
     .icons .fa { 
@@ -241,26 +239,6 @@ function createPageItem(text, page, isActive = false) {
 
 // global variable for entry nutrition
 let entry_nutrition = { calories: 0, carbs: 0, fats: 0, proteins: 0 };
-
-function showLoadingAnimation() {
-    // Show the loading animation covering the entire screen
-    $("#loading-animation").show();
-    $('input').keydown(function(e) {
-        e.preventDefault();
-        return false;
-    });
-
-    $('.introjs-nextbutton').keydown(function(e) {
-        e.preventDefault();
-        return false;
-    });
-}
-
-function hideLoadingAnimation() {
-    // Hide the loading animation
-    $("#loading-animation").hide();
-    $('input').off('keydown');
-}
 
 // function to handle removing a food-item from myplate
 function closeMyPlate(element) {
