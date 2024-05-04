@@ -24,8 +24,10 @@ def time_of_day(date, time):
             return 'Breakfast'
 
 def custom_strftime(date_obj):
+    day_without_zero = str(date_obj.day).lstrip('0')  # Removing leading zero if present
     suffix = 'th' if 11 <= date_obj.day <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(date_obj.day % 10, 'th')
-    return date_obj.strftime('%A, %B %d') + suffix
+    return date_obj.strftime('%A, %B ') + day_without_zero + suffix
+
 
 def custom_strftime_est(utc_datetime):
     # Subtract 4 hours from the UTC datetime
