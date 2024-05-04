@@ -157,7 +157,7 @@ def homepage():
         if 'historyBtn' in request.form:
             return redirect('/history')
         
-        return redirect('/editingplate')
+        return redirect('/editingmeals')
 
     return render_template('homepage.html', 
                             netid=netid,
@@ -420,7 +420,7 @@ def add_usda_nutrition():
 
 #--------------------------------------------------------------------
 
-@app.route('/editingplate', methods=['GET', 'POST'])
+@app.route('/editingmeals', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
     cursor = dbusers.userlogin(netid)
@@ -434,7 +434,7 @@ def editing_plate():
         for entrynum, recids in enumerate(daily_rec):
             nutrition_info = dbnutrition.find_many_nutrition(recids)
             entry_info[entrynum] = zip(nutrition_info, daily_serv[entrynum])
-        return render_template('editingplate.html',
+        return render_template('editingmeals.html',
                            entry_info = entry_info)
     else:
         # Unpack AJAX call 
