@@ -9,7 +9,7 @@
 <h3 id="homepage-subtitle" class="text-center m-3 text-muted" >Good <span id="greetingTime"></span>, {{netid}}. Today is <span id='greetingDate'></span>.</h3>
 </div>
 
-<!--Placeholder Message (when no entries exist)-->
+<!--Placeholder Message (when the user has not logged any meals)-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div id="placeholder" class="d-flex justify-content-center align-items-center" style="display:none!important; height: 100vh;">
@@ -24,7 +24,7 @@
             <!-- "Click to log a meal" Button -->
             <form action="/homepage" method="post">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a Meal</button>
+                <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to log a Meal</button>
             </form>
         </div>
         
@@ -34,16 +34,12 @@
     </div>
 </div>
 
-
-
-<!--CHECK IF ENTRIES ARE EMPTY, SHOW PLACEHOLDER IF SO-->
+<!--Show placeholder if there are no logged meals-->
 {% if entries_food_dict.items()|length == 0 %}
-	<!-- Show placeholder function -->
 	<script>
 		showPlaceholder();
 	</script>
 {% else %}
-	<!--Show homepage cards function-->
 	<script>
 		showHomepageCards();
 	</script>
@@ -94,9 +90,9 @@
 	<div class="col-md-6 py-4">
 		<div id="rightCard" class="card homepage-card">
 			<div class="card-body">
-				<!--My Plate (right card)-->
+				<!--Today's Logged Meals (right card)-->
 				<h4 class="text-center py-3">Today's Logged Meals</h4>
-				<!-- Edit my plate button -->
+				<!-- Edit button -->
         <!-- Copy of bottom button for mobile compatibility -->
 				<div class="py-3 position-absolute top-0 end-0 mt-3 me-3 d-none d-xl-block">
 					<form action="/homepage" method="post">
@@ -109,7 +105,7 @@
 						</button>
 					</form>
 				</div>
-				<!--Create a card for each entry-->
+				<!--Create an inner card for each meal-->
 				<div class="col">
 					{% for entry, data in entries_food_dict.items() %}
 					{% set foods = data.foods %}
@@ -156,12 +152,12 @@
 					</form>
 				</div>
 				
-				<!--"Click to add an entry"-->
+				<!--"Click to add a Meal" button-->
                 <div class="p-3">
                     <form action="/homepage" method="post">
 						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <center>
-                            <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to add a Meal</button>
+                            <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to add a Meal</button>
                         </center>
                     </form>
                 </div>
@@ -175,7 +171,7 @@
 
 <script>
 	function showHomepageCards() {
-		// Hide the placeholder message/buttons
+		// Hide the placeholder
 		document.getElementById("placeholder").style.display = "none!important";
 
 		// Show the homepage cards 
@@ -185,7 +181,7 @@
 	}
 
 	function showPlaceholder() {
-		// Show the placeholder message/buttons
+		// Show the placeholder
 		document.getElementById("placeholder").style.display = "block";
 		// Hide the homepage cards and header
 		document.getElementById("homepage-title").style.display = "none";

@@ -3,9 +3,6 @@
 {% block title %}My Custom Foods{% endblock %}
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
-<div id="loading-animation" class="loading-animation" style="display: none;">
-    <div class="loading-spinner"></div>
-</div>
 <div class = "p-5">
     <div class = "text-center">
         <h1>My Custom Foods</h1>
@@ -41,7 +38,7 @@
             <div class="deleted-overlay">Deleted</div>
             <div class="card-body">
                 <div class="header-container">
-                    <h5 class="card-title text-center"></h5><b>{{ item['mealname'] }}</b></h5>
+                    <h5 class="card-title text-center"></h5><b style="overflow-y: auto;">{{ item['mealname'] }}</b></h5>
                     <button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm x-custom-food" aria-label="Close" style="display: none;"
                             onclick="confirmDelete(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
                     </button>

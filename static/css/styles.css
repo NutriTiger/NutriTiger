@@ -9,8 +9,6 @@
     --blue-transparent: rgba(66, 142, 223, 0.7);
 }
 
-
-
 .custom-text-wrapper {
     width: 70%; /* Adjust this value as needed */
     margin-left: auto;
@@ -238,12 +236,6 @@ body {
     align-self: center;
 }
 
-/* Bordered rows for editing foods rows */
-.list-group-item {
-    border: 1px solid #dee2e6; /* Add border */
-    border-radius: 0; /* Remove border-radius */
-}
-
 /* Calorie goal lineedit */ 
 /* <input type="number" class="form-control" name='line' placeholder="Enter the number here" min="0" required>*/
 .form-calgoal {
@@ -252,16 +244,12 @@ body {
     align-self: center;
 }
 
-.selected-label {
-    height: 30px;
-    font-size: 16px;
-}
-
 /* Setting min heights for logmeals page cards */
 .logmeals-card {
-    min-height: 500px; /* Set minimum height */
+    min-height: 500px;
   }
 
+/* Loading animations */
 .loading-animation {
     position: fixed;
     top: 0;
@@ -288,11 +276,13 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+/*********************************************************/
 
 .homepage-card {
     min-height: 700px;
 }
 
+/* Custom dropdowns for History and Log Meals dhalls */
 .select-dropdown {
     justify-content: center;
     background-color: #ffaf63; 
@@ -300,6 +290,7 @@ body {
     color: #000000; 
 }
 
+/* Set color to orange */
 .select-dropdown:focus,
 .select-dropdown:hover,
 .select-dropdown:active {
