@@ -561,7 +561,7 @@ def custom_food():
     form_data = session.pop('form_data', None) if 'form_data' in session else {
         'message': "Enter nutrition information for your own food items!"
     }
-    return render_template('custom_food.html', **form_data) 
+    return render_template('custom_add.html', **form_data) 
 
 #--------------------------------------------------------------------
 
