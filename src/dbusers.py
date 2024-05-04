@@ -367,7 +367,7 @@ Handles deleting the recipes in deletedFoods array, deleting them from
 user profile
 
 '''
-def handleDeletePersonalNutrition(netid, deletedFood):
+def handleDeleteCustomNutrition(netid, deletedFood):
     this_user = finduser(netid)
     daily_recids = this_user["daily_rec"]
     for entrynum, recids in enumerate(daily_recids):
@@ -386,7 +386,7 @@ def handleDeletePersonalNutrition(netid, deletedFood):
             this_user["daily_nut"].pop(index)
     return __setuser__(netid, this_user)
 
-def handleManyDeletePersonalNutrition(netid, deletedFoods):
+def handleManyDeleteCustomNutrition(netid, deletedFoods):
     this_user = finduser(netid)
     daily_recids = this_user["daily_rec"]
     for entrynum, recids in enumerate(daily_recids):

@@ -323,7 +323,7 @@ body {
     margin-right: 0;
 }
 
-/* Personal food - description text box will grow with input */
+/* Custom food - description text box will grow with input */
 .autosize {
     min-height: 50px;
     max-height: 300px;

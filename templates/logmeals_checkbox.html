@@ -53,7 +53,7 @@
                         <div class="form-check">
                             {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
                             <input type="checkbox" style="border: 1px solid black;" class="form-check-input" id="checkbox-{{ checkbox_id }}"
-                                data-usda="false" data-recid="{{ item.recipeid }}" data-location="Personal Food" data-mealtime="N/A"
+                                data-usda="false" data-recid="{{ item.recipeid }}" data-location="Custom Food" data-mealtime="N/A"
                                 data-mealname="{{ item.mealname }}" data-servingsize="{{ item.servingsize }}"
                                 data-cals="{{ item.calories }}" data-carbs="{{ item.carbs }}"
                                 data-prots="{{ item.proteins }}" data-fats="{{ item.fats }}"
@@ -80,7 +80,7 @@
             </nav>
         </div>
     {% else %}
-        <p id="noDataPersonalMessage" class="text-center">You have not added any Custom Foods yet.</p>
+        <p id="noDataCustomMessage" class="text-center">You have not added any Custom Foods yet.</p>
     {% endif %}
 
 </div>
