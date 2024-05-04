@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% set current_page = 'logfood' %}
+{% set current_page = 'logmeals' %}
 
 {% block title %}Log Meals{% endblock %} =
 {% block head %}
@@ -52,7 +52,7 @@
     <div class="row px-2">
         <div class="col-md-12 col-lg-6 p-3">
             <!--Putting entire food selection menu in one background card-->
-            <div class="logfood-card card">
+            <div class="logmeals-card card">
 
                 <!--Radio buttons-->
                 <center>
@@ -120,11 +120,9 @@
                     <div class="card" style="min-height: 300px;">
                         <div class="card-body" id="usda-search-results">
                         </div>
-                        {% include 'logfood_update.html' %}
-                        <a class="btn btn-primary" href="/addcustomfood" role="button" id="customFoodButton">Click here to add a custom food item!</a>
-
+                        {% include 'logmeals_checkbox.html' %}
                         <div class="pagination-container"> 
-                            <div id="pagination-usda"></div>
+                            <div id="pagination"></div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +131,7 @@
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
             <form action="/logmeals" method="post">
-            <div class="logfood-card card" id="tutorial-my-plate">
+            <div class="logmeals-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Meal</h5>
                     <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
@@ -225,7 +223,7 @@
     }
 
     function createPagination() {
-        const pagination = document.getElementById("pagination-usda");
+        const pagination = document.getElementById("pagination");
         if (!pagination) return; // Ensure pagination container exists
 
         pagination.innerHTML = ""; // Clear previous pagination links
@@ -266,17 +264,12 @@
     }
 
     function handleCustomPageChange(page) {
-        currentCustomPage = page; // Store the current page globally if needed elsewhere
+        currentCustomPage = page;
+        $('.personal-items-content').hide(); // Hide all items
+        $(`div[data-page="${page}"]`).show(); // Show items for the current page
 
-        // Hide all items by targeting a class or an ID that wraps all the personal item contents
-        $('#personal-food-items .personal-items-content').hide();
-
-        // Show only the items for the current page
-        $(`#personal-food-items div[data-page="${page}"]`).show();
-
-        // Update pagination active state. Assuming the container has an ID for specificity and items use classes
-        $('#pagination-custom .page-item').removeClass('active');
-        $('#pagination-custom .page-item:nth-child(' + page + ')').addClass('active');
+        $('.pagination .page-item').removeClass('active'); // Remove 'active' class from all pagination buttons
+        $(`.pagination .page-item:nth-child(${page})`).addClass('active'); // Add 'active' class to current page button
     }
 
 
@@ -425,7 +418,7 @@
         if (query != '') {
             showLoadingAnimation();
             console.log("Searching for:", query);
-            fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
+            fetch(`/logmeals/usdadata?query=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     currentUSDAPage = 1;
@@ -438,7 +431,7 @@
         }
         else {
             const resultsContainer = document.getElementById("usda-search-results");
-            const pagination = document.getElementById("pagination-usda");
+            const pagination = document.getElementById("pagination");
             pagination.innerHTML = "";
             resultsContainer.innerHTML = ""; // Clear previous results
             resultsContainer.innerHTML =`<div>Enter a food item in the search bar above to display nutrition options.</div>`;
@@ -449,7 +442,7 @@
     function prepareAllPages(data) {
         const resultsContainer = document.getElementById("usda-search-results");
         resultsContainer.innerHTML = ""; // Clear previous results
-        const pagination = document.getElementById("pagination-usda");
+        const pagination = document.getElementById("pagination");
         pagination.innerHTML = "";
 
         if (data && data.length > 0) {
@@ -521,7 +514,7 @@
     }
 
     function createPagination() {
-        const pagination = document.getElementById("pagination-usda");
+        const pagination = document.getElementById("pagination");
         pagination.innerHTML = "";
         const ul = document.createElement("ul");
         ul.className = "pagination";
@@ -552,8 +545,8 @@
 
 
         // Update active state for page numbers
-        document.querySelectorAll('#pagination-usda .page-item').forEach(item => {
-            if (item.firstChild.textContent == currentUSDAPage.toString()) {
+        document.querySelectorAll('.pagination .page-item').forEach(item => {
+            if (item.firstChild.textContent == currentPage.toString()) {
                 item.classList.add('active');
             } else {
                 item.classList.remove('active');
@@ -562,7 +555,7 @@
     }
 
 
-    document.getElementById("pagination-usda").addEventListener("click", function(event) {
+    document.getElementById("pagination").addEventListener("click", function(event) {
         const target = event.target;
         if (target.classList.contains("page-link")) {
             const pageNumber = parseInt(target.textContent);
@@ -878,12 +871,12 @@
         });
 
         var validFormElements = document.querySelectorAll(".small-input:valid")
-        var logFoodButton = document.getElementById("submitButton")
+        var logMealsButton = document.getElementById("submitButton")
 
         if (validFormElements.length == inputs.length) {
-            logFoodButton.style.pointerEvents = "none"
-            logFoodButton.textContent = "Submitting..."
-            logFoodButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+            logMealsButton.style.pointerEvents = "none"
+            logMealsButton.textContent = "Submitting..."
+            logMealsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
         }
     }
 
@@ -891,9 +884,7 @@
     function updateCardVisibility(radioBtnId) {
 
         if (radioBtnId === 'radio-dhall') {
-            $("#pagination-usda").hide();
-            $("#pagination-custom").hide();
-            $("#customFoodButton").hide();
+            $("#pagination").hide();
 
             $("#usda-search-results").hide();
             $("#personal-food-items").hide();
@@ -907,10 +898,7 @@
 
 
         } else if (radioBtnId === 'radio-custom') {
-            $("#pagination-usda").hide();
-            $("#pagination-custom").show();
-            $("#customFoodButton").show();
-
+            $("#pagination").hide();
 
             $("#searchBarSpan").hide();
             $("#mealTimeTab").hide();
@@ -922,10 +910,7 @@
 
 
         } else if (radioBtnId === 'radio-usda') {
-            $("#pagination-usda").show();
-            $("#pagination-custom").hide();
-            $("#customFoodButton").hide();
-
+            $("#pagination").show();
 
             $("#mealTimeTab").hide();
             $("#searchBarSpan").show();
@@ -942,13 +927,13 @@
     // If the user hits the back button reset the form
     window.onunload = function() {
         hideLoadingAnimation();
-        var logFoodButton = document.getElementById("submitButton");
+        var logMealsButton = document.getElementById("submitButton");
         var dropdown = document.querySelector('.select-dropdown');
 
         calorieInput.readOnly = false;
-        logFoodButton.style.pointerEvents = "auto";
-        logFoodButton.textContent = "Upload Plate and Return";
-        logFoodButton.style.opacity = "none";
+        logMealsButton.style.pointerEvents = "auto";
+        logMealsButton.textContent = "Upload Plate and Return";
+        logMealsButton.style.opacity = "none";
         dropdown.value = "Select Food Source";
         //dropdown.selectedIndex = 0
         dropdown.dispatchEvent(new Event('change'));
@@ -956,9 +941,7 @@
 
     // set up event listeners for dhall select and mealtime tab
     function setup() {
-        handleCustomPageChange(1);
-        $("#customFoodButton").hide();
-
+        handleCustomPageChange(1)
 
         // Event listeners for the radio buttons
         document.querySelectorAll('input[name="foodSource"]').forEach(function(radio) {

@@ -489,13 +489,13 @@ def log_food():
         items_per_page = 7
         total_pages = (int)(len(personal_data) / items_per_page)
 
-        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, 
+        return render_template('logmeals.html', is_weekend_var = is_weekend_var, data=data, 
                                 nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, 
                                 personal_data = personal_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT, total_pages = total_pages)
 
 #--------------------------------------------------------------------
 
-@app.route('/logfood/data', methods=['GET'])
+@app.route('/logmeals/data', methods=['GET'])
 def log_food_data():
     netid = auth.authenticate()
 
@@ -508,11 +508,11 @@ def log_food_data():
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
 
-    return render_template('logfood_update.html', data=data,
+    return render_template('logmeals_checkbox.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
 
-@app.route('/logfood/usdadata', methods=['GET'])
-def logfood_usdadata():
+@app.route('/logmeals/usdadata', methods=['GET'])
+def logmeals_usdadata():
     netid = auth.authenticate()
     query = request.args.get('query', default="", type=str)
     dotenv.load_dotenv()
