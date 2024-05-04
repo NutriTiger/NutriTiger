@@ -8,7 +8,6 @@ import datetime
 import pytz
 import re
 
-
 def time_of_day(date, time):
     lunch_start = datetime.time(11, 0)
     dinner_start = datetime.time(14, 0)
