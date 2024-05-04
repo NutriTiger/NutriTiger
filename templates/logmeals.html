@@ -322,25 +322,6 @@ function handleCheckboxChange(element) {
     handleServingChange();
 }
 
-// Validate the serving inputs
-function isValid(input) {
-    var charCode = input.which || input.keyCode;
-    var value = input.target.value;
-
-    // If the pressed key is a '-'
-    if (input.charCode === 45)
-        return false;
-
-    // If the key contains nonvalid chars 
-    if ((input.charCode < 48 || input.charCode > 57) && input.charCode !== 46)
-        return false;
-    
-    // Limit input to 2 decimal places
-    if (value.indexOf('.') !== -1 && value.length - value.indexOf('.') > 2)
-        return false;
-    return true;
-}
-
 // for when AJAX Request encounters an error
 function handleError() {
     console.log("error");
