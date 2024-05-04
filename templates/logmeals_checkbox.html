@@ -21,8 +21,7 @@
                                 data-carbs="{{ nutrition_info[ns.c]['carbs'] }}"
                                 data-prots="{{ nutrition_info[ns.c]['proteins'] }}"
                                 data-fats="{{ nutrition_info[ns.c]['fats'] }}"
-                                onchange="handleCheckboxChange(this)"
-                                onkeypress="changeCheckbox(this)">
+                                onchange="handleCheckboxChange(this)">
                             <label class="form-check-label" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
                             <p id="nf-{{ checkbox_id }}" class="nutrition-container">
                                 <span class="nutrition-fact">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }}</span>

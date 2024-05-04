@@ -168,7 +168,7 @@ let currentCustomPage = 1;
 let itemsPerPage = 7;
 let totalPages = Math.ceil(totalItems / itemsPerPage);
 
-
+/* Pagination ********************************************************/
 function renderPage(startIndex, endIndex, data) {
     const resultsContainer = document.getElementById("usda-search-results");
     resultsContainer.innerHTML = ""; // Clear previous results
@@ -230,11 +230,10 @@ function createPageItem(text, page, isActive = false) {
     return li;
 }
 
-    function handleCustomPageChange(page) {
-        currentCustomPage = page;
-        $('.custom-items-content').hide(); // Hide all items
-        $(`div[data-page="${page}"]`).show(); // Show items for the current page
-
+function handleCustomPageChange(page) {
+    currentCustomPage = page;
+    $('.custom-items-content').hide(); // Hide all items
+    $(`div[data-page="${page}"]`).show(); // Show items for the current page
     $('#pagination-custom .page-item').removeClass('active');
     $(`#pagination-custom .page-item:nth-child(${page})`).addClass('active');
 }
@@ -249,7 +248,6 @@ function showLoadingAnimation() {
         e.preventDefault();
         return false;
     });
-
     $('.introjs-nextbutton').keydown(function(e) {
         e.preventDefault();
         return false;
@@ -275,15 +273,6 @@ function closeMyPlate(element) {
         myplatebox.remove();
     }
     handleServingChange();
-}
-
-function changeCheckbox(element) {
-    if (element.checked) {
-        element.checked = false
-    } else {
-        element.checked = true
-    }
-    handleCheckboxChange(element)
 }
 
 // Function to handle checkbox change event: gets label text, macro data, makes URL, and
@@ -320,10 +309,17 @@ function handleCheckboxChange(element) {
                         <div id="new_entry" class="d-flex align-items-center">
                             <span class="text-muted" style="font-size: small; margin-right: 5px;">Servings: </span>
                             <input type="number" onpaste="return false;" step="any" min="0.01" max="100" 
-                            class="form-control small-input" data-usda="${element.dataset.usda}" data-cals="${element.dataset.cals}" 
-                            data-recid="${element.dataset.recid}" data-mealname="${element.dataset.mealname}" data-carbs="${element.dataset.carbs}" 
-                            data-fats="${element.dataset.fats}" data-prots="${element.dataset.prots}" placeholder="Servings" value="1" 
-                            oninput="handleServingChange(this)" required onkeypress="return isValid(event)">
+                            class="form-control small-input" 
+                            data-usda="${element.dataset.usda}" 
+                            data-cals="${element.dataset.cals}" 
+                            data-recid="${element.dataset.recid}" 
+                            data-mealname="${element.dataset.mealname}" 
+                            data-carbs="${element.dataset.carbs}" 
+                            data-fats="${element.dataset.fats}" 
+                            data-prots="${element.dataset.prots}" 
+                            data-servingsize="${element.dataset.servingsize}"
+                            placeholder="Servings" value="1" oninput="handleServingChange(this)" 
+                            required onkeypress="return isValid(event)">
                             <button type="button" id="close-${uniqueid}" class="btn btn-close btn-sm" 
                             aria-label="Close" onclick="closeMyPlate(this)" data-checkid="${element.id}" 
                             data-myplateid="myplate-${uniqueid}"></button>
