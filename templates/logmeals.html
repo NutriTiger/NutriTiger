@@ -117,6 +117,8 @@
                     <div class="pagination-container"> 
                         <div id="pagination"></div>
                     </div>
+                    <a class="btn btn-primary" href="/addcustomfood" role="button" id = "customFoodButton">Add a custom food!</a>
+
                 </div>
             </div>
         </div>
@@ -829,41 +831,49 @@ function updateCardVisibility(radioBtnId) {
 
     if (radioBtnId === 'radio-dhall') {
         $("#pagination").hide();
-
-            $("#usda-search-results").hide();
-            $("#custom-food-items").hide();
-            $("#tutorial-food-items").hide();
-            $("#menu-items").hide();
-            $("#mealTimeTab").show();
-            $("#foodsource-dropdown").show();
-            $("#searchBarSpan").hide();
-            $("#usda-search-results").hide();
-            getResults();
+        $("#customFoodButton").hide();
 
 
-    } else if (radioBtnId === 'radio-custom') {
+        $("#usda-search-results").hide();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#mealTimeTab").show();
+        $("#foodsource-dropdown").show();
+        $("#searchBarSpan").hide();
+        $("#usda-search-results").hide();
+        getResults();
+
+
+    } 
+    else if (radioBtnId === 'radio-custom') {
         $("#pagination").hide();
-
-            $("#searchBarSpan").hide();
-            $("#mealTimeTab").hide();
-            $("#usda-search-results").hide();
-            $("#custom-food-items").show();
-            $("#tutorial-food-items").hide();
-            $("#menu-items").hide();
-            $("#foodsource-dropdown").hide();
+        $("#customFoodButton").show();
 
 
-    } else if (radioBtnId === 'radio-usda') {
+        $("#searchBarSpan").hide();
+        $("#mealTimeTab").hide();
+        $("#usda-search-results").hide();
+        $("#custom-food-items").show();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#foodsource-dropdown").hide();
+
+
+    } 
+    else if (radioBtnId === 'radio-usda') {
         $("#pagination").show();
+        $("#customFoodButton").hide();
 
-            $("#mealTimeTab").hide();
-            $("#searchBarSpan").show();
-            $("#usda-search-results").show();
-            $("#custom-food-items").hide();
-            $("#tutorial-food-items").hide();
-            $("#menu-items").hide();
-            $("#foodsource-dropdown").hide();
-        }
+
+        $("#mealTimeTab").hide();
+        $("#searchBarSpan").show();
+        $("#usda-search-results").show();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#foodsource-dropdown").hide();
+    }
     
     }
 
