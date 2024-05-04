@@ -547,7 +547,7 @@ def custom_nutrition():
     if request.method == 'POST':
         data = request.get_json()
         deletedFood = data.get('deletedFood')
-        this_user = dbusers.handleDeletePersonalNutrition(netid, deletedFood)
+        this_user = dbusers.handleDeleteCustomNutrition(netid, deletedFood)
         result = dbnutrition.del_custom_food(deletedFood)
         if result:
             return jsonify({"success": True, "redirect": url_for('custom_nutrition')})
