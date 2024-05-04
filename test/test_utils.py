@@ -41,19 +41,19 @@ class TestUtils(unittest.TestCase):
 
     def test_custom_date_string_first(self):
         date = datetime.datetime(2024, 3, 1)
-        self.assertEqual(custom_strftime(date), 'Friday, March 01st')
+        self.assertEqual(custom_strftime(date), 'Friday, March 1st')
     
     def test_custom_date_string_second(self):
         date = datetime.datetime(2024, 3, 2)
-        self.assertEqual(custom_strftime(date), 'Saturday, March 02nd')
+        self.assertEqual(custom_strftime(date), 'Saturday, March 2nd')
     
     def test_custom_date_string_third(self):
         date = datetime.datetime(2024, 3, 3)
-        self.assertEqual(custom_strftime(date), 'Sunday, March 03rd')
+        self.assertEqual(custom_strftime(date), 'Sunday, March 3rd')
     
     def test_custom_date_string_one(self):
         date = datetime.datetime(2024, 3, 7)
-        self.assertEqual(custom_strftime(date), 'Thursday, March 07th')
+        self.assertEqual(custom_strftime(date), 'Thursday, March 7th')
     
     def test_custom_date_string_two(self):
         date = datetime.datetime(2024, 3, 11)
@@ -79,7 +79,25 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(gtocal(2, 3, 4), (8, 27, 16))
     
     def test_get_corresponding_arrays(self):
-        self.assertEqual(get_corresponding_arrays([8, 5], [27, 3], [16, 9], [4, 4]), ([8, 5], [27, 3], [16, 9], [4, 4], ['04-27', '04-26']))
+        today = datetime.datetime.now()
+        yesterday = today - datetime.timedelta(days = 1)
+        today_month = today.month
+        today_day = today.day
+        yesterday_month = yesterday.month
+        yesterday_day = yesterday.day
+
+        if today_month < 10:
+            today_month = "0" + str(today_month)
+        if today_day < 10:
+            today_day = "0" + str(today_day)
+        if yesterday_month < 10:
+            yesterday_month = "0" + str(yesterday_month)
+        if yesterday_day < 10:
+            yesterday_day = "0" + str(yesterday_day)
+
+        today_string = str(today_month) + '-' + str(today_day)
+        yesterday_string = str(yesterday_month) + '-' + str(yesterday_day)
+        self.assertEqual(get_corresponding_arrays([8, 5], [27, 3], [16, 9], [4, 4]), ([8, 5], [27, 3], [16, 9], [4, 4], [today_string, yesterday_string]))
 
     def test_get_average_one(self):
         test_data = [1, 2, 3, 4, 5, 6]
@@ -93,6 +111,9 @@ class TestUtils(unittest.TestCase):
         test_data = [{'data': {'somedhall': {'recipeids': [123, 456]}}}, {'data': {'somedhall': {'recipeids': [789, 312]}}}]
         result = [[123, 456], [789, 312]]
         self.assertEqual(gather_recipes(test_data), result)
+
+    def test_parse_nutritional_info(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
