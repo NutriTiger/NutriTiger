@@ -7,7 +7,7 @@
 <div id="loading-animation" class="loading-animation" style="display:none;">
     <div class="loading-spinner"></div>
 </div>
-    <h1 class="text-center m-3">Editing My Plate</h1> 
+    <h1 class="text-center m-3">Editing My Meals</h1> 
     <h3 class="text-center m-3 text-muted">Edit servings, delete foods, or delete entries.</h3>
 
     <!--Layout for the two main cards-->
@@ -17,7 +17,7 @@
             <div class="card-body">
 
                 <!--My Plate (right card)-->
-                <h4 class="text-center py-3">My Plate</h4>
+                <h4 class="text-center py-3">Today's Logged Meals</h4>
 
                 <!--Create a card for each entry-->
                 <div class="col">
@@ -74,10 +74,10 @@
 
                 {% endfor %}
 
-                <!--Save plate button-->
+                <!--Save Meals button-->
                 <div class="py-3">
                     <form>
-                        <button id="savePlate" type="submit" class="btn btn-secondary btn-lg btn-block">Save Plate</button>
+                        <button id="savePlate" type="submit" class="btn btn-secondary btn-lg btn-block">Save Meals</button>
                     </form>
                 </div>
                 
@@ -230,7 +230,7 @@
             showLoadingAnimation();
             $.ajax({
                 type: "POST",
-                url: "/editingplate",
+                url: "/editingmeals",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token() }}"
