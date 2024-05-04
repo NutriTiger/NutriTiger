@@ -43,61 +43,41 @@ def allowed_size(photo):
 
     return file_size <= max_size
 
-def delete_one_photo(public_id):
-    dotenv.load_dotenv()
-    cloudinary.config(
-        cloud_name=os.getenv("cloud_name"), 
-        api_key=os.getenv("api_key"), 
-        api_secret=os.getenv("api_secret")
-    )
-    try:
-        response = cloudinary.uploader.destroy(public_id)
-        return response  # This will return the result of the delete operation
-    except Exception as e:
-        return {'status': 'error', 'message': str(e)}
+# def delete_one_photo(public_id):
+#     dotenv.load_dotenv()
+#     cloudinary.config(
+#         cloud_name=os.getenv("cloud_name"), 
+#         api_key=os.getenv("api_key"), 
+#         api_secret=os.getenv("api_secret")
+#     )
+#     try:
+#         response = cloudinary.uploader.destroy(public_id)
+#         return response  # This will return the result of the delete operation
+#     except Exception as e:
+#         return {'status': 'error', 'message': str(e)}
 
-def delete_many_photos(public_ids):
-    dotenv.load_dotenv()
-    cloudinary.config(
-        cloud_name=os.getenv("cloud_name"), 
-        api_key=os.getenv("api_key"), 
-        api_secret=os.getenv("api_secret")
-    )
-    print("inside delete_many_photos:")
-    print(public_ids)
-    try:
-        # Ensure that the 'public_ids' parameter name is used correctly
-        response = cloudinary.api.delete_resources(public_ids=public_ids)
-        print("success in delete_many_photos")
-        return True
-    except Exception as e:
-        print("fails in delete_many_photos")
-        print(f"An error occurred: {str(e)}")
-        # Handle the response in case of an exception
-        # return {"status": "error", "message": str(e)}
-        return False
+# def delete_many_photos(public_ids):
+#     dotenv.load_dotenv()
+#     cloudinary.config(
+#         cloud_name=os.getenv("cloud_name"), 
+#         api_key=os.getenv("api_key"), 
+#         api_secret=os.getenv("api_secret")
+#     )
+#     print("inside delete_many_photos:")
+#     print(public_ids)
+#     try:
+#         # Ensure that the 'public_ids' parameter name is used correctly
+#         response = cloudinary.api.delete_resources(public_ids=public_ids)
+#         print("success in delete_many_photos")
+#         return True
+#     except Exception as e:
+#         print("fails in delete_many_photos")
+#         print(f"An error occurred: {str(e)}")
+#         # Handle the response in case of an exception
+#         # return {"status": "error", "message": str(e)}
+#         return False
 
-    
-def edit_photo_width(file, format):
-    try:
-        im = Image.open(file.stream)
-        # Specify the desired width
-        desired_width = 210
-        # Calculate the new height to maintain the aspect ratio
-        ratio = desired_width / im.width
-        new_height = int(im.height * ratio)
-        # Resize the image
-        im = im.resize((desired_width, new_height), Image.Resampling.LANCZOS)
 
-        # Save the resized image to a bytes buffer
-        image_bytes = io.BytesIO()
-        im.save(image_bytes, format=format) 
-        image_bytes.seek(0)
-        image_data = Binary(image_bytes.read())
-
-        return image_data
-    except IOError:
-        return "n/a"
     
 
 

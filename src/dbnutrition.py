@@ -109,16 +109,16 @@ def del_personal_food(recipeid):
         try:
             document_to_delete = {'recipeid': recipeid}
 
-            # Deletes image first
-            document = nutrition_col.find_one(document_to_delete)
-            if 'public_id' in document:
-                public_id = document['public_id']
-                response = photos.delete_one_photo(public_id)
-                if response.get('result') == 'ok':
-                    print(f"Successfully deleted {response.get('public_id')}")
-                else:
-                    print(f"Failed to delete {response.get('public_id')}. Reason: {response.get('result')}")
-                    return False
+            # IMAGE DELETION
+            # document = nutrition_col.find_one(document_to_delete)
+            # if 'public_id' in document:
+            #     public_id = document['public_id']
+            #     response = photos.delete_one_photo(public_id)
+            #     if response.get('result') == 'ok':
+            #         print(f"Successfully deleted {response.get('public_id')}")
+            #     else:
+            #         print(f"Failed to delete {response.get('public_id')}. Reason: {response.get('result')}")
+            #         return False
             nutrition_col.delete_one(document_to_delete)
             return True
         except Exception as e:
@@ -139,14 +139,14 @@ def del_many_personal_food(recipeids):
             query = {'recipeid': {'$in': recipeids}}
 
             # Deletes images first
-            documents = nutrition_col.find(query)
-            public_ids = [doc['public_id'] for doc in documents if 'public_id' in doc] 
+            # documents = nutrition_col.find(query)
+            # public_ids = [doc['public_id'] for doc in documents if 'public_id' in doc] 
 
-            # Deletes photos if they exist, otherwise continue w nutrition deletion
-            if len(public_ids) > 0:
-                success = photos.delete_many_photos(public_ids)
-                if not success:
-                    return False
+            # # Deletes photos if they exist, otherwise continue w nutrition deletion
+            # if len(public_ids) > 0:
+            #     success = photos.delete_many_photos(public_ids)
+            #     if not success:
+            #         return False
 
             result = nutrition_col.delete_many(query)
             print(f"Deleted {result.deleted_count} documents.")
