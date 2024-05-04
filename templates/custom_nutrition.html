@@ -142,7 +142,10 @@ function handleDelete(recid) {
     $.ajax({
         type: "POST",
         url: "/customfoods",
-        contentType: "application/json",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token() }}"
+        },
         data: jsonData,
         success: function (response) {
             if (response.success && response.redirect) {

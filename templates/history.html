@@ -31,7 +31,10 @@
       $.ajax({
         url: '/history',
         type: 'POST',
-        contentType: 'application/json',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token() }}"
+        },
         data: JSON.stringify({ "selectedRange": selectedRange }),
         success: handleResponse,
         error: function(xhr, status, error) {
