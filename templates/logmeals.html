@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% set current_page = 'logfood' %}
+{% set current_page = 'logmeals' %}
 
 {% block title %}Log Meals{% endblock %} =
 {% block head %}
@@ -52,7 +52,7 @@
     <div class="row px-2">
         <div class="col-md-12 col-lg-6 p-3">
             <!--Putting entire food selection menu in one background card-->
-            <div class="logfood-card card">
+            <div class="logmeals-card card">
 
                 <!--Radio buttons-->
                 <center>
@@ -120,7 +120,7 @@
                     <div class="card" style="min-height: 300px;">
                         <div class="card-body" id="usda-search-results">
                         </div>
-                        {% include 'logfood_update.html' %}
+                        {% include 'logmeals_checkbox.html' %}
                         <div class="pagination-container"> 
                             <div id="pagination"></div>
                         </div>
@@ -131,7 +131,7 @@
         <!--My Plate Card (right side)-->
         <div class="col-md-12 col-lg-6 p-3">
             <form action="/logmeals" method="post">
-            <div class="logfood-card card" id="tutorial-my-plate">
+            <div class="logmeals-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Meal</h5>
                     <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
@@ -418,7 +418,7 @@
         if (query != '') {
             showLoadingAnimation();
             console.log("Searching for:", query);
-            fetch(`/logfood/usdadata?query=${encodeURIComponent(query)}`)
+            fetch(`/logmeals/usdadata?query=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     currentUSDAPage = 1;
@@ -871,12 +871,12 @@
         });
 
         var validFormElements = document.querySelectorAll(".small-input:valid")
-        var logFoodButton = document.getElementById("submitButton")
+        var logMealsButton = document.getElementById("submitButton")
 
         if (validFormElements.length == inputs.length) {
-            logFoodButton.style.pointerEvents = "none"
-            logFoodButton.textContent = "Submitting..."
-            logFoodButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+            logMealsButton.style.pointerEvents = "none"
+            logMealsButton.textContent = "Submitting..."
+            logMealsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
         }
     }
 
@@ -927,13 +927,13 @@
     // If the user hits the back button reset the form
     window.onunload = function() {
         hideLoadingAnimation();
-        var logFoodButton = document.getElementById("submitButton");
+        var logMealsButton = document.getElementById("submitButton");
         var dropdown = document.querySelector('.select-dropdown');
 
         calorieInput.readOnly = false;
-        logFoodButton.style.pointerEvents = "auto";
-        logFoodButton.textContent = "Upload Plate and Return";
-        logFoodButton.style.opacity = "none";
+        logMealsButton.style.pointerEvents = "auto";
+        logMealsButton.textContent = "Upload Plate and Return";
+        logMealsButton.style.opacity = "none";
         dropdown.value = "Select Food Source";
         //dropdown.selectedIndex = 0
         dropdown.dispatchEvent(new Event('change'));
