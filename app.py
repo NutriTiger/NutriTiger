@@ -192,9 +192,9 @@ def dhall_menus():
    
     todays_date = utils.custom_strftime(current_date)
 
-    return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
+    return render_template('menus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
 
-@app.route('/update-menus-mealtime', methods=['GET'])
+@app.route('/menus/update', methods=['GET'])
 def update_menus_mealtime():
     netid = auth.authenticate()
     current_date_string = request.args.get('currentdate')
@@ -212,7 +212,7 @@ def update_menus_mealtime():
 
     data = dbmenus.query_menu_display(current_date_zeros)
     if data == []:
-        return render_template("dhallmenus_none.html", todays_date=todays_date, is_weekend_var=is_weekend_var)
+        return render_template("menus_none.html", todays_date=todays_date, is_weekend_var=is_weekend_var)
 
     
     recipeids = utils.gather_recipes(data)
@@ -239,7 +239,7 @@ def update_menus_mealtime():
             else:
                 missingdata.append({'dhall': dhall, 'mealtime': meal})
 
-    return render_template('dhallmenus_update.html', todays_date=todays_date, data=data, missingdata=missingdata,
+    return render_template('menus_update.html', todays_date=todays_date, data=data, missingdata=missingdata,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 #--------------------------------------------------------------------
@@ -489,13 +489,13 @@ def log_food():
         items_per_page = 7
         total_pages = (int)(len(personal_data) / items_per_page)
 
-        return render_template('logfood.html', is_weekend_var = is_weekend_var, data=data, 
+        return render_template('logmeals.html', is_weekend_var = is_weekend_var, data=data, 
                                 nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, 
                                 personal_data = personal_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT, total_pages = total_pages)
 
 #--------------------------------------------------------------------
 
-@app.route('/logfood/data', methods=['GET'])
+@app.route('/logmeals/data', methods=['GET'])
 def log_food_data():
     netid = auth.authenticate()
 
@@ -508,11 +508,11 @@ def log_food_data():
     nutrition_info = dbnutrition.find_many_nutrition(recipeids)
 
 
-    return render_template('logfood_update.html', data=data,
+    return render_template('logmeals_checkbox.html', data=data,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var)
 
-@app.route('/logfood/usdadata', methods=['GET'])
-def logfood_usdadata():
+@app.route('/logmeals/usdadata', methods=['GET'])
+def logmeals_usdadata():
     netid = auth.authenticate()
     query = request.args.get('query', default="", type=str)
     dotenv.load_dotenv()
