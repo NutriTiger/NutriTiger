@@ -66,10 +66,12 @@
                     {% endfor %}
                 </div>
                 <!--Save Meals button-->
-                <div class="py-3">
-                    <form>
-                        <button id="savePlate" type="button" class="btn btn-secondary btn-lg btn-block">Save Meals</button>
-                    </form>
+                <div class="form-row mt-3">
+                    <div class="col d-flex justify-content-end">
+                        <!-- Add a margin to the right of the Cancel button -->
+                        <button type="button" id ="cancelButton" class="btn btn-secondary me-2" onclick="location.href='/homepage'">Cancel</button>
+                        <button type="button" id ="savePlate" class="btn btn-primary">Save Meals</button>
+                    </div>
                 </div>
             </div>
         </div>
