@@ -45,7 +45,6 @@ cloudinary.config(
     api_key = "api_key", 
     api_secret = "api_secret"
 )
-
 # Takes the user to a general error page if an error occurs
 @app.errorhandler(Exception)
 def not_found(e):
@@ -61,7 +60,6 @@ def display_error():
     if "404" in error:
         error404 = True
     return render_template("error.html", error=error, error404=error404)
-
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
@@ -555,7 +553,7 @@ def custom_nutrition():
 
     else:
         user_nutrition = dbnutrition.find_all_custom_nutrition(netid)
-        return render_template('custom_nutrition.html', user_nutrition=user_nutrition, custom_strftime=utils.custom_strftime)
+        return render_template('custom_nutrition.html', user_nutrition=user_nutrition, custom_strftime_est=utils.custom_strftime_est)
 #--------------------------------------------------------------------
 
 @app.route('/addcustomfood', methods=['GET'])
