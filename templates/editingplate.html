@@ -251,7 +251,10 @@
             $.ajax({
                 type: "POST",
                 url: "/editingplate",
-                contentType: "application/json",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token() }}"
+                },
                 data: jsonData,
                 success: function (response) {
                     // Check if the server response includes the redirect URL

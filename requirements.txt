@@ -20,6 +20,6 @@ aiohttp>=3.9.4
 bs4==0.0.2
 lxml==5.1.0
 pillow==10.3.0
-
+flask-wtf==1.2.1
 cloudinary==1.39.1
 six==1.16.0

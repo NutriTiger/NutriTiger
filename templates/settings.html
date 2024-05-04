@@ -25,6 +25,7 @@
                                                 <h4 class="m-2"> Daily Calorie Goal:</h4>
                                             </div>
                                             <form action="/settings" method="post" class="d-flex flex-column flex-md-row m-2"> <!-- Added flex-column and flex-md-row classes -->
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                                 <input id="firstCalorieInput" type="number" class="form-control form-calgoal mr-2 mb-2 mb-md-0" name='line' placeholder="Enter the number here." min="1" max="100000" onpaste="return false;" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
                                                 <button id="firstCalorieButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
                                             </form>

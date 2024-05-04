@@ -127,6 +127,7 @@
     <!--My Plate Card (right side)-->
     <div class="col-md-12 col-lg-6 p-3">
         <form action="/logmeals" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="logmeals-card card" id="tutorial-my-plate">
                 <div class="card-body">
                     <h5 class="card-title text-center">My Meal</h5>
@@ -537,7 +538,10 @@ function addUSDANutritionData() {
         $.ajax({
             url: "/addingnutrition", // URL to the server-side function handling the database insertion
             type: "POST",
-            contentType: "application/json",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
             data: JSON.stringify({ nutritionData: nutritionData }),
             success: function (response) {
                 console.log("Nutrition data successfully sent and saved:", response);
@@ -984,7 +988,10 @@ function setup() {
             $.ajax({
                 type: "POST",
                 url: "/logmeals",
-                contentType: "application/json",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token() }}"
+                },
                 data: jsonData,
                 success: function (response) {
                     if (response.success && response.redirect) {
