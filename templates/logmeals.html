@@ -621,6 +621,11 @@ function startTutorial() {
     var element = document.getElementById("navbar");
     element.style.zIndex = "0";
     var introguide = introJs();
+    document.addEventListener('keydown', function(event) {
+    if (event.key === 'Tab') {
+        event.preventDefault(); // Prevent default tab behavior
+    }
+});
 
 introguide.setOptions({
     disableInteraction: true,
