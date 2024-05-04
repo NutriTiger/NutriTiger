@@ -192,9 +192,9 @@ def dhall_menus():
    
     todays_date = utils.custom_strftime(current_date)
 
-    return render_template('dhallmenus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
+    return render_template('menus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
 
-@app.route('/update-menus-mealtime', methods=['GET'])
+@app.route('/menus/update', methods=['GET'])
 def update_menus_mealtime():
     netid = auth.authenticate()
     current_date_string = request.args.get('currentdate')
@@ -212,7 +212,7 @@ def update_menus_mealtime():
 
     data = dbmenus.query_menu_display(current_date_zeros)
     if data == []:
-        return render_template("dhallmenus_none.html", todays_date=todays_date, is_weekend_var=is_weekend_var)
+        return render_template("menus_none.html", todays_date=todays_date, is_weekend_var=is_weekend_var)
 
     
     recipeids = utils.gather_recipes(data)
@@ -239,7 +239,7 @@ def update_menus_mealtime():
             else:
                 missingdata.append({'dhall': dhall, 'mealtime': meal})
 
-    return render_template('dhallmenus_update.html', todays_date=todays_date, data=data, missingdata=missingdata,
+    return render_template('menus_update.html', todays_date=todays_date, data=data, missingdata=missingdata,
                         nutrition_info=nutrition_info, is_weekend_var=is_weekend_var, mealtime=mealtime)
 
 #--------------------------------------------------------------------

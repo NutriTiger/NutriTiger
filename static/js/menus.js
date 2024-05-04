@@ -39,7 +39,7 @@ function getResults() {
     const currentDate = $('#currentDateDiv').text();
     let encoded_mealtime = encodeURIComponent(mealtime);
     let encoded_date = encodeURIComponent(currentDate)
-    let url = '/update-menus-mealtime?mealtime=' + encoded_mealtime + "&currentdate=" + encoded_date;
+    let url = '/menus/update?mealtime=' + encoded_mealtime + "&currentdate=" + encoded_date;
 
     let requestData = {
         type: 'GET',
