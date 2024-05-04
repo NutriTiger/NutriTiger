@@ -38,6 +38,7 @@ from werkzeug.utils import secure_filename
 #--------------------------------------------------------------------
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 dotenv.load_dotenv()
 app.secret_key = os.environ['APP_SECRET_KEY']
 # Configuration
