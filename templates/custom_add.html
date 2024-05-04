@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+{% set current_page = 'customfood' %}
+{% block title %}Add Custom Food{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-warning">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+{% endwith %}
+{% include 'loading.html' %}
+    <h1 class="text-center m-3">Add Custom Food</h1> 
+    <div class="container">
+        <form id="customFoodForm" action="/addcustomfood" method="post" enctype="multipart/form-data" >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="inputImage" class="form-label">Upload Image</label>
+                    <input type="file" class="form-control" id="inputImage" name="image" accept="image/png, image/jpeg, image/heic">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputRecipeName">Recipe Name</label>
+                    <input type="text" class="form-control" id="inputRecipeName" maxlength="30" name = "name" aria-describedby="nameHelp" placeholder = "e.g. overnight oats" value="{{name}}" required>
+                    <small id="nameHelp" class="form-text text-muted">We will not share this with other users</small>
+                </div>
+
+                <div class="form-group">
+                <label for="inputCalories">Calories</label>
+                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputProtein">Proteins (g)</label>
+                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputCarbs">Carbohydrates (g)</label>
+                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputFats">Fats (g)</label>
+                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputServingSize">Serving size</label>
+                    <input type="text" class="form-control" id="inputServingSize" maxlength="20" name = "servingsize" placeholder="e.g. 1 cup" value = "{{servingsize}}" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputDesc">Description</label>
+                    <textarea class="form-control autosize" id="inputDesc" maxlength = "180" name= "description" oninput="autoResizeField(this)" placeholder = "e.g. my fav order from Coffee Club!">{{desc}}</textarea>
+                </div>
+                <div class="form-row mt-3">
+                    <div class="col d-flex justify-content-end">
+                        <!-- Add a margin to the right of the Cancel button -->
+                        <button type="button" id ="cancelButton" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
+                        <button type="button" id ="submitButton" class="btn btn-primary" onclick="validateNums(event)">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script>
+
+        function validateNums(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('customFoodForm');
+            const calories = parseInt(document.getElementById('inputCalories').value) || 0;
+            const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
+            const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
+            const fats = parseInt(document.getElementById('inputFats').value) || 0;
+
+            // HTML validation re-implemented
+            if (form.checkValidity()) {
+                // Numbers do not add up
+                if ((4*proteins + 4*carbs + 9*fats) > calories) {
+                    confirmSubmission(event, form); 
+                }
+                else {
+                    disableForm(event, form);
+                }
+            } else {
+                form.reportValidity(); // This will display any HTML5 validation messages
+            }
+           
+        
+        }
+
+        function confirmSubmission(event, form) {
+            Swal.fire({
+            title: "Are you sure?",
+            text: "Your macronutrient counts are not consistent with your calorie count. \nRecall: 1 gram of protein = 1 gram of fat = 4 calories; 1 gram of fat = 9 calories. \nWant to take another look?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Proceed"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                disableForm(event, form);
+                hideLoadingAnimation();
+                Swal.fire({
+                title: "Hmmmm.... okay!",
+                text: "Let's proceed, then! You can always delete this entry later on.",
+                icon: "success"
+                });
+            }
+            else {
+                enableForm(event, form)
+            }
+            });
+        }
+
+        // Disabled inputs cannot be submitted --> make elements read only and only submit disabled
+        function disableForm(event, form) {
+            showLoadingAnimation()
+
+            Array.from(form.elements).forEach(element => {
+                if (element.type !== 'submit' && element.type !== 'button') {
+                    element.readOnly = true;  // Apply readonly where applicable
+                    element.style.pointerEvents = 'none';  // Disable pointer events
+                    element.style.backgroundColor = '#e9ecef';  // Apply disabled color
+                }
+                if (element.type == 'button') {
+                    element.disabled = true;
+                }
+            });
+            form.submit()
+        }
+
+        
+        function enableForm(event, form) {
+            hideLoadingAnimation()
+
+            Array.from(form.elements).forEach(element => {
+                if (element.type !== 'submit' && element.type !== 'button') {
+                    element.readOnly = false;  
+                    element.style.pointerEvents = '';  
+                    element.style.backgroundColor = ''; 
+                }
+                if (element.type == 'submit') {
+                    element.disabled = false;
+                }
+            });
+
+        }
+
+        function autoResizeField(field) {
+        field.style.height = 'inherit'; // Reset the height
+        const computed = window.getComputedStyle(field);
+        // Calculate the height
+        const height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+                     + parseInt(computed.getPropertyValue('padding-top'), 10)
+                     + field.scrollHeight
+                     + parseInt(computed.getPropertyValue('padding-bottom'), 10)
+                     + parseInt(computed.getPropertyValue('border-bottom-width'), 10);
+
+        field.style.height = `${height}px`;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const input1 = document.getElementById("inputCalories");
+            const input2 = document.getElementById("inputProtein");
+            const input3 = document.getElementById("inputCarbs");
+            const input4 = document.getElementById("inputFats");
+            const form = document.querySelector('form');
+            const array = [input1, input2, input3, input4]
+            array.forEach((evt) => {
+                evt.addEventListener("keydown", function(evt) {
+                    // Allow: backspace, delete, tab, escape, and enter
+                    if ([8, 46, 9, 27, 13].indexOf(evt.keyCode) !== -1 ||
+                        // Allow: Ctrl/cmd+A, Ctrl/cmd+C, Ctrl/cmd+V, Ctrl/cmd+X
+                        (evt.keyCode == 65 || evt.keyCode == 67 || evt.keyCode == 86 || evt.keyCode == 88) && (evt.ctrlKey === true || evt.metaKey === true) ||
+                        // Allow: home, end, left, right
+                        (evt.keyCode >= 35 && evt.keyCode <= 39)) {
+                            return; // let it happen, don't do anything
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((evt.keyCode < 48 || evt.keyCode > 57) && (evt.keyCode < 96 || evt.keyCode > 105)) {
+                        evt.preventDefault();
+                    }
+                });
+            });
+
+
+        });
+
+         // hiding spinner
+        function setup() {
+            hideLoadingAnimation()
+        }
+
+        $("document").ready(setup);
+    </script>
+{% endblock %}

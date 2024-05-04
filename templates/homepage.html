@@ -9,7 +9,7 @@
 <h3 id="homepage-subtitle" class="text-center m-3 text-muted" >Good <span id="greetingTime"></span>, {{netid}}. Today is <span id='greetingDate'></span>.</h3>
 </div>
 
-<!--Placeholder Message (when no entries exist)-->
+<!--Placeholder Message (when the user has not logged any meals)-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div id="placeholder" class="d-flex justify-content-center align-items-center" style="display:none!important; height: 100vh;">
@@ -24,7 +24,7 @@
             <!-- "Click to log a meal" Button -->
             <form action="/homepage" method="post">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a Meal</button>
+                <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to log a Meal</button>
             </form>
         </div>
         
@@ -34,16 +34,12 @@
     </div>
 </div>
 
-
-
-<!--CHECK IF ENTRIES ARE EMPTY, SHOW PLACEHOLDER IF SO-->
+<!--Show placeholder if there are no logged meals-->
 {% if entries_food_dict.items()|length == 0 %}
-	<!-- Show placeholder function -->
 	<script>
 		showPlaceholder();
 	</script>
 {% else %}
-	<!--Show homepage cards function-->
 	<script>
 		showHomepageCards();
 	</script>
@@ -69,14 +65,18 @@
 					</div>
 				</div>
 				<div class="prog-container my-5" style="display: flex; justify-content: center;">
-					<div style="width: 400px; height: 400px; display: flex; justify-content: center;">
+					<div style="width: 400px; height: 325px; display: flex; justify-content: center;">
 						{% include 'piechart.html' %}
 					</div>
 				</div>
 				<div id="chartSubtitle" class="text-center text-muted">
 					Clicking on elements in the legend will hide it from the pie chart.
-					<br>
-					<small>Please note that this pie chart visually represents the proportion of macronutrients relative to their caloric contribution.</small>
+					<a class="tool-tip" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Please note that this pie chart visually represents the proportion of macronutrients relative to their caloric contribution.">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+							<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+							<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+						</svg>
+                    </a>
 				</div>
 
 				<!--Button that redirects to History page -->
@@ -94,9 +94,9 @@
 	<div class="col-md-6 py-4">
 		<div id="rightCard" class="card homepage-card">
 			<div class="card-body">
-				<!--My Plate (right card)-->
+				<!--Today's Logged Meals (right card)-->
 				<h4 class="text-center py-3">Today's Logged Meals</h4>
-				<!-- Edit my plate button -->
+				<!-- Edit button -->
         <!-- Copy of bottom button for mobile compatibility -->
 				<div class="py-3 position-absolute top-0 end-0 mt-3 me-3 d-none d-xl-block">
 					<form action="/homepage" method="post">
@@ -109,7 +109,7 @@
 						</button>
 					</form>
 				</div>
-				<!--Create a card for each entry-->
+				<!--Create an inner card for each meal-->
 				<div class="col">
 					{% for entry, data in entries_food_dict.items() %}
 					{% set foods = data.foods %}
@@ -156,12 +156,12 @@
 					</form>
 				</div>
 				
-				<!--"Click to add an entry"-->
+				<!--"Click to add a Meal" button-->
                 <div class="p-3">
                     <form action="/homepage" method="post">
 						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <center>
-                            <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to add a Meal</button>
+                            <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to add a Meal</button>
                         </center>
                     </form>
                 </div>
@@ -174,8 +174,12 @@
 {% endif %}
 
 <script>
+	/* tooltips for information about chart */
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
 	function showHomepageCards() {
-		// Hide the placeholder message/buttons
+		// Hide the placeholder
 		document.getElementById("placeholder").style.display = "none!important";
 
 		// Show the homepage cards 
@@ -185,7 +189,7 @@
 	}
 
 	function showPlaceholder() {
-		// Show the placeholder message/buttons
+		// Show the placeholder
 		document.getElementById("placeholder").style.display = "block";
 		// Hide the homepage cards and header
 		document.getElementById("homepage-title").style.display = "none";
