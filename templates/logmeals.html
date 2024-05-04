@@ -10,14 +10,6 @@
 
 {% include 'loading.html' %}
 
-<style> 
-    .icons .fa { 
-        width: 50px; 
-        height: 50px; 
-        font-size: 50px; 
-    }      
-</style> 
-
 <div class="text-center p-3">
     <h1 class="my-2">Log Meals</h1>
     <p class="px-5">
@@ -329,9 +321,136 @@ function createPagination() {
     pagination.appendChild(ul);
 }
 
+function handleUSDAPageChange(pageNum) {
+    currentUSDAPage = pageNum; // Update the current page
+
+    const pages = document.querySelectorAll('.page-content');
+    pages.forEach(page => {
+        page.style.display = 'none'; // Hide all pages
+    });
+
+    const activePage = document.getElementById(`page-${pageNum}`);
+    activePage.style.display = 'block'; // Show the current page
+
+
+    // Update active state for page numbers
+    document.querySelectorAll('#pagination-usda .page-item').forEach(item => {
+        if (item.firstChild.textContent == currentUSDAPage.toString()) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+/* USDA **************************************************************/
+// Function to handle USDA data search
+function searchUSDAFood() {
+    const query = document.getElementById("searchBar").value.trim();
+    if (query != '') {
+        showLoadingAnimation();
+        console.log("Searching for:", query);
+        fetch(`/logmeals/usdadata?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                currentUSDAPage = 1;
+                console.log("Data received:", data);
+                totalItems = data.length;
+                totalPages = Math.ceil(totalItems / itemsPerPage);
+                prepareAllPages(data);
+            })
+            .catch(error => console.error("Error fetching USDA data:", error));
+    }
+    else {
+        const resultsContainer = document.getElementById("usda-search-results");
+        const pagination = document.getElementById("pagination-usda");
+        pagination.innerHTML = "";
+        resultsContainer.innerHTML = ""; // Clear previous results
+        resultsContainer.innerHTML =`<div>Enter a food item in the search bar above to display nutrition options.</div>`;
+        
+    }
+}
+
+function addUSDANutritionData() {
+    let nutritionData = [];
+
+    // Collect data from all checked USDA food checkboxes
+    document.querySelectorAll(".small-input").forEach((input) => {
+        if (input.dataset.usda === "true") {
+            let foodData = {
+                recipeid: input.dataset.recid,
+                mealname: input.dataset.mealname,
+                servingsize: input.dataset.servingsize,
+                calories: parseFloat(input.dataset.cals),
+                proteins: parseFloat(input.dataset.prots),
+                carbs: parseFloat(input.dataset.carbs),
+                fats: parseFloat(input.dataset.fats),
+                source: "usda",
+            };
+            nutritionData.push(foodData);
+        }
+    });
+
+    // Send the data to the server if there is any
+    if (nutritionData.length > 0) {
+        showLoadingAnimation();
+        $.ajax({
+            url: "/addingnutrition", // URL to the server-side function handling the database insertion
+            type: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
+            data: JSON.stringify({ nutritionData: nutritionData }),
+            success: function (response) {
+                console.log("Nutrition data successfully sent and saved:", response);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to send nutrition data:", error);
+            },
+        });
+    } else {
+        console.log("No USDA food items selected or data is missing.");
+    }
+}
+// Debounce function to limit rate of invoking functions
+function debounce(func, delay) {
+    let debounceTimer;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
 /* General Functionality *********************************************/
 // global variable for entry nutrition
 let entry_nutrition = { calories: 0, carbs: 0, fats: 0, proteins: 0 };
+
+function handleServingChange() {
+    const inputs = document.querySelectorAll(".small-input");
+    let totalCals = 0;
+    let totalCarbs = 0;
+    let totalFats = 0;
+    let totalProts = 0;
+    inputs.forEach((input) => {
+        input.setCustomValidity('');
+        customCheckValidity(input)
+        let serving = input.value;
+        totalCals += serving * input.dataset.cals;
+        totalCarbs += serving * input.dataset.carbs;
+        totalFats += serving * input.dataset.fats;
+        totalProts += serving * input.dataset.prots;
+    });
+    entry_nutrition["calories"] = totalCals;
+    entry_nutrition["carbs"] = totalCarbs;
+    entry_nutrition["fats"] = totalFats;
+    entry_nutrition["proteins"] = totalProts;
+
+    const plateTotals = document.getElementById("plateTotals");
+    plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
+}
 
 // function to handle removing a food-item from myplate
 function closeMyPlate(element) {
@@ -413,119 +532,6 @@ function handleCheckboxChange(element) {
     handleServingChange();
 }
 
-// for when AJAX Request encounters an error
-function handleError() {
-    console.log("error");
-    hideLoadingAnimation();
-}
-
-// Function to handle USDA data search
-function searchUSDAFood() {
-    const query = document.getElementById("searchBar").value.trim();
-    if (query != '') {
-        showLoadingAnimation();
-        console.log("Searching for:", query);
-        fetch(`/logmeals/usdadata?query=${encodeURIComponent(query)}`)
-            .then(response => response.json())
-            .then(data => {
-                currentUSDAPage = 1;
-                console.log("Data received:", data);
-                totalItems = data.length;
-                totalPages = Math.ceil(totalItems / itemsPerPage);
-                prepareAllPages(data);
-            })
-            .catch(error => console.error("Error fetching USDA data:", error));
-    }
-    else {
-        const resultsContainer = document.getElementById("usda-search-results");
-        const pagination = document.getElementById("pagination-usda");
-        pagination.innerHTML = "";
-        resultsContainer.innerHTML = ""; // Clear previous results
-        resultsContainer.innerHTML =`<div>Enter a food item in the search bar above to display nutrition options.</div>`;
-        
-    }
-}
-
-
-function handleUSDAPageChange(pageNum) {
-    currentUSDAPage = pageNum; // Update the current page
-
-    const pages = document.querySelectorAll('.page-content');
-    pages.forEach(page => {
-        page.style.display = 'none'; // Hide all pages
-    });
-
-    const activePage = document.getElementById(`page-${pageNum}`);
-    activePage.style.display = 'block'; // Show the current page
-
-
-    // Update active state for page numbers
-    document.querySelectorAll('#pagination-usda .page-item').forEach(item => {
-        if (item.firstChild.textContent == currentUSDAPage.toString()) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
-    });
-}
-
-function addUSDANutritionData() {
-    let nutritionData = [];
-
-    // Collect data from all checked USDA food checkboxes
-    document.querySelectorAll(".small-input").forEach((input) => {
-        if (input.dataset.usda === "true") {
-            let foodData = {
-                recipeid: input.dataset.recid,
-                mealname: input.dataset.mealname,
-                servingsize: input.dataset.servingsize,
-                calories: parseFloat(input.dataset.cals),
-                proteins: parseFloat(input.dataset.prots),
-                carbs: parseFloat(input.dataset.carbs),
-                fats: parseFloat(input.dataset.fats),
-                source: "usda",
-            };
-            nutritionData.push(foodData);
-        }
-    });
-
-    // Send the data to the server if there is any
-    if (nutritionData.length > 0) {
-        showLoadingAnimation();
-        $.ajax({
-            url: "/addingnutrition", // URL to the server-side function handling the database insertion
-            type: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token() }}"
-            },
-            data: JSON.stringify({ nutritionData: nutritionData }),
-            success: function (response) {
-                console.log("Nutrition data successfully sent and saved:", response);
-                // alert("Nutrition data added successfully!");
-            },
-            error: function (xhr, status, error) {
-                console.error("Failed to send nutrition data:", error);
-                // alert("Error adding nutrition data. Check console for details.");
-            },
-        });
-    } else {
-        console.log("No USDA food items selected or data is missing.");
-        // alert("No USDA food items selected or data is incomplete.");
-    }
-}
-
-// Debounce function to limit rate of invoking functions
-function debounce(func, delay) {
-    let debounceTimer;
-    return function () {
-        const context = this;
-        const args = arguments;
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => func.apply(context, args), delay);
-    };
-}
-
 // fetch menu items based on selected dhall and mealtime + correct display
 function getResults() {
     $(".menu-items-content").hide();
@@ -533,106 +539,85 @@ function getResults() {
     $("#select").hide();
     $("#noDataMessage").hide();
 
-        $("#searchBarSpan").hide();
+    $("#searchBarSpan").hide();
+    $("#usda-search-results").hide();
+    $("#custom-food-items").hide();
+    $("#tutorial-food-items").hide();
+    $("#menu-items").show();
+
+
+    $("#mealTimeTab").show();
+    let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
+    let selectedHall = $("#diningHallSelect").val();
+    if (selectedHall == "Select Dining Hall") {
+        $("#select").show()
+        return
+    }
+    else if (selectedHall === "Example Dining Hall") {
+        $("#usda-search-results").hide();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").show();
+        $("#menu-items").hide();
+    } 
+    dhallCode = selectedHall.substring(0, 2);
+    let divToShow = dhallCode + "-" + mealtime;
+    if ($("#" + divToShow).length > 0) {
+        $("#" + divToShow).show();
+    } 
+    else {
+        $("#noDataMessage").show();
+    }
+}
+
+// Radio button updates
+function updateCardVisibility(radioBtnId) {
+    if (radioBtnId === 'radio-dhall') {
+        $("#pagination-usda").hide();
+        $("#customFoodButton").hide();
         $("#usda-search-results").hide();
         $("#custom-food-items").hide();
         $("#tutorial-food-items").hide();
-        $("#menu-items").show();
-
-
+        $("#menu-items").hide();
         $("#mealTimeTab").show();
-        let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
-        let selectedHall = $("#diningHallSelect").val();
-        if (selectedHall == "Select Dining Hall") {
-            $("#select").show()
-            return
-        }
-        else if (selectedHall === "Example Dining Hall") {
-            $("#usda-search-results").hide();
-            $("#custom-food-items").hide();
-            $("#tutorial-food-items").show();
-            $("#menu-items").hide();
-        } 
-        dhallCode = selectedHall.substring(0, 2);
-        let divToShow = dhallCode + "-" + mealtime;
-        if ($("#" + divToShow).length > 0) {
-            $("#" + divToShow).show();
-        } 
-        else {
-            $("#noDataMessage").show();
-        }
+        $("#foodsource-dropdown").show();
+        $("#searchBarSpan").hide();
+        $("#usda-search-results").hide();
+        getResults();
+    } 
+    else if (radioBtnId === 'radio-custom') {
+        $("#pagination-usda").hide();
+        $("#customFoodButton").show();
+        $("#searchBarSpan").hide();
+        $("#mealTimeTab").hide();
+        $("#usda-search-results").hide();
+        $("#custom-food-items").show();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#foodsource-dropdown").hide();
+    } 
+    else if (radioBtnId === 'radio-usda') {
+        $("#pagination-usda").show();
+        $("#customFoodButton").hide();
+        $("#mealTimeTab").hide();
+        $("#searchBarSpan").show();
+        $("#usda-search-results").show();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#foodsource-dropdown").hide();
     }
-
-function handleServingChange() {
-    const inputs = document.querySelectorAll(".small-input");
-    let totalCals = 0;
-    let totalCarbs = 0;
-    let totalFats = 0;
-    let totalProts = 0;
-    inputs.forEach((input) => {
-        input.setCustomValidity('');
-        customCheckValidity(input)
-        let serving = input.value;
-        totalCals += serving * input.dataset.cals;
-        totalCarbs += serving * input.dataset.carbs;
-        totalFats += serving * input.dataset.fats;
-        totalProts += serving * input.dataset.prots;
-    });
-    entry_nutrition["calories"] = totalCals;
-    entry_nutrition["carbs"] = totalCarbs;
-    entry_nutrition["fats"] = totalFats;
-    entry_nutrition["proteins"] = totalProts;
-
-    const plateTotals = document.getElementById("plateTotals");
-    plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
 }
 
-function customCheckValidity(input) {
-    let isValid = true;
-    inputValue = parseFloat(input.value)
-    // Check if the input is empty
-    if (!input.value || input.value==0) {
-        input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
-        isValid = false;
-    }
-    else if (inputValue > 100) {
-        input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
-        isValid = false;
-    } else {
-        input.setCustomValidity(""); // Clear any previous custom validity messages
-    }
-    input.reportValidity();
-    return isValid;
-}
-
-function validateInputs(event) {
-    const inputs = document.querySelectorAll(".small-input");
-    valid = true;
-
-    // Check if there are 0 food items selected
-    if (inputs.length == 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Empty Plate',
-            text: 'Please add foods to your plate before submitting.',
-            confirmButtonText: 'OK'
-        });
-        event.preventDefault()
-        return false;
-    }
-
-    inputs.forEach((input) => {
-        if (!customCheckValidity(input)) {
-            valid=false
-        }
-    });
-    return valid
-}
-
+/* Tutorial **********************************************************/
 function startTutorial() {
     var element = document.getElementById("navbar");
     element.style.zIndex = "0";
     var introguide = introJs();
+    document.addEventListener('keydown', function(event) {
+    if (event.key === 'Tab') {
+        event.preventDefault(); // Prevent default tab behavior
+    }
+});
 
 introguide.setOptions({
     disableInteraction: true,
@@ -718,7 +703,6 @@ introguide.setOptions({
         var searchBar = document.getElementById("searchBar");
         searchBar.value = "banana";
         searchUSDAFood();
-        
     }
     if (targetElement.id == 'usda-search-results') {
         var checkbox = document.getElementById("usda-checkbox-usda-2012128");
@@ -727,45 +711,86 @@ introguide.setOptions({
     }
 }).onafterchange(function(targetElement) {
     var nextButton = document.getElementsByClassName("introjs-nextbutton")
-
     nextButton.style.pointerEvents = "none";
 }).onexit(function() {
     try {
-    // reset radio buttons to have dhall button checked
-    document.getElementById('radio-dhall').checked = true;
-    document.getElementById('radio-usda').checked = false;
-    updateCardVisibility('radio-dhall');
+        // reset radio buttons to have dhall button checked
+        document.getElementById('radio-dhall').checked = true;
+        document.getElementById('radio-usda').checked = false;
+        updateCardVisibility('radio-dhall');
 
-    // reset dropdown value
-    var selectDropdown = document.querySelector('.select-dropdown');
-    selectDropdown.value = 'Select Dining Hall';
-    selectDropdown.dispatchEvent(new Event('change'));
+        // reset dropdown value
+        var selectDropdown = document.querySelector('.select-dropdown');
+        selectDropdown.value = 'Select Dining Hall';
+        selectDropdown.dispatchEvent(new Event('change'));
 
-    document.getElementById('close--tutorial-1').click();
-    document.getElementById('close-ckbox-usda-2012128').click();
+        document.getElementById('close--tutorial-1').click();
+        document.getElementById('close-ckbox-usda-2012128').click();
 
-    var searchBar = document.getElementById("searchBar");
-    searchBar.value = "";
-    var usdaSearchResults = document.getElementById('usda-search-results');
-    usdaSearchResults.innerHTML = '';
+        var searchBar = document.getElementById("searchBar");
+        searchBar.value = "";
+        var usdaSearchResults = document.getElementById('usda-search-results');
+        usdaSearchResults.innerHTML = '';
 
-    var navbar = document.getElementById("navbar");
-    navbar.style.zIndex = "1030";
+        var navbar = document.getElementById("navbar");
+        navbar.style.zIndex = "1030";
 
-    // remove example items that were added to My Plate
-    var exampleCheckbox = document.querySelector('#checkbox-tutorial-1');
-    exampleCheckbox.checked = false;
-    handleCheckboxChange(exampleCheckbox);
+        // remove example items that were added to My Plate
+        var exampleCheckbox = document.querySelector('#checkbox-tutorial-1');
+        exampleCheckbox.checked = false;
+        handleCheckboxChange(exampleCheckbox);
 
-    var bananaCheckbox = document.getElementById("usda-checkbox-usda-2012128");
-    bananaCheckbox.checked = false;
-    handleCheckboxChange(bananaCheckbox);
-    } catch {
-        console.log("Tutorial exited early.");
+        var bananaCheckbox = document.getElementById("usda-checkbox-usda-2012128");
+        bananaCheckbox.checked = false;
+        handleCheckboxChange(bananaCheckbox);
+        } catch {
+            console.log("Tutorial exited early.");
+        }
+        return true;
+    }).start();
+}
+
+/* Validation ********************************************************/
+function customCheckValidity(input) {
+    let isValid = true;
+    inputValue = parseFloat(input.value)
+    // Check if the input is empty
+    if (!input.value || input.value==0) {
+        input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
+        isValid = false;
     }
-    return true;
+    else if (inputValue > 100) {
+        input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
+        isValid = false;
+    } else {
+        input.setCustomValidity(""); // Clear any previous custom validity messages
+    }
+    input.reportValidity();
+    return isValid;
+}
 
-}).start();
+function validateInputs(event) {
+    const inputs = document.querySelectorAll(".small-input");
+    valid = true;
+
+    // Check if there are 0 food items selected
+    if (inputs.length == 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Empty Plate',
+            text: 'Please add foods to your plate before submitting.',
+            confirmButtonText: 'OK'
+        });
+        event.preventDefault()
+        return false;
+    }
+
+    inputs.forEach((input) => {
+        if (!customCheckValidity(input)) {
+            valid=false
+        }
+    });
+    return valid
 }
 
 // When the user submits the form and all fields are valid, lock it
@@ -787,59 +812,6 @@ function closeForm(e) {
     }
 }
 
-// Radio button updates
-function updateCardVisibility(radioBtnId) {
-
-    if (radioBtnId === 'radio-dhall') {
-        $("#pagination-usda").hide();
-        $("#customFoodButton").hide();
-
-
-        $("#usda-search-results").hide();
-        $("#custom-food-items").hide();
-        $("#tutorial-food-items").hide();
-        $("#menu-items").hide();
-        $("#mealTimeTab").show();
-        $("#foodsource-dropdown").show();
-        $("#searchBarSpan").hide();
-        $("#usda-search-results").hide();
-        getResults();
-
-
-    } 
-    else if (radioBtnId === 'radio-custom') {
-        $("#pagination-usda").hide();
-        $("#customFoodButton").show();
-
-
-        $("#searchBarSpan").hide();
-        $("#mealTimeTab").hide();
-        $("#usda-search-results").hide();
-        $("#custom-food-items").show();
-        $("#tutorial-food-items").hide();
-        $("#menu-items").hide();
-        $("#foodsource-dropdown").hide();
-
-
-    } 
-    else if (radioBtnId === 'radio-usda') {
-        $("#pagination-usda").show();
-
-        $("#customFoodButton").hide();
-
-
-        $("#mealTimeTab").hide();
-        $("#searchBarSpan").show();
-        $("#usda-search-results").show();
-        $("#custom-food-items").hide();
-        $("#tutorial-food-items").hide();
-        $("#menu-items").hide();
-        $("#foodsource-dropdown").hide();
-    }
-    
-    }
-
-
 // If the user hits the back button reset the form
 window.onunload = function() {
     hideLoadingAnimation();
@@ -855,6 +827,7 @@ window.onunload = function() {
     dropdown.dispatchEvent(new Event('change'));
 }
 
+/* setup *************************************************************/
 // set up event listeners for dhall select and mealtime tab
 function setup() {
     $("#customFoodButton").hide();
@@ -916,7 +889,6 @@ function setup() {
             return false;
         }
 
-
         // gray out and disable submit button
         closeForm(event);
         
@@ -925,6 +897,7 @@ function setup() {
         document.getElementById('radio-custom').checked = false;
         document.getElementById('radio-usda').checked = false;
 
+        // send data
         var recids = [];
         var servings = [];
         const inputs = document.querySelectorAll(".small-input");
@@ -964,6 +937,5 @@ function setup() {
 }
 
 $("document").ready(setup);
-
 </script>
 {% endblock %}

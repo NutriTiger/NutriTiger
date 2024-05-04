@@ -9,9 +9,7 @@
     --blue-transparent: rgba(66, 142, 223, 0.7);
 }
 
-.nav-tabs .nav-link {
-    color: #FF9040; 
-}
+
 
 .custom-text-wrapper {
     width: 70%; /* Adjust this value as needed */
@@ -20,8 +18,19 @@
     text-align: center; /* Center aligns the text */
 }
 
+/* for navbar.html */
+
 .nt-color-navbar {
     background-color: #efd3b8 ; 
+}
+
+.nt-nav-item a:hover{
+    color:#ce6203;
+    text-decoration: underline;
+}
+
+.nav-tabs .nav-link {
+    color: #FF9040; 
 }
 
 .nt-color-bg {
@@ -301,6 +310,11 @@ body {
     outline: none; 
 }
 
+.icons .fa { 
+    width: 50px; 
+    height: 50px; 
+    font-size: 50px; 
+} 
 /* for individual food item nutrition facts ***********************/
 .nutrition-container {
     display: flex; 
@@ -395,7 +409,7 @@ body {
 
 /* for hmenu.html */
 .nt-activated {
-    color:#000000;
+    color:#000000!important;
     font-weight:500;
 }
 .nt-color-menu {
