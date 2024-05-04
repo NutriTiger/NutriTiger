@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% set current_page = 'customfood' %}
-{% block title %}Custom Nutrition{% endblock %}
+{% block title %}My Custom Foods{% endblock %}
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 <div id="loading-animation" class="loading-animation" style="display: none;">
@@ -12,16 +12,18 @@
         <h5 class="text-center px-2">See an overview of your custom foods and add to your collection of recipes.</h5>
     </div>
     <div class="text-center p-3">
-        <div class="d-inline-block">
-            <button id="add_food_btn" onclick="window.location.href='{{ url_for('custom_food') }}'" class="btn btn-primary">+ Add a custom food</button>
-        </div>
-        <div class="d-inline-block p-2">
-            <button type="submit" id="edit_custom_foods" class="btn btn-primary" style="display: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                </svg>
-                Edit Custom Foods
-            </button>
+        <div style="align-items: center;">
+            <div class="d-inline-block">
+                <button id="add_food_btn" onclick="window.location.href='{{ url_for('custom_food') }}'" class="btn btn-primary" style="display: block;">+ Add a custom food</button>
+            </div>
+            <div class="d-inline-block p-2">
+                <button type="submit" id="edit_custom_foods" class="btn btn-primary" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                    </svg>
+                    Edit Custom Foods
+                </button>
+            </div>
         </div>
         <div class="d-inline-block p-2">
             <button type="submit" id="stop_editing" class="btn btn-primary" style="display: none;">

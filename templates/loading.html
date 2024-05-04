@@ -5,11 +5,21 @@
 <script>
 function showLoadingAnimation() {
     // Show the loading animation covering the entire screen
-    $('#loading-animation').show();
+    $("#loading-animation").show();
+    $('input').keydown(function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    $('.introjs-nextbutton').keydown(function(e) {
+        e.preventDefault();
+        return false;
+    });
 }
 
 function hideLoadingAnimation() {
     // Hide the loading animation
-    $('#loading-animation').hide();
+    $("#loading-animation").hide();
+    $('input').off('keydown');
 }
 </script>

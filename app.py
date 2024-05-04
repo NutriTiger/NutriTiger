@@ -3,8 +3,6 @@
 # app.py
 #
 # ----------------------------------------------------------------------
-
-# Based on https://github.com/shannon-heh/TigerSnatch/blob/main/app.py#L75
 from sys import path
 path.append('src')
 path.append('src/db')
@@ -47,7 +45,7 @@ cloudinary.config(
     api_key = "api_key", 
     api_secret = "api_secret"
 )
-'''
+
 # Takes the user to a general error page if an error occurs
 @app.errorhandler(Exception)
 def not_found(e):
@@ -63,20 +61,16 @@ def display_error():
     if "404" in error:
         error404 = True
     return render_template("error.html", error=error, error404=error404)
-    '''
+
 #--------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
 def index():
-    #netid = auth.authenticate()
     # Check if it is a user's first visit
     visited_before = session.get('username')
 
     if visited_before is None:
         # Indicate first contact
-        # Set cookie to mark user as visited now
-        #response = make_response(redirect('/welcome'))
-        #response.set_cookie('visited_before', 'True')
         return render_template('index.html')
     
     return redirect('/homepage')
