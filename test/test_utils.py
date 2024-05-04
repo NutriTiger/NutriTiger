@@ -113,7 +113,24 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(gather_recipes(test_data), result)
 
     def test_parse_nutritional_info(self):
-        pass
+        # Sample API response we might get. Only kept fields relevant for this function
+        test_data = {"foods": [{"fdcId": 0,"description": "CARROTS","foodNutrients": [{"amount": 384,"unitName": "g",}],"ingredients": "some items"}]}
+        self.assertEqual(parse_nutritional_info(test_data), [{'recipeid': 'usda-0', 'mealname': 'CARROTS', 'servingSize': '100g', 'ingredients': 'some items'}])
+
+    def test_trim_data(self):
+        test_data = [{"fdcId": 0,"description": "CARROTS","foodNutrients": [{"amount": 384,"unitName": "g",}],"ingredients": "some items"}]
+        self.assertEqual(trim_data(test_data), [{'fdcId': 0, 'description': 'CARROTS', 'foodNutrients': [{'amount': 384, 'unitName': 'g'}], 'ingredients': 'some items'}])
+
+    def test_check_nutrition_info(self):
+        self.assertEqual(check_nutrition_info(300, 20, 10, 3), True)
+
+    def test_normalize_space_one(self):
+        test_input = "            te st        "
+        self.assertEqual(normalize_space(test_input), "te st")
+
+    def test_normalize_space_two(self):
+        test_input = "test"
+        self.assertEqual(normalize_space(test_input), "test")
 
 if __name__ == '__main__':
     unittest.main()
