@@ -69,7 +69,7 @@
 
             <!-- Pagination Controls -->
             <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination justify-content-center" id = "pagination-custom">
                     
                     {% for i in range(1, total_pages + 1) %}
                         <li class="page-item {% if i == 1 %}active{% endif %}" onclick="handleCustomPageChange({{ i }})">
