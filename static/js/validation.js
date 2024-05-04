@@ -8,17 +8,23 @@ function isValid(input) {
     var value = input.target.value;
 
     // If the pressed key is a '-'
-    if (input.charCode === 45)
+    if (charCode === 45)
         return false;
 
-    // If the key contains nonvalid chars 
-    if (input.charCode < 48 || input.charCode > 57)
+    // If the key is a decimal point and it already exists in the input,
+    // or if the decimal point is at the end, return false
+    if (charCode === 46 && (value.indexOf('.') !== -1 || value.endsWith('.')))
         return false;
 
-    // Limit input to 2 decimal places
-    if (value.indexOf('.') !== -1 && value.length - value.indexOf('.') > 2)
+    // limit input to 2 decimal places
+    var decimalIndex = value.indexOf('.');
+    if (decimalIndex !== -1 && value.length - decimalIndex > 2)
         return false;
 
-    return true;
+    // if the key is a valid number or a decimal point
+    if ((charCode >= 48 && charCode <= 57) || charCode === 46)
+        return true;
+
+    return false;
 }
 
