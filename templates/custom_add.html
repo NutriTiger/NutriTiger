@@ -28,19 +28,19 @@
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
-                <input type="number" step="any" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} required>
+                <input type="number" step="any" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="inputProtein">Proteins (g)</label>
-                    <input type="number" step="any" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} required>
+                    <input type="number" step="any" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="inputCarbs">Carbohydrates (g)</label>
-                    <input type="number" step="any" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} required>
+                    <input type="number" step="any" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
-                    <input type="number" step="any" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} required>
+                    <input type="number" step="any" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="inputServingSize">Serving size</label>
@@ -64,6 +64,23 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src ="../static/js/validation.js"></script>
     <script>
+        window.addEventListener('pageshow', function (event) {
+            // Check if the page was loaded from cache
+            if (event.persisted) {
+                clearFormFields();
+            }
+        });
+
+        function clearFormFields() {
+            const form = document.getElementById('customFoodForm');
+            Array.from(form.elements).forEach(element => {
+                if (element.type === 'text' || element.type === 'number' || element.type === 'file' || element.tagName.toLowerCase() === 'textarea') {
+                    element.value = ''; // Clear the value
+                } else if (element.type === 'checkbox' || element.type === 'radio') {
+                    element.checked = false; // Uncheck checkboxes and radio buttons
+                }
+            });
+        }
 
         function validateNums(event) {
             event.preventDefault();
