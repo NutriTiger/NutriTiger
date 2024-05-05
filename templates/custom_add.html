@@ -28,19 +28,19 @@
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
-                <input type="number" step="0.1" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                <input type="number" step="any" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} required>
                 </div>
                 <div class="form-group">
                     <label for="inputProtein">Proteins (g)</label>
-                    <input type="number" step="0.1" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                    <input type="number" step="any" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} required>
                 </div>
                 <div class="form-group">
                     <label for="inputCarbs">Carbohydrates (g)</label>
-                    <input type="number" step="0.1" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                    <input type="number" step="any" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} required>
                 </div>
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
-                    <input type="number" step="0.1" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                    <input type="number" step="any" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} required>
                 </div>
                 <div class="form-group">
                     <label for="inputServingSize">Serving size</label>
@@ -114,6 +114,29 @@
             }
             });
         }
+        
+        // add event listeners for each of the inputs to check if they are valid
+        var inputFields = document.querySelectorAll('.form-group input[type="number"]');
+
+        inputFields.forEach(function(input) {
+            input.addEventListener('keypress', function(event) {
+                if (!isValid(event)) {
+                    event.preventDefault();
+                }
+            });
+
+            input.addEventListener('copy', function(event) {
+                event.preventDefault();
+            });
+
+            input.addEventListener('paste', function(event) {
+                event.preventDefault();
+            });
+
+            input.addEventListener('cut', function(event) {
+                event.preventDefault();
+            });
+        });
 
         // Disabled inputs cannot be submitted --> make elements read only and only submit disabled
         function disableForm(event, form) {
