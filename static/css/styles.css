@@ -253,6 +253,10 @@ body {
     border-radius: 6px !important;
 }
 
+.nt-custom-tool-tip {
+    
+}
+
 /* Loading animations */
 .loading-animation {
     position: fixed;

@@ -11,6 +11,7 @@
 
 <!--Placeholder Message (when the user has not logged any meals)-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="../static/js/dates.js"></script>
 
 <div id="placeholder" class="d-flex justify-content-center align-items-center" style="display:none!important; height: 100vh;">
     <div class="text-center">
@@ -24,12 +25,12 @@
             <!-- "Click to log a meal" Button -->
             <form action="/homepage" method="post">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to log a Meal</button>
+                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed()">+ Click to log a Meal</button>
             </form>
         </div>
         
         <div class="p-3">
-            <h4>Or, see what's on the <a href="/menus">dining hall menus</a>.</h4>
+            <h4>Or, see what's on the <a href="/menus" onclick="linkPressed()">dining hall menus</a>.</h4>
         </div>
     </div>
 </div>
@@ -198,8 +199,43 @@
 		document.getElementById("rightCard").style.display = "none";
 	}
 
+	function buttonPressed() {
+        // Obtain page buttons
+        var buttons = document.querySelectorAll("button")
+		var links = document.querySelectorAll("a")
+
+        buttons.forEach((button) => {
+			if (button.id == "logMealHomepage") {
+				button.textContent = "Redirecting..."
+        		button.style.opacity = "var(--bs-btn-disabled-opacity)"
+			}
+			button.tabIndex = "-1"
+			button.blur()
+			button.style.pointerEvents = "none"
+		})
+                
+		links.forEach((link) => {
+			link.style.pointerEvents = "none"
+			link.tabIndex = "-1"
+		})
+    }
+
+	window.onunload = function() {
+		var buttons = document.querySelectorAll("button")
+        var links = document.querySelectorAll("a")
+
+        buttons.forEach((button) => {
+			if (button.id == "logMealHomepage") {
+				button.textContent = "+ Click to log a Meal"
+        		button.style.opacity = "none"
+			}
+			button.tabIndex = "1"
+			button.style.pointerEvents = "auto"
+		})
+	}
+
 	window.onload = function() {
-		
+
 		// Get the greeting and date message strings and display
 		document.getElementById('greetingTime').innerHTML = getAmPm();
 		document.getElementById('greetingDate').innerHTML = getDate();
