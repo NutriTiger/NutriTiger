@@ -24,12 +24,12 @@
             <!-- "Click to log a meal" Button -->
             <form action="/homepage" method="post">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to log a Meal</button>
+                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed()">+ Click to log a Meal</button>
             </form>
         </div>
         
         <div class="p-3">
-            <h4>Or, see what's on the <a href="/menus">dining hall menus</a>.</h4>
+            <h4>Or, see what's on the <a href="/menus" onclick="linkPressed()">dining hall menus</a>.</h4>
         </div>
     </div>
 </div>
@@ -198,8 +198,43 @@
 		document.getElementById("rightCard").style.display = "none";
 	}
 
+	function buttonPressed() {
+        // Obtain page buttons
+        var buttons = document.querySelectorAll("button")
+		var links = document.querySelectorAll("a")
+
+        buttons.forEach((button) => {
+			if (button.id == "logMealHomepage") {
+				button.textContent = "Redirecting..."
+        		button.style.opacity = "var(--bs-btn-disabled-opacity)"
+			}
+			button.tabIndex = "-1"
+			button.blur()
+			button.style.pointerEvents = "none"
+		})
+                
+		links.forEach((link) => {
+			link.style.pointerEvents = "none"
+			link.tabIndex = "-1"
+		})
+    }
+
+	window.onunload = function() {
+		var buttons = document.querySelectorAll("button")
+        var links = document.querySelectorAll("a")
+
+        buttons.forEach((button) => {
+			if (button.id == "logMealHomepage") {
+				button.textContent = "+ Click to log a Meal"
+        		button.style.opacity = "none"
+			}
+			button.tabIndex = "1"
+			button.style.pointerEvents = "auto"
+		})
+	}
+
 	window.onload = function() {
-		
+
 		// Get the greeting and date message strings and display
 		document.getElementById('greetingTime').innerHTML = getAmPm();
 		document.getElementById('greetingDate').innerHTML = getDate();
