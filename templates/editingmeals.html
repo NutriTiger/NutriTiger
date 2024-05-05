@@ -17,8 +17,8 @@
                 <!--Create a card for each entry-->
                 <div class="col">
                     {% for entry, foods in entry_info.items() %}
-                    <div class="row-cols-1 p-2">
-                        <div class="entryCard card border-primary" id="entry-{{ entry }}" style="padding: 10px;">
+                    <div class="row-cols-1 p-2" id="entry-{{ entry }}">
+                        <div class="entryCard card border-primary" style="padding: 10px;">
                             <div class="card-body">
                                 <div class="header-container">
                                     <h5 class="card-title py-1"><b>Meal {{ entry +1}}</b></h5>
