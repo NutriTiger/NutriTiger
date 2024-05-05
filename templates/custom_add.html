@@ -28,19 +28,19 @@
 
                 <div class="form-group">
                 <label for="inputCalories">Calories</label>
-                <input type="number" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                <input type="number" step="0.1" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
                 </div>
                 <div class="form-group">
                     <label for="inputProtein">Proteins (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                    <input type="number" step="0.1" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
                 </div>
                 <div class="form-group">
                     <label for="inputCarbs">Carbohydrates (g)</label>
-                    <input type="number" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                    <input type="number" step="0.1" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
                 </div>
                 <div class="form-group">
                     <label for="inputFats">Fats (g)</label>
-                    <input type="number" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} oncopy="return false;" onpaste="return false;" oncut="return false;" required>
+                    <input type="number" step="0.1" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} onkeypress="return isValid(event)" oncopy="return false;" onpaste="return false;" oncut="return false;" required>
                 </div>
                 <div class="form-group">
                     <label for="inputServingSize">Serving size</label>
@@ -62,7 +62,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
+    <script src ="../static/js/validation.js"></script>
     <script>
 
         function validateNums(event) {
@@ -161,32 +161,32 @@
 
         field.style.height = `${height}px`;
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            const input1 = document.getElementById("inputCalories");
-            const input2 = document.getElementById("inputProtein");
-            const input3 = document.getElementById("inputCarbs");
-            const input4 = document.getElementById("inputFats");
-            const form = document.querySelector('form');
-            const array = [input1, input2, input3, input4]
-            array.forEach((evt) => {
-                evt.addEventListener("keydown", function(evt) {
-                    // Allow: backspace, delete, tab, escape, and enter
-                    if ([8, 46, 9, 27, 13].indexOf(evt.keyCode) !== -1 ||
-                        // Allow: Ctrl/cmd+A, Ctrl/cmd+C, Ctrl/cmd+V, Ctrl/cmd+X
-                        (evt.keyCode == 65 || evt.keyCode == 67 || evt.keyCode == 86 || evt.keyCode == 88) && (evt.ctrlKey === true || evt.metaKey === true) ||
-                        // Allow: home, end, left, right
-                        (evt.keyCode >= 35 && evt.keyCode <= 39)) {
-                            return; // let it happen, don't do anything
-                    }
-                    // Ensure that it is a number and stop the keypress
-                    if ((evt.keyCode < 48 || evt.keyCode > 57) && (evt.keyCode < 96 || evt.keyCode > 105)) {
-                        evt.preventDefault();
-                    }
-                });
-            });
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const input1 = document.getElementById("inputCalories");
+        //     const input2 = document.getElementById("inputProtein");
+        //     const input3 = document.getElementById("inputCarbs");
+        //     const input4 = document.getElementById("inputFats");
+        //     const form = document.querySelector('form');
+        //     const array = [input1, input2, input3, input4]
+        //     array.forEach((evt) => {
+        //         evt.addEventListener("keydown", function(evt) {
+        //             // Allow: backspace, delete, tab, escape, and enter
+        //             if ([8, 46, 9, 27, 13].indexOf(evt.keyCode) !== -1 ||
+        //                 // Allow: Ctrl/cmd+A, Ctrl/cmd+C, Ctrl/cmd+V, Ctrl/cmd+X
+        //                 (evt.keyCode == 65 || evt.keyCode == 67 || evt.keyCode == 86 || evt.keyCode == 88) && (evt.ctrlKey === true || evt.metaKey === true) ||
+        //                 // Allow: home, end, left, right
+        //                 (evt.keyCode >= 35 && evt.keyCode <= 39)) {
+        //                     return; // let it happen, don't do anything
+        //             }
+        //             // Ensure that it is a number and stop the keypress (also != '.')
+        //             if ((evt.keyCode < 48 || evt.keyCode > 57) && (evt.keyCode < 96 || evt.keyCode > 105) && evt.keyCode !== 190 && evt.keyCode !== 110) {
+        //                 evt.preventDefault();
+        //             }
+        //         });
+        //     });
 
 
-        });
+        // });
 
          // hiding spinner
         function setup() {
