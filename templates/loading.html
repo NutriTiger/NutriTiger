@@ -1,30 +1,41 @@
-<div id="loading-animation" class="loading-animation" style="display:none;">
+<div id="loading-animation" class="loading-animation" style="display:none;" onclick="return false;">
     <div class="loading-spinner"></div>
 </div>
 
 <script>
+var keydownListenerAdded = false;
+
 function showLoadingAnimation() {
     // Show the loading animation covering the entire screen
     $("#loading-animation").show();
-    $('input').keydown(function(e) {
-        e.preventDefault();
-        return false;
-    });
 
-    $('.introjs-nextbutton').keydown(function(e) {
-        e.preventDefault();
-        return false;
-    });
+    if (!keydownListenerAdded) {
+        // Attach event listeners to capture and prevent keyboard events
+        $(document).on('keydown.loadingAnimation', preventTyping);
+        $(document).on('keypress.loadingAnimation', preventTyping);
+        $(document).on('keyup.loadingAnimation', preventTyping);
+        keydownListenerAdded = true;
+    }
 }
 
 function hideLoadingAnimation() {
     // Hide the loading animation
     $("#loading-animation").hide();
-    $('input').off('keydown');
+
+    // Remove event listeners
+    $(document).off('.loadingAnimation');
+    keydownListenerAdded = false;
+}
+
+// Function to prevent typing
+function preventTyping(event) {
+    event.preventDefault();
+    event.stopPropagation();
 }
 
 // If the user hits the back button reset the form
 window.onunload = function() {
     hideLoadingAnimation();
 }
+
 </script>
