@@ -478,7 +478,10 @@ def log_food():
         data = dbmenus.query_menu_display(current_date_zeros)
         recipeids = utils.gather_recipes(data)
         nutrition_info = dbnutrition.find_many_nutrition(recipeids)
-    
+        if is_weekend_var:
+            for meal_info in data:
+                if meal_info['mealtime'] == 'Lunch':
+                    meal_info['mealtime'] = 'Brunch'
         custom_data = dbnutrition.find_all_custom_nutrition(netid)
         if custom_data is None:
             custom_data = []
