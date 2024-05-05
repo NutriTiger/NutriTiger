@@ -6,14 +6,14 @@
 <nav class="nt-color-navbar navbar fixed-top" id = "navbar">
 	{% include 'hmenu.html' %}
 	<div class="nt-navbar-center order-0 justify-content-center">
-		<a class="navbar-brand" href="/homepage">
+		<a class="navbar-brand" href="/homepage" onclick="linkPressed()">
 			<img src="{{ url_for('static', filename='media/favicon.ico') }}" alt="NutriTiger Logo" class="logo" style="width: 30px; height: auto;">
 			NutriTiger
 		</a>
 	</div>
 	<div class="order-3 d-none d-md-block nt-nav-item">
-		<a class="navbar-brand {% if current_page == 'home' %} nt-activated{% endif %}" href="{{ url_for('homepage')}}">Homepage</a>
-		<a class="navbar-brand {% if current_page == 'menus' %}nt-activated{% endif %}" href="{{ url_for('dhall_menus')}}">Menus</a>
-		<a class="navbar-brand {% if current_page == 'logmeals' %}nt-activated{% endif %}" href="{{ url_for('log_food')}}">Log Meals</a>
+		<a class="navbar-brand {% if current_page == 'home' %} nt-activated{% endif %}" href="{{ url_for('homepage')}}" onclick="linkPressed()">Homepage</a>
+		<a class="navbar-brand {% if current_page == 'menus' %}nt-activated{% endif %}" href="{{ url_for('dhall_menus')}}" onclick="linkPressed()">Menus</a>
+		<a class="navbar-brand {% if current_page == 'logmeals' %}nt-activated{% endif %}" href="{{ url_for('log_food')}}" onclick="linkPressed()">Log Meals</a>
 	</div>
 </nav>
