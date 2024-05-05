@@ -7,6 +7,7 @@
 {% endblock %}
 {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src ="../static/js/validation.js"></script>
 
 {% include 'loading.html' %}
 
@@ -30,7 +31,7 @@
           
           <br><br>Please note that at this time only food items with nutritional information are displayed and able to be logged.
     </p>
-    <button class="btn btn-primary" id="startTutorial">Click to see a tutorial.</button>
+    <button class="btn btn-primary" id="startTutorial">Click to see a tutorial</button>
 </div>
 
 <div class="container-fluid">
@@ -107,8 +108,10 @@
                     <div class="pagination-container"> 
                         <div id="pagination-usda"></div>
                     </div>
-                    <a class="btn btn-primary" href="/addcustomfood" role="button" id = "customFoodButton">Add a custom food!</a>
-
+                    <div class="btn-group">
+                        <a class="btn btn-primary me-2 nt-custom-foods-btn" href="{{ url_for('custom_nutrition') }}" role="button" id = "customFoodButton1" style="display:none;">View your custom foods</a>
+                        <a class="btn btn-primary ms-2 nt-custom-foods-btn" href="{{ url_for('custom_food') }}" role="button" id = "customFoodButton2" style="display:none;">Add a custom food</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -573,7 +576,8 @@ function getResults() {
 function updateCardVisibility(radioBtnId) {
     if (radioBtnId === 'radio-dhall') {
         $("#pagination-usda").hide();
-        $("#customFoodButton").hide();
+        $("#customFoodButton1").hide();
+        $("#customFoodButton2").hide();
         $("#usda-search-results").hide();
         $("#custom-food-items").hide();
         $("#tutorial-food-items").hide();
@@ -586,7 +590,8 @@ function updateCardVisibility(radioBtnId) {
     } 
     else if (radioBtnId === 'radio-custom') {
         $("#pagination-usda").hide();
-        $("#customFoodButton").show();
+        $("#customFoodButton1").show();
+        $("#customFoodButton2").show();
         $("#searchBarSpan").hide();
         $("#mealTimeTab").hide();
         $("#usda-search-results").hide();
@@ -597,7 +602,8 @@ function updateCardVisibility(radioBtnId) {
     } 
     else if (radioBtnId === 'radio-usda') {
         $("#pagination-usda").show();
-        $("#customFoodButton").hide();
+        $("#customFoodButton1").hide();
+        $("#customFoodButton2").hide();
         $("#mealTimeTab").hide();
         $("#searchBarSpan").show();
         $("#usda-search-results").show();
@@ -812,24 +818,26 @@ function closeForm(e) {
     }
 }
 
-// If the user hits the back button reset the form
+// Reset elements in page upon unload
 window.onunload = function() {
-    var logMealsButton = document.getElementById("submitButton");
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+        input.value = '';
+    });
     var dropdown = document.querySelector('.select-dropdown');
-
-    calorieInput.readOnly = false;
-    logMealsButton.style.pointerEvents = "auto";
-    logMealsButton.textContent = "Upload Plate and Return";
-    logMealsButton.style.opacity = "none";
-    dropdown.value = "Select Food Source";
-    //dropdown.selectedIndex = 0
-    dropdown.dispatchEvent(new Event('change'));
-}
+    dropdown.value = "Select Dining Hall";
+    document.getElementById('radio-dhall').checked = true;
+    document.getElementById('radio-usda').checked = false;
+    document.getElementById('radio-custom').checked = false;
+};
 
 /* setup *************************************************************/
 // set up event listeners for dhall select and mealtime tab
 function setup() {
-    $("#customFoodButton").hide();
+    // $("#customFoodButton1").hide();
+    // $("#customFoodButton2").hide();
     handleCustomPageChange(1);
 
     // Event listeners for the radio buttons

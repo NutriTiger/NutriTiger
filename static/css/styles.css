@@ -249,6 +249,10 @@ body {
     min-height: 500px;
   }
 
+.nt-custom-foods-btn {
+    border-radius: 6px !important;
+}
+
 /* Loading animations */
 .loading-animation {
     position: fixed;
