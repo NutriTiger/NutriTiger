@@ -812,19 +812,20 @@ function closeForm(e) {
     }
 }
 
-// If the user hits the back button reset the form
+// Reset elements in page upon unload
 window.onunload = function() {
-    var logMealsButton = document.getElementById("submitButton");
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+        input.value = '';
+    });
     var dropdown = document.querySelector('.select-dropdown');
-
-    calorieInput.readOnly = false;
-    logMealsButton.style.pointerEvents = "auto";
-    logMealsButton.textContent = "Upload Plate and Return";
-    logMealsButton.style.opacity = "none";
-    dropdown.value = "Select Food Source";
-    //dropdown.selectedIndex = 0
-    dropdown.dispatchEvent(new Event('change'));
-}
+    dropdown.value = "Select Dining Hall";
+    document.getElementById('radio-dhall').checked = true;
+    document.getElementById('radio-usda').checked = false;
+    document.getElementById('radio-custom').checked = false;
+};
 
 /* setup *************************************************************/
 // set up event listeners for dhall select and mealtime tab
