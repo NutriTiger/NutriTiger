@@ -83,6 +83,8 @@
             settingsButton.style.pointerEvents = "none"
             settingsButton.textContent = "Submitting..."
             settingsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+            settingsButton.tabIndex = "-1"
+            settingsButton.blur()
         }
     }
 
@@ -95,5 +97,6 @@
         settingsButton.style.pointerEvents = "auto"
         settingsButton.textContent = "Save"
         settingsButton.style.opacity = "none"
+        settingsButton.tabIndex = "1"
     }
 </script>
