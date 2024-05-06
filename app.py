@@ -612,15 +612,18 @@ def check_upload (file):
 def add_customfood():
     netid = auth.authenticate()
 
-    temp_name = request.form.get('name', type = str)
+    old_temp_name = request.form.get('name', type = str)
+    temp_name = utils.sanitize_text_inputs(old_temp_name)
     recipename = utils.normalize_space(temp_name)
     query_name = recipename.lower()
     cal = request.form.get('calories', type = int)
     protein = request.form.get('proteins', type = int)
     carbs = request.form.get('carbs', type = int)
     fats = request.form.get('fats', type = int)
-    servingsize = request.form.get('servingsize', type = str)
-    desc = request.form.get('description', type = str)
+    old_servingsize = request.form.get('servingsize', type = str)
+    servingsize = utils.sanitize_text_inputs(old_servingsize)
+    old_desc = request.form.get('description', type = str)
+    desc = utils.sanitize_text_inputs(old_desc)
 
     file = request.files.get('image')
 
