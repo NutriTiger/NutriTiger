@@ -12,12 +12,12 @@
         <div style="align-items: center;">
             <div class="d-inline-block">
                 <button id="add_food_btn" onclick="buttonPressed(this.id); window.location.href='{{ url_for('custom_food') }}'" class="btn btn-primary" style="display: block;">
-                    (+) Create a custom food
+                    + Create a Custom Food
                 </button>
             </div>
             <div class="d-inline-block pt-2">
                 <button type="submit" id="edit_custom_foods" class="btn btn-primary" style="display: none;">
-                    (-) Delete a Custom Foods
+                    Delete a Custom Food
                 </button>
             </div>
             <div class="d-inline-block pt-2">
@@ -169,7 +169,6 @@ window.onunload = function() {
 
     buttons.forEach((button) => {
         if (button.id == "add_food_btn") {
-            button.textContent = "(+) Create a custom food"
             button.style.opacity = "none"
         }
         button.tabIndex = "1"

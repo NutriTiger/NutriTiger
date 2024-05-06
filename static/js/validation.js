@@ -1,5 +1,5 @@
 // Validation functions for all inputs: Serving sizes and calorie goals
-// Used in logmeals.html, settings.html, welcome.html, custom_add.html
+// Used in logmeals.html, settings.html, welcome.html
 
 // Validate the serving size inputs, limiting to positive numbers only
 // and only up to 2 decimal places 
