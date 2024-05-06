@@ -152,6 +152,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.8/purify.min.js"></script>
+
 <script>
     
 let totalItems = 25; // Total number of checkboxes you want to manage
@@ -469,6 +471,8 @@ function closeMyPlate(element) {
     handleServingChange();
 }
 
+
+
 // Function to handle checkbox change event: gets label text, macro data, makes URL, and
 function handleCheckboxChange(element) {
     if (element.checked) {
@@ -492,6 +496,8 @@ function handleCheckboxChange(element) {
         } else {
             details = element.dataset.location + ", " + element.dataset.mealtime;
         }
+
+        
         const myPlateFoodHTML = `
             <div class="card border-primary p-2 mb-3" id="myplate-${uniqueid}">
                 <div class="row">
@@ -511,7 +517,7 @@ function handleCheckboxChange(element) {
                             data-carbs="${element.dataset.carbs}" 
                             data-fats="${element.dataset.fats}" 
                             data-prots="${element.dataset.prots}" 
-                            data-servingsize="${element.dataset.servingsize}"
+                            data-servingsize="${element.dataset.servingsize}" 
                             placeholder="Servings" value="1" oninput="handleServingChange(this)" 
                             required onkeypress="return isValid(event)">
                             <button type="button" id="close-${uniqueid}" class="btn btn-close btn-sm" 
