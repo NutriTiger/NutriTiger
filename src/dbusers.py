@@ -347,6 +347,7 @@ def handleDeleteCustomNutrition(netid, deletedFood):
         for foodnum, recid in enumerate(recids):
             if recid == deletedFood:
                 foodnum_todelete = foodnum
+                break
         if foodnum_todelete != -1:
             delFood(this_user, entrynum, foodnum_todelete)
 
