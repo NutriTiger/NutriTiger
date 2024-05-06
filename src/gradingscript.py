@@ -3,7 +3,9 @@
 # run with the command: python gradingscript.py netid
 # where netid is the netid of the user you want to load history and 
 # custom foods for, loads 100 days of history and whatever custom foods
-# the TEMPLATE_USER has
+# the TEMPLATE_USER has. 
+# uncomment the clear_history line in main if you want to clear the 
+# user history, rather than just append to it
 #-----------------------------------------------------------------------
 import dbusers
 import dbnutrition
@@ -46,10 +48,23 @@ def load_history(netid):
     this_user['fat_his'] = fat_his
     dbusers.__setuser__(netid, this_user)
 #-----------------------------------------------------------------------
+# clears the user history, including today's logged meals
+def clear_history(netid):
+    this_user = dbusers.finduser(netid)
+    this_user['cal_his'] = [0]
+    this_user['carb_his'] = [0]
+    this_user['prot_his'] = [0]
+    this_user['fat_his'] = [0]
+    this_user['daily_rec'] = []
+    this_user['daily_serv'] = []
+    this_user['daily_nut'] = []
+    dbusers.__setuser__(netid, this_user)
+#-----------------------------------------------------------------------
 def main():
     arguments = sys.argv
     if len(arguments) > 1:
         netid = arguments[1]
+        # clear_history(netid)
         load_history(netid)
         load_custom_foods(netid)
 #-----------------------------------------------------------------------
