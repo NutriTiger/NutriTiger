@@ -55,7 +55,7 @@
                 {% for item in custom_data %}
                     <div class="col-md-12 custom-items-content" data-page="{{ loop.index0 // 7 + 1 }}">
                         <div class="form-check">
-                            {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
+                            {% set checkbox_id = item.recipeid %}
                             <input type="checkbox" style="border: 1px solid black;" class="form-check-input checkbox" id="checkbox-{{ checkbox_id }}"
                                 data-usda="false" 
                                 data-recid="{{ item.recipeid }}" 

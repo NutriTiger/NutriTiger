@@ -490,46 +490,31 @@ function handleCheckboxChange(element) {
             element.checked = false;
             return;
         }
-        const uniqueid = element.id.substring(8);
-        let details;
-        if (element.dataset.mealtime === "N/A") {
-            details = element.dataset.location;
-        } else {
-            details = element.dataset.location + ", " + element.dataset.mealtime;
-        }
-
-        
-        const myPlateFoodHTML = `
-            <div class="card border-primary p-2 mb-3" id="myplate-${uniqueid}">
-                <div class="row">
-                    <div class="col">
-                        <span>${element.dataset.mealname}</span>
-                        <p class="text-muted mb-0">${details}</p>
-                    </div>
-                    <div class="col-auto d-flex align-items-center">
-                        <div id="new_entry" class="d-flex align-items-center">
-                            <span class="text-muted" style="font-size: small; margin-right: 5px;">Servings: </span>
-                            <input type="number" onpaste="return false;" step="any" min="0.01" max="100" 
-                            class="form-control small-input" 
-                            data-usda="${element.dataset.usda}" 
-                            data-cals="${element.dataset.cals}" 
-                            data-recid="${element.dataset.recid}" 
-                            data-mealname="${element.dataset.mealname}" 
-                            data-carbs="${element.dataset.carbs}" 
-                            data-fats="${element.dataset.fats}" 
-                            data-prots="${element.dataset.prots}" 
-                            data-servingsize="${element.dataset.servingsize}" 
-                            placeholder="Servings" value="1" oninput="handleServingChange(this)" 
-                            required onkeypress="return isValid(event)">
-                            <button type="button" id="close-${uniqueid}" class="btn btn-close btn-sm" 
-                            aria-label="Close" onclick="closeMyPlate(this)" data-checkid="${element.id}" 
-                            data-myplateid="myplate-${uniqueid}"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `;
-        $("#my-plate").append(myPlateFoodHTML)
+        let url =
+                `/logmeals/element?checkid=${encodeURIComponent(element.id)}` +
+                `&mealname=${encodeURIComponent(element.dataset.mealname)}` +
+                `&recid=${encodeURIComponent(element.dataset.recid)}` +
+                `&location=${encodeURIComponent(element.dataset.location)}` +
+                `&mealtime=${encodeURIComponent(element.dataset.mealtime)}` +
+                `&servingsize=${encodeURIComponent(element.dataset.servingsize)}` +
+                `&cals=${encodeURIComponent(element.dataset.cals)}` +
+                `&carbs=${encodeURIComponent(element.dataset.carbs)}` +
+                `&prots=${encodeURIComponent(element.dataset.prots)}` +
+                `&fats=${encodeURIComponent(element.dataset.fats)}` +
+                `&usda=${encodeURIComponent(element.dataset.usda)}`;
+        $.ajax({
+            url: url,
+            type: "GET",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
+            success: function (response) {
+                $("#my-plate").append(response)
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to send nutrition data:", error);
+            },
+        });
     } else {
         let checkid = element.id;
         let uniqueid = checkid.slice(8);
