@@ -1,32 +1,36 @@
 import pymongo
 from dbfunctions import connectmongo
-# from dbusers import get_maxid, update_maxid
 import sys
-from datetime import datetime, time
+from datetime import datetime
 import pytz
-from PIL import Image
-import io
-from bson.binary import Binary
-import photos
+import sys
+
 #----------------------------------------------------------------------
 # Contributors:
 # Oyu Enkhbold and Jewel Merriman
-#
+# Handles nutrition information insertion in nutrition collection
+# Note: recipeID logic = [netID]-[maxID] where maxID is a nunber
+#       of custom food items created by the user
 #----------------------------------------------------------------------
+
+# Retrieves the maximum ID for a user (from the "users" collection) to create a custom food recipeID.
 def get_maxid(netid):
     try:
         with connectmongo() as client:
             db = client.db
             users_collection = db["users"]
+            # Will only return the max_id
             this_user = users_collection.find_one({"netid": netid}, {"_id": 0, "max_id": 1})
             if this_user is None:
-                print(f"No document found with netid: {netid}")
+                print(f"No document found with netid: {netid}", file=sys.stderr)
                 return None
             return this_user.get('max_id', None)
     except pymongo.errors.OperationFailure:
         print("Authentication error: check if your DB user is authorized for write operations.")
     except pymongo.errors.ServerSelectionTimeoutError:
         print("Server timeout: ensure your IP address is in the Access List on Atlas.")
+
+# Increments the max_id field of a user after adding a document.
 def update_maxid(netid):
     with connectmongo() as client:
         db = client.db
@@ -35,16 +39,48 @@ def update_maxid(netid):
         try:
             result = users_collection.update_one(who, {"$inc": {"max_id": 1}})
             if result.matched_count == 0:
-                print(f"No document found with netid: {netid}")
+                print(f"No document found with netid: {netid}", file=sys.stderr)
+                return
             elif result.modified_count == 0:
-                print(f"Document with netid: {netid} was not updated.")
+                print(f"Document with netid: {netid} was not updated.", file=sys.stderr)
+                return
+            return
         except pymongo.errors.OperationFailure as e:
-            print(f"An authentication error occurred: {e}")
+            print(f"An authentication error occurred: {e}", file=sys.stderr)
+            return
         except pymongo.errors.ServerSelectionTimeoutError as e:
-            print(f"The server timed out: {e}")
-# Inserts nutrition information of the upcoming two weeks of food (as input)
-# call update_menu before to delete nutrition info
-# new_foods is list of bson objects
+            print(f"The server timed out: {e}", file=sys.stderr)
+            return
+
+# Retrieves the current max_id for a user and then increments it.
+def find_and_update_maxid(netid):
+    try:
+        with connectmongo() as client:
+            db = client.db
+            users_collection = db["users"]
+            who = {"netid": netid}
+
+            # Will only return the max_id
+            this_user = users_collection.find_one(who, {"_id": 0, "max_id": 1})
+            if this_user is None:
+                print(f"No document found with netid: {netid}", file=sys.stderr)
+                return None
+            
+            result = users_collection.update_one(who, {"$inc": {"max_id": 1}})
+
+            if result.modified_count == 0:
+                print(f"Document with netid: {netid} was not updated.", file=sys.stderr)
+
+            return this_user.get('max_id', None)
+    except pymongo.errors.OperationFailure:
+        print("Authentication error: check if your DB user is authorized for write operations.", file=sys.stderr)
+        return
+    except pymongo.errors.ServerSelectionTimeoutError:
+        print("Server timeout: ensure your IP address is in the Access List on Atlas.", file=sys.stderr)
+        return
+
+# Inserts nutritional information for an array of new food items into the nutrition collection.
+# Accepts new_foods as a list of BSON objects.
 def update_nutrition(new_foods):
     with connectmongo() as client:
         db = client.db
@@ -57,22 +93,21 @@ def update_nutrition(new_foods):
 
             for item in new_foods:
                 if not isinstance(item, dict):
-                    print(f"Non-dict item found: {item} of type {type(item)}")
+                    print(f"Non-dict item found: {item} of type {type(item)}", file=sys.stderr)
                     
             add_result = nutrition_col.insert_many(new_foods)
             document_ids = add_result.inserted_ids
-            print(f"_id of inserted documents: {document_ids}")
+            print(f"_id of inserted documents: {document_ids}", file=sys.stderr)
             return
         except pymongo.errors.OperationFailure:
-            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
-            sys.exit(1)
+            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?", file=sys.stderr)
+            return
         except pymongo.errors.ServerSelectionTimeoutError:
-            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
-            sys.exit(1)
+            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.",file=sys.stderr)
+            return
         
 
-# Retrieve nutritional information of singular food item
-# Recipeid is int
+# Retrieves nutritional information for a single food item based on the given recipe ID.
 def find_one_nutrition(recipeid):
     if not recipeid:
         print("no recipe id inputted")
@@ -92,15 +127,14 @@ def find_one_nutrition(recipeid):
             return result
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
-            sys.exit(1)
+            return
         except pymongo.errors.ServerSelectionTimeoutError:
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
-            sys.exit(1)
+            return
 
 
-# Deletes custom food item
-# Recipeid has netid and unique number
-# Returns true if successful, false is unsuccessful
+# Deletes a custom food item from the nutrition collection based on the specified recipe ID.
+# Returns True if successful, False otherwise.
 def del_custom_food(recipeid):
     with connectmongo() as client:
         print(recipeid)
@@ -109,7 +143,7 @@ def del_custom_food(recipeid):
         try:
             document_to_delete = {'recipeid': recipeid}
 
-            # IMAGE DELETION
+            # [FUTURE USE]
             # document = nutrition_col.find_one(document_to_delete)
             # if 'public_id' in document:
             #     public_id = document['public_id']
@@ -124,9 +158,9 @@ def del_custom_food(recipeid):
         except Exception as e:
             print(f"Error: {e}")
             return False
-# Deletes custom food items
-# Recipeids is in array of recipeids
-# Returns true if successful, false is unsuccessful
+        
+# Deletes multiple custom food items from the nutrition collection based on the specified array of recipe IDs.
+# Returns True if successful, False otherwise.
 def del_many_custom_food(recipeids):
     print("in del_many_custom_food")
     print(recipeids)
@@ -138,7 +172,7 @@ def del_many_custom_food(recipeids):
             # Create a query to match any of the recipe IDs in the list
             query = {'recipeid': {'$in': recipeids}}
 
-            # Deletes images first
+            # [FUTURE USE]
             # documents = nutrition_col.find(query)
             # public_ids = [doc['public_id'] for doc in documents if 'public_id' in doc] 
 
@@ -162,35 +196,29 @@ def del_many_custom_food(recipeids):
             print(f"Error during deletion: {e}")
             return False
 
-# Create new food item -- should already include the net id field of user
-# Nutrition is dictionary
+# Creates a new custom food item in the nutrition collection. The recipe ID is generated using the user's net ID and max ID.
 def add_custom_food(name, netid, nutrition):
+    # Gets max_id and increment
+    num_current = find_and_update_maxid(netid)
+
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
 
+        recipeid = netid + '-'+ str(num_current + 1)
+        today = datetime.now(pytz.timezone('US/Eastern'))
+
         try:
-            num_current = get_maxid(netid)
-            print(num_current)
-            recipeid = netid + '-'+ str(num_current + 1)
-            print(recipeid)
-
-            today = datetime.now(pytz.timezone('US/Eastern'))
-
-            try:
-                document_to_add = {"mealname" : name, 
-                    "access": netid,
-                    "recipeid" : recipeid,
-                    "date": today,
-                    **nutrition
-                    }
-                result = nutrition_col.insert_one(document_to_add)
-                document_id = result.inserted_id
-                print(f"_id of inserted document: {document_id}")
-                update_maxid(netid)
-                return
-            except:
-                print("Issue with insert for custom doc")
+            document_to_add = {"mealname" : name, 
+                "access": netid,
+                "recipeid" : recipeid,
+                "date": today,
+                **nutrition
+                }
+            result = nutrition_col.insert_one(document_to_add)
+            document_id = result.inserted_id
+            print(f"_id of inserted document: {document_id}")
+            return
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
             sys.exit(1)
@@ -198,11 +226,11 @@ def add_custom_food(name, netid, nutrition):
             print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
             sys.exit(1)
 
-# Retrieve nutritional information of multiple food items based on recipeids
-# Return list of bson objects with nutrition information (entries are None if recipeid does not exist)
+# Retrieves nutritional information for multiple food items based on a list of recipe IDs.
+# Returns a list of BSON objects with nutritional information, or an empty list if no matching documents are found.
 def find_many_nutrition(recipeids):
     if not recipeids:
-        print("empty recipeid list")
+        print("Empty recipeid list")
         return []
 
     with connectmongo() as client:
@@ -245,7 +273,7 @@ def find_many_nutrition(recipeids):
             return []
 
 
-# Retrieve nutritional information of a user and sorts by recently created
+# Retrieves all custom nutrition information for a user, sorted by the most recently created documents.
 def find_all_custom_nutrition(netid):
     with connectmongo() as client:
         db = client.db
@@ -261,13 +289,13 @@ def find_all_custom_nutrition(netid):
                 return
             return result
         except pymongo.errors.OperationFailure:
-            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
-            sys.exit(1)
+            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?", file = sys.stderr)
+            return
         except pymongo.errors.ServerSelectionTimeoutError:
-            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
-            sys.exit(1)
+            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.", file = sys.stderr)
+            return
 
-# Find one custom nutrition info with user's netid and recipeid
+# Retrieves a specific custom nutrition document for a user based on the net ID and lowercase name (identifier).
 def find_one_custom_nutrition(netid, lowercase_name):
     with connectmongo() as client:
         db = client.db
@@ -282,91 +310,25 @@ def find_one_custom_nutrition(netid, lowercase_name):
                 return
             return result
         except pymongo.errors.OperationFailure:
-            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
-            sys.exit(1)
+            print("An authentication error was received. Are you sure your database user is authorized to perform write operations?", file = sys.stderr)
+            return
         except pymongo.errors.ServerSelectionTimeoutError:
-            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
-            sys.exit(1)            
+            print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.", file = sys.stderr)
+            return 
 
 #-----------------------------------------------------------------------
 
-# USED FOR TESTING FOR NOW 
+# ONLY USE TO DELETE CUSTOM FOOD ITEMS
+# Main function that deletes all custom food items for a specific user.
 def main(): 
-    nutrition = [
-        {"recipeid": 12345,
-         "mealname": "Test Soup",
-         "link": "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html",
-         "calories": 100,
-         "proteins": 10,
-         "carbs": 9,
-         "fats": 8,
-         "cholesterol": 7,
-         "sodium": 6,
-         "calcium": 5,
-         "vitd": 4,
-         "potassium": 3,
-         "iron": 2,
-         "sugar": 1,
-         "fiber": 0,
-         "allergen": "soy",
-         "ingredients": "Flour, soy, water",
-        },
-        {"recipeid": 24821,
-         "mealname": "Tomato Soup",
-         "link": "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html",
-         "calories": 100,
-         "proteins": 10,
-         "carbs": 9,
-         "fats": 8,
-         "cholesterol": 7,
-         "sodium": 6,
-         "calcium": 5,
-         "vitd": 4,
-         "potassium": 3,
-         "iron": 2,
-         "sugar": 1,
-         "fiber": 0,
-         "allergen": "soy",
-         "ingredients": "Flour, soy, water",
-        }
-    ]
-    custom = {"calories": 100,
-         "proteins": 10,
-         "carbs": 9,
-         "fats": 8,
-         "cholesterol": 7,
-         "sodium": 6,
-         "calcium": 5,
-         "vitd": 4,
-         "potassium": 3,
-         "iron": 2,
-         "sugar": 1,
-         "fiber": 0,
-         "allergen": "soy",
-         "ingredients": "Flour, soy, water",
-         "access": "oe7583"
-        }
-
-    # update_nutrition(nutrition)
-    # data = find_one_nutrition('560154')
-    # print(data['calories'])
-    # list = [12345, 54321]
-    # result = find_many_nutrition(list)
-    # print(result[0]['calories'])
-    # link = "https://www.cs.princeton.edu/courses/archive/spr24/cos333/index.html"
-    # add_custom_food("ANOTHER", "oe7583", custom, link)
-    # list = find_all_custom_nutrition("oe7583")
-    # for item in list:
-    #     print(item)
-    # find_one_custom_nutrition("oe7583", 1)
-
-    # date_obj = datetime.now(timezone('US/Eastern')).date()
-        # today = datetime.combine(date_obj, time.min)
     
     with connectmongo() as client:
         db = client.db
-        col = db.custom_nutrition
-        documents_to_delete = {"access": "oe7583"}
+        col = db.nutrition
+
+        # Write your netID here
+        netid = ''
+        documents_to_delete = {"access": netid}
 
         del_result = col.delete_many(documents_to_delete)
         print(del_result)
