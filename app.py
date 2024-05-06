@@ -493,6 +493,29 @@ def log_food():
                                 custom_data = custom_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT, total_pages = total_pages)
 
 #--------------------------------------------------------------------
+@app.route('/logmeals/element', methods=['GET'])
+def logmeals_element():
+    checkid = request.args.get('checkid', type = str)
+    mealname = request.args.get('mealname', type = str)
+    recid = request.args.get('recid', type = str)
+    location = request.args.get('location', type = str)
+    mealtime = request.args.get('mealtime', type = str)
+    servingsize = request.args.get('servingsize', type = str)
+    cals = request.args.get('cals', type = float)
+    prots = request.args.get('prots', type = float)
+    carbs = request.args.get('carbs', type = float)
+    fats = request.args.get('fats', type = float)
+    usda = request.args.get('usda', type = str)
+    uniqueid = checkid[8:]
+    if mealtime == "N/A":
+        details = location
+    else:
+        details = location + ", " + mealtime
+
+    html_code = render_template('logmeals_element.html', checkid=checkid, uniqueid=uniqueid, mealname=mealname, 
+                                recid=recid, location=location, mealtime=mealtime, servingsize=servingsize, 
+                                cals=cals, prots=prots, carbs=carbs, fats=fats, usda = usda, details=details)
+    return make_response(html_code)
 
 @app.route('/logmeals/data', methods=['GET'])
 def log_food_data():
