@@ -1,6 +1,3 @@
-<!--==============================================================-->
-<!-- logmeals.html                                          -->
-<!--==============================================================-->
 <div class="card-body" id="menu-items" style="display: none;">
     {% set ns = namespace(c = 0) %}
     {% for item in data %}
@@ -14,7 +11,9 @@
                             {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
                             <input type="checkbox" class="form-check-input checkbox" id="checkbox-{{ checkbox_id }}" 
                                 data-usda="false"
-                                data-recid="{{ code }}" data-location="{{ item.dhall }}" data-mealtime="{{ item.mealtime }}"
+                                data-recid="{{ code }}" 
+                                data-location="{{ item.dhall }}" 
+                                data-mealtime="{{ item.mealtime }}"
                                 data-mealname="{{ food }}"
                                 data-servingsize="{{ nutrition_info[ns.c]['servingsize'] }}"
                                 data-cals="{{ nutrition_info[ns.c]['calories'] }}"
@@ -52,12 +51,9 @@
     /* tooltips for info */
 	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-
 </script>
 
-
 <div class="card-body" id="custom-food-items" style="display: none;">
-    
     {% if custom_data %}
         <div class="card-body" id="custom-food-items">
             <div class="row">
@@ -66,11 +62,18 @@
                         <div class="form-check">
                             {% set checkbox_id = item.access ~ '-' ~ item.recipeid %}
                             <input type="checkbox" style="border: 1px solid black;" class="form-check-input checkbox" id="checkbox-{{ checkbox_id }}"
-                                data-usda="false" data-recid="{{ item.recipeid }}" data-location="Custom Food" data-mealtime="N/A"
-                                data-mealname="{{ item.mealname }}" data-servingsize="{{ item.servingsize }}"
-                                data-cals="{{ item.calories }}" data-carbs="{{ item.carbs }}"
-                                data-prots="{{ item.proteins }}" data-fats="{{ item.fats }}"
-                                onchange="handleCheckboxChange(this)" onkeypress="changeCheckbox(this)">
+                                data-usda="false" 
+                                data-recid="{{ item.recipeid }}" 
+                                data-location="Custom Food" 
+                                data-mealtime="N/A"
+                                data-mealname="{{ item.mealname }}" 
+                                data-servingsize="{{ item.servingsize }}"
+                                data-cals="{{ item.calories }}" 
+                                data-carbs="{{ item.carbs }}"
+                                data-prots="{{ item.proteins }}" 
+                                data-fats="{{ item.fats }}"
+                                onchange="handleCheckboxChange(this)" 
+                                onkeypress="changeCheckbox(this)">
                             <label class="form-check-label text-med" for="checkbox-{{ checkbox_id }}">{{ item.mealname }}</label>
                             <p>
                                 <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: {{ item.servingsize }}</span>
@@ -99,7 +102,6 @@
     {% else %}
         <p id="noDataCustomMessage" class="text-center">You have not added any Custom Foods yet.</p>
     {% endif %}
-
 </div>
 
 <div class="card-body" id="tutorial-food-items" style="display: none;">
@@ -107,7 +109,9 @@
         <div class="form-check">
             <input type="checkbox" style="border: 1px solid black;" class="form-check-input checkbox" id="checkbox-tutorial-1" 
                 data-usda="false"
-                data-recid="tutorial-1" data-location="Custom Food" data-mealtime="N/A"
+                data-recid="tutorial-1" 
+                data-location="Dining Hall" 
+                data-mealtime="Mealtime"
                 data-mealname="Example Food"
                 data-servingsize="1"
                 data-cals="630"

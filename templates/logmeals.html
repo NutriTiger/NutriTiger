@@ -853,46 +853,36 @@ window.onunload = function() {
 /* setup *************************************************************/
 // set up event listeners for dhall select and mealtime tab
 function setup() {
-    // $("#customFoodButton1").hide();
-    // $("#customFoodButton2").hide();
     handleCustomPageChange(1);
+    $("#menu-items").show();
+    hideLoadingAnimation();
 
-    // Event listeners for the radio buttons
+    // Event listeners
     document.querySelectorAll('input[name="foodSource"]').forEach(function(radio) {
         radio.addEventListener('change', function() {
             updateCardVisibility(this.id); // Call updateCard function passing the id of the selected radio button
         });
     });
-
-    $("#menu-items").show();
-    hideLoadingAnimation();
-
     document.getElementById("startTutorial").addEventListener("click", function () {
         startTutorial();
     });
-
     $("#diningHallSelect").change(getResults); // Toggle search bar on selection change
     $("#searchBar").on("input", debounce(searchUSDAFood, 1000)); // Debounce the search input
     const diningHallSelect = document.getElementById("diningHallSelect");
-
-    // Event listener for the dropdown selection change
     $("#mealTimeTab a").on("shown.bs.tab", getResults);
     diningHallSelect.addEventListener("change", getResults);
-
     document.getElementById("pagination-usda").addEventListener("click", function(event) {
         const target = event.target;
         if (target.classList.contains("page-link")) {
             const pageNumber = parseInt(target.textContent);
-            console.log("Handling page change to:", pageNumber); // Debug: Check which page is clicked
             handleUSDAPageChange(pageNumber);
         }
     });
 
-    // Event listener for submit button (to get entry and send to flask)
+    // submit data
     document.getElementById("submitButton").addEventListener("click", function (event) {
         event.preventDefault();
         addUSDANutritionData();
-
         // checks entry limit 
         const over_limit = $("#over_limit").data('value');
         const entry_limit = $("#entry_limit").data('value');
