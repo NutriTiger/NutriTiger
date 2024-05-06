@@ -97,7 +97,7 @@ def update_nutrition(new_foods):
                     
             add_result = nutrition_col.insert_many(new_foods)
             document_ids = add_result.inserted_ids
-            print(f"_id of inserted documents: {document_ids}", file=sys.stderr)
+            # print(f"_id of inserted documents: {document_ids}")
             return
         except pymongo.errors.OperationFailure:
             print("An authentication error was received. Are you sure your database user is authorized to perform write operations?", file=sys.stderr)
@@ -162,8 +162,6 @@ def del_custom_food(recipeid):
 # Deletes multiple custom food items from the nutrition collection based on the specified array of recipe IDs.
 # Returns True if successful, False otherwise.
 def del_many_custom_food(recipeids):
-    print("in del_many_custom_food")
-    print(recipeids)
 
     with connectmongo() as client:
         db = client.db
@@ -183,7 +181,7 @@ def del_many_custom_food(recipeids):
             #         return False
 
             result = nutrition_col.delete_many(query)
-            print(f"Deleted {result.deleted_count} documents.")
+            # print(f"Deleted {result.deleted_count} documents.")
 
             # Check if the number of deleted documents matches the number of IDs provided
             if result.deleted_count == len(recipeids):
@@ -278,10 +276,9 @@ def find_all_custom_nutrition(netid):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
-
-        documents_to_find = {"access": netid}# Define the sort order - descending by 'created_at' field
+        documents_to_find = {"access": netid}
         try:
-            # Execute find operation with sorting
+            # Define the sort order - descending by 'created_at' field
             result = list(nutrition_col.find(documents_to_find).sort("date", pymongo.DESCENDING))
             print(f"found documents: {result}")
             if len(result) == 0:
@@ -300,11 +297,10 @@ def find_one_custom_nutrition(netid, lowercase_name):
     with connectmongo() as client:
         db = client.db
         nutrition_col = db.nutrition
-
         documents_to_find = {"access": netid, "check": lowercase_name}
         try:
             result = nutrition_col.find_one(documents_to_find)
-            print(f"found documents: {result}")
+            # print(f"found documents: {result}")
             if not result:
                 print("No custom nutrition document found")
                 return
@@ -327,7 +323,7 @@ def main():
         col = db.nutrition
 
         # Write your netID here
-        netid = ''
+        netid = '-'
         documents_to_delete = {"access": netid}
 
         del_result = col.delete_many(documents_to_delete)
