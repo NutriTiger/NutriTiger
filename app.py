@@ -381,7 +381,7 @@ def settings():
         return redirect('/welcome')
     if request.method == 'POST':
         #netid = 'jm0278'
-        new_user_goal = request.form['line']
+        new_user_goal = float(request.form['line'])
         dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
     user_settings = dbusers.findsettings(netid)
