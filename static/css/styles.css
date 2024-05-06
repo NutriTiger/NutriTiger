@@ -7,8 +7,16 @@
     --purple-transparent: rgba(68, 0, 128, 0.5);
     --blue: rgba(66, 142, 223);
     --blue-transparent: rgba(66, 142, 223, 0.7);
+    --grey: rgba(96, 96, 96, 0.7);
 }
-
+.text-med {
+    font-size: 18px;
+}
+.checkbox {
+    height: 18px;
+    width: 18px;
+    border: 1px solid black;
+}
 .custom-text-wrapper {
     width: 70%; /* Adjust this value as needed */
     margin-left: auto;
@@ -314,23 +322,6 @@ body {
     height: 50px; 
     font-size: 50px; 
 } 
-/* for individual food item nutrition facts ***********************/
-.nutrition-container {
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 5px;
-}
-
-.nutrition-fact {
-    background-color: #e0e0e0; 
-    padding: 2px;
-    font-size: 14px;
-    border-radius: 6px;
-}
-
-.nutrition-fact:last-child {
-    margin-right: 0;
-}
 
 /* Custom food - description text box will grow with input */
 .autosize {

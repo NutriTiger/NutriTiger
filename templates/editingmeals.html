@@ -33,12 +33,12 @@
                                             <div class="col">
                                                 <!-- Food name label-->
                                                 <span><b>{{ food_dict.mealname }}</b></span>
-                                                <p class="nutrition-container">
-                                                    <span class="nutrition-fact">Serving Size: {{ food_dict.servingsize }}</span>
-                                                    <span class="nutrition-fact">Calories: {{ food_dict.calories }}</span>
-                                                    <span class="nutrition-fact">Proteins: {{ food_dict.proteins }}g</span>
-                                                    <span class="nutrition-fact">Carbs: {{ food_dict.carbs }}g</span>
-                                                    <span class="nutrition-fact">Fats: {{ food_dict.fats }}g</span>
+                                                <p>
+                                                    <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: {{ food_dict.servingsize }}</span>
+                                                    <span class="badge badge-info" style="background-color: var(--blue);">{{ food_dict.calories }} Calories</span>
+                                                    <span class="badge badge-info" style="background-color: var(--pink);">{{ food_dict.proteins }}g Protein</span>
+                                                    <span class="badge badge-info" style="background-color: var(--green);">{{ food_dict.carbs }}g Carbs</span>
+                                                    <span class="badge badge-info" style="background-color: var(--purple-transparent);">{{ food_dict.fats }}g Fat</span>
                                                 </p>
                                             </div>
                                             <div class="col-auto d-flex align-items-center">

@@ -163,14 +163,14 @@ function renderPage(startIndex, endIndex, data) {
         const foodElement = document.createElement("div");
         foodElement.className = "form-check";
         foodElement.innerHTML = `
-            <input type="checkbox" class="form-check-input" id="usda-checkbox-${recipeid}">
-            <label class="form-check-label" for="usda-checkbox-${recipeid}">${mealname}</label>
-            <p class="nutrition-container">
-                <span class="nutrition-fact">Serving Size: ${servingSize}</span>
-                <span class="nutrition-fact">Calories: ${calories}</span>
-                <span class="nutrition-fact">Proteins: ${proteins}g</span>
-                <span class="nutrition-fact">Carbs: ${carbs}g</span>
-                <span class="nutrition-fact">Fats: Fats: ${fats}g</span>
+            <input type="checkbox" class="form-check-input checkbox" id="usda-checkbox-${recipeid}">
+            <label class="form-check-label text-med" for="usda-checkbox-${recipeid}">${mealname}</label>
+            <p>
+                <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: ${servingSize}</span>
+                <span class="badge badge-info" style="background-color: var(--blue);">${calories} Calories</span>
+                <span class="badge badge-info" style="background-color: var(--pink);">${proteins}g Protein</span>
+                <span class="badge badge-info" style="background-color: var(--green);">${carbs}g Carbs</span>
+                <span class="badge badge-info" style="background-color: var(--purple-transparent);">${fats}g Fat</span>
             </p>
         `;
         resultsContainer.appendChild(foodElement);
