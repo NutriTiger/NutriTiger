@@ -280,7 +280,6 @@ def find_all_custom_nutrition(netid):
         try:
             # Define the sort order - descending by 'created_at' field
             result = list(nutrition_col.find(documents_to_find).sort("date", pymongo.DESCENDING))
-            print(f"found documents: {result}")
             if len(result) == 0:
                 print("No custom nutrition documents found")
                 return
