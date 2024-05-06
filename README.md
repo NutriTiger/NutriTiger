@@ -1,6 +1,6 @@
 <br />
 <div align="center">
-    <img src="static/media/logo.png" alt="Logo" width="100" height="100">
+    <img src="static/media/indexlogo.png" alt="Logo" width="100" height="100">
 
   <h3 align="center">NutriTiger</h3>
 
@@ -29,16 +29,23 @@ pip install -r requirements.txt
 ```
 3. Configure .env file with tokens/secrets for the database. For CAS authentication, please specify the following environment variable
 
-APP_SECRET_KEY=<somesecretkey>
+- MONGODB_USERNAME=
+- MONGODB_PASSWORD=
+- APP_SECRET_KEY=
+- cloud_name = 
+- api_key = 
+- api_secret = 
+- usda_api_key = 
+- APP_SECRET_KEY=
 
 4. ``python app.py``
 ## Contributing
 ### Branching Guidelines
 The general branch structure is as follows.
 - ``main``
-- ``prototype``
-- ``alpha``
-- ``beta``
+- ``prototype`` (archived)
+- ``alpha`` (archived)
+- ``beta`` (archived)
 
 Then, for stretch goals and other features, use the feature syntax
 Ex: ``feature/webscraping``

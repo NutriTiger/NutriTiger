@@ -1,90 +1,90 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-        <title>{% block title %}{% endblock %} - NutriTiger</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='media/apple-touch-icon.png') }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='media/favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='media/favicon-16x16.png') }}">
-        <link rel="manifest" href="{{ url_for('static', filename='media/site.webmanifest') }}">
-        <link rel="mask-icon" href="{{ url_for('static', filename='media/safari-pinned-tab.svg') }}" color="#5bbad5">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='media/favicon.ico') }}">
-        <meta name="msapplication-TileColor" content="#da532c">
-        <meta name="msapplication-config" content="{{ url_for('static', filename='media/browserconfig.xml') }}">
-        <meta name="theme-color" content="#ffffff">
-
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-        {% block head %}
-        {% endblock %}
-    </head>
-    <body>
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+		<title>{% block title %}{% endblock %} - NutriTiger</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='media/apple-touch-icon.png') }}">
+		<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='media/favicon-32x32.png') }}">
+		<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='media/favicon-16x16.png') }}">
+		<link rel="manifest" href="{{ url_for('static', filename='media/site.webmanifest') }}">
+		<link rel="mask-icon" href="{{ url_for('static', filename='media/safari-pinned-tab.svg') }}" color="#5bbad5">
+		<link rel="shortcut icon" href="{{ url_for('static', filename='media/favicon.ico') }}">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="msapplication-config" content="{{ url_for('static', filename='media/browserconfig.xml') }}">
+		<meta name="theme-color" content="#ffffff">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+		{% block head %}
+		{% endblock %}
+	</head>
+	<body>
+		<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+		
         {% include 'navbar.html' %}
-        {% block content %}{% endblock %}
-        {% block script %}{% endblock %}
-        <script>
-            function buttonPressed(id) {
-                // Obtain page buttons
-                var buttons = document.querySelectorAll("button")
-                var links = document.querySelectorAll("a")
-
-                buttons.forEach((button) => {
-                    if (button.id == id) {
-                        button.textContent = "Redirecting..."
-                        button.style.opacity = "var(--bs-btn-disabled-opacity)"
-                    }
-                    button.tabIndex = "-1"
-                    button.blur()
-                    button.style.pointerEvents = "none"
-                })
-                        
-                links.forEach((link) => {
-                    link.style.pointerEvents = "none"
-                    link.tabIndex = "-1"
-                })
-            }
-
-            function linkButtonPressed(id) {
-                var links = document.querySelectorAll("a")
-                var buttons = document.querySelectorAll("button")
-                
-                links.forEach((link) => {
-                    if (link.id == id) {
-                        link.textContent = "Redirecting..."
-                        link.style.opacity = "var(--bs-btn-disabled-opacity)"
-                    }
-                    link.style.pointerEvents = "none"
-                    link.blur()
-                    link.tabIndex = "-1"
-                })
-
-                buttons.forEach((button) => {
-                    button.tabIndex = "-1"
-                    button.blur()
-                    button.style.pointerEvents = "none"
-                })
-            }
-
-            function linkPressed() {
-                var links = document.querySelectorAll("a")
-                var buttons = document.querySelectorAll("button")
-                
-                links.forEach((link) => {
-                    link.style.pointerEvents = "none"
-                    link.tabIndex = "-1"
-                })
-
-                buttons.forEach((button) => {
-                    button.tabIndex = "-1"
-                    button.blur()
-                    button.style.pointerEvents = "none"
-                })
-            }
-        </script>
-    </body>
+		{% block content %}{% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+		{% block script %}{% endblock %}
+		<script>
+			function buttonPressed(id) {
+			    // Obtain page buttons
+			    var buttons = document.querySelectorAll("button")
+			    var links = document.querySelectorAll("a")
+			
+			    buttons.forEach((button) => {
+			        if (button.id == id) {
+			            button.textContent = "Redirecting..."
+			            button.style.opacity = "var(--bs-btn-disabled-opacity)"
+			        }
+			        button.tabIndex = "-1"
+			        button.blur()
+			        button.style.pointerEvents = "none"
+			    })
+			            
+			    links.forEach((link) => {
+			        link.style.pointerEvents = "none"
+			        link.tabIndex = "-1"
+			    })
+			}
+			
+			function linkButtonPressed(id) {
+			    var links = document.querySelectorAll("a")
+			    var buttons = document.querySelectorAll("button")
+			    
+			    links.forEach((link) => {
+			        if (link.id == id) {
+			            link.textContent = "Redirecting..."
+			            link.style.opacity = "var(--bs-btn-disabled-opacity)"
+			        }
+			        link.style.pointerEvents = "none"
+			        link.blur()
+			        link.tabIndex = "-1"
+			    })
+			
+			    buttons.forEach((button) => {
+			        button.tabIndex = "-1"
+			        button.blur()
+			        button.style.pointerEvents = "none"
+			    })
+			}
+			
+			function linkPressed() {
+			    var links = document.querySelectorAll("a")
+			    var buttons = document.querySelectorAll("button")
+			    
+			    links.forEach((link) => {
+			        link.style.pointerEvents = "none"
+			        link.tabIndex = "-1"
+			    })
+			
+			    buttons.forEach((button) => {
+			        button.tabIndex = "-1"
+			        button.blur()
+			        button.style.pointerEvents = "none"
+			    })
+			}
+		</script>
+	</body>
 </html>
