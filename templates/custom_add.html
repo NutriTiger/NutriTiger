@@ -12,7 +12,7 @@
 {% include 'loading.html' %}
 <h1 class="text-center m-3">Create Custom Food</h1>
 <div class="container">
-	<form id="customFoodForm" action="/addcustomfood" method="post" enctype="multipart/form-data" >
+	<form id="customFoodForm" action="/createcustomfood" method="post" enctype="multipart/form-data" >
 		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 		<div class="col-12">
 			<div class="form-group">
@@ -26,19 +26,19 @@
 			</div>
 			<div class="form-group">
 				<label for="inputCalories">Calories</label>
-				<input type="number" step="any" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value={{calories}} autocomplete="off" required>
+				<input type="number" step="any" min="0" max = "10000" class="form-control"  id="inputCalories" name = "calories"  value="{{calories}}" autocomplete="off" required>
 			</div>
 			<div class="form-group">
 				<label for="inputProtein">Proteins (g)</label>
-				<input type="number" step="any" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value={{proteins}} autocomplete="off" required>
+				<input type="number" step="any" min="0" max = "2500" class="form-control" id="inputProtein" name = "proteins" value="{{proteins}}" autocomplete="off" required>
 			</div>
 			<div class="form-group">
 				<label for="inputCarbs">Carbohydrates (g)</label>
-				<input type="number" step="any" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value={{carbs}} autocomplete="off" required>
+				<input type="number" step="any" min="0" max = "2500" class="form-control"  id="inputCarbs" name = "carbs"  value="{{carbs}}" autocomplete="off" required>
 			</div>
 			<div class="form-group">
 				<label for="inputFats">Fats (g)</label>
-				<input type="number" step="any" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value={{fats}} autocomplete="off" required>
+				<input type="number" step="any" min="0" max = "1200" class="form-control"  id="inputFats" name = "fats"  value="{{fats}}" autocomplete="off" required>
 			</div>
 			<div class="form-group">
 				<label for="inputServingSize">Serving size</label>
