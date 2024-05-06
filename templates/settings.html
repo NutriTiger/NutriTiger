@@ -50,8 +50,9 @@
         // Obtain form elements
         // var validFormElements = document.querySelector(":valid")
         // cc
-        var calorieInput = document.getElementById("firstCalorieInput")
-        var settingsButton = document.getElementById("firstCalorieButton")
+        var validFormElements = document.querySelector(":valid")
+        var calorieInput = validFormElements.querySelector("#firstCalorieInput")
+        var settingsButton = validFormElements.querySelector("#firstCalorieButton")
 
         // Check if the input was validated
         if (calorieInput != null) {
@@ -64,6 +65,9 @@
             settingsButton.style.pointerEvents = "none"
             settingsButton.textContent = "Submitting..."
             settingsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+            settingsButton.tabIndex = "-1"
+            settingsButton.blur()
+            linkPressed()
         }
     }
 
