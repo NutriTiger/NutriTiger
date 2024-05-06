@@ -43,12 +43,11 @@ function isValid(input) {
     return false;
 }
 
-// When the user submits the form and all fields are valid, lock it
-// Used to validate Calorie Goal inputs (settings.html) */
+/* When the user submits the Calorie Goal form and all fields are valid, lock it.
+This function is used to validate Calorie Goal inputs (settings.html) */
+
 function closeForm() {
     // Obtain form elements
-    // var validFormElements = document.querySelector(":valid")
-    // cc
     var validFormElements = document.querySelector(":valid")
     var calorieInput = validFormElements.querySelector("#firstCalorieInput")
     var settingsButton = validFormElements.querySelector("#firstCalorieButton")

@@ -48,7 +48,7 @@
                                                     <span class="text-muted" style="font-size: small; margin-right: 5px;">Servings: </span>
                                                     <input type="number" step="any" min="0.01" onpaste="return false;" class="form-control small-input mr-2"
                                                     value="{{ serving }}" oninput="handleServingChange(this)" required
-                                                    data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}" step="0.01"
+                                                    data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}"
                                                     onkeypress="return isValid(event)">
                                                 </div>
                                                 <div class="form-group">
@@ -104,8 +104,11 @@
     function handleServingChange(input) {
         input.setCustomValidity('');
         if (!customCheckValidity(input)) return;
+
+        // round the serving input after submission
         let inputServ = parseFloat(input.value);
         let serving = inputServ.toFixed(2);
+
         let entryNum = $(input).data('entrynum');
         let foodNum = $(input).data('foodnum');
         let key = `${entryNum}-${foodNum}`;
