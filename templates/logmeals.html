@@ -441,7 +441,8 @@ function handleServingChange() {
     inputs.forEach((input) => {
         input.setCustomValidity('');
         customCheckValidity(input)
-        let serving = input.value;
+        let inputServing = parseFloat(input.value);
+        let serving = parseFloat(inputServing.toFixed(2));
         totalCals += serving * input.dataset.cals;
         totalCarbs += serving * input.dataset.carbs;
         totalFats += serving * input.dataset.fats;
