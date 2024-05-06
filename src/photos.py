@@ -8,6 +8,7 @@ import os
 import cloudinary.uploader
 import cloudinary.api
 import dotenv
+import sys
 
 dotenv.load_dotenv()
 cloudinary.config(
@@ -77,8 +78,6 @@ def delete_many_photos(public_ids):
     except Exception as e:
         print("fails in delete_many_photos")
         print(f"An error occurred: {str(e)}", file = sys.stderr)
-        # Handle the response in case of an exception
-        # return {"status": "error", "message": str(e)}
         return False
 
 
