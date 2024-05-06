@@ -31,7 +31,6 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 from werkzeug.utils import secure_filename
-import html
 
 
 #--------------------------------------------------------------------
@@ -613,19 +612,15 @@ def check_upload (file):
 def add_customfood():
     netid = auth.authenticate()
 
-    old_temp_name = request.form.get('name', type = str)
-    # temp_name = html.escape(old_temp_name)
-    temp_name = old_temp_name
+    temp_name = request.form.get('name', type = str)
     recipename = utils.normalize_space(temp_name)
     query_name = recipename.lower()
     cal = request.form.get('calories', type = int)
     protein = request.form.get('proteins', type = int)
     carbs = request.form.get('carbs', type = int)
     fats = request.form.get('fats', type = int)
-    old_servingsize = request.form.get('servingsize', type = str)
-    servingsize = old_servingsize
-    old_desc = request.form.get('description', type = str)
-    desc = old_desc
+    servingsize = request.form.get('servingsize', type = str)
+    desc = request.form.get('description', type = str)
 
     file = request.files.get('image')
 
