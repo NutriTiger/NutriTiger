@@ -13,7 +13,7 @@
 
 <div class="text-center p-3">
     <h1 class="my-2">Log Meals
-        <a class="tool-tip nt-custom-tool-tip" data-bs-toggle="tooltip" data-bs-placement = "bottom" data-bs-html="true" data-bs-boundary="window" title="" data-bs-original-title="<strong>Choose</strong> a food source from the 3 buttons below. <strong>Select</strong> your dish(es). <strong>Enter</strong> the number of servings you consumed in the “My Meal” window. <strong>Press</strong> the Upload Meal button to return to the homepage.">
+        <a class="tool-tip nt-custom-tool-tip" data-bs-toggle="tooltip" data-bs-placement = "bottom" data-bs-html="true" data-bs-boundary="window" title="" data-bs-original-title="<strong>Choose</strong> a food source from the 3 buttons below. <br><strong>Select</strong> your dish(es). <br><strong>Enter</strong> the number of servings you consumed in the “My Meal” window. <br><strong>Press</strong> the Upload Meal button to return to the homepage.">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
@@ -41,12 +41,12 @@
                                     <input type="radio" name="foodSource" id="radio-dhall" checked> Dining Halls  
                                 </label>
                             </div>
-                            <div class="col-sm">
+                            <div class="col-sm" id = "tutorial-radio-custom">
                                 <label class="radio-inline pl-2">
                                     <input type="radio" name="foodSource" id="radio-custom"> My Custom Foods  
                                 </label>
                             </div>
-                            <div class="col-sm">
+                            <div class="col-sm" id = "tutorial-radio-usda">
                                 <label class="radio-inline pl-2">
                                     <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
                                 </label>
@@ -100,7 +100,7 @@
                     <div class="pagination-container"> 
                         <div id="pagination-usda"></div>
                     </div>
-                    <div class="btn-group">
+                    <div class="btn-group" id = "tutorial-custom-food-btns">
                         <a class="btn btn-primary me-2 nt-custom-foods-btn" href="{{ url_for('custom_nutrition') }}" role="button" id = "customFoodButton1" style="display:none;">View my custom foods</a>
                         <a class="btn btn-primary ms-2 nt-custom-foods-btn" href="{{ url_for('custom_food') }}" role="button" id = "customFoodButton2" style="display:none;">Add a custom food</a>
                     </div>
@@ -627,9 +627,25 @@ introguide.setOptions({
         title: 'Welcome',
         intro: 'Welcome to the tutorial to learn how to log the foods you ate in a meal!'
     }, {
-        title: 'Select a source',
+        title: 'Select a Source Card',
+        element: document.querySelector('.logmeals-card'),
+        intro: "This section is where you can select where you got your food from. By default, the Dining Halls are selected and a dropdown to pick which dining hall is shown. Checkboxes will appear for you to pick out items, as shown later in the tutorial."
+    }, {
+        title: 'Select from Custom Foods',
+        element: document.querySelector('#tutorial-radio-custom'),
+        intro: "You can also log custom foods that you make at home as part of your meals."
+    }, {
+        title: 'Custom Foods',
+        element: document.querySelector('#tutorial-custom-food-btns'),
+        intro: "With the buttons on the bottom, you can view your custom foods to see relevant images and descriptions along with adding more custom foods."
+    }, {
+        title: 'Search for Other Foods',
+        element: document.querySelector('#tutorial-radio-usda'),
+        intro: "This third option is for a generic food search for items that are not included in the other options. We will see this later."
+    }, {
+        title: 'Select from Dining Halls',
         element: document.querySelector('#radio-buttons'),
-        intro: "First, select your food source: Princeton dining halls, your custom recipes, or search for any food in a generic USDA database. We've chosen a dining hall for this demo."
+        intro: "Let's chose a dining hall for the start of this demo."
     }, {
         title: 'Select a dining hall',
         element: document.querySelector('.select-dropdown'),
@@ -679,6 +695,14 @@ introguide.setOptions({
     if (targetElement.id == 'radio-buttons') {
         document.getElementById('radio-dhall').checked = true;
         updateCardVisibility('radio-dhall');
+    }
+    if (targetElement.id == 'tutorial-radio-custom') {
+        document.getElementById('radio-custom').checked = true;
+        updateCardVisibility('radio-custom');
+    }
+    if (targetElement.id == 'tutorial-radio-usda') {
+        document.getElementById('radio-usda').checked = true;
+        updateCardVisibility('radio-usda');
     }
     // Check if we are on the step where we want to auto-select an option from the dropdown
     if (targetElement.classList.contains('select-dropdown')) {
