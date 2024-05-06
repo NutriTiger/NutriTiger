@@ -250,7 +250,7 @@ def first_contact():
         # Placeholder netID
         #netid = 'jm0278'
         # Get value entered into the calorie goal box
-        user_goal = float(request.form['line'])
+        user_goal = int(request.form['line'])
         # Store value into database
         if dbusers.finduser(netid) is None:
             dbusers.newuser(netid, user_goal)
@@ -381,7 +381,7 @@ def settings():
         return redirect('/welcome')
     if request.method == 'POST':
         #netid = 'jm0278'
-        new_user_goal = float(request.form['line'])
+        new_user_goal = int(request.form['line'])
         dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
     user_settings = dbusers.findsettings(netid)

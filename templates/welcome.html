@@ -45,7 +45,9 @@
                                             <h4 class="mb-2 mb-md-0"> Daily Calorie Goal:</h4>
                                             <form action="/welcome" method="post" class="d-flex flex-column flex-md-row m-2">
                                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                                <input id="firstCalorieInput" type="number" class="form-control form-calgoal mr-2 mb-2 mb-md-0" name='line' placeholder="Enter the number here." min="1" max="100000" onpaste="return false;" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
+                                                <input id="firstCalorieInput" step="any" type="number" class="form-control form-calgoal mr-2 mb-2 mb-md-0" 
+                                                name='line' placeholder="Enter the number here." min="1" max="100000" onpaste="return false;" onkeypress="return isCalGoalValid(event)"
+                                                required autofocus style="width: 200px;">
                                                 <button id="firstCalorieButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
                                             </form>
                                         </div>
@@ -64,30 +66,6 @@
 </html>
 
 <script>
-
-    // When the user submits the form and all fields are valid, lock it
-    function closeForm() {
-        // Obtain form elements
-        var validFormElements = document.querySelector(":valid")
-        var calorieInput = validFormElements.querySelector("#firstCalorieInput")
-        var settingsButton = validFormElements.querySelector("button")
-
-        // Check if the input was validated
-        if (calorieInput != null) {
-            // Remove any leading zeros
-            var currentNumber = calorieInput.value
-            calorieInput.value = currentNumber.replace(/^0+/, '')
-
-            // Disable the button but have it submit the form
-            calorieInput.readOnly = true
-            settingsButton.style.pointerEvents = "none"
-            settingsButton.textContent = "Submitting..."
-            settingsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
-            settingsButton.tabIndex = "-1"
-            settingsButton.blur()
-        }
-    }
-
     // If the user hits the back button reset the form
     window.onunload = function() {
         var calorieInput = document.getElementById("firstCalorieInput")

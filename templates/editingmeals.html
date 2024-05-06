@@ -104,11 +104,12 @@
     function handleServingChange(input) {
         input.setCustomValidity('');
         if (!customCheckValidity(input)) return;
-        let serving = parseFloat(input.value);
+        let inputServ = parseFloat(input.value);
+        let serving = inputServ.toFixed(2);
         let entryNum = $(input).data('entrynum');
         let foodNum = $(input).data('foodnum');
         let key = `${entryNum}-${foodNum}`;
-        servingsChanged[key] = serving;
+        servingsChanged[key] = parseFloat(serving);
     }
 
     function customCheckValidity(input) {
