@@ -30,12 +30,40 @@
         {% block script %}{% endblock %}
 
         <script>
+            function buttonPressed(id) {
+                // Obtain page buttons
+                var buttons = document.querySelectorAll("button")
+                var links = document.querySelectorAll("a")
+
+                buttons.forEach((button) => {
+                    if (button.id == id) {
+                        button.textContent = "Redirecting..."
+                        button.style.opacity = "var(--bs-btn-disabled-opacity)"
+                    }
+                    button.tabIndex = "-1"
+                    button.blur()
+                    button.style.pointerEvents = "none"
+                })
+                        
+                links.forEach((link) => {
+                    link.style.pointerEvents = "none"
+                    link.tabIndex = "-1"
+                })
+            }
+
             function linkPressed() {
                 var links = document.querySelectorAll("a")
+                var buttons = document.querySelectorAll("button")
                 
                 links.forEach((link) => {
                     link.style.pointerEvents = "none"
                     link.tabIndex = "-1"
+                })
+
+                buttons.forEach((button) => {
+                    button.tabIndex = "-1"
+                    button.blur()
+                    button.style.pointerEvents = "none"
                 })
             }
         </script>

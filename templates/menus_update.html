@@ -14,13 +14,14 @@
     </div>
     <h4 class>Click on a food to see its nutritional contents.</h4>
     <h4> Ready to record what you ate? </h4>
-    <a href="{{ url_for('log_food') }}" class="btn btn-primary">+ Click to log a Meal</a>
+    <a href="{{ url_for('log_food') }}" class="btn btn-primary">+ Click to log Today's Meal</a>
 </div>
 <div style = "display:none;" id="todaysDateDivUpdate">{{ todays_date }}</div>
 <div class="p-5 row row-nt row-cols-1 row-cols-md-3 g-4">
     {% set ns = namespace(c = 0) %}
     {% for item in data %}
-    <div class="col meal {{ item.mealtime }}" {% if item.mealtime != mealtime %} style = "display: none;" {% endif %}>
+
+    <div class="col meal {{ item.mealtime }}" {% if mealtime not in item.mealtime %} style = "display: none;" {% endif %}>
         <div class="card h-100 card-body-dhall-menus ">
             <div class="card-body"  >
                 <h2 class="card-title text-center">{{ item.dhall }}</h2>
