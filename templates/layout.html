@@ -51,6 +51,27 @@
                 })
             }
 
+            function linkButtonPressed(id) {
+                var links = document.querySelectorAll("a")
+                var buttons = document.querySelectorAll("button")
+                
+                links.forEach((link) => {
+                    if (link.id == id) {
+                        link.textContent = "Redirecting..."
+                        link.style.opacity = "var(--bs-btn-disabled-opacity)"
+                    }
+                    link.style.pointerEvents = "none"
+                    link.blur()
+                    link.tabIndex = "-1"
+                })
+
+                buttons.forEach((button) => {
+                    button.tabIndex = "-1"
+                    button.blur()
+                    button.style.pointerEvents = "none"
+                })
+            }
+
             function linkPressed() {
                 var links = document.querySelectorAll("a")
                 var buttons = document.querySelectorAll("button")
