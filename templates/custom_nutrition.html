@@ -11,7 +11,7 @@
     <div class="text-center p-3">
         <div style="align-items: center;">
             <div class="d-inline-block">
-                <button id="add_food_btn" onclick="buttonPressed(this.id); window.location.href='{{ url_for('custom_food') }}'" class="btn btn-primary" style="display: block;">
+                <button id="add_food_btn" onclick="window.location.href='{{ url_for('custom_food') }}'" class="btn btn-primary" style="display: block;">
                     + Create a Custom Food
                 </button>
             </div>
@@ -162,6 +162,7 @@ function handleDelete(recid) {
         },
     });
 }
+<<<<<<< HEAD
 
 window.onunload = function() {
     var buttons = document.querySelectorAll("button")
@@ -176,6 +177,8 @@ window.onunload = function() {
     })
 }
 
+=======
+>>>>>>> cdc589231e2426e804abedd4dc8268ba77b396ea
 $(document).ready(function(){
     $('#edit_custom_foods').click(function() {
         console.log("edit clicked")
