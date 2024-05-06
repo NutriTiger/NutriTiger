@@ -8,12 +8,13 @@
 <div class="row pt-2 px-2 justify-content-center">
     <div class="col-6 col-sm-3 m-3">
         <select class="select-dropdown btn btn-secondary dropdown-toggle form-select" id = "historyRangeSelect">
-            <option value="7" selected>Past 7 logged days</option>
-            <option value="14">Past 14 logged days</option>
-            <option value="30">Past 30 logged days</option>
-            <option value="90">Past 90 logged days</option>
+            <option value="7" selected>Past 7 days</option>
+            <option value="14">Past 14 days</option>
+            <option value="30">Past 30 days</option>
+            <option value="90">Past 90 days</option>
         </select>
     </div>
+</div>
 </div>
 <div id = "history-content">
     {% include "history_content.html" %}
