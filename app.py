@@ -580,7 +580,7 @@ def custom_nutrition():
         return render_template('custom_nutrition.html', user_nutrition=user_nutrition, custom_strftime_est=utils.custom_strftime_est)
 #--------------------------------------------------------------------
 
-@app.route('/addcustomfood', methods=['GET'])
+@app.route('/createcustomfood', methods=['GET'])
 def custom_food():
     netid = auth.authenticate()
 
@@ -631,7 +631,7 @@ def check_upload (file):
     
 #--------------------------------------------------------------------
 
-@app.route('/addcustomfood', methods=['POST'])
+@app.route('/createcustomfood', methods=['POST'])
 def add_customfood():
     netid = auth.authenticate()
 
