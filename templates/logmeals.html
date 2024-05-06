@@ -510,6 +510,7 @@ function handleCheckboxChange(element) {
             },
             success: function (response) {
                 $("#my-plate").append(response)
+                handleServingChange();
             },
             error: function (xhr, status, error) {
                 console.error("Failed to send nutrition data:", error);
@@ -521,9 +522,9 @@ function handleCheckboxChange(element) {
         let myplatebox = document.getElementById("myplate-" + uniqueid);
         if (myplatebox) {
             myplatebox.remove();
+            handleServingChange();
         }
     }
-    handleServingChange();
 }
 
 // fetch menu items based on selected dhall and mealtime + correct display
