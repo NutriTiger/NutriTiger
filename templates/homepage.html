@@ -25,7 +25,7 @@
             <!-- "Click to log a meal" Button -->
             <form action="/homepage" method="post">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed()">+ Click to log a Meal</button>
+                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed()">+ Click to log Today's Meal</button>
             </form>
         </div>
         
@@ -234,7 +234,7 @@
 
         buttons.forEach((button) => {
 			if (button.id == "logMealHomepage") {
-				button.textContent = "+ Click to log a Meal"
+				button.textContent = "+ Click to log Today's Meal"
         		button.style.opacity = "none"
 			}
 			button.tabIndex = "1"
