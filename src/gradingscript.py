@@ -2,7 +2,8 @@
 # INSTRUCTIONS
 # run with the command: python gradingscript.py netid
 # where netid is the netid of the user you want to load history and 
-# custom foods for, loads 100 days of history and 12 custom foods
+# custom foods for, loads 100 days of history and whatever custom foods
+# the TEMPLATE_USER has
 #-----------------------------------------------------------------------
 import dbusers
 import dbnutrition
@@ -15,7 +16,6 @@ NUM_LOGGED_DAYS = 100
 #-----------------------------------------------------------------------
 def load_custom_foods(netid):
     custom_foods = dbnutrition.find_all_custom_nutrition(TEMPLATE_USER)
-    print(custom_foods)
     keys_to_exclude = ["mealname", "access", "recipeid", "date", "_id"]
     for document in custom_foods:
         mealname = document["mealname"]
@@ -28,6 +28,8 @@ def load_history(netid):
     carb_his = this_user['carb_his']
     prot_his = this_user['prot_his']
     fat_his = this_user['fat_his']
+
+    # load history based on certain percentage of calories going to carbs, fats, proteins
     for i in range(NUM_LOGGED_DAYS):
         num_cals = 2000 + random.randint(0, 1000)
         num_prot = round((0.3 * num_cals) / 4, 2)
@@ -48,7 +50,6 @@ def main():
     arguments = sys.argv
     if len(arguments) > 1:
         netid = arguments[1]
-        print(netid)
         load_history(netid)
         load_custom_foods(netid)
 #-----------------------------------------------------------------------
