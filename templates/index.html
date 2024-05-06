@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html id="animated-canvas" lang="en">
+<html lang="en">
    <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,7 +26,6 @@
          }
 
          body {
-            background-color: antiquewhite;
             background-image: url('../static/media/nutritiger_splashr.svg');
             background-size: cover;
             background-repeat: no-repeat;
@@ -36,7 +35,6 @@
    </head>
 
    <body class="text-center">
-
       <div class="mx-auto" style="padding: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
          <div class="m-3 pt-3">
             <img style="width: 180px;" src="../static/media/indexlogo.png" alt="NutriTiger Logo">
@@ -44,8 +42,8 @@
          </div>
 
          <h3 style="margin-top: 3%;">Your go-to for easy access to nutritional information for Princeton's dining halls.</h4>
+         <h5 style="margin-top: 2%;">Streamline your health journey with simple tracking and informed choices.</h5>
 
-         <h5 style="margin-top: 2%;">Streamline your health journey with simple tracking and informed choices.</h6>
          <button id="loginButton" style="margin-top: 3%;" class="btn btn-primary btn-lg btn-block" onclick="validateLogin()">
                Login with NetID
          </button>
@@ -64,10 +62,9 @@
             window.location.href = '/welcome';
          }
 
-         // If the user hits the back button reset the form
+         // If the user hits the back button, reset the form
          window.onunload = function() {
             var loginButton = document.getElementById("loginButton")
-
             loginButton.style.pointerEvents = "auto"
             loginButton.textContent = "Login with NetID"
             loginButton.style.opacity = "none"
