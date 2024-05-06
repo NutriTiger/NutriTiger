@@ -192,14 +192,12 @@ def dhall_menus():
 
 @app.route('/menus/update', methods=['GET'])
 def update_menus_mealtime():
-    netid = auth.authenticate()
+    _ = auth.authenticate()
     current_date_string = request.args.get('currentdate')
     
     current_date = datetime.datetime.strptime(current_date_string, "%Y-%m-%d %H:%M:%S.%f%z")
-    mealtime = request.args.get('mealtime')
-    if mealtime:
-        mealtime = utils.time_of_day(current_date.date(), current_date.time())
-
+    mealtime = utils.time_of_day(current_date.date(), current_date.time())
+    
     #current_date = datetime.datetime.today()
     todays_date = utils.custom_strftime(current_date)
 
