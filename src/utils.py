@@ -6,11 +6,7 @@
 import datetime
 import pytz
 import re
-import bleach
 
-# Removes HTML from inputs and returns result
-def sanitize_text_inputs(text):
-    return bleach.clean(text, tags={}, attributes={})
 
 def time_of_day(date, time):
     lunch_start = datetime.time(11, 0)
