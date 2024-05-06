@@ -64,23 +64,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src ="../static/js/validation.js"></script>
     <script>
-        window.addEventListener('pageshow', function (event) {
-            // Check if the page was loaded from cache
-            if (event.persisted) {
-                clearFormFields();
-            }
-        });
-
-        function clearFormFields() {
+        // Reset elements in page upon unload
+        window.onunload = function() {
             const form = document.getElementById('customFoodForm');
-            Array.from(form.elements).forEach(element => {
-                if (element.type === 'text' || element.type === 'number' || element.type === 'file' || element.tagName.toLowerCase() === 'textarea') {
-                    element.value = ''; // Clear the value
-                } else if (element.type === 'checkbox' || element.type === 'radio') {
-                    element.checked = false; // Uncheck checkboxes and radio buttons
-                }
-            });
-        }
+            form.reset();
+        };
 
         function validateNums(event) {
             event.preventDefault();
@@ -201,34 +189,6 @@
 
         field.style.height = `${height}px`;
         }
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const input1 = document.getElementById("inputCalories");
-        //     const input2 = document.getElementById("inputProtein");
-        //     const input3 = document.getElementById("inputCarbs");
-        //     const input4 = document.getElementById("inputFats");
-        //     const form = document.querySelector('form');
-        //     const array = [input1, input2, input3, input4]
-        //     array.forEach((evt) => {
-        //         evt.addEventListener("keydown", function(evt) {
-        //             // Allow: backspace, delete, tab, escape, and enter
-        //             if ([8, 46, 9, 27, 13].indexOf(evt.keyCode) !== -1 ||
-        //                 // Allow: Ctrl/cmd+A, Ctrl/cmd+C, Ctrl/cmd+V, Ctrl/cmd+X
-        //                 (evt.keyCode == 65 || evt.keyCode == 67 || evt.keyCode == 86 || evt.keyCode == 88) && (evt.ctrlKey === true || evt.metaKey === true) ||
-        //                 // Allow: home, end, left, right
-        //                 (evt.keyCode >= 35 && evt.keyCode <= 39)) {
-        //                     return; // let it happen, don't do anything
-        //             }
-        //             // Ensure that it is a number and stop the keypress (also != '.')
-        //             if ((evt.keyCode < 48 || evt.keyCode > 57) && (evt.keyCode < 96 || evt.keyCode > 105) && evt.keyCode !== 190 && evt.keyCode !== 110) {
-        //                 evt.preventDefault();
-        //             }
-        //         });
-        //     });
-
-
-        // });
-
-         // hiding spinner
         function setup() {
             hideLoadingAnimation()
         }

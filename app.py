@@ -678,7 +678,8 @@ def add_customfood():
                         "servingsize": servingsize,
                         "description": desc,
                         "image_url": url,
-                        "public_id": public_id
+                        "public_id": public_id,
+                        "check": query_name
                         }
 
 

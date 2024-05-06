@@ -45,13 +45,14 @@
 {% endblock %}
 {% block script %}
 <script>
-
     // When the user submits the form and all fields are valid, lock it
     function closeForm() {
         // Obtain form elements
-        var validFormElements = document.querySelector(":valid")
-        var calorieInput = validFormElements.querySelector("input")
-        var settingsButton = validFormElements.querySelector("button")
+        // var validFormElements = document.querySelector(":valid")
+        // var calorieInput = validFormElements.querySelector("input")
+        // var settingsButton = validFormElements.querySelector("button")
+        var calorieInput = document.getElementById("firstCalorieInput")
+        var settingsButton = document.getElementById("firstCalorieButton")
 
         // Check if the input was validated
         if (calorieInput != null) {
@@ -69,10 +70,11 @@
 
     // If the user hits the back button reset the form
     window.onunload = function() {
-        var calorieInput = document.getElementById("settingsCalorieInput")
-        var settingsButton = document.getElementById("caloriesSettingsButton")
+        var calorieInput = document.getElementById("firstCalorieInput")
+        var settingsButton = document.getElementById("firstCalorieButton")
 
         calorieInput.readOnly = false
+        calorieInput.value = '';
         settingsButton.style.pointerEvents = "auto"
         settingsButton.textContent = "Save"
         settingsButton.style.opacity = "none"
