@@ -53,7 +53,7 @@
                 <div class="form-row mt-3">
                     <div class="col d-flex justify-content-end">
                         <!-- Add a margin to the right of the Cancel button -->
-                        <button type="button" id ="cancelButton" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
+                        <button type="button" id ="cancelButton" class="btn btn-secondary me-2" onclick="buttonPressed(this.id); location.href='/customfoods'">Cancel</button>
                         <button type="button" id ="submitButton" class="btn btn-primary" onclick="validateNums(event)">Submit</button>
                     </div>
                 </div>
@@ -68,6 +68,17 @@
         window.onunload = function() {
             const form = document.getElementById('customFoodForm');
             form.reset();
+
+            var buttons = document.querySelectorAll("button")
+
+            buttons.forEach((button) => {
+                if (button.id == "cancelButton") {
+                    button.textContent = "Cancel"
+                    button.style.opacity = "none"
+                }
+                button.tabIndex = "1"
+                button.style.pointerEvents = "auto"
+            })
         };
 
         function validateNums(event) {
