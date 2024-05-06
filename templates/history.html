@@ -45,6 +45,21 @@
     
      }
     
+    window.onunload = function() {
+      var links = document.querySelectorAll("a")
+      var buttons = document.querySelectorAll("button")
+      
+      links.forEach((link) => {
+          link.style.pointerEvents = "auto"
+          link.tabIndex = "1"
+      })
+
+      buttons.forEach((button) => {
+          button.tabIndex = "1"
+          button.style.pointerEvents = "auto"
+      })
+    }
+    
     function setup() {
       const historyRangeSelect = document.getElementById('historyRangeSelect');
       historyRangeSelect.addEventListener('change', getHistory);
