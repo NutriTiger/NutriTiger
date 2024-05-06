@@ -76,8 +76,14 @@
                 </div>
             </center>
                 
-            <span class="col-10 col-sm-6 p-3" id="searchBarSpan"  style="display: none;">
-                <input id="searchBar" type="text" class="form-control" placeholder='ex. "Snapple..."' />
+            <span class="col-10 col-sm-8 p-3" id="searchBarSpan"  style="display: none;">
+                <input id="searchBar" type="text" style = "display: inline-block; width:auto;" class="form-control" placeholder='ex. "Snapple..."' />
+                <a class="tool-tip" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="" data-bs-original-title="We source data for other generic foods from the USDA FoodData Central database. Note that some entries may be inaccurate so carefully select items that best closely reflect macronutrient values that are reasonable.">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                    </svg>
+                </a>
             </span>
             
             <div class="card-body">
@@ -510,6 +516,7 @@ function handleCheckboxChange(element) {
             },
             success: function (response) {
                 $("#my-plate").append(response)
+                handleServingChange();
             },
             error: function (xhr, status, error) {
                 console.error("Failed to send nutrition data:", error);
@@ -521,9 +528,9 @@ function handleCheckboxChange(element) {
         let myplatebox = document.getElementById("myplate-" + uniqueid);
         if (myplatebox) {
             myplatebox.remove();
+            handleServingChange();
         }
     }
-    handleServingChange();
 }
 
 // fetch menu items based on selected dhall and mealtime + correct display

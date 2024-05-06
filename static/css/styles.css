@@ -1,3 +1,5 @@
+/* global variables for colors */
+
 :root {
     --pink: rgb(251, 107, 129);
     --pink-transparent: rgba(251, 107, 129, 0.5);
@@ -412,4 +414,33 @@ body {
     text-decoration: underline;
 }
 
+/* for about.html */
+
+.image-container {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 300px; /* Adjust the container size */
+    height: 234px; /* Adjust the container size */
+}
+
+.nt-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Set the width to fill the container */
+    height: 100%; /* Set the height to fill the container */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+    transition: opacity 0.5s ease-in-out; /* Smooth transition */
+}
+
+#imageB {
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+#imageB:hover {
+    opacity: 1;
+}
+     
 /*******************************************************************/

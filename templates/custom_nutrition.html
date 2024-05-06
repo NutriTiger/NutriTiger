@@ -77,6 +77,10 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 <script>
+    function hideButton() {
+        const button = document.getElementById('stop_editing');
+        button.style.display = 'none';
+    }
 	// Function to show SweetAlert confirmation dialog
 	function confirmDelete(item) {
 	    const swalWithBootstrapButtons = Swal.mixin({
@@ -106,6 +110,7 @@
 	            }
 	        });
 	        deleteCustomFood(item);
+
 	    } else if (
 	        /* Read more about handling dismissals below */
 	        result.dismiss === Swal.DismissReason.cancel
@@ -119,6 +124,7 @@
 	    });
 	}
 	function deleteCustomFood(item) {
+        hideButton();
 	    var recid = item.dataset.recid;
 	    console.log(recid);
 	    var cardid = item.dataset.cardid;
