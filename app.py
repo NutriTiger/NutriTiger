@@ -614,7 +614,8 @@ def add_customfood():
     netid = auth.authenticate()
 
     old_temp_name = request.form.get('name', type = str)
-    temp_name = html.escape(old_temp_name)
+    # temp_name = html.escape(old_temp_name)
+    temp_name = old_temp_name
     recipename = utils.normalize_space(temp_name)
     query_name = recipename.lower()
     cal = request.form.get('calories', type = int)
@@ -622,9 +623,9 @@ def add_customfood():
     carbs = request.form.get('carbs', type = int)
     fats = request.form.get('fats', type = int)
     old_servingsize = request.form.get('servingsize', type = str)
-    servingsize = html.escape(old_servingsize)
+    servingsize = old_servingsize
     old_desc = request.form.get('description', type = str)
-    desc = html.escape(old_desc)
+    desc = old_desc
 
     file = request.files.get('image')
 
