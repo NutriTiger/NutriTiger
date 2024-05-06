@@ -16,7 +16,7 @@ python-dotenv==1.0.1
 pytz==2024.1
 requests==2.31.0
 urllib3==2.2.1
-Werkzeug==3.0.1
+Werkzeug==3.0.3
 aiohttp>=3.9.4
 bs4==0.0.2
 lxml==5.1.0
