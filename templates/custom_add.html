@@ -12,7 +12,7 @@
 {% include 'loading.html' %}
 <h1 class="text-center m-3">Create Custom Food</h1>
 <div class="container">
-	<form id="customFoodForm" action="/addcustomfood" method="post" enctype="multipart/form-data" >
+	<form id="customFoodForm" action="/createcustomfood" method="post" enctype="multipart/form-data" >
 		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 		<div class="col-12">
 			<div class="form-group">

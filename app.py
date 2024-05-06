@@ -594,6 +594,7 @@ def custom_food():
 # Flashes an issue with the submission and returns the previously
 # typed elements back into the input areas
 def add_customfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc):
+    print("try again")
     flash(message)
     
     # Store form data and message in session
