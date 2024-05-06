@@ -72,10 +72,10 @@
 	    event.preventDefault();
 	
 	    const form = document.getElementById('customFoodForm');
-	    const calories = parseInt(document.getElementById('inputCalories').value) || 0;
-	    const proteins = parseInt(document.getElementById('inputProtein').value) || 0;
-	    const carbs = parseInt(document.getElementById('inputCarbs').value) || 0;
-	    const fats = parseInt(document.getElementById('inputFats').value) || 0;
+	    const calories = parseFloat(document.getElementById('inputCalories').value) || 0;
+	    const proteins = parseFloat(document.getElementById('inputProtein').value) || 0;
+	    const carbs = parseFloat(document.getElementById('inputCarbs').value) || 0;
+	    const fats = parseFloat(document.getElementById('inputFats').value) || 0;
 	
 	    // HTML validation re-implemented
 	    if (form.checkValidity()) {
