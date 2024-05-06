@@ -170,7 +170,7 @@
                     <form action="/homepage" method="post">
 						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <center>
-                            <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to add a Meal</button>
+                            <button id="addMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">+ Click to add a Meal</button>
                         </center>
                     </form>
                 </div>
@@ -222,6 +222,10 @@
 			}
 			if (button.id == "editPlateHomepage") {
 				button.textContent = "Edit"
+        		button.style.opacity = "none"
+			}
+			if (button.id == "addMealHomepage") {
+				button.textContent = "+ Click to add a Meal"
         		button.style.opacity = "none"
 			}
 			button.tabIndex = "1"
