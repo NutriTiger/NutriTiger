@@ -25,7 +25,7 @@
             <!-- "Click to log a meal" Button -->
             <form action="/homepage" method="post">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed()">+ Click to log Today's Meal</button>
+                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">+ Click to log Today's Meal</button>
             </form>
         </div>
         
@@ -93,7 +93,7 @@
 					<form action="/homepage" method="post">
 						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <center>
-							<button name="historyBtn" type="submit" class="btn btn-secondary">Click to see detailed history</button>
+							<button id="historyButtonHomepage" name="historyBtn" type="submit" class="btn btn-secondary" onclick="buttonPressed(this.id)">Click to see detailed history</button>
                         </center>
                     </form>
 				</div>
@@ -110,7 +110,7 @@
 				<div class="py-3 position-absolute top-0 end-0 mt-3 me-3 d-none d-xl-block">
 					<form action="/homepage" method="post">
 						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-						<button type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block">
+						<button id="editPlateHomepage" type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
 								<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
 							</svg>
@@ -170,7 +170,7 @@
                     <form action="/homepage" method="post">
 						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <center>
-                            <button type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block">+ Click to add a Meal</button>
+                            <button id="addMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">+ Click to add a Meal</button>
                         </center>
                     </form>
                 </div>
@@ -207,34 +207,25 @@
 		document.getElementById("rightCard").style.display = "none";
 	}
 
-	function buttonPressed() {
-        // Obtain page buttons
-        var buttons = document.querySelectorAll("button")
-		var links = document.querySelectorAll("a")
-
-        buttons.forEach((button) => {
-			if (button.id == "logMealHomepage") {
-				button.textContent = "Redirecting..."
-        		button.style.opacity = "var(--bs-btn-disabled-opacity)"
-			}
-			button.tabIndex = "-1"
-			button.blur()
-			button.style.pointerEvents = "none"
-		})
-                
-		links.forEach((link) => {
-			link.style.pointerEvents = "none"
-			link.tabIndex = "-1"
-		})
-    }
-
 	window.onunload = function() {
 		var buttons = document.querySelectorAll("button")
         var links = document.querySelectorAll("a")
 
         buttons.forEach((button) => {
 			if (button.id == "logMealHomepage") {
-				button.textContent = "+ Click to log Today's Meal"
+				button.textContent = "+ Click to log a Meal"
+        		button.style.opacity = "none"
+			}
+			if (button.id == "historyButtonHomepage") {
+				button.textContent = "Click to see detailed history"
+        		button.style.opacity = "none"
+			}
+			if (button.id == "editPlateHomepage") {
+				button.textContent = "Edit"
+        		button.style.opacity = "none"
+			}
+			if (button.id == "addMealHomepage") {
+				button.textContent = "+ Click to add a Meal"
         		button.style.opacity = "none"
 			}
 			button.tabIndex = "1"
