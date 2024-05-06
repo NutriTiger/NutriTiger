@@ -342,9 +342,9 @@ deleting it from user profile
 def handleDeleteCustomNutrition(netid, deletedFood):
     this_user = finduser(netid)
     daily_recids = this_user["daily_rec"]
+    foods_to_del = []
     for entrynum, recids in enumerate(daily_recids):
         for foodnum, recid in enumerate(recids):
-            foods_to_del = []
             if recid == deletedFood:
                 foods_to_del.append(foodnum)
         foods_to_del = sorted(foods_to_del, reverse=True)
@@ -365,9 +365,9 @@ user profile
 def handleManyDeleteCustomNutrition(netid, deletedFoods):
     this_user = finduser(netid)
     daily_recids = this_user["daily_rec"]
+    foods_to_del = []
     for entrynum, recids in enumerate(daily_recids):
         for foodnum, recid in enumerate(recids):
-            foods_to_del = []
             if recid in deletedFoods:
                 foods_to_del.append(foodnum)
         foods_to_del = sorted(foods_to_del, reverse=True)
