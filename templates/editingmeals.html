@@ -79,6 +79,10 @@
         </div>
     </div>
 </div>
+<div class="hidden" id = "timePageLoaded" data-time = "{{ datetime_string }}">
+</div>
+<!-- Include SweetAlert2 from a CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // List of deleted entries' indices
     let deletedEntries = [];
@@ -170,7 +174,8 @@
             const input = $(`input[data-entrynum="${entryNum}"][data-foodnum="${foodNum}"]`);
             input.val(servingsChanged[key]);
         }
-
+        const timePageLoadedElement = document.getElementById("timePageLoaded")
+        const timePageLoaded = timePageLoadedElement.dataset.time
         $.ajax({
             type: "POST",
             url: "/editingmeals",
@@ -181,11 +186,25 @@
             data: JSON.stringify({
                 entriesToDelete: deletedEntries,
                 foodsToDelete: deletedFoods,
-                servingsToChange: servingsChanged
+                servingsToChange: servingsChanged,
+                timePageLoaded: timePageLoaded
             }),
             success: function (response) {
                 if (response.success && response.redirect) {
                     window.location.href = response.redirect;
+                }
+                else {
+                    hideLoadingAnimation();
+                    Swal.fire({
+                        title: 'Edit Error',
+                        text: response.message,
+                        icon: 'warning',
+                        confirmButtonText: 'Refresh'
+                    }).then((willRefresh) => {
+                        if (willRefresh.isConfirmed) {
+                            location.reload(); // Refresh the page if confirmed
+                        }
+                    });
                 }
             },
             error: function (xhr) {

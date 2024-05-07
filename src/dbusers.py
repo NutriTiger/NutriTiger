@@ -19,6 +19,91 @@ import sys
 #----------------------------------------------------------------------
 
 '''
+Gets the time for the user's last access to the database
+'''
+def get_last_time(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        who = {"netid": netid}
+        try:
+            user = users_collection.find_one(who)
+            recent_time = user.get("last_delete", None)
+           
+            return recent_time
+        
+
+        except pymongo.errors.OperationFailure:
+                print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+                sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+                print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+                sys.exit(1)
+
+'''
+Updates the time for the user's last access to the database as now
+'''
+def update_last_time(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        who = {"netid": netid}  # Query to identify the user by their `netid`
+        try:
+            # Fetch the current time
+            recent_time = datetime.now()
+
+            # Update the last_delete field to the current timestamp
+            result = users_collection.update_one(
+                who,
+                {"$set": {"last_delete": recent_time}}
+            )
+        
+            if result.matched_count == 0:
+                print(f"User with netid {netid} not found.")
+            else:
+                print(f"Successfully updated last_delete for netid {netid}.")
+            return recent_time
+
+        except pymongo.errors.OperationFailure:
+                print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+                sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+                print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+                sys.exit(1)
+
+'''
+Adds last_delete field for all users who do not have the field
+(sets the time to absolute minimum)
+'''
+def add_last_time():
+    with connectmongo() as client:
+        db = client.db  # Replace with the appropriate database name
+        users_collection = db['users']
+
+        try:
+            # Define the default timestamp for new `last_delete` fields
+            default_time = datetime.min 
+
+            # Find all users missing the `last_delete` field using `$exists`
+            query = {"last_delete": {"$exists": False}}
+
+            # Update all documents that match the query to add the `last_delete` field
+            result = users_collection.update_many(
+                query,
+                {"$set": {"last_delete": default_time}}
+            )
+
+            print(f"Updated {result.matched_count} users and added the `last_delete` field to {result.modified_count} users.")
+
+        except pymongo.errors.OperationFailure:
+                print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+                sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+                print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+                sys.exit(1)
+
+
+'''
 Sets the user document with netid: netid to user_profile
 Returns updated user profile
 '''
@@ -106,7 +191,8 @@ def newuser(netid, cal):
                     "daily_rec" : [],
                     "daily_serv" : [],
                     "daily_nut" : [],
-                    "max_id": 0
+                    "max_id": 0,
+                    "last_delete": today
                     }
 
     # connect to database and add user
@@ -331,6 +417,8 @@ def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
             this_user["daily_rec"].pop(index)
             this_user["daily_serv"].pop(index)
             this_user["daily_nut"].pop(index)
+    
+    this_user["last_login"] = datetime.now()
     return __setuser__(netid, this_user)
     
 
@@ -356,6 +444,7 @@ def handleDeleteCustomNutrition(netid, deletedFood):
             this_user["daily_rec"].pop(index)
             this_user["daily_serv"].pop(index)
             this_user["daily_nut"].pop(index)
+    this_user["last_delete"] = datetime.now().astimezone(pytz.utc)
     return __setuser__(netid, this_user)
 
 '''
@@ -455,7 +544,11 @@ def deleteuser(netid):
 
 # USED FOR TESTING FOR NOW 
 def main(): 
-    editFood("jm0278", 0, 0, 100)
+    # editFood("jm0278", 0, 0, 100)
+    # add_last_time()
+    print(get_last_time('oe7583'))
+    print(update_last_time('oe7583'))
+    print(get_last_time('oe7583'))
 
 #-----------------------------------------------------------------------
 
