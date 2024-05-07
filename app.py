@@ -432,14 +432,25 @@ def editing_plate():
         for entrynum, recids in enumerate(daily_rec):
             nutrition_info = dbnutrition.find_many_nutrition(recids)
             entry_info[entrynum] = zip(nutrition_info, daily_serv[entrynum])
+        now_utc = datetime.datetime.now().astimezone(pytz.utc)
+        datetime_string = now_utc.isoformat()
+        print(datetime_string)
         return render_template('editingmeals.html',
-                           entry_info = entry_info)
+                           entry_info = entry_info, datetime_string=datetime_string)
     else:
         # Unpack AJAX call 
         data = request.get_json()
         entriesToDel = data.get("entriesToDelete", [])
         foodsToDel = data.get("foodsToDelete", [])
         servingsToChange = data.get("servingsToChange", {})
+
+        # process datetime objects
+        time_page_loaded = data.get("timePageLoaded")
+        time_page_loaded = datetime.datetime.fromisoformat(time_page_loaded)
+        last_delete = dbusers.get_last_time(netid)
+        last_delete = pytz.utc.localize(last_delete)
+        if last_delete > time_page_loaded:
+            return jsonify({"success": True, "message": "Your edits could not be applied because your database has been changed since you opened this page. Please try again."})
         # delete entries/foods from user DB
         dbusers.editPlateAll(netid, entriesToDel, foodsToDel, servingsToChange)
         return jsonify({"success": True, "redirect": url_for('homepage')})
@@ -592,7 +603,6 @@ def custom_food():
 # Flashes an issue with the submission and returns the previously
 # typed elements back into the input areas
 def add_customfood_tryagain(message, recipename, cal, carbs, protein, fats, servingsize, desc):
-    print("try again")
     flash(message)
     
     # Store form data and message in session
@@ -607,6 +617,15 @@ def add_customfood_tryagain(message, recipename, cal, carbs, protein, fats, serv
     }
     return redirect(url_for('custom_food'))
 
+#--------------------------------------------------------------------
+
+def editingmeals_tryagain():
+    message = "Your edits could not be applied because your database has been changed since you opened this page. Please try again."
+    flash(message)
+    
+    # Store form data and message in session
+
+    return jsonify({"success": True, "message": message})
 #--------------------------------------------------------------------
 
 def check_upload (file):
