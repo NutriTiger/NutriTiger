@@ -39,13 +39,6 @@ cloudinary.config(
 
 #--------------------------------------------------------------------
 
-def checkFirstTimeUser(netid):
-    cursor = dbusers.userlogin(netid)
-    if cursor is None:
-        return redirect('/welcome')
-
-#--------------------------------------------------------------------
-
 # Takes the user to a general error page if an error occurs
 @app.errorhandler(Exception)
 def not_found(e):
@@ -254,7 +247,9 @@ def first_contact():
 @app.route('/history', methods=['GET', 'POST'])
 def history():
     netid = auth.authenticate()
-    checkFirstTimeUser(netid)
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
 
     profile = dbusers.finduser(netid)
     cals, carbs, prots, fats, dates = utils.get_corresponding_arrays(profile['cal_his'], 
@@ -362,7 +357,9 @@ def serve_image(photo_id):
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     netid = auth.authenticate()
-    checkFirstTimeUser(netid)
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     
     if request.method == 'POST':
         new_user_goal = int(request.form['line'])
@@ -406,7 +403,9 @@ def add_usda_nutrition():
 @app.route('/editingmeals', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
-    checkFirstTimeUser(netid)
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
     
     if request.method=='GET':
         cursor = dbusers.finduser(netid)
@@ -570,7 +569,9 @@ def logmeals_usdadata():
 @app.route('/customfoods', methods=['GET', 'POST'])
 def custom_nutrition():
     netid = auth.authenticate()
-    checkFirstTimeUser(netid)
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
 
     if request.method == 'POST':
         data = request.get_json()
