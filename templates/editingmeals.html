@@ -158,6 +158,19 @@
         event.preventDefault();
         if (!validateInputs()) return;
         showLoadingAnimation();
+
+        // Round the servingsChanged values to two decimal places
+        for (let key in servingsChanged) {
+            servingsChanged[key] = parseFloat(servingsChanged[key].toFixed(2));
+        }
+
+        // Show the rounded numbers once Save button is pressed
+        for (let key in servingsChanged) {
+            const [entryNum, foodNum] = key.split('-');
+            const input = $(`input[data-entrynum="${entryNum}"][data-foodnum="${foodNum}"]`);
+            input.val(servingsChanged[key]);
+        }
+
         $.ajax({
             type: "POST",
             url: "/editingmeals",
@@ -179,6 +192,7 @@
                 console.error("Error in data submission:", xhr.status, xhr.responseText);
             }
         });
+
     }
 
     function setup() {

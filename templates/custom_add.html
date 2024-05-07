@@ -50,7 +50,6 @@
 			</div>
 			<div class="form-row mt-3">
 				<div class="col d-flex justify-content-end">
-					<!-- Add a margin to the right of the Cancel button -->
 					<button type="button" id ="cancelButton" class="btn btn-secondary me-2" onclick="location.href='/customfoods'">Cancel</button>
 					<button type="button" id ="submitButton" class="btn btn-primary" onclick="validateNums(event)">Submit</button>
 				</div>
@@ -76,7 +75,15 @@
 	    const proteins = parseFloat(document.getElementById('inputProtein').value) || 0;
 	    const carbs = parseFloat(document.getElementById('inputCarbs').value) || 0;
 	    const fats = parseFloat(document.getElementById('inputFats').value) || 0;
+		const serving = parseFloat(document.getElementById('inputServingSize').value);
 	
+		// Round the input values to two decimal places upon submission
+		document.getElementById('inputCalories').value = calories.toFixed(2);
+		document.getElementById('inputProtein').value = proteins.toFixed(2);
+		document.getElementById('inputCarbs').value = carbs.toFixed(2);
+		document.getElementById('inputFats').value = fats.toFixed(2);
+		document.getElementById('inputServingSize').value = serving.toFixed(2);
+		
 	    // HTML validation re-implemented
 	    if (form.checkValidity()) {
 	        // Numbers do not add up
@@ -87,7 +94,7 @@
 	            disableForm(event, form);
 	        }
 	    } else {
-	        form.reportValidity(); // This will display any HTML5 validation messages
+	        form.reportValidity();
 	    }
 	   
 	
@@ -147,9 +154,9 @@
 	
 	    Array.from(form.elements).forEach(element => {
 	        if (element.type !== 'submit' && element.type !== 'button') {
-	            element.readOnly = true;  // Apply readonly where applicable
-	            element.style.pointerEvents = 'none';  // Disable pointer events
-	            element.style.backgroundColor = '#e9ecef';  // Apply disabled color
+	            element.readOnly = true;
+	            element.style.pointerEvents = 'none';
+	            element.style.backgroundColor = '#e9ecef';
 	        }
 	        if (element.type == 'button') {
 	            element.disabled = true;
@@ -176,7 +183,7 @@
 	}
 	
 	function autoResizeField(field) {
-	field.style.height = 'inherit'; // Reset the height
+	field.style.height = 'inherit';
 	const computed = window.getComputedStyle(field);
 	// Calculate the height
 	const height = parseInt(computed.getPropertyValue('border-top-width'), 10)

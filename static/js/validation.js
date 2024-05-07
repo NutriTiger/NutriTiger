@@ -31,11 +31,6 @@ function isValid(input) {
     if (charCode === 46 && (value.indexOf('.') !== -1 || value.endsWith('.')))
         return false;
 
-    // limit input to 2 decimal places
-    var decimalIndex = value.indexOf('.');
-    if (decimalIndex !== -1 && value.length - decimalIndex > 2)
-        return false;
-
     // if the key is a valid number or a decimal point
     if ((charCode >= 48 && charCode <= 57) || charCode === 46)
         return true;
