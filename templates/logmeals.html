@@ -796,6 +796,10 @@ function customCheckValidity(input) {
         input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
         isValid = false;
     }
+    else if (input.value < 0.01) {
+        input.setCustomValidity("Serving size must be greater than 0.01."); // Set custom message
+        isValid = false;
+    }
     else if (inputValue > 100) {
         input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
         isValid = false;
