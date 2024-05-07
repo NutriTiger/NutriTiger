@@ -74,9 +74,10 @@
                  }
              });
          } else {
-             const noData = document.createElement("h1")
-             test.innerText = "No data available"
-             document.getElementById('myPieChartDiv').appendChild(test)
+             const noData = document.createElement("h3")
+             noData.innerText = "Zero macronutrient count found in current logged meals."
+             noData.style.textAlign = "center";
+             document.getElementById('myPieChartDiv').appendChild(noData)
              document.getElementById('myPieChart').hidden = true
          }
      </script>
