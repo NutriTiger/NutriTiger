@@ -76,9 +76,9 @@ def homepage():
     if cursor is None:
         return redirect('/welcome')
     
-    curr_prots = round(float(cursor['prot_his'][0]), 1)
-    curr_carbs = round(float(cursor['carb_his'][0]), 1)
-    curr_fats = round(float(cursor['fat_his'][0]), 1)
+    curr_prots = round(float(cursor['prot_his'][0]), 2)
+    curr_carbs = round(float(cursor['carb_his'][0]), 2)
+    curr_fats = round(float(cursor['fat_his'][0]), 2)
 
     curr_caltotal = round(float(cursor['cal_his'][0]), 1)
     cal_goal = int(cursor['caloricgoal'])
