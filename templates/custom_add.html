@@ -75,14 +75,12 @@
 	    const proteins = parseFloat(document.getElementById('inputProtein').value) || 0;
 	    const carbs = parseFloat(document.getElementById('inputCarbs').value) || 0;
 	    const fats = parseFloat(document.getElementById('inputFats').value) || 0;
-		const serving = parseFloat(document.getElementById('inputServingSize').value);
 	
 		// Round the input values to two decimal places upon submission
 		document.getElementById('inputCalories').value = calories.toFixed(2);
 		document.getElementById('inputProtein').value = proteins.toFixed(2);
 		document.getElementById('inputCarbs').value = carbs.toFixed(2);
 		document.getElementById('inputFats').value = fats.toFixed(2);
-		document.getElementById('inputServingSize').value = serving.toFixed(2);
 		
 	    // HTML validation re-implemented
 	    if (form.checkValidity()) {
