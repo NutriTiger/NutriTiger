@@ -12,9 +12,8 @@ function isCalGoalValid(input) {
     return false;
 }
 
-/* Validation function for all serving size inputs.
-The user is only allowed to type up to two decimal places. 
-The user is also limited to numerical characters 
+/* Validation function for all serving size inputs. 
+The user is limited to only typing numerical characters 
 (digits 0-9) and the decimal point (.). This function is used in 
 logmeals.html, editingplate.html, and custom_add.html. */
 
