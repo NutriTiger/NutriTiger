@@ -50,7 +50,7 @@
 
 <div class="card-body" id="custom-food-items" style="display: none;">
     {% if custom_data %}
-        <div class="card-body" id="custom-food-items">
+        <div class="card-body" id="custom-food-item-inner">
             <div class="row">
                 {% for item in custom_data %}
                     <div class="col-md-12 custom-items-content" data-page="{{ loop.index0 // 7 + 1 }}">
@@ -85,7 +85,6 @@
             <!-- Pagination Controls -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center" id = "pagination-custom">
-                    
                     {% for i in range(1, total_pages + 1) %}
                         <li class="page-item {% if i == 1 %}active{% endif %}" onclick="handleCustomPageChange({{ i }})">
                             <a class="page-link" href="javascript:void(0);">{{ i }}</a>

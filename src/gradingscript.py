@@ -65,8 +65,8 @@ def main():
     if len(arguments) > 1:
         netid = arguments[1]
         # clear_history(netid)
-        dbusers.newuser(netid, 2000)
-        load_history(netid)
+        # dbusers.newuser(netid, 2000)
+        # load_history(netid)
         load_custom_foods(netid)
 #-----------------------------------------------------------------------
 if __name__ == '__main__':
