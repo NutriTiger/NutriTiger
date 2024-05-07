@@ -6,32 +6,23 @@
 from sys import path
 path.append('src')
 path.append('src/db')
-from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for, flash, send_file, Response
+from flask import Flask, render_template, request, redirect, make_response, jsonify, session, url_for, flash
 from flask_wtf.csrf import CSRFProtect
-import time
 import datetime
 import os
 import dotenv
 import pytz
 from pytz import timezone
-#from CASClient import CASClient
 from src import dbusers
 from src import dbmenus
 from src import dbnutrition
-from src import dbfunctions
 from src import utils
 from src import auth
 from src import photos
 import requests
-import json
-from bson.objectid import ObjectId
-from PIL import Image
-from bson.binary import Binary
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from werkzeug.utils import secure_filename
-
 
 #--------------------------------------------------------------------
 
@@ -46,6 +37,15 @@ cloudinary.config(
     api_secret = "api_secret"
 )
 
+#--------------------------------------------------------------------
+
+def checkFirstTimeUser(netid):
+    cursor = dbusers.userlogin(netid)
+    if cursor is None:
+        return redirect('/welcome')
+
+#--------------------------------------------------------------------
+
 # Takes the user to a general error page if an error occurs
 @app.errorhandler(Exception)
 def not_found(e):
@@ -55,7 +55,7 @@ def not_found(e):
 
 @app.route('/error', methods=['GET'])
 def display_error():
-    netid = auth.authenticate()
+    _ = auth.authenticate()
     error = session.pop("error")
     error404 = False
     if "404" in error:
@@ -66,11 +66,9 @@ def display_error():
 
 @app.route('/', methods=['GET'])
 def index():
-    # Check if it is a user's first visit
+    # If it is a user's first visit, send them to the index page
     visited_before = session.get('username')
-
     if visited_before is None:
-        # Indicate first contact
         return render_template('index.html')
     
     return redirect('/homepage')
@@ -80,7 +78,6 @@ def index():
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
     netid = auth.authenticate()
-    
     cursor = dbusers.userlogin(netid)
     if cursor is None:
         return redirect('/welcome')
@@ -92,16 +89,15 @@ def homepage():
     curr_caltotal = round(float(cursor['cal_his'][0]), 1)
     cal_goal = int(cursor['caloricgoal'])
 
-    # A list of lists: holds recipeids for each entry
+    # A list of lists: holds recipeids for each meal
     entries_info = cursor['daily_rec']
     user_info = cursor['daily_nut']
     serv_info = cursor['daily_serv'] # List of lists of servings for each entry
 
+    # Meal title strings array ("Meal #")
+    MEALS = ["Meal " + str(i + 1) for i in range(len(entries_info))]
 
-    # Entry title strings array ("Meal #")
-    ENTRIES = ["Meal " + str(i + 1) for i in range(len(entries_info))]
-
-    # List of lists of foods, should match up with ENTRIES array
+    # List of lists of foods, should match up with MEALS array
     foods_lists = []
     for entry in entries_info:
 
@@ -110,7 +106,7 @@ def homepage():
         # Get nutrition info for entries
         entry_nutrition = dbnutrition.find_many_nutrition(entry_recipeids)
 
-        # Check for None values in entry_nutrition (maybe ask Oyu to catch these in dbnutrition?)
+        # Check for None values in entry_nutrition
         if entry_nutrition is None:
             foods_lists.append([])
         
@@ -129,11 +125,7 @@ def homepage():
     # Add servings for each food
     servs_lists = []
     for entry in serv_info:
-
-
         entry_servings = entry[:]
-
-
         servings = []
         for serv in entry_servings:
             servings.append(serv)
@@ -142,8 +134,8 @@ def homepage():
 
     # Create dict to pass in: match up ENTRIES list with foods_lists list
     entries_food_dict = {}
-    for i in range(len(ENTRIES)):
-        entry = ENTRIES[i]
+    for i in range(len(MEALS)):
+        entry = MEALS[i]
         foods = foods_lists[i]
         totals = user_info[i]
         servings = servs_lists[i]
@@ -172,20 +164,19 @@ def homepage():
 
 @app.route('/about', methods=['GET'])
 def about():
-    netid = auth.authenticate()
+    _ = auth.authenticate()
     return render_template('about.html')
 
 #--------------------------------------------------------------------
 
 @app.route('/menus', methods=['GET'])
 def dhall_menus():
-    netid = auth.authenticate()
+    _ = auth.authenticate()
+
     # Fetch menu data from database
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     mealtime = utils.time_of_day(current_date.date(), current_date.time())
     is_weekend_var = utils.is_weekend(current_date.now(timezone('US/Eastern')))
-    
-   
     todays_date = utils.custom_strftime(current_date)
 
     return render_template('menus.html', todays_date=todays_date, is_weekend_var=is_weekend_var, mealtime=mealtime, current_date=current_date)
@@ -241,13 +232,13 @@ def update_menus_mealtime():
 @app.route('/welcome', methods=['GET', 'POST'])
 def first_contact():
     netid = auth.authenticate()
+
+    # if returning user
     if dbusers.finduser(netid) is not None:
         return redirect('/homepage')
     
     if request.method == 'POST':
-        # Placeholder netID
-        #netid = 'jm0278'
-        # Get value entered into the calorie goal box
+        # Get the entered cal goal
         user_goal = int(request.form['line'])
         # Store value into database
         if dbusers.finduser(netid) is None:
@@ -263,10 +254,8 @@ def first_contact():
 @app.route('/history', methods=['GET', 'POST'])
 def history():
     netid = auth.authenticate()
-    cursor = dbusers.userlogin(netid)
-    if cursor is None:
-        return redirect('/welcome')
-    # find current user
+    checkFirstTimeUser(netid)
+
     profile = dbusers.finduser(netid)
     cals, carbs, prots, fats, dates = utils.get_corresponding_arrays(profile['cal_his'], 
                                                                     profile['carb_his'],
@@ -274,14 +263,15 @@ def history():
                                                                     profile['fat_his']
                                                                     )
     
-    # Default range of history shown = 7
+    # Default range is 1 week
     his_range = 7
 
-    # If user selects a different range, update his_range value
+    # If the user selects a different range, update his_range
     if request.method == 'POST':
         data = request.get_json()
         selected_range = int(data.get("selectedRange"))
         his_range = selected_range
+        
         cal_his = cals[:his_range]
         carb_his = carbs[:his_range]
         fat_his = fats[:his_range]
@@ -344,10 +334,9 @@ def history():
 #--------------------------------------------------------------------
 
 # Get image
-# Get image
 @app.route('/image/<image_id>')
 def serve_image(photo_id):
-    netid = auth.authenticate()
+    _ = auth.authenticate()
     
     # Load environment variables where your Cloudinary config is stored
     dotenv.load_dotenv()
@@ -363,25 +352,23 @@ def serve_image(photo_id):
     )
 
     # Generate the URL of the image
-    image_url, options = cloudinary.utils.cloudinary_url(photo_id)
+    image_url, _ = cloudinary.utils.cloudinary_url(photo_id)
 
     if not image_url:
         return jsonify({"error": "Image not found"}), 404
-
 
 #--------------------------------------------------------------------
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     netid = auth.authenticate()
-    cursor = dbusers.userlogin(netid)
-    if cursor is None:
-        return redirect('/welcome')
+    checkFirstTimeUser(netid)
+    
     if request.method == 'POST':
-        #netid = 'jm0278'
         new_user_goal = int(request.form['line'])
         dbusers.updategoal(netid, new_user_goal)
         return redirect('/homepage')
+    
     user_settings = dbusers.findsettings(netid)
     current_cal_goal = user_settings['caloricgoal']
     join_date = utils.custom_strftime(user_settings['join_date'])
@@ -394,7 +381,7 @@ def settings():
 
 @app.route('/addingnutrition', methods=['POST'])
 def add_usda_nutrition():
-    netid = auth.authenticate()  # Authentication to identify the user
+    _ = auth.authenticate()
 
     if request.method == 'POST':
         try:
@@ -409,10 +396,8 @@ def add_usda_nutrition():
 
             return jsonify({'message': 'Nutrition data successfully added'}), 200
         except Exception as e:
-            # Handle exceptions that may occur during the process
             return jsonify({'error': str(e)}), 500
 
-    # Method not allowed
     return jsonify({'error': 'Invalid method'}), 405
 
 
@@ -421,22 +406,24 @@ def add_usda_nutrition():
 @app.route('/editingmeals', methods=['GET', 'POST'])
 def editing_plate():
     netid = auth.authenticate()
-    cursor = dbusers.userlogin(netid)
-    if cursor is None:
-        return redirect('/welcome')
+    checkFirstTimeUser(netid)
+    
     if request.method=='GET':
         cursor = dbusers.finduser(netid)
         daily_rec = cursor['daily_rec']
         daily_serv = cursor['daily_serv']
+
         entry_info = {}
         for entrynum, recids in enumerate(daily_rec):
             nutrition_info = dbnutrition.find_many_nutrition(recids)
             entry_info[entrynum] = zip(nutrition_info, daily_serv[entrynum])
+
         now_utc = datetime.datetime.now().astimezone(pytz.utc)
         datetime_string = now_utc.isoformat()
         print(datetime_string)
         return render_template('editingmeals.html',
                            entry_info = entry_info, datetime_string=datetime_string)
+    
     else:
         # Unpack AJAX call 
         data = request.get_json()
@@ -451,8 +438,10 @@ def editing_plate():
         last_delete = pytz.utc.localize(last_delete)
         if last_delete > time_page_loaded:
             return jsonify({"success": True, "message": "Your edits could not be applied because your database has been changed since you opened this page. Please try again."})
-        # delete entries/foods from user DB
+        
+        # Delete meals/foods from user DB
         dbusers.editPlateAll(netid, entriesToDel, foodsToDel, servingsToChange)
+
         return jsonify({"success": True, "redirect": url_for('homepage')})
 
 #--------------------------------------------------------------------
@@ -465,19 +454,22 @@ def log_food():
     cursor = dbusers.userlogin(netid)
     if cursor is None:
         return redirect('/welcome')
+
     current_date = datetime.datetime.now(timezone('US/Eastern'))
     calc_mealtime = utils.time_of_day(current_date.date(), current_date.time())
     num_entries = len(cursor['daily_rec'])
     over_limit = num_entries >= ENTRY_LIMIT
-    # Handle upload plate and return button
+
     if request.method == 'POST':
         # retrieve json object
         data = request.get_json()
         if not data or 'entry_recids' not in data or 'entry_servings' not in data:
             return jsonify({"success": False, "message": "Missing data"}), 400
+        
         entry_recids = data.get('entry_recids')
         entry_servings = data.get('entry_servings')
         entry_nutrition = data.get('entry_nutrition')
+
         dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings, "nutrition": entry_nutrition})
         return jsonify({"success": True, "redirect": url_for('homepage')})
     else :
@@ -555,8 +547,8 @@ def logmeals_usdadata():
 
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
-        data = response.json()  # Convert response to JSON
+        response.raise_for_status()
+        data = response.json()
 
         # Packs everything correctly
         parsed_data = utils.parse_nutritional_info(data)
@@ -570,9 +562,8 @@ def logmeals_usdadata():
 @app.route('/customfoods', methods=['GET', 'POST'])
 def custom_nutrition():
     netid = auth.authenticate()
-    cursor = dbusers.userlogin(netid)
-    if cursor is None:
-        return redirect('/welcome')
+    checkFirstTimeUser(netid)
+
     if request.method == 'POST':
         data = request.get_json()
         deletedFood = data.get('deletedFood')
@@ -580,8 +571,7 @@ def custom_nutrition():
         result = dbnutrition.del_custom_food(deletedFood)
         if result:
             return jsonify({"success": True, "redirect": url_for('custom_nutrition')})
-        # IF THERE IS AN ERROR WITH THE DELETION: let's see if any issues come up
-        # flash("Failed to delete custom food item(s).")
+
         return redirect(url_for('custom_nutrition'))
 
     else:
@@ -622,8 +612,6 @@ def add_customfood_tryagain(message, recipename, cal, carbs, protein, fats, serv
 def editingmeals_tryagain():
     message = "Your edits could not be applied because your database has been changed since you opened this page. Please try again."
     flash(message)
-    
-    # Store form data and message in session
 
     return jsonify({"success": True, "message": message})
 #--------------------------------------------------------------------
@@ -687,6 +675,7 @@ def add_customfood():
                     "description": desc,
                     "check": query_name
                     }
+    
     # If there is a file, upload image
     if file:
         message = check_upload(file)
@@ -723,13 +712,9 @@ def add_customfood():
                         "check": query_name
                         }
 
-
-
     dbnutrition.add_custom_food(recipename, netid, nutrition_dict)
     return redirect(url_for('custom_nutrition'))
-    
-    
-    
+
 #--------------------------------------------------------------------
 
 @app.route('/logoutapp', methods=['GET'])
