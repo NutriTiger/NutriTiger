@@ -192,7 +192,7 @@ def newuser(netid, cal):
                     "daily_serv" : [],
                     "daily_nut" : [],
                     "max_id": 0,
-                    "last_delete": today
+                    "last_delete": datetime.min
                     }
 
     # connect to database and add user
