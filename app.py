@@ -434,7 +434,6 @@ def editing_plate():
             entry_info[entrynum] = zip(nutrition_info, daily_serv[entrynum])
         now_utc = datetime.datetime.now().astimezone(pytz.utc)
         datetime_string = now_utc.isoformat()
-        print(datetime_string)
         return render_template('editingmeals.html',
                            entry_info = entry_info, datetime_string=datetime_string)
     else:
@@ -450,7 +449,7 @@ def editing_plate():
         last_delete = dbusers.get_last_time(netid)
         last_delete = pytz.utc.localize(last_delete)
         if last_delete > time_page_loaded:
-            return jsonify({"success": True, "message": "Your edits could not be applied because your database has been changed since you opened this page. Please try again."})
+            return jsonify({"success": False, "message": "Your edits could not be applied because your database has been changed since you opened this page. Please try again."})
         # delete entries/foods from user DB
         dbusers.editPlateAll(netid, entriesToDel, foodsToDel, servingsToChange)
         return jsonify({"success": True, "redirect": url_for('homepage')})
@@ -478,6 +477,15 @@ def log_food():
         entry_recids = data.get('entry_recids')
         entry_servings = data.get('entry_servings')
         entry_nutrition = data.get('entry_nutrition')
+        # process datetime objects
+        time_page_loaded = data.get("timePageLoaded")
+        time_page_loaded = datetime.datetime.fromisoformat(time_page_loaded)
+        last_delete = dbusers.get_last_time(netid)
+        last_delete = pytz.utc.localize(last_delete)
+        if last_delete > time_page_loaded:
+            return jsonify({"success": False, "message": "Your meal could not be logged because your database has been changed since you opened this page. Please try again."})
+        
+        # add entry
         dbusers.addEntry(netid, {"recipeids": entry_recids, "servings": entry_servings, "nutrition": entry_nutrition})
         return jsonify({"success": True, "redirect": url_for('homepage')})
     else :
@@ -497,8 +505,10 @@ def log_food():
         items_per_page = 7
         total_pages = (int)(len(custom_data) / items_per_page)
 
+        now_utc = datetime.datetime.now().astimezone(pytz.utc)
+        datetime_string = now_utc.isoformat()
         return render_template('logmeals.html', is_weekend_var = is_weekend_var, data=data, 
-                                nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, 
+                                nutrition_info=nutrition_info, calc_mealtime = calc_mealtime, datetime_string=datetime_string,
                                 custom_data = custom_data, over_limit = str(over_limit).lower(), food_limit = FOOD_LIMIT, entry_limit = ENTRY_LIMIT, total_pages = total_pages)
 
 #--------------------------------------------------------------------
