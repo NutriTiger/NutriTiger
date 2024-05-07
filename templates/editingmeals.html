@@ -196,12 +196,13 @@
                 else {
                     hideLoadingAnimation();
                     Swal.fire({
-                        title: 'Edit Error',
+                        title: 'Database Has Been Changed',
                         text: response.message,
                         icon: 'warning',
                         confirmButtonText: 'Refresh'
                     }).then((willRefresh) => {
                         if (willRefresh.isConfirmed) {
+                            showLoadingAnimation();
                             location.reload(); // Refresh the page if confirmed
                         }
                     });

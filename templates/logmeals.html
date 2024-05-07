@@ -150,7 +150,7 @@
     <div class="hidden" id="over_limit" data-value="{{ over_limit }}"></div>
     <div class="hidden" id="entry_limit" data-value="{{ entry_limit }}"></div>
     <div class="hidden" id="food_limit" data-value="{{ food_limit }}"></div>
-    </div>
+    <div class="hidden" id="timePageLoaded" data-time="{{ datetime_string }}"></div>
 </div>
 {% endblock %} {% block script %}
 <!-- Bootstrap JS, Popper.js, and jQuery -->
@@ -574,6 +574,7 @@ function getResults() {
 function updateCardVisibility(radioBtnId) {
     if (radioBtnId === 'radio-dhall') {
         $("#pagination-usda").hide();
+
         $("#customFoodButton1").hide();
         $("#customFoodButton2").hide();
         $("#usda-search-results").hide();
@@ -588,6 +589,7 @@ function updateCardVisibility(radioBtnId) {
     } 
     else if (radioBtnId === 'radio-custom') {
         $("#pagination-usda").hide();
+
         $("#customFoodButton1").show();
         $("#customFoodButton2").show();
         $("#searchBarSpan").hide();
@@ -600,6 +602,7 @@ function updateCardVisibility(radioBtnId) {
     } 
     else if (radioBtnId === 'radio-usda') {
         $("#pagination-usda").show();
+
         $("#customFoodButton1").hide();
         $("#customFoodButton2").hide();
         $("#mealTimeTab").hide();
@@ -759,6 +762,8 @@ introguide.setOptions({
         searchBar.value = "";
         var usdaSearchResults = document.getElementById('usda-search-results');
         usdaSearchResults.innerHTML = '';
+        var usdaPagination = document.getElementById('pagination-usda');
+        usdaPagination.innerHTML = '';
 
         var navbar = document.getElementById("navbar");
         navbar.style.zIndex = "1030";
@@ -922,10 +927,13 @@ function setup() {
             servings.push(serving);
         });
         if (recids.length > 0) {
+            const timePageLoadedElement = document.getElementById("timePageLoaded")
+            const timePageLoaded = timePageLoadedElement.dataset.time
             var dataToSend = {
                 entry_recids: recids,
                 entry_servings: servings,
                 entry_nutrition: entry_nutrition,
+                timePageLoaded: timePageLoaded
             };
             var jsonData = JSON.stringify(dataToSend);
             showLoadingAnimation();
@@ -940,6 +948,20 @@ function setup() {
                 success: function (response) {
                     if (response.success && response.redirect) {
                         window.location.href = response.redirect;
+                    }
+                    else {
+                        hideLoadingAnimation();
+                        Swal.fire({
+                            title: 'Database Has Been Changed',
+                            text: response.message,
+                            icon: 'warning',
+                            confirmButtonText: 'Refresh'
+                        }).then((willRefresh) => {
+                            if (willRefresh.isConfirmed) {
+                                showLoadingAnimation();
+                                location.reload(); // Refresh the page if confirmed
+                            }
+                        });
                     }
                 },
                 error: function (xhr, status, error) {
