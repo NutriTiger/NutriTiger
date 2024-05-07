@@ -508,6 +508,8 @@ function handleCheckboxChange(element) {
                 `&prots=${encodeURIComponent(element.dataset.prots)}` +
                 `&fats=${encodeURIComponent(element.dataset.fats)}` +
                 `&usda=${encodeURIComponent(element.dataset.usda)}`;
+        
+        showLoadingAnimation();
         $.ajax({
             url: url,
             type: "GET",
@@ -515,11 +517,13 @@ function handleCheckboxChange(element) {
                 "X-CSRFToken": "{{ csrf_token() }}"
             },
             success: function (response) {
+                hideLoadingAnimation();
                 $("#my-plate").append(response)
                 handleServingChange();
             },
             error: function (xhr, status, error) {
                 console.error("Failed to send nutrition data:", error);
+                hideLoadingAnimation();
             },
         });
     } else {
