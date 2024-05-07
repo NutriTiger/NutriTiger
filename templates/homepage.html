@@ -22,10 +22,10 @@
 
         <div class="p-3">
             <h3>Looks like you haven't logged any food for today yet.</h3>
-            <!-- "Click to log a meal" Button -->
+            <!-- "Click to log Today's Meal" Button -->
             <form action="/homepage" method="post">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">+ Click to log a Meal</button>
+                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">+ Click to log Today's Meal</button>
             </form>
         </div>
         
