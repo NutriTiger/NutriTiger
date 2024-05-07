@@ -12,6 +12,7 @@ import datetime
 import os
 import dotenv
 import pytz
+import math
 from pytz import timezone
 from src import dbusers
 from src import dbmenus
@@ -492,7 +493,7 @@ def log_food():
         if custom_data is None:
             custom_data = []
         items_per_page = 7
-        total_pages = (int)(len(custom_data) / items_per_page)
+        total_pages = math.ceil(len(custom_data) / items_per_page)
 
         now_utc = datetime.datetime.now().astimezone(pytz.utc)
         datetime_string = now_utc.isoformat()
