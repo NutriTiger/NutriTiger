@@ -418,7 +418,7 @@ def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
             this_user["daily_serv"].pop(index)
             this_user["daily_nut"].pop(index)
     
-    this_user["last_login"] = datetime.now()
+    this_user["last_delete"] = datetime.now().astimezone(pytz.utc)
     return __setuser__(netid, this_user)
     
 

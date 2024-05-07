@@ -150,7 +150,7 @@
     <div class="hidden" id="over_limit" data-value="{{ over_limit }}"></div>
     <div class="hidden" id="entry_limit" data-value="{{ entry_limit }}"></div>
     <div class="hidden" id="food_limit" data-value="{{ food_limit }}"></div>
-    </div>
+    <div class="hidden" id="timePageLoaded" data-time="{{ datetime_string }}"></div>
 </div>
 {% endblock %} {% block script %}
 <!-- Bootstrap JS, Popper.js, and jQuery -->
@@ -922,10 +922,13 @@ function setup() {
             servings.push(serving);
         });
         if (recids.length > 0) {
+            const timePageLoadedElement = document.getElementById("timePageLoaded")
+            const timePageLoaded = timePageLoadedElement.dataset.time
             var dataToSend = {
                 entry_recids: recids,
                 entry_servings: servings,
                 entry_nutrition: entry_nutrition,
+                timePageLoaded: timePageLoaded
             };
             var jsonData = JSON.stringify(dataToSend);
             showLoadingAnimation();
@@ -940,6 +943,20 @@ function setup() {
                 success: function (response) {
                     if (response.success && response.redirect) {
                         window.location.href = response.redirect;
+                    }
+                    else {
+                        hideLoadingAnimation();
+                        Swal.fire({
+                            title: 'Database Has Been Changed',
+                            text: response.message,
+                            icon: 'warning',
+                            confirmButtonText: 'Refresh'
+                        }).then((willRefresh) => {
+                            if (willRefresh.isConfirmed) {
+                                showLoadingAnimation();
+                                location.reload(); // Refresh the page if confirmed
+                            }
+                        });
                     }
                 },
                 error: function (xhr, status, error) {
