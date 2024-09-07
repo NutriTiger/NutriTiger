@@ -414,15 +414,25 @@ function addUSDANutritionData() {
             data: JSON.stringify({ nutritionData: nutritionData }),
             success: function (response) {
                 console.log("Nutrition data successfully sent and saved:", response);
+                hideLoadingAnimation();
             },
             error: function (xhr, status, error) {
                 console.error("Failed to send nutrition data:", error);
+                hideLoadingAnimation();
+                Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+                });
             },
         });
     } else {
         console.log("No USDA food items selected or data is missing.");
     }
 }
+
+
 // Debounce function to limit rate of invoking functions
 function debounce(func, delay) {
     let debounceTimer;
@@ -621,8 +631,9 @@ function updateCardVisibility(radioBtnId) {
 
 /* Tutorial **********************************************************/
 function startTutorial() {
-    var element = document.getElementById("navbar");
-    element.style.zIndex = "0";
+    var navbar = document.getElementById("navbar");
+    // element.style.zIndex = "0";
+    navbar.style.zIndex = "9999";  // Ensure it's above other elements
     var introguide = introJs();
     document.addEventListener('keydown', function(event) {
     if (event.key === 'Tab') {
@@ -901,6 +912,14 @@ function setup() {
     document.getElementById("submitButton").addEventListener("click", function (event) {
         event.preventDefault();
         addUSDANutritionData();
+
+        Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+                });
+
         // checks entry limit 
         const over_limit = $("#over_limit").data('value');
         const entry_limit = $("#entry_limit").data('value');
