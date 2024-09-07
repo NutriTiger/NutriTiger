@@ -375,7 +375,80 @@ def settings():
     return render_template('settings.html', netid=netid, current_cal_goal=current_cal_goal, join_date=join_date, user_nutrition=user_nutrition)
 
 #--------------------------------------------------------------------
+def usda_validation(nutrition_data):
+    dotenv.load_dotenv()
+    api_key = os.getenv('usda_api_key')  # API key
+    api_url = f"https://api.nal.usda.gov/fdc/v1/foods?api_key={api_key}"
 
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Removes "usda-" prepending and stores all nutrition info into a list
+        for item in nutrition_data:
+            item["recipeid"] = item["recipeid"][5:]
+            item["calories"] = float(item["calories"])
+            item["proteins"] = float(item["proteins"])
+            item["carbs"] = float(item["carbs"])
+            item["fats"] = float(item["fats"])
+        recipe_ids = [item["recipeid"] for item in nutrition_data]
+        recipe_ids = [item["recipeid"] for item in nutrition_data]
+
+        data = {
+            "fdcIds": recipe_ids
+        }
+        response = requests.post(api_url, headers=headers, json=data)
+        response.raise_for_status()  # This will raise an HTTPError if the response was unsuccessful
+        usda_data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error: Failed to fetch USDA data: {str(e)}")
+        return jsonify({'error': f'Failed to fetch USDA data: {str(e)}'}), 400
+
+    usda_data_dict = {item['fdcId']: item for item in usda_data}
+
+    def get_nutrient_value(nutrients, nutrient_name):
+        nutrient = next((n for n in nutrients if n['nutrient']['name'] == nutrient_name), None)
+        return nutrient['amount'] if nutrient else None
+
+    for item in nutrition_data:
+        usda_item = usda_data_dict.get(int(item['recipeid']))
+        if not usda_item:
+            print(f"Error: Invalid USDA food ID {item['recipeid']}")
+            return jsonify({'error': f"Invalid USDA food ID {item['recipeid']}"}), 400
+
+        formatted_serving_size = "100g" if None in (usda_item.get('servingSize'), usda_item.get('servingSizeUnit')) else f"{round(int(usda_item.get('servingSize')))} {usda_item.get('servingSizeUnit')}"
+
+        expected_data = {
+            "mealname": usda_item.get('description'),
+            "servingsize": formatted_serving_size,  # Assuming default serving size
+            "calories": get_nutrient_value(usda_item['foodNutrients'], 'Energy'),
+            "proteins": get_nutrient_value(usda_item['foodNutrients'], 'Protein'),
+            "carbs": get_nutrient_value(usda_item['foodNutrients'], 'Carbohydrate, by difference'),
+            "fats": get_nutrient_value(usda_item['foodNutrients'], 'Total lipid (fat)'),
+        }
+
+        print(expected_data)
+        print(item)
+        print(item['mealname'])
+        print(item['servingsize'])
+        print(item['calories'])
+        print(item['proteins'])
+        print(item['carbs'])
+        print(item['fats'])
+
+        # Compare received data with USDA data
+        if (item['mealname'] != expected_data['mealname'] or
+            item['servingsize'] != expected_data['servingsize'] or
+            item['calories'] != expected_data['calories'] or
+            item['proteins'] != expected_data['proteins'] or
+            item['carbs'] != expected_data['carbs'] or
+            item['fats'] != expected_data['fats']):
+            print("Error: Data tampering detected!")
+            return jsonify({'error': 'Data tampering detected!'}), 400
+
+    print("Success: Nutrition data validated successfully.")
+    return jsonify({'success': True}), 200
 
 @app.route('/addingnutrition', methods=['POST'])
 def add_usda_nutrition():
@@ -384,19 +457,29 @@ def add_usda_nutrition():
     if request.method == 'POST':
         try:
             data = request.get_json()
+            if not data:
+                print("Error: No data provided.")
+                return jsonify({'error': 'No data provided'}), 400
 
             new_data = data.get("nutritionData")
-            
             if not new_data:
-                return jsonify({'error': 'No data provided'}), 400
+                print("Error: No nutrition data provided.")
+                return jsonify({'error': 'No nutrition data provided'}), 400
             
-            dbnutrition.update_nutrition(new_data)
+            validation_response, status_code = usda_validation(new_data)
+            if status_code != 200:
+                return validation_response, status_code
 
+            dbnutrition.update_nutrition(new_data)
+            print("Success: Nutrition data successfully added.")
             return jsonify({'message': 'Nutrition data successfully added'}), 200
         except Exception as e:
+            print(f"Error: An unexpected error occurred: {str(e)}")
             return jsonify({'error': str(e)}), 500
 
+    print("Error: Invalid method.")
     return jsonify({'error': 'Invalid method'}), 405
+
 
 
 #--------------------------------------------------------------------
