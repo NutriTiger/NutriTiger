@@ -15,7 +15,6 @@ import sys
 
 # Connect to NutriTiger MongoDB database and return database object
 def connectmongo():
-    # Load environment variables from .env file
     load_dotenv()
     password = os.getenv("MONGODB_PASSWORD")
     username = os.getenv("MONGODB_USERNAME")
@@ -23,8 +22,6 @@ def connectmongo():
     uri = f"mongodb+srv://{username}:{password}@aws-m0-cluster.cywlmar.mongodb.net/?retryWrites=true&w=majority&appName=aws-m0-cluster"
     try:
         client = pymongo.MongoClient(uri)
-  
-    # return a friendly error if a URI error is thrown 
     except pymongo.errors.ConfigurationError:
         print("An Invalid URI host error was received. Make sure your connection string is valid. See README for more details.")
         sys.exit(1)

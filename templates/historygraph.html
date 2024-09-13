@@ -7,6 +7,9 @@
     width: auto; /* Ensure width adjusts automatically */
     }
 </style>
+<div class="text-center text-muted">
+    Clicking on elements in the legend will hide it from the line graph.
+</div>
 <div class="histChart-container pb-3">
     <!-- Calorie Chart -->
     <canvas id="calHistoryChart" class="hist-canvas"></canvas>
@@ -20,43 +23,45 @@
     var fats = {{ fats | tojson | safe}};
     var dates = {{ dates | tojson | safe}};
     
-    //  Data for the line chart
+    var style = getComputedStyle(document.body); // for color vars in styles.css
+
     var data1 = {
         labels: dates,
         datasets: [{
-            label: 'Calories', // Label for the dataset
+            label: 'Calories',
             data: cals,
-            borderColor: 'rgba(66, 142, 223)', // Line color
-            backgroundColor: 'rgba(66, 142, 223, 0.5)',
-            borderWidth: 2, // Line width
-            fill: true // Fill area under the line
+            borderColor: style.getPropertyValue('--blue'), // fetching color from css
+            backgroundColor: style.getPropertyValue('--blue-transparent'),
+            borderWidth: 2,
+            fill: true
         }]
     };
+
     var data2 = {
         labels: dates,
         datasets: [{
-            label: 'Proteins', // Label for the dataset
+            label: 'Proteins',
             data: prots,
-            borderColor: 'rgba(255, 182, 193, 1)', // Light pink line color
-            backgroundColor: 'rgba(255, 182, 193, 0.3)',
-            borderWidth: 2, // Line width
-            fill: true // Fill area under the line
+            borderColor: style.getPropertyValue('--pink'),
+            backgroundColor: style.getPropertyValue('--pink-transparent'),
+            borderWidth: 2,
+            fill: true 
         },
         {
-            label: 'Carbs', // Label for the dataset
+            label: 'Carbs', 
             data: carbs,
-            borderColor: 'rgba(67, 182, 107)', // Line color (green)
-            backgroundColor: 'rgba(67, 182, 107, 0.3)',
-            borderWidth: 2, // Line width
-            fill: true // Fill area under the line
+            borderColor: style.getPropertyValue('--green'),
+            backgroundColor: style.getPropertyValue('--green-transparent'),
+            borderWidth: 2, 
+            fill: true 
         },
         {
-            label: 'Fats', // Label for the dataset
+            label: 'Fats', 
             data: fats,
-            borderColor: 'rgba(255, 205, 86)', // Line color (yellow)
-            backgroundColor: 'rgba(255, 205, 86, 0.7)',
-            borderWidth: 2, // Line width
-            fill: true // Fill area under the line
+            borderColor: style.getPropertyValue('--purple'),
+            backgroundColor: style.getPropertyValue('--purple-transparent'),
+            borderWidth: 2, 
+            fill: true
         }]
     };
     

@@ -2,87 +2,46 @@
 {% set current_page = 'settings' %}
 {% block title %}Settings{% endblock %}
 {% block content %}
-        <div class="row p-md-5 p-sm-4 p-3 mx-auto">
-        <div class="card">
-        <div class="card-body">
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
-                    <h1 class="py-3 text-center">Edit My Calorie Goal</h1>
-                    <div class="text-center p-4">
-                        <div class="row">
-                            <h5>Join Date: {{ join_date }}</h5>
-                            <h5>Current Calorie Goal: {{ current_cal_goal }}</h5>
-                            <br><br><br>
-
-                            {% include 'caloriecalculator.html' %}
-
-                            <div class="container">
-                                <div class="text-center p-4">
-                                    <div class="row align-items-center">
-                                        <div class="col d-flex align-items-center">
-                                            <h4 class="m-2"> Daily Calorie Goal:</h4>
-                                            <form action="/settings" method="post" class="d-flex m-2">
-                                                <input id="settingsCalorieInput" type="number" class="form-control form-calgoal mr-2" name='line' onpaste="return false;" placeholder="Enter the number here." min="1" max="100000" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
-                                                <button id="caloriesSettingsButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<script src ="../static/js/validation.js"></script>
+<div class="row p-md-5 p-sm-4 p-3 mx-auto">
+	<div class="card text-center p-4">
+		<h1 class="py-4 text-center">Edit My Calorie Goal</h1>
+		<h5>Join Date: {{ join_date }}</h5>
+		<h5>Current Calorie Goal: {{ current_cal_goal }}</h5>
+		<br>
+		{% include 'caloriecalculator.html' %}
+		<div class="container">
+			<div class="text-center p-4">
+				<div class="col d-flex align-items-center flex-column flex-md-row">
+					<!-- Added flex-column and flex-md-row classes -->
+					<!-- Added a wrapping div for the title -->
+					<h4 class="m-2"> Daily Calorie Goal:</h4>
+					<form action="/settings" method="post" class="d-flex flex-column flex-md-row m-2">
+						<!-- Added flex-column and flex-md-row classes -->
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+						<input id="firstCalorieInput" step="any" type="number" class="form-control form-calgoal mr-2 mb-2 mb-md-0" 
+							name='line' placeholder="Enter the number here." min="1" max="100000" onpaste="return false;" onkeypress="return isCalGoalValid(event)" 
+							required autofocus style="width: 200px;">
+						<button id="firstCalorieButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}
 {% block script %}
 <script>
-    // Validate the serving inputs
-    function isValid(input) {
-        var charCode = input.which || input.keyCode;
-        var value = input.target.value;
-    
-        // If the pressed key is a '-'
-        if (input.charCode === 45)
-            return false;
-    
-        // If the key contains nonvalid chars 
-        if (input.charCode < 48 || input.charCode > 57)
-            return false;
-    
-        return true;
-    }
-
-    // When the user submits the form and all fields are valid, lock it
-    function closeForm() {
-        // Obtain form elements
-        var validFormElements = document.querySelector(":valid")
-        var calorieInput = validFormElements.querySelector("input")
-        var settingsButton = validFormElements.querySelector("button")
-
-        // Check if the input was validated
-        if (calorieInput != null) {
-            // Remove any leading zeros
-            var currentNumber = calorieInput.value
-            calorieInput.value = currentNumber.replace(/^0+/, '')
-
-            // Disable the button but have it submit the form
-            calorieInput.readOnly = true
-            settingsButton.style.pointerEvents = "none"
-            settingsButton.textContent = "Submitting..."
-            settingsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
-        }
-    }
-
-    // If the user hits the back button reset the form
-    window.onunload = function() {
-        var calorieInput = document.getElementById("settingsCalorieInput")
-        var settingsButton = document.getElementById("caloriesSettingsButton")
-
-        calorieInput.readOnly = false
-        settingsButton.style.pointerEvents = "auto"
-        settingsButton.textContent = "Save"
-        settingsButton.style.opacity = "none"
-    } 
+	// If the user hits the back button reset the form
+	window.onunload = function() {
+	    var calorieInput = document.getElementById("firstCalorieInput")
+	    var settingsButton = document.getElementById("firstCalorieButton")
+	
+	    calorieInput.readOnly = false
+	    calorieInput.value = '';
+	    settingsButton.style.pointerEvents = "auto"
+	    settingsButton.textContent = "Save"
+	    settingsButton.style.opacity = "none"
+	} 
 </script>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% set current_page = 'home' %}
-{% block title %}My Homepage{% endblock %}
+{% block title %}Homepage{% endblock %}
 {% block content %}
 
 <!--Page Headers-->
@@ -8,38 +8,39 @@
 <h1 id="homepage-title" class="text-center m-3" >Today's Nutritional Breakdown</h1>
 <h3 id="homepage-subtitle" class="text-center m-3 text-muted" >Good <span id="greetingTime"></span>, {{netid}}. Today is <span id='greetingDate'></span>.</h3>
 </div>
-<!--Placeholder Message (when no entries exist)-->
+
+<!--Placeholder Message (when the user has not logged any meals)-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="../static/js/dates.js"></script>
 
-<div id="placeholder" class="text-center mx-auto" style="display:none;">
-	<div class="mx-auto" style="padding: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-		<div class="m-3 p-3">
-			<h1>Good <span id="PgreetingTime"></span>, {{netid}}. </h1>
-			<h1 class="pt-3">Today is <span id='PgreetingDate'></span>.</h1>
-		</div>
+<div id="placeholder" class="d-flex justify-content-center align-items-center" style="display:none!important; height: 100vh;">
+    <div class="text-center">
+        <div class="m-3 p-3">
+            <h1>Good <span id="PgreetingTime"></span>, {{netid}}.</h1>
+            <h1 class="pt-3">Today is <span id='PgreetingDate'></span>.</h1>
+        </div>
 
-		<h3>Looks like you haven't logged any food for today yet.</h3>
-		<!--"Click to add an entry" Button-->
-		<div class="p-3">
-			<form action="/homepage" method="post">
-				<center>
-					<button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to log a meal</button>
-				</center>
-			</form>
-		</div>
-		<h4 class="p-3">Or, see what's on the <a href="/menus"> dining hall menus. </a></h4>
-	</div>
+        <div class="p-3">
+            <h3>Looks like you haven't logged any food for today yet.</h3>
+            <!-- "Click to log Today's Meal" Button -->
+            <form action="/homepage" method="post">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button id="logMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">+ Click to log Today's Meal</button>
+            </form>
+        </div>
+        
+        <div class="p-3">
+            <h4>Or, see what's on the <a href="/menus" onclick="linkPressed()">dining hall menus</a>.</h4>
+        </div>
+    </div>
 </div>
 
-<!--CHECK IF ENTRIES ARE EMPTY, SHOW PLACEHOLDER IF SO-->
-<!--This must be updated with ajax implementation!!-->
+<!-- Show placeholder if there are no logged meals -->
 {% if entries_food_dict.items()|length == 0 %}
-	<!-- Show placeholder function -->
 	<script>
 		showPlaceholder();
 	</script>
 {% else %}
-	<!--Show homepage cards function-->
 	<script>
 		showHomepageCards();
 	</script>
@@ -54,10 +55,10 @@
 				<h4 class="text-center py-3">My Macros</h4>
 				<h5 class="text-center">Current Calorie Progress: <strong>{{curr_caltotal}} cal / {{cal_goal}} cal</strong></h5>
 				<div class="prog-container my-2" style="display: flex; justify-content: center;">
-					<div class="progress" style="height: 50px; width: 300px;">
+					<div class="progress" style="height: 50px; width: 300px; background-color: lightgray;">
 						<div class="progress-bar dynamic-progress-bar" 
 							role="progressbar" 
-							style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223);" 
+							style="width: {{ (curr_caltotal / cal_goal) * 100 }}%; background-color: rgb(66, 142, 223); overflow: visible;" 
 							aria-valuenow="{{curr_caltotal}}" 
 							aria-valuemin="0" 
 							aria-valuemax="{{cal_goal}}">{{ curr_caltotal }} cal
@@ -65,21 +66,34 @@
 					</div>
 				</div>
 				<div class="prog-container my-5" style="display: flex; justify-content: center;">
-					<div style="width: 400px; height: 400px; display: flex; justify-content: center;">
+					<div style="width: 400px; height: 325px; display: flex; justify-content: center;">
 						{% include 'piechart.html' %}
 					</div>
 				</div>
 				<div id="chartSubtitle" class="text-center text-muted">
-					Clicking on elements in the legend will hide it from the pie chart.
+					Clicking or hovering on segments in pie chart will display more information.
+					<a class="tool-tip" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="The calorie count for each macronutrient is calculated based on the number of grams, and may not sum up to your total calorie count for the day.">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+							<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+							<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+						</svg>
+                    </a>
 					<br>
-					<small>Please note that this pie chart visually represents the proportion of macronutrients relative to their caloric contribution.</small>
+					Clicking on elements in the legend will hide it from the pie chart.
+					<a class="tool-tip" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="This pie chart visually represents the proportion of macronutrients relative to their caloric contribution.">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+							<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+							<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+						</svg>
+                    </a>
 				</div>
 
 				<!--Button that redirects to History page -->
 				<div class="pt-2">
 					<form action="/homepage" method="post">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <center>
-							<button name="historyBtn" type="submit" class="btn btn-secondary">Click to see detailed history</button>
+							<button id="historyButtonHomepage" name="historyBtn" type="submit" class="btn btn-secondary" onclick="buttonPressed(this.id)">Click to see detailed history</button>
                         </center>
                     </form>
 				</div>
@@ -89,21 +103,22 @@
 	<div class="col-md-6 py-4">
 		<div id="rightCard" class="card homepage-card">
 			<div class="card-body">
-				<!--My Plate (right card)-->
+				<!--Today's Logged Meals (right card)-->
 				<h4 class="text-center py-3">Today's Logged Meals</h4>
-				<!-- Edit my plate button -->
+				<!-- Edit button -->
         <!-- Copy of bottom button for mobile compatibility -->
-				<div class="py-3 position-absolute top-0 end-0 mt-3 me-3 d-none d-lg-block">
+				<div class="py-3 position-absolute top-0 end-0 mt-3 me-3 d-none d-xl-block">
 					<form action="/homepage" method="post">
-						<button type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+						<button id="editPlateHomepage" type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
 								<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
 							</svg>
-							Edit Plate
+							Edit
 						</button>
 					</form>
 				</div>
-				<!--Create a card for each entry-->
+				<!--Create an inner card for each meal-->
 				<div class="col">
 					{% for entry, data in entries_food_dict.items() %}
 					{% set foods = data.foods %}
@@ -125,10 +140,10 @@
 								<div class="d-flex align-items-center py-0">
 									<strong>Meal Totals:</strong>
 								<div class="p-2">
-									<span class="badge badge-info" style="background-color: rgb(55, 127, 228);">{{ '%.2f'|format(nutrition_totals.calories) }} Calories</span>
-									<span class="badge badge-info" style="background-color: rgb(255, 107, 130);">{{ '%.2f'|format(nutrition_totals.proteins) }}g Protein</span>
-									<span class="badge badge-info" style="background-color: rgb(49, 165, 74);">{{ '%.2f'|format(nutrition_totals.carbs) }}g Carbs</span>
-									<span class="badge badge-info" style="background-color: rgb(246, 188, 30);">{{ '%.2f'|format(nutrition_totals.fats) }}g Fat</span>
+									<span class="badge badge-info" style="background-color: var(--blue);">{{ '%.2f'|format(nutrition_totals.calories) }} Calories</span>
+									<span class="badge badge-info" style="background-color: var(--pink);">{{ '%.2f'|format(nutrition_totals.proteins) }}g Protein</span>
+									<span class="badge badge-info" style="background-color: var(--green);">{{ '%.2f'|format(nutrition_totals.carbs) }}g Carbs</span>
+									<span class="badge badge-info" style="background-color: var(--purple-transparent);">{{ '%.2f'|format(nutrition_totals.fats) }}g Fat</span>
 								</div>
 								</div>
 
@@ -138,22 +153,24 @@
 					{% endfor %}
 				</div>
         <!-- Copy of top button for mobile compatibility -->
-        <div class="text-center d-block d-sm-block d-md-block d-lg-none">
+        <div class="text-center d-block d-sm-block d-md-block d-lg-block d-xl-none">
 					<form action="/homepage" method="post">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 						<button type="submit" name="edit_plate" class="btn btn-primary btn-lg btn-block">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
 								<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
 							</svg>
-							Edit Plate
+							Edit
 						</button>
 					</form>
 				</div>
 				
-				<!--"Click to add an entry"-->
+				<!--"Click to add a Meal" button-->
                 <div class="p-3">
                     <form action="/homepage" method="post">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <center>
-                            <button type="submit" name="add_entry" class="btn btn-primary btn-lg btn-block">+ Click to add a meal</button>
+                            <button id="addMealHomepage" type="submit" name="add_meal" class="btn btn-primary btn-lg btn-block" onclick="buttonPressed(this.id)">+ Click to log Today's Meal</button>
                         </center>
                     </form>
                 </div>
@@ -166,9 +183,13 @@
 {% endif %}
 
 <script>
+	/* tooltips for information about chart */
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
 	function showHomepageCards() {
-		// Hide the placeholder message/buttons
-		document.getElementById("placeholder").style.display = "none";
+		// Hide the placeholder
+		document.getElementById("placeholder").style.display = "none!important";
 
 		// Show the homepage cards 
 		document.getElementById("homepage").style.display = "block";
@@ -177,7 +198,7 @@
 	}
 
 	function showPlaceholder() {
-		// Show the placeholder message/buttons
+		// Show the placeholder
 		document.getElementById("placeholder").style.display = "block";
 		// Hide the homepage cards and header
 		document.getElementById("homepage-title").style.display = "none";
@@ -186,8 +207,34 @@
 		document.getElementById("rightCard").style.display = "none";
 	}
 
+	window.onunload = function() {
+		var buttons = document.querySelectorAll("button")
+        var links = document.querySelectorAll("a")
+
+        buttons.forEach((button) => {
+			if (button.id == "logMealHomepage") {
+				button.textContent = "+ Click to log Today's Meal"
+        		button.style.opacity = "none"
+			}
+			if (button.id == "historyButtonHomepage") {
+				button.textContent = "Click to see detailed history"
+        		button.style.opacity = "none"
+			}
+			if (button.id == "editPlateHomepage") {
+				button.textContent = "Edit"
+        		button.style.opacity = "none"
+			}
+			if (button.id == "addMealHomepage") {
+				button.textContent = "+ Click to log Today's Meal"
+        		button.style.opacity = "none"
+			}
+			button.tabIndex = "1"
+			button.style.pointerEvents = "auto"
+		})
+	}
+
 	window.onload = function() {
-		
+
 		// Get the greeting and date message strings and display
 		document.getElementById('greetingTime').innerHTML = getAmPm();
 		document.getElementById('greetingDate').innerHTML = getDate();

@@ -1,0 +1,216 @@
+{% extends "layout.html" %}
+{% set current_page = 'customfood' %}
+{% block title %}My Custom Foods{% endblock %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+<div class = "p-5">
+	<div class = "text-center">
+		<h1>My Custom Foods</h1>
+		<h5 class="text-center px-2">See an overview of your custom foods and add to your collection of recipes.</h5>
+	</div>
+	<div class="text-center p-3">
+		<div style="align-items: center;">
+			<div class="d-inline-block">
+				<button id="add_food_btn" onclick="buttonPressed(this.id); window.location.href='{{ url_for('custom_food') }}'" class="btn btn-primary" style="display: block;">
+				+ Create a Custom Food
+				</button>
+			</div>
+			<div class="d-inline-block pt-2">
+				<button type="submit" id="edit_custom_foods" class="btn btn-primary" style="display: none;">
+				Delete a Custom Food
+				</button>
+			</div>
+			<div class="d-inline-block pt-2">
+				<button type="submit" id="stop_editing" class="btn btn-secondary" style="display: none;">
+				Cancel
+				</button>
+			</div>
+		</div>
+	</div>
+	<br>
+	{% if user_nutrition is not none %}
+	<script>document.getElementById('edit_custom_foods').style.display="block"</script>
+	<div id = "masonry-grid" class="py-3 row g-4 justify-content-center" data-masonry='{"percentPosition": true }'>
+		{% for item in user_nutrition %}
+		<div class="col col-md-4 col-xl-3 col-xxl-2">
+			<div class="card card-pop h-100" id="{{ loop.index }}">
+				<div class="deleted-overlay">Deleted</div>
+				<div class="card-body">
+					<div class="header-container">
+						<h5 class="card-title text-center"></h5>
+						<b style="overflow-y: auto;">{{ item['mealname'] }}</b></h5>
+						<button type="button" id = "btn-{{ loop.index}}" class="btn btn-close btn-sm x-custom-food" aria-label="Close" style="display: none;"
+							onclick="confirmDelete(this)" data-cardid="{{ loop.index }}" data-recid="{{ item['recipeid'] }}">
+						</button>
+					</div>
+				</div>
+				<ul class="list-group list-group-flush">
+					{% if item['image_url'] %}
+					<li class="list-group-item"><img src="{{ item['image_url'] }}" alt="Meal Image" class = "fitted-image"></li>
+					{% endif %}
+					{% if item['description'] != '' %}
+					<li class="list-group-item"><strong>Description: </strong>{{ item['description']}}</li>
+					{% endif %}
+					<li class="list-group-item"><strong>Serving size:</strong> {{ item['servingsize']}}</li>
+					<li class="list-group-item"><strong>Calories:</strong> {{ item['calories']}}</li>
+					<li class="list-group-item"><strong>Proteins:</strong> {{ item['proteins']}}g</li>
+					<li class="list-group-item"><strong>Carbs:</strong> {{ item['carbs'] }}g</li>
+					<li class="list-group-item"><strong>Fats:</strong> {{ item['fats'] }}g</li>
+				</ul>
+				<div class="card-footer">
+					<small class="text-body-secondary">Created on {{ custom_strftime_est(item['date']) }}.</small>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="mx-auto" style="padding: 15px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+		<div class="text-center text-muted">
+			<h1>No custom foods found.</h1>
+		</div>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+<script>
+    function hideButton() {
+        const button = document.getElementById('stop_editing');
+        button.style.display = 'none';
+    }
+	// Function to show SweetAlert confirmation dialog
+	function confirmDelete(item) {
+	    const swalWithBootstrapButtons = Swal.mixin({
+	    customClass: {
+	        confirmButton: "btn btn-success",
+	        cancelButton: "btn btn-danger"
+	    },
+	    buttonsStyling: false
+	    });
+	    swalWithBootstrapButtons.fire({
+	    title: "Are you sure?",
+	    text: "If you've logged this food today, it will also be deleted from any entries it is part of. You won't be able to revert this!",
+	    icon: "warning",
+	    showCancelButton: true,
+	    confirmButtonText: "Yes, delete it!",
+	    cancelButtonText: "No, cancel!",
+	    reverseButtons: true
+	    }).then((result) => {
+	    if (result.isConfirmed) {
+	        Swal.fire({
+	            title: 'Deleting...',
+	            html: 'Please wait while we are deleting your custom food.',
+	            allowOutsideClick: false,
+	            showConfirmButton: false,
+	            willOpen: () => {
+	                Swal.showLoading();
+	            }
+	        });
+	        deleteCustomFood(item);
+
+	    } else if (
+	        /* Read more about handling dismissals below */
+	        result.dismiss === Swal.DismissReason.cancel
+	    ) {
+	        swalWithBootstrapButtons.fire({
+	        title: "Cancelled",
+	        text: "Your custom food is safe :)",
+	        icon: "error"
+	        });
+	    }
+	    });
+	}
+	function deleteCustomFood(item) {
+        hideButton();
+	    var recid = item.dataset.recid;
+	    console.log(recid);
+	    var cardid = item.dataset.cardid;
+	    console.log(cardid);
+	    var btnid = "btn-" + cardid
+	    console.log(btnid);
+	    let card = document.getElementById(cardid);
+	    let overlay = card.querySelector('.deleted-overlay');
+	    let button = document.getElementById(btnid)
+	    $(button).remove()
+	    overlay.style.display = 'flex'; 
+	    handleDelete(recid)
+	}
+	function handleDelete(recid) {
+	    var dataToSend = {
+	        deletedFood: recid
+	    };
+	    var jsonData = JSON.stringify(dataToSend);
+	
+	    $.ajax({
+	        type: "POST",
+	        url: "/customfoods",
+	        headers: {
+	            "Content-Type": "application/json",
+	            "X-CSRFToken": "{{ csrf_token() }}"
+	        },
+	        data: jsonData,
+	        success: function (response) {
+	            if (response.success && response.redirect) {
+	                Swal.close();
+	                window.location.href = response.redirect;
+	            }
+	        },
+	        error: function (xhr, status, error) {
+	            Swal.close();
+	            swalWithBootstrapButtons.fire({
+	                title: "Error!",
+	                text: "There was a problem deleting your custom food. Please try again later.",
+	                icon: "error"
+	            });
+	            console.error("Error in data submission:", xhr.status, xhr.responseText);
+	        },
+	    });
+	}
+	
+	window.onunload = function() {
+	    var buttons = document.querySelectorAll("button")
+	    var links = document.querySelectorAll("a")
+	
+	    buttons.forEach((button) => {
+	        if (button.id == "add_food_btn") {
+	            button.style.opacity = "none"
+	        }
+	        button.tabIndex = "1"
+	        button.style.pointerEvents = "auto"
+	    })
+	}
+
+	$(document).ready(function(){
+	    $('#edit_custom_foods').click(function() {
+	        console.log("edit clicked")
+	        $('#edit_custom_foods').css('display', 'none')
+	        $('#add_food_btn').css('display', 'none');
+	        $('#stop_editing').css('display', 'block')
+	        $('.x-custom-food').each(function() {
+	            $(this).css('display', 'block');
+	        });
+	    });
+	    $('#stop_editing').click(function() {
+	        $('#stop_editing').css('display', 'none')
+	        $('#add_food_btn').css('display', 'block');
+	        $('#edit_custom_foods').css('display', 'block')
+	        $('.x-custom-food').each(function() {
+	            $(this).css('display', 'none');
+	        });
+	    });
+	    // Initialize Masonry after all images have loaded
+	    $('#masonry-grid').imagesLoaded(function(){
+	        $('#masonry-grid').masonry({
+	            // Masonry options
+	            itemSelector: '.col',
+	            percentPosition: true
+	        });
+	    });
+	});
+	
+	
+</script>
+{% endblock %}

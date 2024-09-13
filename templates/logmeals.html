@@ -1,0 +1,1004 @@
+{% extends "layout.html" %}
+{% set current_page = 'logmeals' %}
+
+{% block title %}Log Meals{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.css" integrity="sha512-4OzqLjfh1aJa7M33b5+h0CSx0Q3i9Qaxlrr1T/Z+Vz+9zs5A7GM3T3MFKXoreghi3iDOSbkPMXiMBhFO7UBW/g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src ="../static/js/validation.js"></script>
+
+{% include 'loading.html' %}
+
+<div class="text-center p-3">
+    <h1 class="my-2">Log Meals
+        <a class="tool-tip nt-custom-tool-tip" data-bs-toggle="tooltip" data-bs-placement = "bottom" data-bs-html="true" data-bs-boundary="window" title="" data-bs-original-title="<strong>Choose</strong> a food source from the 3 buttons below. <br><strong>Select</strong> your dish(es). <br><strong>Enter</strong> the number of servings you consumed in the “My Meal” window. <br><strong>Press</strong> the Upload Meal button to return to the homepage.">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+            </svg>
+        </a>
+    </h1>
+    <p class="px-5">
+       Choose foods from multiple different sources, adjust serving sizes, and submit to log a meal for today.
+    </p>
+    <button class="btn btn-primary" id="startTutorial">Click to see a tutorial</button>
+</div>
+
+<div class="container-fluid">
+    <!--Cards for Food Item display and My Meals-->
+    <div class="row px-2">
+        <div class="col-md-12 col-lg-6 p-3">
+            <div class="logmeals-card card">
+                <!--Radio buttons-->
+                <center>
+                <div class="p-3">
+                    <div id="radio-buttons" class="container justify-content-center">
+                        <div class="row">
+                            <div class="col-sm">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-dhall" checked> Dining Halls  
+                                </label>
+                            </div>
+                            <div class="col-sm" id = "tutorial-radio-custom">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-custom"> My Custom Foods  
+                                </label>
+                            </div>
+                            <div class="col-sm" id = "tutorial-radio-usda">
+                                <label class="radio-inline pl-2">
+                                    <input type="radio" name="foodSource" id="radio-usda"> Search for Other Foods  
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>     
+            </center>   
+            <center>
+                <div id="foodsource-dropdown" class="col-md-8 p-3">
+                    <select class="select-dropdown btn btn-secondary dropdown-toggle form-select custom-dropdown" id="diningHallSelect" aria-label="select_dhall" style="display: inline;">
+                        <option value="Select Dining Hall" selected>Select Dining Hall</option>
+                        <option value="Center for Jewish Life">Center for Jewish Life</option>
+                        <option value="Forbes College">Forbes College</option>
+                        <option value="Graduate College">Graduate College</option>
+                        <option value="Yeh & New West Colleges">Yeh & New West Colleges</option>
+                        <option value="Rockefeller & Mathey Colleges">Rockefeller & Mathey Colleges</option>
+                        <option value="Whitman & Butler Colleges">Whitman & Butler Colleges</option>
+                        <option hidden value="Example Dining Hall">Example Dining Hall</option>
+                    </select>
+                    <a class="tool-tip" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="" data-bs-original-title="Please note that only food with non-zero nutritional information provided to us by Campus Dining are displayed. <br> If you can not find an item, consider searching the generic USDA database for other foods.">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                        </svg>
+                    </a>
+                </div>
+            </center>
+                
+            <span class="col-10 col-sm-8 p-3" id="searchBarSpan"  style="display: none;">
+                <input id="searchBar" type="text" style = "display: inline-block; width:auto;" class="form-control" placeholder='ex. "Snapple..."' />
+                <a class="tool-tip" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="" data-bs-original-title="We source data for other generic foods from the USDA FoodData Central database. Note that some entries may be inaccurate so carefully select items that best closely reflect macronutrient values that are reasonable.">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                    </svg>
+                </a>
+            </span>
+            
+            <div class="card-body">
+                <!-- Mealtime Tab Navs -->
+                <ul class="nav nav-tabs" id="mealTimeTab" role="tablist">
+                    {% if not is_weekend_var: %}
+                    <li class="custom-nav-item">
+                        <a class="nav-link active" id="Breakfast-tab" data-toggle="tab" href="#breakfast" role="tab" aria-controls="breakfast" aria-selected="true">Breakfast</a>
+                    </li>
+                    <li class="custom-nav-item">
+                        <a class="nav-link" id="Lunch-tab" data-toggle="tab" href="#lunch" role="tab" aria-controls="lunch" aria-selected="false">Lunch</a>
+                    </li>
+                    {% endif %} {% if is_weekend_var: %}
+                    <li class="custom-nav-item">
+                        <a class="nav-link active" id="Brunch-tab" data-toggle="tab" href="#brunch" role="tab" aria-controls="brunch" aria-selected="false">Brunch</a>
+                    </li>
+                    {% endif %}
+                    <li class="custom-nav-item">
+                        <a class="nav-link" id="Dinner-tab" data-toggle="tab" href="#dinner" role="tab" aria-controls="dinner" aria-selected="false">Dinner</a>
+                    </li>
+                </ul>
+                <div class="card" style="min-height: 300px;">
+                    <div class="card-body" id="usda-search-results">
+                    </div>
+                    {% include 'logmeals_checkbox.html' %}
+                    <div class="pagination-container"> 
+                        <div id="pagination-usda"></div>
+                    </div>
+                    <div class="btn-group" id = "tutorial-custom-food-btns">
+                        <a class="btn btn-primary me-2 nt-custom-foods-btn" href="{{ url_for('custom_nutrition') }}" role="button" id = "customFoodButton1" style="display:none;" onclick="linkButtonPressed(this.id)">View My Custom Foods</a>
+                        <a class="btn btn-primary ms-2 nt-custom-foods-btn" href="{{ url_for('custom_food') }}" role="button" id = "customFoodButton2" style="display:none;" onclick="linkButtonPressed(this.id)">Create a Custom Food</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--My Plate Card (right side)-->
+    <div class="col-md-12 col-lg-6 p-3">
+        <form action="/logmeals" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="logmeals-card card" id="tutorial-my-plate">
+                <div class="card-body">
+                    <h5 class="card-title text-center">My Meal</h5>
+                    <p class="text-center">Select foods from the menu and add your estimated servings consumed.</p>
+                    <div id="my-plate"></div>
+                </div>
+                <!--My Plate Footer: display plate macro totals-->
+                <div class="card-footer text-center">
+                    <strong>Meal Totals:</strong>
+                    <br />
+                    <div id="plateTotals"></div>
+                </div>
+            </div>
+            <!--Upload plate button-->
+            <div class="container p-5">
+                <h5>Done adding food for your meal?</h5>
+                
+                    <button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block" name="upload_plate">Upload Meal and Return</button>
+                
+            </div>
+        </form>
+    </div>
+    <div class="hidden" id="over_limit" data-value="{{ over_limit }}"></div>
+    <div class="hidden" id="entry_limit" data-value="{{ entry_limit }}"></div>
+    <div class="hidden" id="food_limit" data-value="{{ food_limit }}"></div>
+    <div class="hidden" id="timePageLoaded" data-time="{{ datetime_string }}"></div>
+</div>
+{% endblock %} {% block script %}
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.8/purify.min.js"></script>
+
+<script>
+    
+let totalItems = 25; // Total number of checkboxes you want to manage
+let currentUSDAPage = 1;
+let currentCustomPage = 1;
+const itemsPerPage = 7;
+let totalPages = Math.ceil(totalItems / itemsPerPage);
+
+/* Pagination ********************************************************/
+function renderPage(startIndex, endIndex, data) {
+    const resultsContainer = document.getElementById("usda-search-results");
+    resultsContainer.innerHTML = ""; // Clear previous results
+    data.slice(startIndex, endIndex).forEach(food => {
+        const { calories = 0, proteins = 0, carbs = 0, fats = 0, recipeid, mealname, servingSize = 'Not specified' } = food;
+        const foodElement = document.createElement("div");
+        foodElement.className = "form-check";
+        foodElement.innerHTML = `
+            <input type="checkbox" class="form-check-input checkbox" id="usda-checkbox-${recipeid}">
+            <label class="form-check-label text-med" for="usda-checkbox-${recipeid}">${mealname}</label>
+            <p>
+                <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: ${servingSize}</span>
+                <span class="badge badge-info" style="background-color: var(--blue);">${calories} Calories</span>
+                <span class="badge badge-info" style="background-color: var(--pink);">${proteins}g Protein</span>
+                <span class="badge badge-info" style="background-color: var(--green);">${carbs}g Carbs</span>
+                <span class="badge badge-info" style="background-color: var(--purple-transparent);">${fats}g Fat</span>
+            </p>
+        `;
+        resultsContainer.appendChild(foodElement);
+    });
+    createPagination();
+}
+
+function populateResults(pageNum, data) {
+    currentUSDAPage = pageNum;
+    const startIndex = (pageNum - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    renderPage(startIndex, endIndex, data);
+}
+
+function createPagination() {
+    const pagination = document.getElementById("pagination-usda");
+    if (!pagination) return; // Ensure pagination container exists
+    pagination.innerHTML = ""; // Clear previous pagination links
+    const ul = document.createElement("ul");
+    ul.className = "pagination";
+
+    // Create pages
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = createPageItem(i, i, currentUSDAPage === i);
+        ul.appendChild(pageItem);
+    }
+
+    pagination.appendChild(ul);
+}
+
+function createPageItem(text, page, isActive = false) {
+    const li = document.createElement("li");
+    li.className = "page-item" + (isActive ? " active" : "");
+    const a = document.createElement("a");
+    a.className = "page-link";
+    a.href = "#";
+    a.textContent = text;
+    a.onclick = function (e) {
+        e.preventDefault();
+        populateResults(page, data);
+    };
+    li.appendChild(a);
+    return li;
+}
+
+function handleCustomPageChange(page) {
+    currentCustomPage = page;
+    $('.custom-items-content').hide(); // Hide all items
+    $(`div[data-page="${page}"]`).show(); // Show items for the current page
+    $('#pagination-custom .page-item').removeClass('active');
+    $(`#pagination-custom .page-item:nth-child(${page})`).addClass('active');
+}
+
+function prepareAllPages(data) {
+    const resultsContainer = document.getElementById("usda-search-results");
+    resultsContainer.innerHTML = ""; // Clear previous results
+    const pagination = document.getElementById("pagination-usda");
+    pagination.innerHTML = "";
+
+    if (data && data.length > 0) {
+        for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+            const pageDiv = document.createElement("div");
+            pageDiv.id = `page-${pageNum}`;
+            pageDiv.className = 'page-content';
+            pageDiv.style.display = pageNum === 1 ? 'block' : 'none'; // Show the first page initially
+
+            const startIndex = (pageNum - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = data.slice(startIndex, endIndex);
+
+            pageData.forEach((food) => {
+                const calories = food.calories || 0;
+                const proteins = food.proteins || 0;
+                const carbs = food.carbs || 0;
+                const fats = food.fats || 0;
+
+                // Check if food portions are available and extract the first one
+                const servingSizeInfo = food.servingSize;
+
+                const foodElement = document.createElement("div");
+                foodElement.className = "form-check";
+                console.log(food.fdcIc);
+                foodElement.innerHTML = `
+                <input type="checkbox" class="form-check-input" id="usda-checkbox-${food.recipeid}" page=${pageNum} data-usda="true" data-recid="${food.recipeid}"
+                    data-mealname="${food.mealname}" data-location="USDA FoodData Central" data-mealtime="N/A" data-servingsize="${servingSizeInfo}" data-cals="${calories}"
+                    data-carbs="${carbs}" data-prots="${proteins}" data-fats="${fats}"
+                    onchange="handleCheckboxChange(this)" oncopy="disableCopyPaste(event) onpaste="disableCopyPaste(event) oncut="disableCopyPaste(event)">
+                <label class="form-check-label" for="checkbox-${food.recipeid}">${food.mealname}</label>
+                <p id="nf-${food.recipeid}" class="nutrition-container">
+                        <span class="nutrition-fact">Serving Size: ${servingSizeInfo}</span>
+                        <span class="nutrition-fact">Calories: ${calories}</span>
+                        <span class="nutrition-fact">Proteins: ${proteins}g</span>
+                        <span class="nutrition-fact">Carbs: ${carbs}g</span>
+                        <span class="nutrition-fact">Fats: Fats: ${fats}g</span>
+                </p>
+                `;  
+                pageDiv.appendChild(foodElement);
+        
+            });
+
+            resultsContainer.appendChild(pageDiv);
+        }
+        createPagination();
+    }
+    else {
+        resultsContainer.innerHTML = "<div>No results found.</div>";
+    }
+    hideLoadingAnimation();
+}
+
+function createPageItem(text, page, isDisabled, id) {
+    const li = document.createElement("li");
+    li.className = "page-item" + (isDisabled ? " disabled" : ""); // Add 'disabled' class if isDisabled is true
+    const a = document.createElement("a");
+    a.className = "page-link";
+    a.href = "#";
+    a.textContent = text;
+    if (!isDisabled) {
+        a.onclick = function (e) {
+            e.preventDefault();
+            handleUSDAPageChange(page);
+        };
+    }
+    a.id = id; // Assign ID here
+    li.appendChild(a);
+    return li;
+}
+
+function createPagination() {
+    const pagination = document.getElementById("pagination-usda");
+    pagination.innerHTML = "";
+    const ul = document.createElement("ul");
+    ul.className = "pagination";
+
+    // Page numbers - always active
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = createPageItem(i, i, false, "pageButton" + i);
+        if (i === currentUSDAPage) {
+            pageItem.classList.add('active'); // Mark the current page as active
+        }
+        ul.appendChild(pageItem);
+    }
+
+    pagination.appendChild(ul);
+}
+
+function handleUSDAPageChange(pageNum) {
+    currentUSDAPage = pageNum; // Update the current page
+
+    const pages = document.querySelectorAll('.page-content');
+    pages.forEach(page => {
+        page.style.display = 'none'; // Hide all pages
+    });
+
+    const activePage = document.getElementById(`page-${pageNum}`);
+    activePage.style.display = 'block'; // Show the current page
+
+
+    // Update active state for page numbers
+    document.querySelectorAll('#pagination-usda .page-item').forEach(item => {
+        if (item.firstChild.textContent == currentUSDAPage.toString()) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+/* USDA **************************************************************/
+// Function to handle USDA data search
+function searchUSDAFood() {
+    const query = document.getElementById("searchBar").value.trim();
+    if (query != '') {
+        showLoadingAnimation();
+        console.log("Searching for:", query);
+        fetch(`/logmeals/usdadata?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                currentUSDAPage = 1;
+                console.log("Data received:", data);
+                totalItems = data.length;
+                totalPages = Math.ceil(totalItems / itemsPerPage);
+                prepareAllPages(data);
+            })
+            .catch(error => console.error("Error fetching USDA data:", error));
+    }
+    else {
+        const resultsContainer = document.getElementById("usda-search-results");
+        const pagination = document.getElementById("pagination-usda");
+        pagination.innerHTML = "";
+        resultsContainer.innerHTML = ""; // Clear previous results
+        resultsContainer.innerHTML =`<div>Enter a food item in the search bar above to display nutrition options.</div>`;
+        
+    }
+}
+
+function addUSDANutritionData() {
+    let nutritionData = [];
+
+    // Collect data from all checked USDA food checkboxes
+    document.querySelectorAll(".small-input").forEach((input) => {
+        if (input.dataset.usda === "true") {
+            let foodData = {
+                recipeid: input.dataset.recid,
+                mealname: input.dataset.mealname,
+                servingsize: input.dataset.servingsize,
+                calories: parseFloat(input.dataset.cals),
+                proteins: parseFloat(input.dataset.prots),
+                carbs: parseFloat(input.dataset.carbs),
+                fats: parseFloat(input.dataset.fats),
+                source: "usda",
+            };
+            nutritionData.push(foodData);
+        }
+    });
+
+    // Send the data to the server if there is any
+    if (nutritionData.length > 0) {
+        showLoadingAnimation();
+        $.ajax({
+            url: "/addingnutrition", // URL to the server-side function handling the database insertion
+            type: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
+            data: JSON.stringify({ nutritionData: nutritionData }),
+            success: function (response) {
+                console.log("Nutrition data successfully sent and saved:", response);
+                hideLoadingAnimation();
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to send nutrition data:", error);
+                hideLoadingAnimation();
+                Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+                });
+            },
+        });
+    } else {
+        console.log("No USDA food items selected or data is missing.");
+    }
+}
+
+
+// Debounce function to limit rate of invoking functions
+function debounce(func, delay) {
+    let debounceTimer;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+/* General Functionality *********************************************/
+// global variable for entry nutrition
+let entry_nutrition = { calories: 0, carbs: 0, fats: 0, proteins: 0 };
+
+function handleServingChange() {
+    const inputs = document.querySelectorAll(".small-input");
+    let totalCals = 0;
+    let totalCarbs = 0;
+    let totalFats = 0;
+    let totalProts = 0;
+    inputs.forEach((input) => {
+        input.setCustomValidity('');
+        customCheckValidity(input)
+        let inputServing = parseFloat(input.value);
+        let serving = parseFloat(inputServing.toFixed(2));
+        totalCals += serving * input.dataset.cals;
+        totalCarbs += serving * input.dataset.carbs;
+        totalFats += serving * input.dataset.fats;
+        totalProts += serving * input.dataset.prots;
+    });
+    entry_nutrition["calories"] = totalCals;
+    entry_nutrition["carbs"] = totalCarbs;
+    entry_nutrition["fats"] = totalFats;
+    entry_nutrition["proteins"] = totalProts;
+
+    const plateTotals = document.getElementById("plateTotals");
+    plateTotals.innerHTML = `Calories: ${totalCals.toFixed(2)} Proteins: ${totalProts.toFixed(2)} Carbs: ${totalCarbs.toFixed(2)} Fats: ${totalFats.toFixed(2)} `;
+}
+
+// function to handle removing a food-item from myplate
+function closeMyPlate(element) {
+    let checkid = element.dataset.checkid;
+    let checkbox = document.getElementById(checkid);
+    if (checkbox) {
+        checkbox.checked = false;
+    }
+    let myplateid = element.dataset.myplateid;
+    let myplatebox = document.getElementById(myplateid);
+    if (myplatebox) {
+        myplatebox.remove();
+    }
+    handleServingChange();
+}
+
+
+
+// Function to handle checkbox change event: gets label text, macro data, makes URL, and
+function handleCheckboxChange(element) {
+    if (element.checked) {
+        const num_foods = document.querySelectorAll(".small-input").length;
+        const food_limit = $("#food_limit").data('value');
+        if (num_foods >= food_limit) {
+            var limitwarning = 'You have reached the food limit of ' + food_limit + ' food items per entry. You may delete food items in order to add new ones to this entry, or log additional food items in a separate entry.';
+            Swal.fire({
+                icon: 'error',
+                title: 'Food Limit Reached',
+                text: limitwarning,
+                confirmButtonText: 'OK'
+            });
+            element.checked = false;
+            return;
+        }
+        let url =
+                `/logmeals/element?checkid=${encodeURIComponent(element.id)}` +
+                `&mealname=${encodeURIComponent(element.dataset.mealname)}` +
+                `&recid=${encodeURIComponent(element.dataset.recid)}` +
+                `&location=${encodeURIComponent(element.dataset.location)}` +
+                `&mealtime=${encodeURIComponent(element.dataset.mealtime)}` +
+                `&servingsize=${encodeURIComponent(element.dataset.servingsize)}` +
+                `&cals=${encodeURIComponent(element.dataset.cals)}` +
+                `&carbs=${encodeURIComponent(element.dataset.carbs)}` +
+                `&prots=${encodeURIComponent(element.dataset.prots)}` +
+                `&fats=${encodeURIComponent(element.dataset.fats)}` +
+                `&usda=${encodeURIComponent(element.dataset.usda)}`;
+        
+        showLoadingAnimation();
+        $.ajax({
+            url: url,
+            type: "GET",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
+            success: function (response) {
+                hideLoadingAnimation();
+                $("#my-plate").append(response)
+                handleServingChange();
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to send nutrition data:", error);
+                hideLoadingAnimation();
+            },
+        });
+    } else {
+        let checkid = element.id;
+        let uniqueid = checkid.slice(8);
+        let myplatebox = document.getElementById("myplate-" + uniqueid);
+        if (myplatebox) {
+            myplatebox.remove();
+            handleServingChange();
+        }
+    }
+}
+
+// fetch menu items based on selected dhall and mealtime + correct display
+function getResults() {
+    $(".menu-items-content").hide();
+    $("#menu-items").show();
+    $("#select").hide();
+    $("#noDataMessage").hide();
+
+    $("#searchBarSpan").hide();
+    $("#usda-search-results").hide();
+    $("#custom-food-items").hide();
+    $("#tutorial-food-items").hide();
+    $("#menu-items").show();
+
+
+    $("#mealTimeTab").show();
+    let mealtime = $(".nav-tabs .active").attr("id").replace("-tab", "");
+    let selectedHall = $("#diningHallSelect").val();
+    if (selectedHall == "Select Dining Hall") {
+        $("#select").show()
+        return
+    }
+    else if (selectedHall === "Example Dining Hall") {
+        $("#usda-search-results").hide();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").show();
+        $("#menu-items").hide();
+    } 
+    dhallCode = selectedHall.substring(0, 2);
+    let divToShow = dhallCode + "-" + mealtime;
+    if ($("#" + divToShow).length > 0) {
+        $("#" + divToShow).show();
+    } 
+    else {
+        $("#noDataMessage").show();
+    }
+}
+
+// Radio button updates
+function updateCardVisibility(radioBtnId) {
+    if (radioBtnId === 'radio-dhall') {
+        $("#pagination-usda").hide();
+
+        $("#customFoodButton1").hide();
+        $("#customFoodButton2").hide();
+        $("#usda-search-results").hide();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#mealTimeTab").show();
+        $("#foodsource-dropdown").show();
+        $("#searchBarSpan").hide();
+        $("#usda-search-results").hide();
+        getResults();
+    } 
+    else if (radioBtnId === 'radio-custom') {
+        $("#pagination-usda").hide();
+
+        $("#customFoodButton1").show();
+        $("#customFoodButton2").show();
+        $("#searchBarSpan").hide();
+        $("#mealTimeTab").hide();
+        $("#usda-search-results").hide();
+        $("#custom-food-items").show();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#foodsource-dropdown").hide();
+    } 
+    else if (radioBtnId === 'radio-usda') {
+        $("#pagination-usda").show();
+
+        $("#customFoodButton1").hide();
+        $("#customFoodButton2").hide();
+        $("#mealTimeTab").hide();
+        $("#searchBarSpan").show();
+        $("#usda-search-results").show();
+        $("#custom-food-items").hide();
+        $("#tutorial-food-items").hide();
+        $("#menu-items").hide();
+        $("#foodsource-dropdown").hide();
+    }
+}
+
+/* Tutorial **********************************************************/
+function startTutorial() {
+    var navbar = document.getElementById("navbar");
+    // element.style.zIndex = "0";
+    navbar.style.zIndex = "9999";  // Ensure it's above other elements
+    var introguide = introJs();
+    document.addEventListener('keydown', function(event) {
+    if (event.key === 'Tab') {
+        event.preventDefault(); // Prevent default tab behavior
+    }
+});
+
+introguide.setOptions({
+    disableInteraction: true,
+    showBullets: false,
+    showProgress: true,
+    tooltipClass: 'customTooltip',
+    steps: [{
+        title: 'Welcome',
+        intro: 'Welcome to the tutorial to learn how to log the foods you ate in a meal!'
+    }, {
+        title: 'Select a Source Card',
+        element: document.querySelector('.logmeals-card'),
+        intro: "This section is where you can select where you got your food from. By default, the Dining Halls are selected and a dropdown to pick which dining hall is shown. Checkboxes will appear for you to pick out items, as shown later in the tutorial."
+    }, {
+        title: 'Select from Custom Foods',
+        element: document.querySelector('#tutorial-radio-custom'),
+        intro: "You can also log custom foods that you make at home as part of your meals."
+    }, {
+        title: 'Custom Foods',
+        element: document.querySelector('#tutorial-custom-food-btns'),
+        intro: "With the buttons on the bottom, you can view your custom foods to see relevant images and descriptions along with adding more custom foods."
+    }, {
+        title: 'Search for Other Foods',
+        element: document.querySelector('#tutorial-radio-usda'),
+        intro: "This third option is for a generic food search for items that are not included in the other options. We will see this later."
+    }, {
+        title: 'Select from Dining Halls',
+        element: document.querySelector('#radio-buttons'),
+        intro: "Let's chose a dining hall for the start of this demo."
+    }, {
+        title: 'Select a dining hall',
+        element: document.querySelector('.select-dropdown'),
+        intro: "Select a dining hall from the dropdown to see the foods offered at that dining hall today."
+    }, {
+        title: 'Select Mealtime',
+        element: document.querySelector('#mealTimeTab'),
+        intro: 'Navigate between the tabs to see the foods offered during each mealtime.'
+    }, {
+        title: 'Select Foods',
+        element: document.querySelector('#tutorial-food-items'),
+        intro: 'Select the foods you want to log from the list that appears here.'
+    }, {
+        title: 'Select Item',
+        element: document.querySelector('#checkbox-tutorial-1'),
+        intro: "Let's select an example food item."
+    }, {
+        title: 'Edit My Plate',
+        element: document.querySelector('#tutorial-my-plate'),
+        intro: "Once you select an item, it appears here where you can edit the servings. If you accidentally added it, you can also remove it. Each food is given a serving size of 1 by default, but you can edit this value."
+    }, {
+        title: 'Plate Totals',
+        element: document.querySelector('.card-footer'),
+        intro: "You can also see a running totals of calories, proteins, carbs, and fats for the foods you add to your plate."
+    }, {
+        title: 'Generic Food Search', // make sure this action checks the "radio-usda" radio button
+        element: document.querySelector('#radio-usda'),
+        intro: "Let's go add another food. This time, let's search through the USDA's generic food database for a banana."
+    }, {
+        title: 'Search for a food',
+        element: document.querySelector('#searchBarSpan'),
+        intro: "Type the food name into the search bar."
+    }, {
+        title: 'Generic Food Selection',
+        element: document.querySelector('#usda-search-results'),
+        intro: "Here are all the search results. Let's select a food item from it."
+    }, {
+        title: 'Edit My Plate',
+        element: document.querySelector('#tutorial-my-plate'),
+        intro: "Again, once selected, the food appears on your plate with a default serving of 1."
+    }, {
+        title: 'Upload plate',
+        element: document.querySelector('#submitButton'),
+        intro: "Finally, once you are done adding items and editing servings, you can upload your plate and return to the homepage where your new entry will appear."
+    }, ]
+}).onchange(function(targetElement) {
+    if (targetElement.id == 'radio-buttons') {
+        document.getElementById('radio-dhall').checked = true;
+        updateCardVisibility('radio-dhall');
+    }
+    if (targetElement.id == 'tutorial-radio-custom') {
+        document.getElementById('radio-custom').checked = true;
+        updateCardVisibility('radio-custom');
+    }
+    if (targetElement.id == 'tutorial-radio-usda') {
+        document.getElementById('radio-usda').checked = true;
+        updateCardVisibility('radio-usda');
+    }
+    // Check if we are on the step where we want to auto-select an option from the dropdown
+    if (targetElement.classList.contains('select-dropdown')) {
+        // Simulate selecting an option by triggering a change event
+        document.querySelector('.select-dropdown').value = 'Example Dining Hall';
+        document.querySelector('.select-dropdown').dispatchEvent(new Event('change'));
+    }
+    if (targetElement.id == 'checkbox-tutorial-1') {
+        var checkbox = document.querySelector('#checkbox-tutorial-1');
+        checkbox.checked = true;
+        handleCheckboxChange(checkbox);
+    }
+    if (targetElement.id == 'radio-usda') {
+        var button = document.querySelector('#radio-usda');
+        document.querySelector('#radio-dhall').checked = false;
+        button.checked = true;
+        updateCardVisibility('radio-usda');
+    }
+    if (targetElement.id == 'searchBarSpan') {
+        updateCardVisibility('radio-usda');
+        var searchBar = document.getElementById("searchBar");
+        searchBar.value = "banana";
+        searchUSDAFood();
+    }
+    if (targetElement.id == 'usda-search-results') {
+        var checkbox = document.getElementById("usda-checkbox-usda-2012128");
+        checkbox.checked = true;
+        handleCheckboxChange(checkbox);
+    }
+}).onafterchange(function(targetElement) {
+    var nextButton = document.getElementsByClassName("introjs-nextbutton")
+    nextButton.style.pointerEvents = "none";
+}).onexit(function() {
+    try {
+        // reset radio buttons to have dhall button checked
+        document.getElementById('radio-dhall').checked = true;
+        document.getElementById('radio-usda').checked = false;
+        updateCardVisibility('radio-dhall');
+
+        // reset dropdown value
+        var selectDropdown = document.querySelector('.select-dropdown');
+        selectDropdown.value = 'Select Dining Hall';
+        selectDropdown.dispatchEvent(new Event('change'));
+
+        document.getElementById('close--tutorial-1').click();
+        document.getElementById('close-ckbox-usda-2012128').click();
+
+        var searchBar = document.getElementById("searchBar");
+        searchBar.value = "";
+        var usdaSearchResults = document.getElementById('usda-search-results');
+        usdaSearchResults.innerHTML = '';
+        var usdaPagination = document.getElementById('pagination-usda');
+        usdaPagination.innerHTML = '';
+
+        var navbar = document.getElementById("navbar");
+        navbar.style.zIndex = "1030";
+
+        // remove example items that were added to My Plate
+        var exampleCheckbox = document.querySelector('#checkbox-tutorial-1');
+        exampleCheckbox.checked = false;
+        handleCheckboxChange(exampleCheckbox);
+
+        var bananaCheckbox = document.getElementById("usda-checkbox-usda-2012128");
+        bananaCheckbox.checked = false;
+        handleCheckboxChange(bananaCheckbox);
+        } catch {
+            console.log("Tutorial exited early.");
+        }
+        return true;
+    }).start();
+}
+
+/* Validation ********************************************************/
+function customCheckValidity(input) {
+    let isValid = true;
+    inputValue = parseFloat(input.value)
+    // Check if the input is empty
+    if (!input.value || input.value==0) {
+        input.setCustomValidity("Please fill out a non-zero serving size."); // Set custom message
+        isValid = false;
+    }
+    else if (input.value < 0.01) {
+        input.setCustomValidity("Serving size must be greater than 0.01."); // Set custom message
+        isValid = false;
+    }
+    else if (inputValue > 100) {
+        input.setCustomValidity("Serving size must be less than or equal to 100."); // Set custom message
+        isValid = false;
+    } else {
+        input.setCustomValidity(""); // Clear any previous custom validity messages
+    }
+    input.reportValidity();
+    return isValid;
+}
+
+function validateInputs(event) {
+    const inputs = document.querySelectorAll(".small-input");
+    valid = true;
+
+    // Check if there are 0 food items selected
+    if (inputs.length == 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Empty Plate',
+            text: 'Please add foods to your plate before submitting.',
+            confirmButtonText: 'OK'
+        });
+        event.preventDefault()
+        return false;
+    }
+
+    inputs.forEach((input) => {
+        if (!customCheckValidity(input)) {
+            valid=false
+        }
+    });
+    return valid
+}
+
+// When the user submits the form and all fields are valid, lock it
+function closeForm(e) {
+    // Obtain form elements
+    const inputs = document.querySelectorAll(".small-input");
+
+    inputs.forEach((input) => {
+        input.value = parseFloat(input.value).toFixed(2)
+    });
+
+    var validFormElements = document.querySelectorAll(".small-input:valid")
+    var logMealsButton = document.getElementById("submitButton")
+
+    if (validFormElements.length == inputs.length) {
+        logMealsButton.style.pointerEvents = "none"
+        logMealsButton.textContent = "Submitting..."
+        logMealsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
+    }
+}
+
+// Reset elements in page upon unload
+window.onunload = function() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+        input.value = '';
+    });
+    var dropdown = document.querySelector('.select-dropdown');
+    dropdown.value = "Select Dining Hall";
+    document.getElementById('radio-dhall').checked = true;
+    document.getElementById('radio-usda').checked = false;
+    document.getElementById('radio-custom').checked = false;
+};
+
+/* setup *************************************************************/
+// set up event listeners for dhall select and mealtime tab
+function setup() {
+    handleCustomPageChange(1);
+    $("#menu-items").show();
+    hideLoadingAnimation();
+
+    // Event listeners
+    document.querySelectorAll('input[name="foodSource"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            updateCardVisibility(this.id); // Call updateCard function passing the id of the selected radio button
+        });
+    });
+    document.getElementById("startTutorial").addEventListener("click", function () {
+        startTutorial();
+    });
+    $("#diningHallSelect").change(getResults); // Toggle search bar on selection change
+    $("#searchBar").on("input", debounce(searchUSDAFood, 1000)); // Debounce the search input
+    const diningHallSelect = document.getElementById("diningHallSelect");
+    $("#mealTimeTab a").on("shown.bs.tab", getResults);
+    diningHallSelect.addEventListener("change", getResults);
+    document.getElementById("pagination-usda").addEventListener("click", function(event) {
+        const target = event.target;
+        if (target.classList.contains("page-link")) {
+            const pageNumber = parseInt(target.textContent);
+            handleUSDAPageChange(pageNumber);
+        }
+    });
+
+    // submit data
+    document.getElementById("submitButton").addEventListener("click", function (event) {
+        event.preventDefault();
+        addUSDANutritionData();
+
+        Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+                });
+
+        // checks entry limit 
+        const over_limit = $("#over_limit").data('value');
+        const entry_limit = $("#entry_limit").data('value');
+        if (over_limit) {
+            var limitwarning = 'You are not able to upload plate because you have reached the entry log limit of ' + entry_limit + ' entries for the day. You may delete entries in order to add new ones.'
+            Swal.fire({
+                icon: 'error',
+                title: 'Entry Limit Reached',
+                text: limitwarning,
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
+        // validation
+        if (!validateInputs(event)) {
+            event.preventDefault()
+            return false;
+        }
+
+        // gray out and disable submit button
+        closeForm(event);
+
+        // send data
+        var recids = [];
+        var servings = [];
+        const inputs = document.querySelectorAll(".small-input");
+        inputs.forEach((input) => {
+            let recid = input.dataset.recid;
+            let serving = parseFloat(input.value);
+            recids.push(recid);
+            servings.push(serving);
+        });
+        if (recids.length > 0) {
+            const timePageLoadedElement = document.getElementById("timePageLoaded")
+            const timePageLoaded = timePageLoadedElement.dataset.time
+            var dataToSend = {
+                entry_recids: recids,
+                entry_servings: servings,
+                entry_nutrition: entry_nutrition,
+                timePageLoaded: timePageLoaded
+            };
+            var jsonData = JSON.stringify(dataToSend);
+            showLoadingAnimation();
+            $.ajax({
+                type: "POST",
+                url: "/logmeals",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token() }}"
+                },
+                data: jsonData,
+                success: function (response) {
+                    if (response.success && response.redirect) {
+                        window.location.href = response.redirect;
+                    }
+                    else {
+                        hideLoadingAnimation();
+                        Swal.fire({
+                            title: 'Database Has Been Changed',
+                            text: response.message,
+                            icon: 'warning',
+                            confirmButtonText: 'Refresh'
+                        }).then((willRefresh) => {
+                            if (willRefresh.isConfirmed) {
+                                showLoadingAnimation();
+                                location.reload(); // Refresh the page if confirmed
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in data submission:", xhr.status, xhr.responseText);
+                },
+            });
+        }
+    });
+}
+
+$("document").ready(setup);
+</script>
+{% endblock %}

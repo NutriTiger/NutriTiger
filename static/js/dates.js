@@ -1,9 +1,11 @@
 // Getting dates and times from the client, not the server.
 // Used in homepage.html
 
-// Get ampm function for time of day
+// Returns the time of day as a string:
+// "morning", "afternoon", or "evening"
 function getAmPm() {
     let hours = new Date().getHours();
+
     if (hours < 12) {
         return 'morning';
     } else if (hours < 18) {
@@ -13,13 +15,14 @@ function getAmPm() {
     }
 }
 
-// getting the current date (formatted)
+// Returns the current date as a formatted string:
+// "Weekday, Month Xth"
 function getDate() {
     var current = new Date();
     var day = current.getDate();
     var suffix = "";
 
-    // Determine the suffix for the day
+    // determine the suffix for the date
     if (day === 1 || day === 21 || day === 31) {
         suffix = "st";
     } else if (day === 2 || day === 22) {
@@ -31,7 +34,7 @@ function getDate() {
     }
 
     var formattedDate = current.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    formattedDate = formattedDate.replace(/, \d{4}/, ''); // removing year from string
+    formattedDate = formattedDate.replace(/, \d{4}/, ''); // removing year from formatted string
 
     return formattedDate + suffix;
 }

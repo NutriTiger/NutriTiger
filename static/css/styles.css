@@ -1,7 +1,24 @@
-.nav-tabs .nav-link {
-    color: #FF9040; 
-}
+/* global variables for colors */
 
+:root {
+    --pink: rgb(251, 107, 129);
+    --pink-transparent: rgba(251, 107, 129, 0.5);
+    --green: rgba(67, 182, 107);
+    --green-transparent: rgba(67, 182, 107, 0.5);
+    --purple: rgb(68, 0, 128);
+    --purple-transparent: rgba(68, 0, 128, 0.5);
+    --blue: rgba(66, 142, 223);
+    --blue-transparent: rgba(66, 142, 223, 0.7);
+    --grey: rgba(96, 96, 96, 0.7);
+}
+.text-med {
+    font-size: 18px;
+}
+.checkbox {
+    height: 18px;
+    width: 18px;
+    border: 1px solid black;
+}
 .custom-text-wrapper {
     width: 70%; /* Adjust this value as needed */
     margin-left: auto;
@@ -9,8 +26,19 @@
     text-align: center; /* Center aligns the text */
 }
 
+/* for navbar.html */
+
 .nt-color-navbar {
     background-color: #efd3b8 ; 
+}
+
+.nt-nav-item a:hover{
+    color:#ce6203;
+    text-decoration: underline;
+}
+
+.nav-tabs .nav-link {
+    color: #FF9040; 
 }
 
 .nt-color-bg {
@@ -28,7 +56,7 @@
 body { 
     padding-top: 60px; 
     background-color: #f6e3d1 ;
-    font-family: "Montserrat", sans-serif; 
+    /* font-family: sans-serif, "Montserrat"; */
 }
 
 .row-nt {
@@ -45,10 +73,6 @@ body {
 
 .p-5 {
     padding-top: 1.5rem !important;
-}
-
-.nt-color-menu {
-    background-color: #FFF4E9;
 }
 
 .nt-food-text {
@@ -163,27 +187,27 @@ body {
     height: auto;
 }
 .avg-cals {
-    border-Color: rgb(7, 127, 255); 
+    border-Color: var(--blue); 
     border-width: 2px;
-    background-Color: rgb(152, 188, 227);
+    background-Color: var(--blue-transparent);
     font-size: large;
 }
 .avg-prots {
-    border-Color: rgb(255, 141, 158); 
+    border-Color: var(--pink); 
     border-width: 2px;
-    background-Color: rgb(248, 183, 193);
+    background-Color: var(--pink-transparent);
     font-size: large;
 }
 .avg-carbs {
-    border-Color: rgb(67, 182, 107); 
+    border-Color: var(--green); 
     border-width: 2px;
-    background-Color: rgb(67, 182, 107, 0.3);
+    background-Color: var(--green-transparent);
     font-size: large;
 }
 .avg-fats {
-    border-Color: rgba(255, 205, 86); 
+    border-Color: var(--purple); 
     border-width: 2px;
-    background-Color: rgba(255, 205, 86, 0.5);
+    background-Color: var(--purple-transparent);
     font-size: large;
 }
 
@@ -222,12 +246,6 @@ body {
     align-self: center;
 }
 
-/* Bordered rows for editing foods rows */
-.list-group-item {
-    border: 1px solid #dee2e6; /* Add border */
-    border-radius: 0; /* Remove border-radius */
-}
-
 /* Calorie goal lineedit */ 
 /* <input type="number" class="form-control" name='line' placeholder="Enter the number here" min="0" required>*/
 .form-calgoal {
@@ -236,22 +254,17 @@ body {
     align-self: center;
 }
 
-.selected-label {
-    height: 30px;
-    font-size: 16px;
-}
-
-/* settings photo */
-.fitted-image {
-    width: 100%;   /* Makes the image take the full width of its container */
-    height: auto;  /* Maintains the aspect ratio of the image */
-}
-
-/* Setting min heights for logfood page cards */
-.logfood-card {
-    min-height: 500px; /* Set minimum height */
+/* Setting min heights for logmeals page cards */
+.logmeals-card {
+    min-height: 500px;
   }
 
+.nt-custom-foods-btn {
+    border-radius: 6px !important;
+    margin: 10px;
+}
+
+/* Loading animations */
 .loading-animation {
     position: fixed;
     top: 0;
@@ -278,11 +291,13 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+/*********************************************************/
 
 .homepage-card {
     min-height: 700px;
 }
 
+/* Custom dropdowns for History and Log Meals dhalls */
 .select-dropdown {
     justify-content: center;
     background-color: #ffaf63; 
@@ -290,6 +305,7 @@ body {
     color: #000000; 
 }
 
+/* Set color to orange */
 .select-dropdown:focus,
 .select-dropdown:hover,
 .select-dropdown:active {
@@ -300,25 +316,13 @@ body {
     outline: none; 
 }
 
-/* for individual food item nutrition facts ***********************/
-.nutrition-container {
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 5px;
-}
+.icons .fa { 
+    width: 50px; 
+    height: 50px; 
+    font-size: 50px; 
+} 
 
-.nutrition-fact {
-    background-color: #e0e0e0; 
-    padding: 2px;
-    font-size: 14px;
-    border-radius: 6px;
-}
-
-.nutrition-fact:last-child {
-    margin-right: 0;
-}
-
-/* Personal food - description text box will grow with input */
+/* Custom food - description text box will grow with input */
 .autosize {
     min-height: 50px;
     max-height: 300px;
@@ -372,4 +376,67 @@ body {
     justify-content: center; /* This centers the child horizontally in the container */
     width: 100%; /* Takes full width of its parent */
 }
+
+.popover-body {
+    height: 300px;
+    overflow-y: auto;
+}
+
+/* for custom foods page */
+.fitted-image {
+    width: 100%; /* Make the image width responsive to the card width */
+    height: auto; /* Maintain the aspect ratio */
+    max-height: 200px; /* Restrict the image height to keep the layout uniform */
+    object-fit: cover; /* Ensure the image covers the area without distorting */
+}
+.card-pop {
+    transition: transform 0.3s ease-in-out; /* Smooth transformation for hover effect */
+}
+.card-pop:hover {
+    transform: scale(1.03); /* Slight scale on hover to add interaction feedback */
+}
+
+/* for hmenu.html */
+.nt-activated {
+    color:#000000!important;
+    font-weight:500;
+}
+.nt-color-menu {
+    background-color: #FFF4E9;
+}
+
+.nt-color-menu a:hover {
+    color:#ce6203;
+    text-decoration: underline;
+}
+
+/* for about.html */
+
+.image-container {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 300px; /* Adjust the container size */
+    height: 234px; /* Adjust the container size */
+}
+
+.nt-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Set the width to fill the container */
+    height: 100%; /* Set the height to fill the container */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+    transition: opacity 0.5s ease-in-out; /* Smooth transition */
+}
+
+#imageB {
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+#imageB:hover {
+    opacity: 1;
+}
+     
 /*******************************************************************/

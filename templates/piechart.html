@@ -1,87 +1,85 @@
 <!--Homepage Pie Chart with macronutrient breakdown
  for today's logged foods-->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pie Chart Example</title>
-    <!-- Include Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <div style="position: relative;">
-        <div id="myPieChartDiv" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <!-- HTML canvas element where the chart will be rendered -->
-            <canvas id="myPieChart" width="350" height="350"></canvas>
-        </div>
-    </div>    
-
-<script>
-    var fatsInGrams = {{ fats }};
-    var proteinsInGrams = {{ prots }};
-    var carbsInGrams = {{ carbs }};
-    var fatsCalories = fatsInGrams * 9;
-    var proteinsCalories = proteinsInGrams * 4;
-    var carbsCalories = carbsInGrams * 4;
-
-        var empty = true
-        if (fatsInGrams !== 0 || proteinsInGrams !== 0 || carbsInGrams !== 0) {
-            empty = false
-        }
-
-        if (!empty) {
-            // Data for the pie chart
-            var data = {
-                labels: [
-                    `Protein (${proteinsInGrams}g)`,
-                    `Carbs (${carbsInGrams}g)`,
-                    `Fat (${fatsInGrams}g)`
-                ],
-                datasets: [{
-                    data: [proteinsCalories.toFixed(2), carbsCalories.toFixed(2), fatsCalories.toFixed(2)], // Proportions based on calories
-                    backgroundColor: [
-                        'rgba(255, 182, 193, 1)',
-                        'rgba(67, 182, 107)',
-                        'rgba(255, 205, 86)'
-                    ]
-                }]
-            };
-
-            // Get the canvas element
-            var ctx = document.getElementById('myPieChart').getContext('2d');
-
-            // Create the pie chart
-            var myPieChart = new Chart(ctx, {
-                type: 'pie',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'bottom'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                // Include grams in tooltip
-                                label: function(context) {
-                                    var label = ' ' + context.parsed + ' cal';
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        } else {
-            const noData = document.createElement("h1")
-            test.innerText = "No data available"
-            document.getElementById('myPieChartDiv').appendChild(test)
-            document.getElementById('myPieChart').hidden = true
-        }
-    </script>
-</body>
-</html>
+ <head>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ </head>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <body>
+     <div style="position: relative;">
+         <div id="myPieChartDiv" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+             <!-- HTML canvas element where the chart will be rendered -->
+             <canvas id="myPieChart" width="350" height="350"></canvas>
+         </div>
+     </div>    
+ 
+ <script>
+     var fatsInGrams = {{ fats }};
+     var proteinsInGrams = {{ prots }};
+     var carbsInGrams = {{ carbs }};
+     var fatsCalories = fatsInGrams * 9;
+     var proteinsCalories = proteinsInGrams * 4;
+     var carbsCalories = carbsInGrams * 4;
+     var style = getComputedStyle(document.body);
+         var empty = true
+         if (fatsInGrams !== 0 || proteinsInGrams !== 0 || carbsInGrams !== 0) {
+             empty = false
+         }
+ 
+         if (!empty) {
+             // Data for the pie chart
+             var data = {
+                 labels: [
+                     `Protein (${proteinsInGrams}g)`,
+                     `Carbs (${carbsInGrams}g)`,
+                     `Fat (${fatsInGrams}g)`
+                 ],
+                 datasets: [{
+                     data: [proteinsCalories.toFixed(2), carbsCalories.toFixed(2), fatsCalories.toFixed(2)], // Proportions based on calories
+                     backgroundColor: [
+                         style.getPropertyValue('--pink'),
+                         style.getPropertyValue('--green'),
+                         style.getPropertyValue('--purple-transparent')
+                         // 'rgba(255, 182, 193, 1)',
+                         // 'rgba(67, 182, 107)',
+                         // 'rgba(255, 205, 86)'
+                     ]
+                 }]
+             };
+ 
+             // Get the canvas element
+             var ctx = document.getElementById('myPieChart').getContext('2d');
+ 
+             // Create the pie chart
+             var myPieChart = new Chart(ctx, {
+                 type: 'pie',
+                 data: data,
+                 options: {
+                     responsive: true,
+                     maintainAspectRatio: false,
+                     plugins: {
+                         legend: {
+                             display: true,
+                             position: 'bottom'
+                         },
+                         tooltip: {
+                             callbacks: {
+                                 // Include grams in tooltip
+                                 label: function(context) {
+                                     var label = ' ' + context.parsed + ' cal';
+                                     return label;
+                                 }
+                             }
+                         }
+                     }
+                 }
+             });
+         } else {
+             const noData = document.createElement("h3")
+             noData.innerText = "Zero macronutrient count found in current logged meals."
+             noData.style.textAlign = "center";
+             document.getElementById('myPieChartDiv').appendChild(noData)
+             document.getElementById('myPieChart').hidden = true
+         }
+     </script>
+ </body>
+ </html>

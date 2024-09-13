@@ -3,104 +3,69 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Nutrition Goals</title>
+        <title>Welcome</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+        <!--Favicons-->
         <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='media/apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='media/favicon-32x32.png') }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='media/favicon-16x16.png') }}">
         <link rel="manifest" href="{{ url_for('static', filename='media/site.webmanifest') }}">
         <link rel="mask-icon" href="{{ url_for('static', filename='media/safari-pinned-tab.svg') }}" color="#5bbad5">
         <link rel="shortcut icon" href="{{ url_for('static', filename='media/favicon.ico') }}">
-
-
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
-
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        
         {% block head %}
         {% endblock %}
     </head>
 
     <body>
+        <script src ="../static/js/validation.js"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     {% set current_page = 'firstcontact' %}
-        <div class="row p-5">
-            <div class="'col-sm-7">
-                <div class="card">
+    <div class="container-fluid p-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card p-3">
                     <div class="card-body text-center">
-                    
-                        <div class="container-fluid mx-auto p-5">
-                            <h1 class="m-5"><strong>Nutrition Goals</strong></h1> 
-                            <h3 class="m-3 p-4">Welcome to NutriTiger! Please fill out your daily calorie goal. <br>
+                        <div class="container-fluid px-md-5">
+                            <h1 class="mt-5 mb-4"><strong>Set Daily Calorie Goal</strong></h1> 
+                            <h3 class="mb-5">Welcome to NutriTiger! Please fill out your daily calorie goal. <br>
                                 This value can be changed at any time.</h3>
                             
                             {% include 'caloriecalculator.html' %}
                     
                             <div class="container">
-                                <div class="text-center p-4">
-                                    <div class="row align-items-center">
-                                        <div class="col d-flex align-items-center">
-                                            <h4 class="m-2"> Daily Calorie Goal:</h4>
-                                            <form action="/welcome" method="post" class="d-flex m-2">
-                                                <input id="firstCalorieInput" type="number" class="form-control form-calgoal mr-2" name='line' placeholder="Enter the number here." min="1" max="100000" onpaste="return false;" onkeypress="return isValid(event)" required autofocus style="width: 200px;">
+                                <div class="text-center">
+                                    <div class="row align-items-center pb-5">
+                                        <div class="col d-flex flex-column flex-md-row align-items-center">
+                                            <h4 class="mb-2 mb-md-0"> Daily Calorie Goal:</h4>
+                                            <form action="/welcome" method="post" class="d-flex flex-column flex-md-row m-2">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                <input id="firstCalorieInput" step="any" type="number" class="form-control form-calgoal mr-2 mb-2 mb-md-0" 
+                                                name='line' placeholder="Enter the number here." min="1" max="100000" onpaste="return false;" onkeypress="return isCalGoalValid(event)"
+                                                required autofocus style="width: 200px;">
                                                 <button id="firstCalorieButton" class="btn btn-primary btn-lg pl-3 m-2" type="submit" onclick="closeForm()">Save</button>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            
+                        </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
+    </div>
+    
+    
     </body>
 </html>
 
 <script>
-
-    // Validate the serving inputs
-    function isValid(input) {
-        var charCode = input.which || input.keyCode;
-        var value = input.target.value;
-
-        // If the pressed key is a '-'
-        if (input.charCode === 45)
-            return false;
-
-        // If the key contains nonvalid chars 
-        if (input.charCode < 48 || input.charCode > 57)
-            return false;
-
-        return true;
-    }
-
-    // When the user submits the form and all fields are valid, lock it
-    function closeForm() {
-        // Obtain form elements
-        var validFormElements = document.querySelector(":valid")
-        var calorieInput = validFormElements.querySelector("input")
-        var settingsButton = validFormElements.querySelector("button")
-
-        // Check if the input was validated
-        if (calorieInput != null) {
-            // Remove any leading zeros
-            var currentNumber = calorieInput.value
-            calorieInput.value = currentNumber.replace(/^0+/, '')
-
-            // Disable the button but have it submit the form
-            calorieInput.readOnly = true
-            settingsButton.style.pointerEvents = "none"
-            settingsButton.textContent = "Submitting..."
-            settingsButton.style.opacity = "var(--bs-btn-disabled-opacity)"
-        }
-    }
-
     // If the user hits the back button reset the form
     window.onunload = function() {
         var calorieInput = document.getElementById("firstCalorieInput")
@@ -110,5 +75,6 @@
         settingsButton.style.pointerEvents = "auto"
         settingsButton.textContent = "Save"
         settingsButton.style.opacity = "none"
+        settingsButton.tabIndex = "1"
     }
 </script>

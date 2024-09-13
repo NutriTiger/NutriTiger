@@ -19,6 +19,91 @@ import sys
 #----------------------------------------------------------------------
 
 '''
+Gets the time for the user's last access to the database
+'''
+def get_last_time(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        who = {"netid": netid}
+        try:
+            user = users_collection.find_one(who)
+            recent_time = user.get("last_delete", None)
+           
+            return recent_time
+        
+
+        except pymongo.errors.OperationFailure:
+                print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+                sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+                print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+                sys.exit(1)
+
+'''
+Updates the time for the user's last access to the database as now
+'''
+def update_last_time(netid):
+    with connectmongo() as client:
+        db = client.db
+        users_collection = db["users"]
+        who = {"netid": netid}  # Query to identify the user by their `netid`
+        try:
+            # Fetch the current time
+            recent_time = datetime.now()
+
+            # Update the last_delete field to the current timestamp
+            result = users_collection.update_one(
+                who,
+                {"$set": {"last_delete": recent_time}}
+            )
+        
+            if result.matched_count == 0:
+                print(f"User with netid {netid} not found.")
+            else:
+                print(f"Successfully updated last_delete for netid {netid}.")
+            return recent_time
+
+        except pymongo.errors.OperationFailure:
+                print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+                sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+                print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+                sys.exit(1)
+
+'''
+Adds last_delete field for all users who do not have the field
+(sets the time to absolute minimum)
+'''
+def add_last_time():
+    with connectmongo() as client:
+        db = client.db  # Replace with the appropriate database name
+        users_collection = db['users']
+
+        try:
+            # Define the default timestamp for new `last_delete` fields
+            default_time = datetime.min 
+
+            # Find all users missing the `last_delete` field using `$exists`
+            query = {"last_delete": {"$exists": False}}
+
+            # Update all documents that match the query to add the `last_delete` field
+            result = users_collection.update_many(
+                query,
+                {"$set": {"last_delete": default_time}}
+            )
+
+            print(f"Updated {result.matched_count} users and added the `last_delete` field to {result.modified_count} users.")
+
+        except pymongo.errors.OperationFailure:
+                print("An authentication error was received. Are you sure your database user is authorized to perform write operations?")
+                sys.exit(1)
+        except pymongo.errors.ServerSelectionTimeoutError:
+                print("The server timed out. Is your IP address added to Access List? To fix this, add your IP address in the Network Access panel in Atlas.")
+                sys.exit(1)
+
+
+'''
 Sets the user document with netid: netid to user_profile
 Returns updated user profile
 '''
@@ -41,8 +126,10 @@ def __setuser__(netid, user_profile):
 
 #-----------------------------------------------------------------------
 
-# INSIDE UPDATEDCONSUMED: organize macro/calorie count:
-# Note: right now, dict keys for nutrtion facts is labeled as "calories", "carbs", "fats", "proteins" and vals are doubles
+'''
+returns the nutrition facts of an entry with corresponding recipeids and servings, 
+where recipeids and servings args are arrays of the same length
+'''
 def __calculatenutrition__(recipeids, servings):
     entry_cal = 0
     entry_carb = 0
@@ -61,7 +148,6 @@ def __calculatenutrition__(recipeids, servings):
             "carbs" : entry_carb,
             "fats" : entry_fat,
             "proteins": entry_prot}
-
 #-----------------------------------------------------------------------
 '''
 Updates the nutrient history for this_user, adding or subtracting the entry_nut
@@ -79,10 +165,9 @@ def __updatehistory__(this_user, entry_nut, factor):
     prot_his[0] = prot_his[0] + entry_nut["proteins"] * factor
 
 #-----------------------------------------------------------------------
-
 '''
 Create a new user document with netid: netid and caloricgoal: cal
-Returns the new user's profile as a dict
+Returns the new user's profile as a json
 '''
 def newuser(netid, cal):
     # check that this user does not already exist
@@ -106,7 +191,8 @@ def newuser(netid, cal):
                     "daily_rec" : [],
                     "daily_serv" : [],
                     "daily_nut" : [],
-                    "max_id": 0
+                    "max_id": 0,
+                    "last_delete": datetime.min
                     }
 
     # connect to database and add user
@@ -125,34 +211,8 @@ def newuser(netid, cal):
             sys.exit(1)
 #-----------------------------------------------------------------------
 '''
-Returns the max_id for a user.
-'''
-def get_maxid(netid):
-    this_user = finduser(netid)
-    return this_user["max_id"]
-#-----------------------------------------------------------------------
-'''
-Updates the max_id for a user.
-'''
-def update_maxid(netid):
-    with connectmongo() as client:
-        db = client.db
-        users_collection = db["users"]
-        who = {"netid": netid}
-        try:
-            result = users_collection.update_one(who, {"$inc": {"max_id": 1}})
-            if result.matched_count == 0:
-                print(f"No document found with netid: {netid}")
-            elif result.modified_count == 0:
-                print(f"Document with netid: {netid} was not updated.")
-        except pymongo.errors.OperationFailure as e:
-            print(f"An authentication error occurred: {e}")
-        except pymongo.errors.ServerSelectionTimeoutError as e:
-            print(f"The server timed out: {e}")
-#-----------------------------------------------------------------------
-'''
 If this is first contact of the day for user with netid: netid, updates fields
-Returns updated user profile
+Returns updated user profile as json
 '''
 def userlogin(netid):
     this_user = finduser(netid)
@@ -167,10 +227,9 @@ def userlogin(netid):
  
     # if it's the same day, no updates necessary
     if (diff == 0):
-        print("same day login")
         return this_user
 
-    # update fields
+    # else update fields
     for i in range(diff):
         this_user["cal_his"].insert(0, 0)
         this_user["carb_his"].insert(0, 0)
@@ -248,12 +307,11 @@ Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th i
 '''
 def deleteManyEntry(this_user, array_of_entry_nums):
     sorted_entry_nums = sorted(array_of_entry_nums, reverse = True)
-
     totalNut = {"calories": 0, 
                 "carbs": 0, 
                 "fats": 0, 
                 "proteins": 0}
-    # update
+
     for entry_num in sorted_entry_nums:
         entry_nut = this_user["daily_nut"][entry_num]
         totalNut["calories"] += entry_nut["calories"]
@@ -277,11 +335,11 @@ Note: Entry num ranges from 0 to total number of entries - 1 for the user (0th i
 Note: Food num is also 0th indexed
 '''
 def delFood(this_user, entry_num, food_num):
-    
     food_rec = this_user["daily_rec"][entry_num].pop(food_num)
     food_serv = this_user["daily_serv"][entry_num].pop(food_num)
     food_nut = __calculatenutrition__([food_rec], [food_serv])
     entry_nut = this_user["daily_nut"][entry_num]
+
     entry_nut["calories"] = entry_nut["calories"] - food_nut["calories"]
     entry_nut["carbs"] = entry_nut["carbs"] - food_nut["carbs"]
     entry_nut["fats"] = entry_nut["fats"] - food_nut["fats"]
@@ -300,11 +358,12 @@ Note: Food num is also 0th indexed
 Note: New serving size is a double
 '''
 def editFood(this_user, entry_num, food_num, new_serv):
-    # calculate difference
+    # check to see if new serving
     food_serv = this_user["daily_serv"][entry_num][food_num]
     if (food_serv == new_serv):
-        print("serving size is the same")
         return this_user
+
+    # calculate the nutrition fact difference with new serving
     food_rec = this_user["daily_rec"][entry_num][food_num]
     old = __calculatenutrition__([food_rec], [food_serv])
     serv_fact = new_serv/food_serv
@@ -326,7 +385,7 @@ def editFood(this_user, entry_num, food_num, new_serv):
 
 #-----------------------------------------------------------------------
 '''
-One function for all edit plate possibilities. Takes 3 arguments:
+One function for all edit plate possibilities. Takes 4 arguments:
     netid
     entriesToDelete: an array of entry numbers (0 indexed) to be deleted
     foodsToDelete: an array of dictionaries [{index: entrynum, foods:[foodnums]}]
@@ -358,40 +417,46 @@ def editPlateAll(netid, entriesToDelete, foodsToDelete, servingsToEdit):
             this_user["daily_rec"].pop(index)
             this_user["daily_serv"].pop(index)
             this_user["daily_nut"].pop(index)
+    
+    this_user["last_delete"] = datetime.now().astimezone(pytz.utc)
     return __setuser__(netid, this_user)
     
 
 #-----------------------------------------------------------------------
 '''
-Handles deleting the recipes in deletedFoods array, deleting them from
-user profile
-
+Handles deleting the logged foods with recid deletedFood , 
+deleting it from user profile
 '''
-def handleDeletePersonalNutrition(netid, deletedFood):
+def handleDeleteCustomNutrition(netid, deletedFood):
     this_user = finduser(netid)
     daily_recids = this_user["daily_rec"]
     for entrynum, recids in enumerate(daily_recids):
+        foodnum_todelete = -1
         for foodnum, recid in enumerate(recids):
-            foods_to_del = []
             if recid == deletedFood:
-                foods_to_del.append(foodnum)
-        foods_to_del = sorted(foods_to_del, reverse=True)
-        for food in foods_to_del:
-            delFood(this_user, entrynum, food)
+                foodnum_todelete = foodnum
+                break
+        if foodnum_todelete != -1:
+            delFood(this_user, entrynum, foodnum_todelete)
 
     for index, entry in enumerate(this_user["daily_rec"]):
         if len(entry)==0:
             this_user["daily_rec"].pop(index)
             this_user["daily_serv"].pop(index)
             this_user["daily_nut"].pop(index)
+    this_user["last_delete"] = datetime.now().astimezone(pytz.utc)
     return __setuser__(netid, this_user)
 
-def handleManyDeletePersonalNutrition(netid, deletedFoods):
+'''
+Handles deleting the recipes in deletedFoods array, deleting them from
+user profile
+'''
+def handleManyDeleteCustomNutrition(netid, deletedFoods):
     this_user = finduser(netid)
     daily_recids = this_user["daily_rec"]
+    foods_to_del = []
     for entrynum, recids in enumerate(daily_recids):
         for foodnum, recid in enumerate(recids):
-            foods_to_del = []
             if recid in deletedFoods:
                 foods_to_del.append(foodnum)
         foods_to_del = sorted(foods_to_del, reverse=True)
@@ -407,7 +472,7 @@ def handleManyDeletePersonalNutrition(netid, deletedFoods):
 #-----------------------------------------------------------------------
 
 '''
-Returns the profile of the user with netid: netid as a dict
+Returns the profile of the user with netid: netid as a json
 '''
 def finduser(netid):
     with connectmongo() as client:
@@ -479,7 +544,11 @@ def deleteuser(netid):
 
 # USED FOR TESTING FOR NOW 
 def main(): 
-    editFood("jm0278", 0, 0, 100)
+    # editFood("jm0278", 0, 0, 100)
+    # add_last_time()
+    print(get_last_time('oe7583'))
+    print(update_last_time('oe7583'))
+    print(get_last_time('oe7583'))
 
 #-----------------------------------------------------------------------
 

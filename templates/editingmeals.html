@@ -1,0 +1,229 @@
+{% extends "layout.html" %}
+{% set current_page = 'editingplate' %}
+{% block title %}My Homepage{% endblock %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.js" integrity="sha512-f26fxKZJiF0AjutUaQHNJ5KnXSisqyUQ3oyfaoen2apB1wLa5ccW3lmtaRe2jdP5kh4LF2gAHP9xQbx7wYhU5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src ="../static/js/validation.js"></script>
+<!--Give header white background -->
+{% include 'loading.html' %}
+    <h1 class="text-center m-3">Editing My Meals</h1> 
+    <h3 class="text-center m-3 text-muted">Edit servings, delete foods, or delete meals.</h3>
+    <!--Layout for the two main cards-->
+    <div class="row p-3 p-md-5">
+        <div class="col-sm-9 mx-auto">
+          <div class="card">
+            <div class="card-body">
+                <!--My Plate (right card)-->
+                <h4 class="text-center py-3">Today's Logged Meals</h4>
+                <!--Create a card for each entry-->
+                <div class="col">
+                    {% for entry, foods in entry_info.items() %}
+                    <div class="row-cols-1 p-2" id="entry-{{ entry }}">
+                        <div class="entryCard card border-primary" style="padding: 10px;">
+                            <div class="card-body">
+                                <div class="header-container">
+                                    <h5 class="card-title py-1"><b>Meal {{ entry +1}}</b></h5>
+                                    <button type="submit" data-entrynum="{{ entry }}" class="entryCloseBtn btn-close" aria-label="Close"></button>
+                                </div>
+                                <!--Create a bordered element for each food in the entry-->
+                                <ul class="list-group">
+                                    {% for food_dict, serving in foods %}
+                                    <!--Border with close buttons for each food-->
+                                    <div class="foodCard card border-primary p-2 mb-3" id="{{ entry }}-{{ loop.index - 1}}">
+                                        <div class="row">
+                                            <div class="col">
+                                                <!-- Food name label-->
+                                                <span><b>{{ food_dict.mealname }}</b></span>
+                                                <p>
+                                                    <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: {{ food_dict.servingsize }}</span>
+                                                    <span class="badge badge-info" style="background-color: var(--blue);">{{ food_dict.calories }} Calories</span>
+                                                    <span class="badge badge-info" style="background-color: var(--pink);">{{ food_dict.proteins }}g Protein</span>
+                                                    <span class="badge badge-info" style="background-color: var(--green);">{{ food_dict.carbs }}g Carbs</span>
+                                                    <span class="badge badge-info" style="background-color: var(--purple-transparent);">{{ food_dict.fats }}g Fat</span>
+                                                </p>
+                                            </div>
+                                            <div class="col-auto d-flex align-items-center">
+                                                <!-- Serving Lineedit Column and Close button -->
+                                                <div data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="d-flex align-items-center">
+                                                    <!-- Serving Lineedit -->
+                                                    <span class="text-muted" style="font-size: small; margin-right: 5px;">Servings: </span>
+                                                    <input type="number" step="any" min="0.01" onpaste="return false;" class="form-control small-input mr-2"
+                                                    value="{{ serving }}" oninput="handleServingChange(this)" required
+                                                    data-foodnum="{{ loop.index  - 1}}" data-entrynum="{{ entry }}"
+                                                    onkeypress="return isValid(event)">
+                                                </div>
+                                                <div class="form-group">
+                                                    <!-- Close button -->
+                                                    <button type="button" data-foodnum="{{ loop.index - 1}}" data-entrynum="{{ entry }}" class="foodCloseBtn btn btn-close btn-sm" aria-label="Close">
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </ul>
+                            </div>                             
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!--Save Meals button-->
+                <div class="form-row mt-3">
+                    <div class="col d-flex justify-content-end">
+                        <!-- Add a margin to the right of the Cancel button -->
+                        <button type="button" id ="cancelButton" class="btn btn-secondary me-2" onclick="location.href='/homepage'">Cancel</button>
+                        <button type="button" id ="savePlate" class="btn btn-primary">Save Meals</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hidden" id = "timePageLoaded" data-time = "{{ datetime_string }}">
+</div>
+<!-- Include SweetAlert2 from a CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // List of deleted entries' indices
+    let deletedEntries = [];
+    // List of lists of deleted foods & their entries
+    let deletedFoods = [];
+    let servingsChanged = {};
+
+    function appendFoodToDelete(entryIndex, foodIndex) {
+        let entryFound = false;
+        for (let entry of deletedFoods) {
+            if (entry.index === entryIndex) {
+                if (!entry.foods.includes(foodIndex)) {
+                    entry.foods.push(foodIndex);
+                }
+                entryFound = true;
+                break;
+            }
+        }
+        if (!entryFound) {
+            deletedFoods.push({index: entryIndex, foods: [foodIndex]});
+        }
+    }
+
+    function handleServingChange(input) {
+        input.setCustomValidity('');
+        if (!customCheckValidity(input)) return;
+
+        // round the serving input after submission
+        let inputServ = parseFloat(input.value);
+        let serving = inputServ.toFixed(2);
+
+        let entryNum = $(input).data('entrynum');
+        let foodNum = $(input).data('foodnum');
+        let key = `${entryNum}-${foodNum}`;
+        servingsChanged[key] = parseFloat(serving);
+    }
+
+    function customCheckValidity(input) {
+        let isValid = true;
+        const inputValue = parseFloat(input.value);
+        if (!input.value || inputValue === 0) {
+            input.setCustomValidity("Please fill out a non-zero serving size.");
+            isValid = false;
+        } else if (inputValue > 100) {
+            input.setCustomValidity("Serving size must be less than or equal to 100.");
+            isValid = false;
+        } else if (input.value < 0.01) {
+            input.setCustomValidity("Serving size must be greater than 0.01."); // Set custom message
+            isValid = false;
+        }
+        else {
+            input.setCustomValidity("");
+        }
+        input.reportValidity();
+        return isValid;
+    }
+
+
+    function handleEntryClose() {
+        const entryNum = $(this).data('entrynum');
+        console.log(entryNum)
+        const entryId = `entry-${entryNum}`;
+        deletedEntries.push(entryNum);
+        $(`#${entryId}`).hide();
+    }
+
+    function handleFoodClose() {
+        const entryNum = $(this).data('entrynum');
+        const foodNum = $(this).data('foodnum');
+        const foodId = `${entryNum}-${foodNum}`;
+        appendFoodToDelete(entryNum, foodNum);
+        $(`#${foodId}`).hide();
+    }
+
+    function validateInputs() {
+        const inputs = $('.small-input').toArray();
+        return inputs.every(customCheckValidity);
+    }
+
+    function handleSave(event) {
+        event.preventDefault();
+        if (!validateInputs()) return;
+        showLoadingAnimation();
+
+        // Round the servingsChanged values to two decimal places
+        for (let key in servingsChanged) {
+            servingsChanged[key] = parseFloat(servingsChanged[key].toFixed(2));
+        }
+
+        // Show the rounded numbers once Save button is pressed
+        for (let key in servingsChanged) {
+            const [entryNum, foodNum] = key.split('-');
+            const input = $(`input[data-entrynum="${entryNum}"][data-foodnum="${foodNum}"]`);
+            input.val(servingsChanged[key]);
+        }
+        const timePageLoadedElement = document.getElementById("timePageLoaded")
+        const timePageLoaded = timePageLoadedElement.dataset.time
+        $.ajax({
+            type: "POST",
+            url: "/editingmeals",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
+            data: JSON.stringify({
+                entriesToDelete: deletedEntries,
+                foodsToDelete: deletedFoods,
+                servingsToChange: servingsChanged,
+                timePageLoaded: timePageLoaded
+            }),
+            success: function (response) {
+                if (response.success && response.redirect) {
+                    window.location.href = response.redirect;
+                }
+                else {
+                    hideLoadingAnimation();
+                    Swal.fire({
+                        title: 'Database Has Been Changed',
+                        text: response.message,
+                        icon: 'warning',
+                        confirmButtonText: 'Refresh'
+                    }).then((willRefresh) => {
+                        if (willRefresh.isConfirmed) {
+                            showLoadingAnimation();
+                            location.reload(); // Refresh the page if confirmed
+                        }
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error("Error in data submission:", xhr.status, xhr.responseText);
+            }
+        });
+
+    }
+
+    function setup() {
+        $('.entryCloseBtn').click(handleEntryClose);
+        $('.foodCloseBtn').click(handleFoodClose);
+        $('#savePlate').click(handleSave);
+    }
+    $(document).ready(setup);
+</script>
+{% endblock %}

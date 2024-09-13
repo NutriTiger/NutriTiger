@@ -1,0 +1,127 @@
+<div class="card-body" id="menu-items" style="display: none;">
+    {% set ns = namespace(c = 0) %}
+    {% for item in data %}
+        {% set ooo_loop = loop %}
+        <div class = "menu-items-content" style="display: none;" id="{{ item.dhall[:2] }}-{{ item.mealtime }}">
+        {% for category, foods in item.data.items() %}
+            {% set oo_loop = loop %}
+                {% for food, code in foods.items() %}
+                    {% if nutrition_info[ns.c]['calories'] != "" %}
+                        <div class="form-check">
+                            {% set checkbox_id = ooo_loop.index ~ '-' ~ oo_loop.index ~ '-' ~ loop.index %}
+                            <input type="checkbox" class="form-check-input checkbox" id="checkbox-{{ checkbox_id }}" 
+                                data-usda="false"
+                                data-recid="{{ code }}" 
+                                data-location="{{ item.dhall }}" 
+                                data-mealtime="{{ item.mealtime }}"
+                                data-mealname="{{ food }}"
+                                data-servingsize="{{ nutrition_info[ns.c]['servingsize'] }}"
+                                data-cals="{{ nutrition_info[ns.c]['calories'] }}"
+                                data-carbs="{{ nutrition_info[ns.c]['carbs'] }}"
+                                data-prots="{{ nutrition_info[ns.c]['proteins'] }}"
+                                data-fats="{{ nutrition_info[ns.c]['fats'] }}"
+                                onchange="handleCheckboxChange(this)">
+                            <label class="form-check-label text-med" for="checkbox-{{ checkbox_id }}">{{ food }}</label>
+                            <p>
+                                <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: {{ nutrition_info[ns.c]['servingsize'] }}</span>
+                                <span class="badge badge-info" style="background-color: var(--blue);">{{ nutrition_info[ns.c]['calories'] }} Calories</span>
+                                <span class="badge badge-info" style="background-color: var(--pink);">{{ nutrition_info[ns.c]['proteins'] }}g Protein</span>
+                                <span class="badge badge-info" style="background-color: var(--green);">{{ nutrition_info[ns.c]['carbs'] }}g Carbs</span>
+                                <span class="badge badge-info" style="background-color: var(--purple-transparent);">{{ nutrition_info[ns.c]['fats'] }}g Fat</span>
+                            </p>
+                        </div>
+                    {% endif %}
+                    {% set ns.c = ns.c + 1 %}
+                {% endfor %}
+        {% endfor %}
+        </div>
+    {% endfor %}
+    <p id="select" class="text-center">Please select a dining hall from the dropdown menu.
+
+    </p>
+    <p id="noDataMessage" class="text-center" style="display: none;">No data available for this source.</p>
+</div>
+
+<script>
+    /* tooltips for info */
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+
+<div class="card-body" id="custom-food-items" style="display: none;">
+    {% if custom_data %}
+        <div class="card-body" id="custom-food-item-inner">
+            <div class="row">
+                {% for item in custom_data %}
+                    <div class="col-md-12 custom-items-content" data-page="{{ loop.index0 // 7 + 1 }}">
+                        <div class="form-check">
+                            {% set checkbox_id = item.recipeid %}
+                            <input type="checkbox" style="border: 1px solid black;" class="form-check-input checkbox" id="checkbox-{{ checkbox_id }}"
+                                data-usda="false" 
+                                data-recid="{{ item.recipeid }}" 
+                                data-location="Custom Food" 
+                                data-mealtime="N/A"
+                                data-mealname="{{ item.mealname | e}}" 
+                                data-servingsize="{{ item.servingsize | e }}"
+                                data-cals="{{ item.calories }}" 
+                                data-carbs="{{ item.carbs }}"
+                                data-prots="{{ item.proteins }}" 
+                                data-fats="{{ item.fats }}"
+                                onchange="handleCheckboxChange(this)" 
+                                onkeypress="changeCheckbox(this)">
+                            <label class="form-check-label text-med" for="checkbox-{{ checkbox_id }}">{{ item.mealname }}</label>
+                            <p>
+                                <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: {{ item.servingsize }}</span>
+                                <span class="badge badge-info" style="background-color: var(--blue);">{{ item.calories }} Calories</span>
+                                <span class="badge badge-info" style="background-color: var(--pink);">{{ item.proteins }}g Protein</span>
+                                <span class="badge badge-info" style="background-color: var(--green);">{{ item.carbs }}g Carbs</span>
+                                <span class="badge badge-info" style="background-color: var(--purple-transparent);">{{ item.fats }}g Fat</span>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center" id = "pagination-custom">
+                    {% for i in range(1, total_pages + 1) %}
+                        <li class="page-item {% if i == 1 %}active{% endif %}" onclick="handleCustomPageChange({{ i }})">
+                            <a class="page-link" href="javascript:void(0);">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    {% else %}
+        <p id="noDataCustomMessage" class="text-center">You have not added any Custom Foods yet.</p>
+    {% endif %}
+</div>
+
+<div class="card-body" id="tutorial-food-items" style="display: none;">
+    <div class = "tutorial-items-content">
+        <div class="form-check">
+            <input type="checkbox" style="border: 1px solid black;" class="form-check-input checkbox" id="checkbox-tutorial-1" 
+                data-usda="false"
+                data-recid="tutorial-1" 
+                data-location="Dining Hall" 
+                data-mealtime="Mealtime"
+                data-mealname="Example Food"
+                data-servingsize="1"
+                data-cals="630"
+                data-carbs="20"
+                data-prots="31"
+                data-fats="18"
+                onchange="handleCheckboxChange(this)"
+                onkeypress="changeCheckbox(this)">
+            <label class="form-check-label text-med" for="checkbox-tutorial-1">Example Food</label>
+            <p>
+                <span class="badge badge-info" style="background-color: var(--grey);">Serving Size: 1</span>
+                <span class="badge badge-info" style="background-color: var(--blue);">630 Calories</span>
+                <span class="badge badge-info" style="background-color: var(--pink);">31g Protein</span>
+                <span class="badge badge-info" style="background-color: var(--green);">20g Carbs</span>
+                <span class="badge badge-info" style="background-color: var(--purple-transparent);">18g Fat</span>
+            </p>
+        </div>
+    </div>
+</div>

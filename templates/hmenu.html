@@ -1,0 +1,43 @@
+<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-start nt-color-menu" tabindex="-1" id="offcanvasNavbar" data-bs-backdrop="false" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header nt-color-menu">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">NutriTiger</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body nt-color-menu">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'home' %}active nt-activated{% endif %}" href="/homepage" onclick="linkPressed()">Homepage</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'menus' %}active nt-activated{% endif %}" href="{{ url_for('dhall_menus')}}" onclick="linkPressed()">Dining Hall Menus</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'logmeals' %}active nt-activated{% endif %}" href="{{ url_for('log_food')}}" onclick="linkPressed()">Log Meals</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'history' %}active nt-activated{% endif %}" href="{{ url_for('history')}}" onclick="linkPressed()">My History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'customfood' %}active nt-activated{% endif %}" href="{{ url_for('custom_nutrition')}}" onclick="linkPressed()">My Custom Foods</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'settings' %}active nt-activated{% endif %}" href="{{ url_for('settings')}}" onclick="linkPressed()">Edit My Calorie Goal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'about' %}active nt-activated{% endif %}" href="{{ url_for('about')}}" onclick="linkPressed()">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logoutcas')}}">
+                        Logout  
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>

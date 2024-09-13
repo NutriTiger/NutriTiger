@@ -4,7 +4,6 @@
 #
 #----------------------------------------------------------------------
 import datetime
-# from datetime import datetime, timedelta
 import pytz
 import re
 
@@ -25,8 +24,25 @@ def time_of_day(date, time):
             return 'Breakfast'
 
 def custom_strftime(date_obj):
+    day_without_zero = str(date_obj.day).lstrip('0')  # Removing leading zero if present
     suffix = 'th' if 11 <= date_obj.day <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(date_obj.day % 10, 'th')
-    return date_obj.strftime('%A, %B %d') + suffix
+    return date_obj.strftime('%A, %B ') + day_without_zero + suffix
+
+
+def custom_strftime_est(utc_datetime):
+    # Subtract 4 hours from the UTC datetime
+    est_datetime = utc_datetime - datetime.timedelta(hours=4)
+    
+    # Determine the day without suffix
+    day_without_suffix = est_datetime.strftime('%d').lstrip('0')
+    
+    # Determine suffix for the day
+    suffix = 'th' if 11 <= est_datetime.day <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(est_datetime.day % 10, 'th')
+    
+    # Format the date string
+    formatted_date = est_datetime.strftime('%A, %B ') + day_without_suffix + suffix
+    
+    return formatted_date
 
 def is_weekend(date):
     day_of_week = date.weekday()
