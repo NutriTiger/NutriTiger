@@ -466,9 +466,10 @@ def add_usda_nutrition():
                 print("Error: No nutrition data provided.")
                 return jsonify({'error': 'No nutrition data provided'}), 400
             
-            validation_response, status_code = usda_validation(new_data)
-            if status_code != 200:
-                return validation_response, status_code
+            # commenting out validation
+            # validation_response, status_code = usda_validation(new_data)
+            # if status_code != 200:
+            #     return validation_response, status_code
 
             dbnutrition.update_nutrition(new_data)
             print("Success: Nutrition data successfully added.")
